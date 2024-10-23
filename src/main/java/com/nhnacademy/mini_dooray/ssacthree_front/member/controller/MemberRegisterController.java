@@ -17,6 +17,6 @@ public class MemberRegisterController {
 
     @PostMapping("/register")
     public String memberRegister(@ModelAttribute MemberRegisterRequest memberRegisterRequest, Model model) {
-
+        return null;
     }
 }
