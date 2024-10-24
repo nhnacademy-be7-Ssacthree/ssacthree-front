@@ -29,52 +29,31 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-      
-    - name : 프론트 파일 업로드 1
+
+    - name: 프론트 파일 업로드 (원본 업로드)
       uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.SSH_IP }}
         username: ${{ secrets.SSH_ID }}
         key: ${{ secrets.SSH_KEY }}
-        port: ${{ secrets.SSH_PORT1 }}
+        port: ${{ secrets.SSH_PORT }}
         source: "target/*.jar"
         target: "~/"
         rm: false
 
-    - name: 쉘스크립트 1
+    - name: 쉘스크립트 실행 (파일 복사 및 이름 변경)
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.SSH_IP }}
         username: ${{ secrets.SSH_ID }}
         key: ${{ secrets.SSH_KEY }}
-        port: ${{ secrets.SSH_PORT1}}
+        port: ${{ secrets.SSH_PORT}}
         script_stop: true
         script: |
-          chmod +x ./startup.sh
-          ./startup.sh
+          cp ~/target/ssacthree_front-0.0.1-SNAPSHOT.jar ~/target/ssacthree_front_instance1.jar
+          cp ~/target/ssacthree_front-0.0.1-SNAPSHOT.jar ~/target/ssacthree_front_instance2.jar
 
-    - name: 프론트 파일 업로드 2
-      uses: appleboy/scp-action@master
-      with:
-        host: ${{ secrets.SSH_IP }}
-        username: ${{ secrets.SSH_ID }}
-        key: ${{ secrets.SSH_KEY }}
-        port: ${{ secrets.SSH_PORT2 }}
-        source: "target/*.jar"
-        target: "~/"
-        rm: false
 
-    - name: 쉘스크립트 2
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.SSH_IP }}
-        username: ${{ secrets.SSH_ID }}
-        key: ${{ secrets.SSH_KEY }}
-        port: ${{ secrets.SSH_PORT2}}
-        script_stop: true
-        script: |
-          chmod +x ./startup.sh
-          ./startup.sh
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
       uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
