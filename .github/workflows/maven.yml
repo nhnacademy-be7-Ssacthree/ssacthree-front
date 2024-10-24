@@ -44,6 +44,17 @@ jobs:
         target: "~/"
         rm: false
 
+    - name: copy and rename file
+      uses: appleboy/ssh-action@master
+      with:
+          host: ${{ secrets.SSH_IP }}
+          username: ${{ secrets.SSH_ID }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script_stop: true
+          script: |
+            cp ~/ssacthree_front-0.0.1-SNAPSHOT.jar ~/ssacthree_front_copy.jar
+
     - name: execute shell script
       uses: appleboy/ssh-action@master
       with:
