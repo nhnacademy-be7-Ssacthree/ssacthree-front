@@ -53,7 +53,8 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script_stop: true
           script: |
-            cp ~/ssacthree_front-0.0.1-SNAPSHOT.jar ~/ssacthree_front_copy.jar
+            cp ~/target/ssacthree_front-0.0.1-SNAPSHOT.jar ~/target/ssacthree_front_instance1.jar
+            cp ~/target/ssacthree_front-0.0.1-SNAPSHOT.jar ~/target/ssacthree_front_instance2.jar
 
     - name: execute shell script
       uses: appleboy/ssh-action@master
