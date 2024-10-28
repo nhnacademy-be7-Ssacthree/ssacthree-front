@@ -1351,3 +1351,8 @@ select#input-sort {
     margin-bottom: 10px;
   }
 }
+
+.list-group-item:hover {
+  background-color: #ffecec;
+  cursor: pointer;
+}
