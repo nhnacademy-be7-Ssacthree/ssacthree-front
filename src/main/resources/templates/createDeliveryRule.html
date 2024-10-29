@@ -15,7 +15,7 @@
           <h3>새 배송 정책 추가</h3>
         </div>
         <div class="card-body">
-          <form th:action="@{/admin/deliveryRules}" th:method="post">
+          <form th:action="@{/admin/deliveryRules/create}" th:method="post">
             <div class="mb-3">
               <label for="deliveryRuleName" class="form-label">배송 정책 이름</label>
               <input type="text" class="form-control" id="deliveryRuleName" name="deliveryRuleName" required>
