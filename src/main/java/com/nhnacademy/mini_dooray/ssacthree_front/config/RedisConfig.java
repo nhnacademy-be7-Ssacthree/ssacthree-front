@@ -4,10 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.nhnacademy.mini_dooray.ssacthree_front.cart.domain.Cart;
+//import com.nhnacademy.mini_dooray.ssacthree_front.cart.domain.Cart;
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.domain.CartItem;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -19,7 +20,7 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
-@EnableRedisRepositories
+@EnableRedisRepositories()
 public class RedisConfig {
 
     @Value("${spring.data.redis.host}")
@@ -27,6 +28,14 @@ public class RedisConfig {
 
     @Value("${spring.data.redis.port}")
     private int redisPort;
+
+    @Bean
+    public RedisProperties redisProperties() {
+        RedisProperties redisProperties = new RedisProperties();
+        redisProperties.setHost(redisHost);
+        redisProperties.setPort(redisPort);
+        return redisProperties;
+    }
 
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
@@ -53,7 +62,7 @@ public class RedisConfig {
         GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(mapper);
 
         template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new GenericJackson2JsonRedisSerializer(mapper));
+        template.setValueSerializer(serializer);
         template.setHashKeySerializer(new StringRedisSerializer());
         template.setHashValueSerializer(serializer);
 
