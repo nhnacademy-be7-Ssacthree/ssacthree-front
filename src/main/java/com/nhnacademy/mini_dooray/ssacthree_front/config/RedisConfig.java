@@ -23,25 +23,11 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @EnableRedisRepositories()
 public class RedisConfig {
 
-    @Value("${spring.data.redis.host}")
-    private String redisHost;
-
-    @Value("${spring.data.redis.port}")
-    private int redisPort;
-
     @Bean
-    public RedisProperties redisProperties() {
-        RedisProperties redisProperties = new RedisProperties();
-        redisProperties.setHost(redisHost);
-        redisProperties.setPort(redisPort);
-        return redisProperties;
-    }
-
-    @Bean
-    public LettuceConnectionFactory redisConnectionFactory() {
+    public LettuceConnectionFactory redisConnectionFactory(RedisProperties redisProperties) {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
-        config.setHostName(redisHost);
-        config.setPort(redisPort);
+        config.setHostName(redisProperties.getHost());
+        config.setPort(redisProperties.getPort());
         return new LettuceConnectionFactory(config);
     }
 
