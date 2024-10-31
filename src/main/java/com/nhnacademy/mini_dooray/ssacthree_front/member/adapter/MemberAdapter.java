@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name="gateway-service", url = "${member.url")
+@FeignClient(name="gateway-service", url = "${member.url}",contextId = "memberClient")
 public interface MemberAdapter {
 
     @PostMapping("/shop/members")
