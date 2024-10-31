@@ -34,7 +34,10 @@
               <td th:text="${rule.deliveryDiscountCost}">0</td>
               <td th:text="${#temporals.format(rule.deliveryRuleCreatedAt, 'yyyy-MM-dd HH:mm')}">2024-10-29</td>
               <td>
-                <button class="btn btn-warning btn-sm" th:if="${!rule.deliveryRuleIsSelected}" style="padding: 0.5rem 2.625rem;">선택</button>
+                <form th:action="@{/admin/deliveryRules/update}" method="post">
+                  <input type="hidden" th:name="deliveryRuleId" th:value="${rule.deliveryRuleId}" />
+                  <button class="btn btn-warning btn-sm" th:if="${!rule.deliveryRuleIsSelected}" type="submit" style="padding: 0.5rem 2.625rem;">선택</button>
+                </form>
               </td>
             </tr>
             </tbody>
