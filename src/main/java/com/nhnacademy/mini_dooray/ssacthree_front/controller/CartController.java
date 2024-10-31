@@ -16,6 +16,7 @@ import java.util.List;
 public class CartController {
 
     private final CartService cartService;
+    private static final String CART_REDIRECT = "redirect:/shop";
 
     @GetMapping("/shop")
     public String viewCart(HttpServletRequest request, Model model) {
@@ -32,19 +33,19 @@ public class CartController {
                                                   @RequestParam int price,
                                                   @RequestParam byte[] image) { //새로운 책 장바구니에 추가
         cartService.addNewBook(session,itemId,title,price,image);
-        return "redirect:/shop";
+        return CART_REDIRECT;
     }
 
     @PutMapping("/shop/{itemId}")
     public String changeQuantity(HttpSession session, @PathVariable Long itemId, @RequestParam int quantityChange) { //수량 변경
         cartService.updateItemQuantity(session, itemId, quantityChange);
-        return "redirect:/shop"; // 변경 후 장바구니 페이지로 리다이렉트
+        return CART_REDIRECT; // 변경 후 장바구니 페이지로 리다이렉트
     }
 
 
     @DeleteMapping("/shop/{itemId}")
     public String deleteCartItem(HttpSession session, @PathVariable Long itemId) {
         cartService.deleteItem(session,itemId);
-        return "redirect:/shop";
+        return CART_REDIRECT;
     }
 }
