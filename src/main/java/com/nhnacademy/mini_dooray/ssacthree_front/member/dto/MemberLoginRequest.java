@@ -10,7 +10,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MemberLoginRequest {
-
-    String memberLoginId;
-    String memberLoginPassword;
+    // 아직도 불필요한 어노테이션이 이렇게나 많이.....
+    // MemberRegisterRequest에도 불필요한 어노테이션이....
+    private String memberLoginId;
+    private String memberPassword;
 }

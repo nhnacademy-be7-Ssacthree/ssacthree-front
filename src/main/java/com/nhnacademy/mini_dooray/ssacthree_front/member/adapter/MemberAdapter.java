@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(name="memberSendClient", url = "http://localhost:8081/api")
 public interface MemberAdapter {
 
-    @PostMapping("/members")
+    @PostMapping("/shop/members")
     ResponseEntity<MessageResponse> memberRegister(@RequestBody MemberRegisterRequest memberRegisterRequest);
 
-    @PostMapping("/members/login")
+    @PostMapping("/auth/login")
     ResponseEntity<MessageResponse> memberLogin(@RequestBody MemberLoginRequest memberLoginRequest);
 }
