@@ -10,11 +10,13 @@ import com.nhnacademy.mini_dooray.ssacthree_front.member.service.MemberService;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
@@ -44,8 +46,11 @@ public class MemberServiceImpl implements MemberService {
         try {
             if(response.getStatusCode().is2xxSuccessful()) {
                 List<String> cookies = response.getHeaders().get("Set-Cookie");
-                System.out.println(cookies);
-                httpServletResponse.addHeader("Set-Cookie", cookies.get(0));
+                log.info("Cookies: {}", cookies);
+                assert cookies != null;
+                if (!cookies.isEmpty()) {
+                    httpServletResponse.addHeader("Set-Cookie", cookies.getFirst());
+                }
                 return response.getBody();
             }
 
