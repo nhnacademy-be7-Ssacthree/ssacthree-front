@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient(name="adminSendClient", url = "${admin-client.url}")
+@FeignClient(name="gateway-service", url = "${admin-client.url}")
 public interface AdminAdapter {
 
     @GetMapping("/deliveryRules")
