@@ -27,10 +27,10 @@ class CartItemTest {
     void testCartItemDefaultConstructor() {
         CartItem cartItem = new CartItem();
 
-        assertThat(cartItem.getId()).isEqualTo(0L);
+        assertThat(cartItem.getId()).isZero();
         assertThat(cartItem.getTitle()).isNull();
-        assertThat(cartItem.getQuantity()).isEqualTo(0);
-        assertThat(cartItem.getPrice()).isEqualTo(0);
+        assertThat(cartItem.getQuantity()).isZero();
+        assertThat(cartItem.getPrice()).isZero();
         assertThat(cartItem.getImage()).isNull();
     }
 
@@ -39,6 +39,6 @@ class CartItemTest {
         CartItem cartItem = new CartItem(1L, "도서 제목", 1, 25000, null);
 
         String expected = "CartItem(id=1, title=도서 제목, quantity=1, price=25000, image=null)";
-        assertThat(cartItem.toString()).isEqualTo(expected);
+        assertThat(cartItem.toString()).hasToString(expected);
     }
 }
