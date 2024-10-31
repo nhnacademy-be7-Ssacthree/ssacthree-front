@@ -8,12 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name="memberSendClient", url = "http://localhost:8081/api")
+@FeignClient(name="gateway-service", url = "${member.url")
 public interface MemberAdapter {
 
-    @PostMapping("/members")
+    @PostMapping("/shop/members")
     ResponseEntity<MessageResponse> memberRegister(@RequestBody MemberRegisterRequest memberRegisterRequest);
 
-    @PostMapping("/members/login")
+    @PostMapping("/auth/login")
     ResponseEntity<MessageResponse> memberLogin(@RequestBody MemberLoginRequest memberLoginRequest);
 }

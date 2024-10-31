@@ -7,6 +7,8 @@ import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberRegisterReque
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.LoginFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.MemberRegisterFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.MemberService;
+import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -36,14 +38,20 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MessageResponse memberLogin(MemberLoginRequest request) {
-        ResponseEntity<MessageResponse> response = memberAdapter.memberLogin(request);
+    public MessageResponse memberLogin(MemberLoginRequest requestBody, HttpServletResponse httpServletResponse) {
+        ResponseEntity<MessageResponse> response = memberAdapter.memberLogin(requestBody);
+
         try {
             if(response.getStatusCode().is2xxSuccessful()) {
+                List<String> cookies = response.getHeaders().get("Set-Cookie");
+                System.out.println(cookies);
+                httpServletResponse.addHeader("Set-Cookie", cookies.get(0));
                 return response.getBody();
             }
+
             throw new LoginFailedException("로그인에 실패하였습니다.");
         }
+
         catch ( HttpClientErrorException  | HttpServerErrorException e ) {
             throw new LoginFailedException("로그인에 실패하였습니다.");
         }
