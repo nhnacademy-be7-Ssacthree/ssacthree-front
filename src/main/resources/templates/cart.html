@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/config :: config}">
+  <title>장바구니</title>
+</head>
+<body>
+
+<header th:replace="~{common/header :: header}"></header>
+
+<div class="container mt-5">
+  <h2>장바구니</h2>
+
+  <div class="cart-items">
+    <div th:each="item : ${cartItems}" class="row cart-item border-bottom py-3">
+      <div class="col-md-2">
+        <img th:src="@{/images/book1.jpg}" class="img-fluid" alt="Book Image">
+      </div>
+      <div class="col-md-4">
+        <h5 th:text="${item.title}">책 제목</h5>
+      </div>
+      <div class="col-md-3">
+        <div class="input-group">
+          <!-- 수량 감소 버튼 -->
+          <form th:action="@{/shop/{itemId}(itemId=${item.id})}" method="post" style="display:inline;">
+            <input type="hidden" name="_method" value="PUT">
+            <input type="hidden" name="quantityChange" value="-1">
+            <button type="submit" class="btn btn-outline-secondary">-</button>
+          </form>
+
+          <!-- 현재 수량 표시 (읽기 전용) -->
+          <input type="text" class="form-control text-center" th:value="${item.quantity}" readonly>
+
+          <!-- 수량 증가 버튼 -->
+          <form th:action="@{/shop/{itemId}(itemId=${item.id})}" method="post" style="display:inline;">
+            <input type="hidden" name="_method" value="PUT">
+            <input type="hidden" name="quantityChange" value="+1">
+            <button type="submit" class="btn btn-outline-secondary">+</button>
+          </form>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <span class="price" th:text="${item.price} + '원'">20,000원</span>
+      </div>
+      <div class="col-md-1">
+        <form th:action="@{/shop/{itemId}(itemId=${item.id})}" method="post" style="display:inline;">
+          <input type="hidden" name="_method" value="DELETE" />
+          <button class="btn btn-danger">X</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 새로운 책 추가 버튼 -->
+  <div class="row mt-5">
+    <div class="col-md-12 text-center">
+      <form th:action="@{/shop/}" method="post">
+        <input type="hidden" name="itemId" value="3" />
+        <input type="hidden" name="title" value="새로운 책 제목" />
+        <input type="hidden" name="price" value="15000" />
+        <input type="hidden" name="image" value="" />
+        <button type="submit" class="btn btn-primary">새로운 책 추가</button>
+      </form>
+    </div>
+  </div>
+
+
+  <div class="row mt-3">
+    <div class="col-md-6">
+      <h4>배송 정보</h4>
+      <p>무료 배송 - 2~3 영업일 소요</p>
+    </div>
+    <div class="col-md-6 text-right">
+      <h4>총 금액: <span id="total-price" th:text="${totalPrice} + '원'">20,000원</span></h4>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-md-6">
+      <h4>결제 방법</h4>
+      <ul class="list-unstyled">
+        <li><img src="images/visa.jpg" alt="Visa" width="50"> Visa</li>
+        <li><img src="images/mastercard.jpg" alt="MasterCard" width="50"> MasterCard</li>
+        <li><img src="images/paypal.jpg" alt="PayPal" width="50"> PayPal</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<footer th:replace="~{common/footer :: footer}"></footer>
+
+<script th:src="@{/js/jquery-1.11.0.min.js}"></script>
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

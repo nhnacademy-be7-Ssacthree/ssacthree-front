@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name="memberSendClient", url = "http://localhost:8081/api")
+@FeignClient(name="gateway-service", url = "${member.url}",contextId = "memberClient")
 public interface MemberAdapter {
 
     @PostMapping("/shop/members")

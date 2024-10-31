@@ -7,11 +7,9 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableFeignClients
-@Slf4j
 public class SsacthreeFrontApplication {
 
     public static void main(String[] args) {
-        log.error("fuck");
         SpringApplication.run(SsacthreeFrontApplication.class, args);
     }
 

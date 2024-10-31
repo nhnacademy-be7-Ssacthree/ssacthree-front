@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient(name="gateway-service", url = "${admin-client.url}")
+
+@FeignClient(name="gateway-service", url = "${admin-client.url}", contextId = "deliveryRuleClient")
 public interface AdminAdapter {
     @GetMapping("/deliveryRules")
     ResponseEntity<List<DeliveryRuleGetResponse>> getAllDeliveryRules();
