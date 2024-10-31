@@ -40,7 +40,7 @@ jobs:
         username: ${{ secrets.SSH_ID }}
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
-        source: "target/*.jar"
+        source: "target/ssacthree_front-0.0.1-SNAPSHOT.jar"
         target: "~/"
         rm: false
 
@@ -53,8 +53,11 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script_stop: true
         script: |
-          chmod +x ./startup.sh
-          ./startup.sh
+         # 8080,8085 포트 프로세스 종료 및 재시작
+          fuser -k 8080/tcp || echo "No process on 8080"
+          fuser -k 8085/tcp || echo "No process on 8085"
+          chmod +x ./front_startup.sh
+          ./front_startup.sh
 
     - name: Run SonarQube
       run: mvn sonar:sonar -Dsonar.projectKey=ssacthree-front -Dsonar.host.url=${{secrets.SONAR_HOST}} -Dsonar.token=${{secrets.SONAR_TOKEN}}
