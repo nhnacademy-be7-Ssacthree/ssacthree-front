@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
-  <head th:replace="common/config :: config">
+  <head th:replace="~{common/config :: config}">
   </head>
   <body>
+
 
   <header th:replace="~{common/header}" />
 
@@ -1152,6 +1153,6 @@
       </div>
     </section>
 
-    <footer th:replace="common/footer :: footer"/>
+    <footer th:replace="~{common/footer :: footer}"/>
   </body>
 </html>
