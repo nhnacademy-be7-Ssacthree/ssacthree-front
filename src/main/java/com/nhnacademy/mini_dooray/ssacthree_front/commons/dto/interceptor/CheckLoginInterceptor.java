@@ -6,6 +6,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+
+/**
+ * 로그인을 체크하기위한 interceptor
+ * @author : 김희망
+ * @Date : 2024/11/03
+ */
 public class CheckLoginInterceptor implements HandlerInterceptor {
 
     @Override

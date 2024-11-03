@@ -7,8 +7,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-public class FeignCookieInterceptor implements RequestInterceptor {
 
+/**
+ * FiegnClient에 쿠키를 담기 위한 인터셉터
+ * @author : 김희망
+ * @Date : 2024/11/03
+ */
+public class FeignCookieInterceptor implements RequestInterceptor {
     @Override
     public void apply(RequestTemplate requestTemplate) {
         HttpServletRequest httpServletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
