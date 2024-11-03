@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/config :: config}">
+    <title>카테고리 관리</title>
+    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css"/>
+</head>
+<body class="bg-light">
+<header th:replace="~{common/adminHeader :: header}" />
+
+<div class="container py-5">
+    <div class="card shadow-sm border-0">
+        <div class="card-header d-flex justify-content-between align-items-center bg-white border-bottom-0">
+            <h2 class="fs-4 fw-bold mb-0">카테고리 관리</h2>
+            <a href="/admin/categories/create" class="btn btn-outline-danger btn-sm rounded-2">등록</a>
+        </div>
+
+        <ul class="list-group list-group-flush list-unstyled" id="category-tree" th:if="${not #lists.isEmpty(categories)}">
+            <li th:each="category : ${categories}" th:if="${category != null}">
+                <th:block th:replace="~{this :: renderCategory(cat=${category})}" />
+            </li>
+        </ul>
+        <p th:if="${#lists.isEmpty(categories)}" class="text-center my-3">등록된 카테고리가 없습니다.</p>
+    </div>
+</div>
+
+<!-- 삭제 확인 모달 -->
+<div id="deleteConfirmModal" class="modal fade" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteConfirmModalLabel">주의</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p id="deleteMessage" class="fw-bold"></p>
+                <p>삭제 시 복원이 불가능합니다.</p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">삭제</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript 함수 -->
+<script type="text/javascript">
+    let deleteForm; // 삭제할 폼을 저장할 변수
+
+    function toggleCategory(categoryId) {
+        const target = document.getElementById('subcat-' + categoryId);
+        const icon = document.getElementById('icon-' + categoryId);
+
+        if (target.classList.contains('show')) {
+            target.classList.remove('show');
+            icon.textContent = '▶';
+        } else {
+            target.classList.add('show');
+            icon.textContent = '▼';
+        }
+    }
+
+    function showDeleteConfirm(form) {
+        deleteForm = form;
+        const categoryName = form.querySelector("button").getAttribute("data-category-name");
+        document.getElementById('deleteMessage').textContent = `'${categoryName}'을(를) 정말 삭제하시겠습니까?`;
+        $('#deleteConfirmModal').modal('show');
+    }
+
+    document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+        if (deleteForm) {
+            deleteForm.submit();
+        }
+        $('#deleteConfirmModal').modal('hide');
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const editDropdowns = document.querySelectorAll('.dropdown-toggle');
+
+        editDropdowns.forEach(dropdown => {
+            // '편집' 버튼에만 적용하기 위해 클릭할 때마다 'dropdown-toggle' 클래스를 제거
+            dropdown.classList.remove('dropdown-toggle');
+        });
+    });
+
+</script>
+
+<!-- Thymeleaf 프래그먼트: 각 카테고리와 하위 카테고리를 재귀적으로 렌더링 -->
+<th:block th:fragment="renderCategory(cat)">
+    <!-- 첫 번째 방식: 사용 가능한 카테고리만 렌더링 -->
+    <th:block th:if="${cat != null and cat.categoryIsUsed}">
+        <li class="list-group-item bg-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <span th:if="${not #lists.isEmpty(cat.children)}"
+                          class="me-2"
+                          th:id="'icon-' + ${cat.categoryId}"
+                          th:onclick="'toggleCategory(' + ${cat.categoryId} + ')'"
+                          style="cursor: pointer;">
+                        ▶
+                    </span>
+                    <span th:if="${#lists.isEmpty(cat.children)}" class="me-2" style="width: 20px;"></span>
+                    <span th:text="${cat.categoryName}" class="fw-bold fs-5"></span>
+                </div>
+                <div class="ms-auto">
+                    <div class="dropdown">
+                        <a href="#" class="text-primary text-decoration-none dropdown-toggle" role="button"
+                           th:id="'dropdownMenuLink-' + ${cat.categoryId}"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            편집
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end"
+                            th:attr="aria-labelledby='dropdownMenuLink-' + ${cat.categoryId}">
+                            <li>
+                                <a class="dropdown-item"
+                                   th:href="@{/admin/categories/update/{categoryId}(categoryId=${cat.categoryId})}">
+                                    수정
+                                </a>
+                            </li>
+                            <li>
+                                <form th:action="@{/admin/categories/delete/{categoryId}(categoryId=${cat.categoryId})}"
+                                      method="post" th:id="'deleteForm-' + ${cat.categoryId}">
+                                    <button type="button" class="dropdown-item text-danger"
+                                            onclick="showDeleteConfirm(this.form)"
+                                            th:data-category-name="${cat.categoryName}">삭제</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <ul class="list-group collapse ms-4 list-unstyled"
+                th:id="'subcat-' + ${cat.categoryId}"
+                th:if="${not #lists.isEmpty(cat.children)}">
+                <li th:each="childCat : ${cat.children}">
+                    <th:block th:replace="~{this :: renderCategory(cat=${childCat})}" />
+                </li>
+            </ul>
+        </li>
+    </th:block>
+
+    <!-- 두 번째 방식: 사용 여부에 따라 스타일 변경 및 null 체크 -->
+<!--    <th:block th:if="${cat != null and cat.categoryIsUsed != null}">-->
+<!--        <li class="list-group-item"-->
+<!--            th:classappend="${cat.categoryIsUsed} ? 'bg-white' : 'bg-light text-muted'">-->
+<!--            <div class="d-flex justify-content-between align-items-center">-->
+<!--                <div class="d-flex align-items-center">-->
+<!--                    <span th:if="${not #lists.isEmpty(cat.children)}"-->
+<!--                          class="me-2"-->
+<!--                          th:id="'icon-' + ${cat.categoryId}"-->
+<!--                          th:onclick="'toggleCategory(' + ${cat.categoryId} + ')'"-->
+<!--                          style="cursor: pointer;">-->
+<!--                        ▶-->
+<!--                    </span>-->
+<!--                    <span th:if="${#lists.isEmpty(cat.children)}" class="me-2" style="width: 20px;"></span>-->
+<!--                    <span th:text="${cat.categoryName}" class="fw-bold fs-5"></span>-->
+<!--                </div>-->
+<!--                <div class="ms-auto">-->
+<!--                    <div class="dropdown">-->
+<!--                        <a href="#" class="text-primary text-decoration-none dropdown-toggle" role="button"-->
+<!--                           th:id="'dropdownMenuLink-' + ${cat.categoryId}"-->
+<!--                           data-bs-toggle="dropdown" aria-expanded="false">-->
+<!--                            편집-->
+<!--                        </a>-->
+<!--                        <ul class="dropdown-menu dropdown-menu-end"-->
+<!--                            th:attr="aria-labelledby='dropdownMenuLink-' + ${cat.categoryId}">-->
+<!--                            <li>-->
+<!--                                <a class="dropdown-item"-->
+<!--                                   th:href="@{/admin/categories/update/{categoryId}(categoryId=${cat.categoryId})}">-->
+<!--                                    수정-->
+<!--                                </a>-->
+<!--                            </li>-->
+<!--                            <li>-->
+<!--                                <form th:action="@{/admin/categories/delete/{categoryId}(categoryId=${cat.categoryId})}"-->
+<!--                                      method="post" th:id="'deleteForm-' + ${cat.categoryId}">-->
+<!--                                    <button type="button" class="dropdown-item text-danger"-->
+<!--                                            onclick="showDeleteConfirm(this.form)"-->
+<!--                                            th:data-category-name="${cat.categoryName}">삭제</button>-->
+<!--                                </form>-->
+<!--                            </li>-->
+<!--                        </ul>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <ul class="list-group collapse ms-4 list-unstyled"-->
+<!--                th:id="'subcat-' + ${cat.categoryId}"-->
+<!--                th:if="${not #lists.isEmpty(cat.children)}">-->
+<!--                <li th:each="childCat : ${cat.children}">-->
+<!--                    <th:block th:replace="~{this :: renderCategory(cat=${childCat})}" />-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--        </li>-->
+<!--    </th:block>-->
+</th:block>
+
+<footer th:replace="~{common/footer :: footer}"/>
+</body>
+</html>
