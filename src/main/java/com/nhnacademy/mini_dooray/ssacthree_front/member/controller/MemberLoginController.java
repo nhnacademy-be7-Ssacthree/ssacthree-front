@@ -7,10 +7,15 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+
+/**
+ * 로그인과 로그아웃에 관련된 컨트롤러
+ * @author : 김희망
+ * @Datge : 2024/11/03
+ */
 @Controller
 @RequiredArgsConstructor
 public class MemberLoginController {
