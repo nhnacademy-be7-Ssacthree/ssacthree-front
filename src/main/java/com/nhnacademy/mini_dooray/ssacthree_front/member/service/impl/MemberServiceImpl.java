@@ -5,6 +5,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.member.adapter.MemberAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberLoginRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberRegisterRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.LoginFailedException;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.LogoutIllegalAccessException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.MemberRegisterFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.MemberService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -44,8 +45,8 @@ public class MemberServiceImpl implements MemberService {
         try {
             if(response.getStatusCode().is2xxSuccessful()) {
                 List<String> cookies = response.getHeaders().get("Set-Cookie");
-                System.out.println(cookies);
                 httpServletResponse.addHeader("Set-Cookie", cookies.get(0));
+                httpServletResponse.addHeader("Set-Cookie", cookies.get(1));
                 return response.getBody();
             }
 
@@ -55,5 +56,25 @@ public class MemberServiceImpl implements MemberService {
         catch ( HttpClientErrorException  | HttpServerErrorException e ) {
             throw new LoginFailedException("로그인에 실패하였습니다.");
         }
+    }
+
+    @Override
+    public MessageResponse memberLogout() {
+        ResponseEntity<MessageResponse> response = memberAdapter.memberLogout();
+
+        try {
+
+            if(response.getStatusCode().is2xxSuccessful()) {
+                return response.getBody();
+            }
+
+            throw new LogoutIllegalAccessException("잘못된 접근입니다.");
+        }
+
+        catch ( HttpClientErrorException  | HttpServerErrorException e ) {
+            throw new LogoutIllegalAccessException("잘못된 접근입니다.");
+        }
+
+
     }
 }

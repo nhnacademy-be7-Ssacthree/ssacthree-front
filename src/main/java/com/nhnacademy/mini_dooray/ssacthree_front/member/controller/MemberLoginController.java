@@ -21,4 +21,10 @@ public class MemberLoginController {
         memberService.memberLogin(requestBody,httpServletResponse);
         return "redirect:/";
     }
+
+    @PostMapping("/logout")
+    public String logout(HttpServletResponse httpServletResponse) {
+        memberService.memberLogout();
+        return "redirect:/";
+    }
 }
