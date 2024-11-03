@@ -283,34 +283,13 @@
                       </div>
                       <div class="modal-body">
                         <div class="tabs-listing">
-                          <nav>
-                            <div class="nav nav-tabs d-flex justify-content-center" id="nav-tab" role="tablist">
-                              <button class="nav-link text-capitalize active" id="nav-sign-in-tab" data-bs-toggle="tab"
-                                      data-bs-target="#nav-sign-in" type="button" role="tab" aria-controls="nav-sign-in"
-                                      aria-selected="true">로그인</button>
-                            </div>
-                          </nav>
 
                           <div class="tab-content" id="nav-tabContent">
-                            <form action="/login" method="POST"> <!-- POST 메서드로 '/login' 주소로 전송 -->
+                            <form action="/logout" method="POST"> <!-- POST 메서드로 '/login' 주소로 전송 -->
                               <div class="tab-pane fade active show" id="nav-sign-in" role="tabpanel" aria-labelledby="nav-sign-in-tab">
-                                <div class="form-group py-3">
-                                  <label class="mb-2" for="memberLoginId">아이디</label>
-                                  <input type="text" minlength="2" name="memberLoginId" id="memberLoginId" placeholder="아이디" autocomplete="name"
-                                         class="form-control w-100 rounded-3 p-3" required>
-                                </div>
-                                <div class="form-group pb-3">
-                                  <label class="mb-2" for="memberPassword">비밀번호</label>
-                                  <input type="password" minlength="2" id="memberPassword" name="memberPassword" placeholder="비밀번호"
-                                         class="form-control w-100 rounded-3 p-3" required>
-                                </div>
-                                <!--                                <label class="py-3">-->
-                                <!--                                  <input type="checkbox" required="" class="d-inline">-->
-                                <!--                                  <span class="label-body">Remember me</span>-->
-                                <!--                                  <span class="label-body"><a href="#" class="fw-bold">Forgot Password</a></span>-->
-                                <!--                                </label>-->
-                                <button type="submit" name="submit" class="btn btn-dark w-100 my-3">로그인</button>
-                                <a href="/register" class="btn btn-dark w-100 my-3">회원가입</a>
+
+                                <button type="submit" name="submit" class="btn btn-dark w-100 my-3">로그아웃</button>
+                                <a href="/member/mypage" class="btn btn-dark w-100 my-3">마이페이지</a>
                               </div>
                             </form>
                           </div>
@@ -320,49 +299,7 @@
                   </div>
                 </div>
               </li>
-              <li class="wishlist-dropdown dropdown pe-3">
-                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
-                  <svg class="wishlist">
-                    <use xlink:href="#heart"></use>
-                  </svg>
-                </a>
-                <div class="dropdown-menu animate slide dropdown-menu-start dropdown-menu-lg-end p-3">
-                  <h4 class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="text-primary">Your wishlist</span>
-                    <span class="badge bg-primary rounded-pill">2</span>
-                  </h4>
-                  <ul class="list-group mb-3">
-                    <li class="list-group-item bg-transparent d-flex justify-content-between lh-sm">
-                      <div>
-                        <h5>
-                          <a href="index.html">The Emerald Crown</a>
-                        </h5>
-                        <small>Special discounted price.</small>
-                        <a href="#" class="d-block fw-medium text-capitalize mt-2">Add to cart</a>
-                      </div>
-                      <span class="text-primary">$2000</span>
-                    </li>
-                    <li class="list-group-item bg-transparent d-flex justify-content-between lh-sm">
-                      <div>
-                        <h5>
-                          <a href="index.html">The Last Enchantment</a>
-                        </h5>
-                        <small>Perfect for enlightened people.</small>
-                        <a href="#" class="d-block fw-medium text-capitalize mt-2">Add to cart</a>
-                      </div>
-                      <span class="text-primary">$400</span>
-                    </li>
-                    <li class="list-group-item bg-transparent d-flex justify-content-between">
-                      <span class="text-capitalize"><b>Total (USD)</b></span>
-                      <strong>$1470</strong>
-                    </li>
-                  </ul>
-                  <div class="d-flex flex-wrap justify-content-center">
-                    <a href="#" class="w-100 btn btn-dark mb-1" type="submit">Add all to cart</a>
-                    <a href="index.html" class="w-100 btn btn-primary" type="submit">View cart</a>
-                  </div>
-                </div>
-              </li>
+
               <li class="cart-dropdown dropdown">
                 <a href="index.html" class="dropdown-toggle" data-bs-toggle="dropdown" role="button"
                    aria-expanded="false">

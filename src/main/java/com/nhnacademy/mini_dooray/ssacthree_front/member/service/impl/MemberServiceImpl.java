@@ -59,12 +59,15 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MessageResponse memberLogout() {
+    public MessageResponse memberLogout(HttpServletResponse httpServletResponse) {
         ResponseEntity<MessageResponse> response = memberAdapter.memberLogout();
 
         try {
 
             if(response.getStatusCode().is2xxSuccessful()) {
+                List<String> cookies = response.getHeaders().get("Set-Cookie");
+                httpServletResponse.addHeader("Set-Cookie", cookies.get(0));
+                httpServletResponse.addHeader("Set-Cookie", cookies.get(1));
                 return response.getBody();
             }
 
