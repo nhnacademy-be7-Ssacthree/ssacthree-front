@@ -32,6 +32,9 @@ build/
 ### VS Code ###
 .vscode/
 
+### logs ###
+.log
+
 # 로그 파일 및 디렉토리 무시
 /log
 *.log
