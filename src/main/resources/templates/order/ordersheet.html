@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/config :: config}">
+    <meta charset="UTF-8">
+    <title>주문서 작성</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+</head>
+<body>
+<header th:replace="~{common/header :: header}" />
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3>주문서 작성</h3>
+                </div>
+                <div class="card-body">
+                    <!-- 1. 주문 상품 정보 -->
+                    <section id="order-items" class="mb-4">
+                        <h4 class="text-primary">주문 상품 정보</h4>
+                        <table class="table table-bordered mt-3">
+                            <thead class="table-light">
+                            <tr>
+                                <th>도서명</th>
+                                <th>가격</th>
+                                <th>적립 마일리지</th>
+                                <th>수량</th>
+                                <th>쿠폰 적용</th>
+                                <th>포장지 선택</th>
+                                <th>책별 총 금액</th>
+                            </tr>
+                            </thead>
+                            <tbody id="items-table-body">
+                            <!-- 상품 행이 JavaScript로 추가됩니다 -->
+                            </tbody>
+                        </table>
+                        <p class="text-end fw-bold">총 예상금액: <span id="estimated-total">0원</span></p>
+                    </section>
+
+                    <!-- 2. 구매자 정보 입력 -->
+                    <!-- 비회원인 경우, 모든 칸이 비어있고, 회원인 경우 구매자 정보 입력칸을 해당 회원의 정보로 채워야함.-->
+                    <section id="buyer-info" class="mb-4">
+                        <h4 class="text-primary">구매자 정보 입력</h4>
+                        <div class="mb-3">
+                            <label for="buyer-name" class="form-label">이름</label>
+                            <input type="text" class="form-control" id="buyer-name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="buyer-email" class="form-label">이메일</label>
+                            <input type="email" class="form-control" id="buyer-email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="buyer-phone" class="form-label">휴대폰번호</label>
+                            <input type="tel" class="form-control" id="buyer-phone" required>
+                        </div>
+                    </section>
+
+                    <!-- 3. 배송지 입력 -->
+                    <section id="delivery-info" class="mb-4">
+                        <h4 class="text-primary">배송지 입력</h4>
+                        <div class="mb-3">
+                            <label for="address-list" class="form-label">주소 선택</label>
+                            <select class="form-select" id="address-list" onchange="setSelectedAddress()">
+                                <option>주소 선택</option>
+                                <!-- 회원 주소 리스트 추가 -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="form-label">받는 사람 이름</label>
+                            <input type="text" class="form-control" id="recipient-name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="form-label">받는 사람 연락처</label>
+                            <input type="text" class="form-control" id="recipient-phone" required>
+                        </div>
+                        <div class="mb-3">
+                            <button type="button" class="btn btn-outline-secondary" onclick="openPostcodeSearch()">주소 조회</button>
+                        </div>
+                        <div class="mb-3">
+                            <label for="postal-code" class="form-label">우편 주소</label>
+                            <input type="text" class="form-control" id="postal-code" readonly onclick="openPostcodeSearch()">
+                        </div>
+                        <div class="mb-3">
+                            <label for="road-address" class="form-label">도로명 주소</label>
+                            <input type="text" class="form-control" id="road-address" readonly onclick="openPostcodeSearch()">
+                        </div>
+                        <div class="mb-3">
+                            <label for="detail-address" class="form-label">상세 주소</label>
+                            <input type="text" class="form-control" id="detail-address" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="delivery-date" class="form-label">배송 날짜 지정</label>
+                            <input type="date" class="form-control" id="delivery-date">
+                            <!-- 5일 이후까지만 선택 가능 -->
+                            <script>
+                                const deliveryDateInput = document.getElementById("delivery-date");
+                                const today = new Date();
+
+                                // 오늘로부터 5일 이후 날짜 설정
+                                const maxDate = new Date(today);
+                                maxDate.setDate(today.getDate() + 5);
+
+                                // YYYY-MM-DD 형식으로 min과 max 속성 설정
+                                deliveryDateInput.max = maxDate.toISOString().split("T")[0];
+                            </script>
+                        </div>
+                    </section>
+
+                    <!-- 4. 포인트 사용 -->
+                    <section id="point-use" class="mb-4">
+                        <h4 class="text-primary">포인트 사용</h4>
+                        <p>보유 포인트: <span id="user-points">2000 포인트</span></p>
+                        <!-- 가진 포인트보다 많으면 안됨. -->
+                        <div class="mb-3">
+                            <label for="points-to-use" class="form-label">사용할 포인트</label>
+                            <input type="number" class="form-control" id="points-to-use" max="2000" onchange="applyPoints()">
+                        </div>
+                    </section>
+
+                    <!-- 5. 결제 버튼 -->
+                    <div class="text-center">
+                        <button type="button" class="btn btn-primary" onclick="processOrder()">결제하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{common/footer :: footer}"/>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+    // 주문서 스크립트 로직
+    function openPostcodeSearch() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                document.getElementById('postal-code').value = data.zonecode;
+                document.getElementById('road-address').value = data.roadAddress;
+                document.getElementById('detail-address').focus();
+            }
+        }).open();
+    }
+</script>
+</body>
+</html>
