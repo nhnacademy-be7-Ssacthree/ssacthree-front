@@ -9,5 +9,6 @@ public interface MemberService {
 
     MessageResponse memberRegister(MemberRegisterRequest request);
     MessageResponse memberLogin(MemberLoginRequest requestBody, HttpServletResponse httpServletResponse);
-
+    MessageResponse memberLogout(HttpServletResponse httpServletResponse);
+    boolean isAuthenticated();
 }
