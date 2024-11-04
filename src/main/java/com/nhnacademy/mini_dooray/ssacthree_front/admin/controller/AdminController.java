@@ -20,23 +20,23 @@ public class AdminController {
 
     @GetMapping
     public String admin() {
-        return "admin";
+        return "admin/admin";
     }
 
     @GetMapping("/main")
     public String adminMain() {
-        return "adminMainPage";
+        return "admin/adminMainPage";
     }
 
     @GetMapping("/deliveryRules")
     public String deliveryRule(Model model) {
         model.addAttribute("deliveryRules", adminService.getAllDeliveryRules());
-        return "deliveryRules";
+        return "admin/deliveryRule/deliveryRules";
     }
 
     @GetMapping("/deliveryRules/create")
     public String createDeliveryRule() {
-        return "createDeliveryRule";
+        return "admin/deliveryRule/createDeliveryRule";
     }
 
     @PostMapping("/deliveryRules/create")

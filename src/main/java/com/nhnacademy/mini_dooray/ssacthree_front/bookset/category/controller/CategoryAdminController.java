@@ -33,7 +33,7 @@ public class CategoryAdminController {
         List<CategoryInfoResponse> categories = response.getBody();
 
         model.addAttribute("categories", response.getBody());
-        return "categoryManagement";
+        return "admin/category/categoryManagement";
     }
 
     /**
@@ -45,7 +45,7 @@ public class CategoryAdminController {
         List<CategoryInfoResponse> flatCategories = categoryCommonService.flattenCategories(response.getBody()); // 평탄화된 카테고리 리스트 생성
 
         model.addAttribute("categories", flatCategories); // 모델에 추가하여 뷰로 전달
-        return "categoryAddOrEdit";
+        return "admin/category/categoryAddOrEdit";
     }
 
     /**
@@ -64,7 +64,7 @@ public class CategoryAdminController {
     public String updateCategoryForm(@PathVariable Long categoryId, Model model) {
         CategoryInfoResponse category = categoryCommonService.getCategoryById(categoryId).getBody();
         model.addAttribute("category", category);
-        return "categoryAddOrEdit";
+        return "admin/category/categoryAddOrEdit";
     }
 
     /**
