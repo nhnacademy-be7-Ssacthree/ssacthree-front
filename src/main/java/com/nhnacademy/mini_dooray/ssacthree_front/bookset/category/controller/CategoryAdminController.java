@@ -32,14 +32,6 @@ public class CategoryAdminController {
 
         List<CategoryInfoResponse> categories = response.getBody();
 
-        // todo: 디버깅용: 각 카테고리의 children 필드를 출력
-        for (CategoryInfoResponse category : categories) {
-            System.out.println("Category: " + category.getCategoryName());
-            System.out.println("Children: " + (category.getChildren() != null ? category.getChildren() : "null"));
-            String childName = category.getChildren() != null && !category.getChildren().isEmpty() ? category.getChildren().get(0).getCategoryName() : "";
-            System.out.println("Child Name: " + childName);
-        }
-
         model.addAttribute("categories", response.getBody());
         return "categoryManagement";
     }
@@ -52,12 +44,6 @@ public class CategoryAdminController {
         ResponseEntity<List<CategoryInfoResponse>> response = categoryCommonService.getAllCategories();
         List<CategoryInfoResponse> flatCategories = categoryCommonService.flattenCategories(response.getBody()); // 평탄화된 카테고리 리스트 생성
 
-        // todo: 디버깅용: 평탄화된 카테고리 리스트의 children 필드를 출력
-        for (CategoryInfoResponse category : flatCategories) {
-            System.out.println("Flat Category: " + category.getCategoryName());
-            System.out.println("Children: " + category.getChildren());
-        }
-
         model.addAttribute("categories", flatCategories); // 모델에 추가하여 뷰로 전달
         return "categoryAddOrEdit";
     }
@@ -67,10 +53,6 @@ public class CategoryAdminController {
      */
     @PostMapping("/create")
     public String createCategory(CategorySaveRequest request, Model model) {
-        // todo: 디버깅용
-        System.out.println("Category Name: " + request.getCategoryName());
-        System.out.println("Super Category ID: " + request.getSuperCategoryId());
-
         categoryAdminService.createCategory(request);
         return "redirect:/admin/categories";
     }
@@ -85,9 +67,6 @@ public class CategoryAdminController {
         return "categoryAddOrEdit";
     }
 
-    //todo: html에서는 post와 get만 지원한다고 하여 수정과 삭제를 일단 post로 했는데,
-    // put이나 delete를 쓸 수 있긴 하지만 html에서 메소드 처리가 필요하다고 함.
-    // 어떻게 할까요?
     /**
      * 카테고리 수정 요청
      */
