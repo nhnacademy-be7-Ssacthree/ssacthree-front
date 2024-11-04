@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/config :: config}">
+</head>
+
+<!--TODO : 구현하면서 하나씩 주석 지우기 ... -->
+<body>
+<!-- Header -->
+<header th:replace="~{common/loginedHeader}"/>
+
+<!-- Main Container -->
+<div class="container mypage-container py-5">
+  <div class="row">
+    <!-- Sidebar 메뉴 -->
+    <aside class="col-lg-3 mb-4">
+      <h5 class="mb-3">마이페이지</h5>
+      <ul class="list-group">
+<!--        <li class="list-group-item"><strong>회원 등급</strong>: <span th:text="${member.grade}">일반회원</span></li>-->
+<!--        <li class="list-group-item">포인트: <span th:text="${member.points}">3,000점</span></li>-->
+        <li class="list-group-item"><a href="#orders">최근 주문 내역</a></li>
+        <li class="list-group-item"><a href="#wishlist">찜 목록</a></li>
+        <li class="list-group-item"><a href="#account">나의 계좌</a></li>
+        <li class="list-group-item"><a href="#coupon">쿠폰 목록</a></li>
+        <li class="list-group-item"><a href="#address">주소록</a></li>
+        <li class="list-group-item"><a href="#withdraw">회원 탈퇴</a></li>
+      </ul>
+    </aside>
+
+    <!-- 메인 컨텐츠 -->
+    <main class="col-lg-9">
+      <!-- 회원 등급 섹션 -->
+      <section id="grade" class="mb-4">
+<!--        <h3>회원 등급: <span th:text="${member.grade}">일반회원</span></h3>-->
+        <p>3개월간 총 주문 금액이 10만원 이상일 경우 다음 등급으로 상승할 수 있습니다.</p>
+      </section>
+
+      <!-- 포인트 섹션 -->
+      <section id="points" class="mb-4">
+        <h3>포인트</h3>
+<!--        <p>현재 보유 포인트: <span th:text="${member.points}">3,000점</span></p>-->
+      </section>
+
+      <!-- 최근 주문 내역 섹션 -->
+      <section id="orders" class="mb-4">
+        <h3>최근 주문 내역</h3>
+        <table class="table table-bordered">
+          <thead>
+          <tr>
+            <th>주문일자</th>
+            <th>주문번호</th>
+            <th>상품명</th>
+            <th>상태</th>
+          </tr>
+          </thead>
+          <tbody>
+<!--          <tr th:each="order : ${recentOrders}">-->
+<!--            <td th:text="${order.date}">2024-11-01</td>-->
+<!--            <td th:text="${order.number}">123456789</td>-->
+<!--            <td th:text="${order.productName}">책 제목 예시</td>-->
+<!--            <td th:text="${order.status}">배송 완료</td>-->
+<!--          </tr>-->
+          </tbody>
+        </table>
+<!--        <a href="#" th:href="@{/orders}" class="btn btn-link">반품/교환 신청 및 조회</a>-->
+      </section>
+
+      <!-- 찜 목록 섹션 -->
+      <section id="wishlist" class="mb-4">
+        <h3>찜 목록</h3>
+        <ul class="list-group">
+<!--          <li class="list-group-item" th:each="item : ${wishlist}">-->
+<!--            <span th:text="${item.name}">상품명</span>-->
+          </li>
+        </ul>
+      </section>
+
+      <!-- 쿠폰 목록 섹션 -->
+      <section id="coupon" class="mb-4">
+        <h3>쿠폰 목록</h3>
+        <ul class="list-group">
+<!--          <li class="list-group-item" th:each="coupon : ${coupons}">-->
+<!--            <span th:text="${coupon.description}">쿠폰 설명</span>-->
+          </li>
+        </ul>
+      </section>
+
+      <!-- 나의 계좌 섹션 -->
+      <section id="account" class="mb-4">
+        <h3>나의 계좌</h3>
+<!--        <p th:text="${accountInfo}">계좌 정보가 표시됩니다.</p>-->
+      </section>
+
+      <!-- 나의 정보 섹션 -->
+      <section id="info" class="mb-4">
+        <h3>나의 정보</h3>
+<!--        <p>회원 정보가 표시됩니다. <a href="#" th:href="@{/member/info}">자세히 보기</a></p>-->
+      </section>
+
+      <!-- 주소록 섹션 -->
+      <section id="address" class="mb-4">
+        <h3>주소록</h3>
+        <ul class="list-group">
+<!--          <li class="list-group-item" th:each="address : ${addresses}">-->
+<!--            <span th:text="${address.fullAddress}">주소</span>-->
+<!--            <button class="btn btn-sm btn-danger float-end" th:onclick="'/address/delete/' + ${address.id}">삭제</button>-->
+<!--          </li>-->
+        </ul>
+      </section>
+
+      <!-- 회원 탈퇴 섹션 -->
+      <section id="withdraw" class="mb-4">
+        <h3>회원 탈퇴</h3>
+<!--        <form th:action="@{/member/withdraw}" method="post">-->
+          <button type="submit" class="btn btn-danger">탈퇴하기</button>
+        </form>
+      </section>
+    </main>
+  </div>
+</div>
+<!-- Footer -->
+<footer th:replace="~{common/footer :: footer}"/>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>
