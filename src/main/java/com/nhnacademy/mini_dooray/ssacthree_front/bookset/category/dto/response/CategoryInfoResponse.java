@@ -15,7 +15,6 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "categoryId")
 public class CategoryInfoResponse {
 
     private Long categoryId;
@@ -25,8 +24,7 @@ public class CategoryInfoResponse {
 
     private boolean categoryIsUsed;
 
-    @JsonDeserialize(using = CategoryInfoResponseDeserializer.class)
+    @Setter
     private List<CategoryInfoResponse> children = new ArrayList<>();
-
-
+    
 }
