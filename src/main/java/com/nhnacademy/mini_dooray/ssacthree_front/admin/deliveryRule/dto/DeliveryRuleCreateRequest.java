@@ -1,4 +1,4 @@
-package com.nhnacademy.mini_dooray.ssacthree_front.admin.dto;
+package com.nhnacademy.mini_dooray.ssacthree_front.admin.deliveryRule.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

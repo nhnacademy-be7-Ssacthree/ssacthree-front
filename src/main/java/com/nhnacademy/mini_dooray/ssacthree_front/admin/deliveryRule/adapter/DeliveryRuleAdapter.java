@@ -1,8 +1,8 @@
-package com.nhnacademy.mini_dooray.ssacthree_front.admin.adapter;
+package com.nhnacademy.mini_dooray.ssacthree_front.admin.deliveryRule.adapter;
 
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.dto.DeliveryRuleCreateRequest;
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.dto.DeliveryRuleGetResponse;
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.dto.DeliveryRuleUpdateRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.admin.deliveryRule.dto.DeliveryRuleCreateRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.admin.deliveryRule.dto.DeliveryRuleGetResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.admin.deliveryRule.dto.DeliveryRuleUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -15,13 +15,13 @@ import java.util.List;
 
 
 @FeignClient(name="gateway-service", url = "${admin-client.url}", contextId = "deliveryRuleClient")
-public interface AdminAdapter {
+public interface DeliveryRuleAdapter {
     @GetMapping("/deliveryRules")
     ResponseEntity<List<DeliveryRuleGetResponse>> getAllDeliveryRules();
 
-    @PostMapping("/deliveryRules/create")
-    ResponseEntity<MessageResponse> createDeliveryRule(@RequestBody DeliveryRuleCreateRequest deliveryRuleCreateRequest);
-
     @PutMapping("/deliveryRules")
     ResponseEntity<MessageResponse> updateDeliveryRule(@RequestBody DeliveryRuleUpdateRequest deliveryRuleUpdateRequest);
+
+    @PostMapping("/deliveryRules/create")
+    ResponseEntity<MessageResponse> createDeliveryRule(@RequestBody DeliveryRuleCreateRequest deliveryRuleCreateRequest);
 }
