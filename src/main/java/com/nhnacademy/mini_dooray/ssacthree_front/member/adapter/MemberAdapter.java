@@ -1,6 +1,7 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.member.adapter;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.AddressRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberLoginRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberRegisterRequest;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -22,4 +23,7 @@ public interface MemberAdapter {
 
     @PostMapping("/auth/authenticate")
     ResponseEntity<MessageResponse> memberAuthenticate();
+
+    @PostMapping("/members/address") // 주소 추가
+    ResponseEntity<MessageResponse> addNewAddress(@RequestBody AddressRequest addressRequest);
 }
