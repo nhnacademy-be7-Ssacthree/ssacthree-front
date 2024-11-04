@@ -44,7 +44,7 @@ public class AdminController {
 
     @PostMapping("/deliveryRules/create")
     public String createDeliveryRule(@Valid @ModelAttribute DeliveryRuleCreateRequest deliveryRuleCreateRequest,
-                                     BindingResult bindingResult, Model model) {
+                                     BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new ValidationFailedException(bindingResult);
         }
@@ -56,7 +56,7 @@ public class AdminController {
 
     @PostMapping("/deliveryRules/update")
     public String updateDeliveryRule(@Valid @ModelAttribute DeliveryRuleUpdateRequest deliveryRuleUpdateRequest,
-                                     BindingResult bindingResult, Model model) {
+                                     BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new ValidationFailedException(bindingResult);
         }
