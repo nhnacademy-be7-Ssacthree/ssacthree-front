@@ -41,12 +41,11 @@ public class DeliveryRuleServiceImpl implements DeliveryRuleService {
         ResponseEntity<List<DeliveryRuleGetResponse>> response = adminAdapter.getAllDeliveryRules();
 
         try {
-            if(response.getStatusCode().is2xxSuccessful()) {
+            if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             }
             throw new DeliveryRuleCreateFailedException("배송정책 조회에 실패하였습니다.");
-        }
-        catch (HttpClientErrorException | HttpServerErrorException e ) {
+        } catch (HttpClientErrorException | HttpServerErrorException e ) {
             throw new DeliveryRuleCreateFailedException("배송정책 조회에 실패하였습니다.");
         }
     }
