@@ -22,7 +22,6 @@
               <th>이름</th>
               <th>배송비</th>
               <th>할인 기준 금액</th>
-              <th>선택됨</th>
               <th>생성일</th>
               <th>관리</th>
             </tr>
@@ -33,16 +32,13 @@
               <td th:text="${rule.deliveryRuleName}">기본 배송비</td>
               <td th:text="${rule.deliveryFee}">3000</td>
               <td th:text="${rule.deliveryDiscountCost}">0</td>
-              <td th:text="${rule.deliveryRuleIsSelected ? '예' : '아니요'}">예</td>
-              <td>임시</td>
-              <td>임시</td>
-<!--              <td th:text="${#dates.format(rule.deliveryRuleCreatedAt, 'yyyy-MM-dd HH:mm')}">2024-10-29</td>-->
-<!--              <td>-->
-<!--                <button class="btn btn-warning btn-sm"-->
-<!--                        th:onclick="|location.href='/admin/deliveryRules/edit/${rule.id}'|">수정</button>-->
-<!--                <button class="btn btn-danger btn-sm"-->
-<!--                        th:onclick="|location.href='/admin/deliveryRules/delete/${rule.id}'|">삭제</button>-->
-<!--              </td>-->
+              <td th:text="${#temporals.format(rule.deliveryRuleCreatedAt, 'yyyy-MM-dd HH:mm')}">2024-10-29</td>
+              <td>
+                <form th:action="@{/admin/deliveryRules/update}" method="post">
+                  <input type="hidden" th:name="deliveryRuleId" th:value="${rule.deliveryRuleId}" />
+                  <button class="btn btn-warning btn-sm" th:if="${!rule.deliveryRuleIsSelected}" type="submit" style="padding: 0.5rem 2.625rem;">선택</button>
+                </form>
+              </td>
             </tr>
             </tbody>
           </table>

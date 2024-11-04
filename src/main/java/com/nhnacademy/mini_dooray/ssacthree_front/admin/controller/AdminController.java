@@ -1,6 +1,7 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.admin.controller;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.dto.DeliveryRuleCreateRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.admin.dto.DeliveryRuleUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.service.AdminService;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.exception.ValidationFailedException;
 import jakarta.validation.Valid;
@@ -44,11 +45,23 @@ public class AdminController {
     @PostMapping("/deliveryRules/create")
     public String createDeliveryRule(@Valid @ModelAttribute DeliveryRuleCreateRequest deliveryRuleCreateRequest,
                                      BindingResult bindingResult, Model model) {
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             throw new ValidationFailedException(bindingResult);
         }
 
         adminService.createDeliveryRule(deliveryRuleCreateRequest);
+
+        return "redirect:/admin/deliveryRules";
+    }
+
+    @PostMapping("/deliveryRules/update")
+    public String updateDeliveryRule(@Valid @ModelAttribute DeliveryRuleUpdateRequest deliveryRuleUpdateRequest,
+                                     BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            throw new ValidationFailedException(bindingResult);
+        }
+
+        adminService.updateDeliveryRule(deliveryRuleUpdateRequest);
 
         return "redirect:/admin/deliveryRules";
     }
