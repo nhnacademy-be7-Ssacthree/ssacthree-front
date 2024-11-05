@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/admin/deliveryRules")
 public class DeliveryRuleController {
 
-    private final DeliveryRuleService adminService;
+    private final DeliveryRuleService deliveryRuleService;
 
     @GetMapping
     public String deliveryRule(Model model) {
-        model.addAttribute("deliveryRules", adminService.getAllDeliveryRules());
+        model.addAttribute("deliveryRules", deliveryRuleService.getAllDeliveryRules());
         return "admin/deliveryRule/deliveryRules";
     }
 
@@ -31,7 +31,7 @@ public class DeliveryRuleController {
             throw new ValidationFailedException(bindingResult);
         }
 
-        adminService.updateDeliveryRule(deliveryRuleUpdateRequest);
+        deliveryRuleService.updateDeliveryRule(deliveryRuleUpdateRequest);
 
         return "redirect:/admin/deliveryRules";
     }
@@ -48,7 +48,7 @@ public class DeliveryRuleController {
             throw new ValidationFailedException(bindingResult);
         }
 
-        adminService.createDeliveryRule(deliveryRuleCreateRequest);
+        deliveryRuleService.createDeliveryRule(deliveryRuleCreateRequest);
 
         return "redirect:/admin/deliveryRules";
     }

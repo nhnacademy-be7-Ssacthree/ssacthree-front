@@ -16,6 +16,6 @@ public interface PointSaveRuleAdapter {
     @GetMapping("/pointSaveRules")
     ResponseEntity<List<PointSaveRuleGetResponse>> getAllPointSaveRules();
 
-    @PostMapping("/pointSaveRules/create")
+    @PostMapping("/pointSaveRules")
     ResponseEntity<MessageResponse> createPointSaveRule(@RequestBody PointSaveRuleCreateRequest pointSaveRuleCreateRequest);
 }

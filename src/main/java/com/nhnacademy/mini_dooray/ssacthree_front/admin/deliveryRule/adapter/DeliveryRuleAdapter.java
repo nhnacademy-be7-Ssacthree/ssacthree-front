@@ -21,6 +21,6 @@ public interface DeliveryRuleAdapter {
     @PutMapping("/deliveryRules")
     ResponseEntity<MessageResponse> updateDeliveryRule(@RequestBody DeliveryRuleUpdateRequest deliveryRuleUpdateRequest);
 
-    @PostMapping("/deliveryRules/create")
+    @PostMapping("/deliveryRules")
     ResponseEntity<MessageResponse> createDeliveryRule(@RequestBody DeliveryRuleCreateRequest deliveryRuleCreateRequest);
 }
