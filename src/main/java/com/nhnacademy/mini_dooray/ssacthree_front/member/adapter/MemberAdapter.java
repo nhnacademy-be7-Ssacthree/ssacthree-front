@@ -16,4 +16,10 @@ public interface MemberAdapter {
 
     @PostMapping("/auth/login")
     ResponseEntity<MessageResponse> memberLogin(@RequestBody MemberLoginRequest memberLoginRequest);
+
+    @PostMapping("/auth/logout")
+    ResponseEntity<MessageResponse> memberLogout();
+
+    @PostMapping("/auth/authenticate")
+    ResponseEntity<MessageResponse> memberAuthenticate();
 }

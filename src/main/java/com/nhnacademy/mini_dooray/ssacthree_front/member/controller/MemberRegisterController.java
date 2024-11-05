@@ -12,6 +12,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+
+/**
+ * 회원가입을 처리하는 컨트롤러
+ * @author : 김희망
+ * @date : 2024/11/03
+ */
 @Controller
 @RequiredArgsConstructor
 public class MemberRegisterController {
