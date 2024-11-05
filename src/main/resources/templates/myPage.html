@@ -29,86 +29,55 @@
     <!-- 메인 컨텐츠 -->
     <main class="col-lg-9">
       <!-- 회원 등급 섹션 -->
-      <section id="grade" class="mb-4">
-<!--        <h3>회원 등급: <span th:text="${member.grade}">일반회원</span></h3>-->
-        <p>3개월간 총 주문 금액이 10만원 이상일 경우 다음 등급으로 상승할 수 있습니다.</p>
-      </section>
+      <h3>회원 정보</h3>
+      <div class="card-body p-4">
+        <form action="/register" method="post">
 
-      <!-- 포인트 섹션 -->
-      <section id="points" class="mb-4">
-        <h3>포인트</h3>
-<!--        <p>현재 보유 포인트: <span th:text="${member.points}">3,000점</span></p>-->
-      </section>
+          <!-- Login ID -->
+          <div class="mb-3">
+            <label for="loginId" class="form-label">아이디</label>
+            <input type="text" id="loginId" name="loginId" class="form-control" placeholder="exam123" minlength="5" maxlength="20" pattern=".{5,20}" title="아이디는 5자에서 20자 사이로 입력하십시오." required>
+          </div>
 
-      <!-- 최근 주문 내역 섹션 -->
-      <section id="orders" class="mb-4">
-        <h3>최근 주문 내역</h3>
-        <table class="table table-bordered">
-          <thead>
-          <tr>
-            <th>주문일자</th>
-            <th>주문번호</th>
-            <th>상품명</th>
-            <th>상태</th>
-          </tr>
-          </thead>
-          <tbody>
-<!--          <tr th:each="order : ${recentOrders}">-->
-<!--            <td th:text="${order.date}">2024-11-01</td>-->
-<!--            <td th:text="${order.number}">123456789</td>-->
-<!--            <td th:text="${order.productName}">책 제목 예시</td>-->
-<!--            <td th:text="${order.status}">배송 완료</td>-->
-<!--          </tr>-->
-          </tbody>
-        </table>
-<!--        <a href="#" th:href="@{/orders}" class="btn btn-link">반품/교환 신청 및 조회</a>-->
-      </section>
+          <!-- Password -->
+          <div class="mb-3">
+            <label for="loginPassword" class="form-label">비밀번호</label>
+            <input type="password" id="loginPassword" name="loginPassword" class="form-control" placeholder="xxx1234" minlength="8" maxlength="20" pattern=".{8,20}" title="비밀번호는 8자에서 20자 사이로 입력하십시오." required>
+          </div>
 
-      <!-- 찜 목록 섹션 -->
-      <section id="wishlist" class="mb-4">
-        <h3>찜 목록</h3>
-        <ul class="list-group">
-<!--          <li class="list-group-item" th:each="item : ${wishlist}">-->
-<!--            <span th:text="${item.name}">상품명</span>-->
-          </li>
-        </ul>
-      </section>
+          <!-- Name -->
+          <div class="mb-3">
+            <label for="customerName" class="form-label">이름</label>
+            <input type="text" id="customerName" name="customerName" class="form-control" placeholder="홍길동" maxlength="10" required>
+          </div>
 
-      <!-- 쿠폰 목록 섹션 -->
-      <section id="coupon" class="mb-4">
-        <h3>쿠폰 목록</h3>
-        <ul class="list-group">
-<!--          <li class="list-group-item" th:each="coupon : ${coupons}">-->
-<!--            <span th:text="${coupon.description}">쿠폰 설명</span>-->
-          </li>
-        </ul>
-      </section>
+          <!-- Phone Number -->
+          <div class="mb-3">
+            <label for="customerPhoneNumber" class="form-label">전화번호</label>
+            <input type="text" id="customerPhoneNumber" name="customerPhoneNumber" class="form-control" placeholder="예) 010-3622-0514" pattern="010-[0-9]{4}-[0-9]{4}" title="010-1234-5678 형식으로 입력해 주세요" required>
+          </div>
 
-      <!-- 나의 계좌 섹션 -->
-      <section id="account" class="mb-4">
-        <h3>나의 계좌</h3>
-<!--        <p th:text="${accountInfo}">계좌 정보가 표시됩니다.</p>-->
-      </section>
+          <!-- Email -->
+          <div class="mb-3">
+            <label for="customerEmail" class="form-label">이메일</label>
+            <input type="email" id="customerEmail" name="customerEmail" class="form-control" placeholder="test@naver.com" required>
+          </div>
 
-      <!-- 나의 정보 섹션 -->
-      <section id="info" class="mb-4">
-        <h3>나의 정보</h3>
-<!--        <p>회원 정보가 표시됩니다. <a href="#" th:href="@{/member/info}">자세히 보기</a></p>-->
-      </section>
+          <!-- Birth Date -->
+          <div class="mb-3">
+            <label for="birth" class="form-label">생년월일</label>
+            <input type="text" id="birth" name="birth" class="form-control" placeholder="예) 19990101" pattern="\d{8}" title="YYYYMMDD 형식으로 입력해주세요." required>
+          </div>
 
-      <!-- 주소록 섹션 -->
-      <section id="address" class="mb-4">
-        <h3>주소록</h3>
-        <ul class="list-group">
-<!--          <li class="list-group-item" th:each="address : ${addresses}">-->
-<!--            <span th:text="${address.fullAddress}">주소</span>-->
-<!--            <button class="btn btn-sm btn-danger float-end" th:onclick="'/address/delete/' + ${address.id}">삭제</button>-->
-<!--          </li>-->
-        </ul>
-      </section>
-
+          <!-- Sign Up Button -->
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary">수정</button>
+          </div>
+        </form>
+      </div>
       <!-- 회원 탈퇴 섹션 -->
       <section id="withdraw" class="mb-4">
+        <form>
         <h3>회원 탈퇴</h3>
 <!--        <form th:action="@{/member/withdraw}" method="post">-->
           <button type="submit" class="btn btn-danger">탈퇴하기</button>

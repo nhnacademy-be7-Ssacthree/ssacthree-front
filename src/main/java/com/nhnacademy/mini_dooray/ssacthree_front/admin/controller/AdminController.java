@@ -2,7 +2,7 @@ package com.nhnacademy.mini_dooray.ssacthree_front.admin.controller;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.dto.DeliveryRuleCreateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.service.AdminService;
-import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.exception.ValidationFailedException;
+import com.nhnacademy.mini_dooray.ssacthree_front.commons.exception.exception.ValidationFailedException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
