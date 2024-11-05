@@ -24,6 +24,6 @@ public interface MemberAdapter {
     @PostMapping("/auth/authenticate")
     ResponseEntity<MessageResponse> memberAuthenticate();
 
-    @PostMapping("/members/address") // 주소 추가
+    @PostMapping("/shop/members/address") // 주소 추가
     ResponseEntity<MessageResponse> addNewAddress(@RequestBody AddressRequest addressRequest);
 }

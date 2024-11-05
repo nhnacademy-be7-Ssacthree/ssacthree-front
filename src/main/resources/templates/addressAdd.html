@@ -9,7 +9,7 @@
 <!-- 주소 추가 섹션 -->
 <section id="address" class="container my-5">
   <h3>주소 추가</h3>
-  <form th:action="@{/address}" method="post">
+  <form th:action="@{/members/address}" method="post">
     <div class="mb-3">
       <label for="addressAlias" class="form-label">주소 별칭</label>
       <input type="text" class="form-control" id="addressAlias" name="addressAlias" placeholder="예: 집, 회사" required>
@@ -17,17 +17,17 @@
     <div class="mb-3">
       <label for="sample4_postcode" class="form-label">우편번호</label>
       <div class="input-group">
-        <input type="text" class="form-control" id="sample4_postcode" name="postalCode" placeholder="우편번호" required>
+        <input type="text" class="form-control" id="sample4_postcode" name="addressPostalNumber" placeholder="우편번호" required>
         <button type="button" class="btn btn-secondary" onclick="sample4_execDaumPostcode()">우편번호 찾기</button>
       </div>
     </div>
     <div class="mb-3">
       <label for="roadAddress" class="form-label">도로명 주소</label>
-      <input type="text" class="form-control" id="sample4_roadAddress" name="roadAddress" placeholder="도로명 주소" required>
+      <input type="text" class="form-control" id="sample4_roadAddress" name="addressRoadname" placeholder="도로명 주소" required>
     </div>
     <div class="mb-3">
       <label for="detailAddress" class="form-label">상세 주소</label>
-      <input type="text" class="form-control" id="sample4_detailAddress" name="detailAddress" placeholder="상세 주소" required>
+      <input type="text" class="form-control" id="sample4_detailAddress" name="addressDetail" placeholder="상세 주소" required>
     </div>
     <button type="submit" class="btn btn-primary">주소 추가</button>
   </form>
