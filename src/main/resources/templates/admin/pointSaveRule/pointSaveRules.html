@@ -36,6 +36,7 @@
                   <input type="hidden" name="_method" value="put"/>
                   <input type="hidden" name="pointSaveRuleId" th:value="${rule.pointSaveRuleId}" />
                   <button class="btn btn-warning btn-sm" th:if="${!rule.pointSaveRuleIsSelected}" type="submit" style="padding: 0.5rem 2.625rem;">선택</button>
+                  <button class="btn btn-warning btn-sm" th:if="${rule.pointSaveRuleIsSelected}" type="submit" style="padding: 0.5rem 2.625rem; background-color: darkturquoise;">해제</button>
                 </form>
               </td>
             </tr>

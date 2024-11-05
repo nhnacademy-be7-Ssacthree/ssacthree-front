@@ -3,6 +3,7 @@ package com.nhnacademy.mini_dooray.ssacthree_front.admin.pointSaveRule.service.i
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.pointSaveRule.adapter.PointSaveRuleAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.pointSaveRule.dto.PointSaveRuleCreateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.pointSaveRule.dto.PointSaveRuleGetResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.admin.pointSaveRule.dto.PointSaveRuleUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.pointSaveRule.exception.PointSaveRuleCreateFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.pointSaveRule.service.PointSaveRuleService;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
@@ -18,11 +19,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PointSaveRuleServiceImpl implements PointSaveRuleService {
 
-    private final PointSaveRuleAdapter adminAdapter;
+    private final PointSaveRuleAdapter pointSaveRuleAdapter;
 
     @Override
     public List<PointSaveRuleGetResponse> getAllPointSaveRules() {
-        ResponseEntity<List<PointSaveRuleGetResponse>> response = adminAdapter.getAllPointSaveRules();
+        ResponseEntity<List<PointSaveRuleGetResponse>> response = pointSaveRuleAdapter.getAllPointSaveRules();
 
         try {
             if (response.getStatusCode().is2xxSuccessful()) {
@@ -36,7 +37,7 @@ public class PointSaveRuleServiceImpl implements PointSaveRuleService {
 
     @Override
     public MessageResponse createPointSaveRule(PointSaveRuleCreateRequest pointSaveRuleCreateRequest) {
-        ResponseEntity<MessageResponse> response = adminAdapter.createPointSaveRule(pointSaveRuleCreateRequest);
+        ResponseEntity<MessageResponse> response = pointSaveRuleAdapter.createPointSaveRule(pointSaveRuleCreateRequest);
 
         try {
             if (response.getStatusCode().is2xxSuccessful()) {
@@ -45,6 +46,20 @@ public class PointSaveRuleServiceImpl implements PointSaveRuleService {
             throw new PointSaveRuleCreateFailedException("포인트 적립 정책 생성에 실패하였습니다.");
         } catch (HttpClientErrorException | HttpServerErrorException e) {
             throw new PointSaveRuleCreateFailedException("포인트 적립 정책 생성에 실패하였습니다.");
+        }
+    }
+
+    @Override
+    public MessageResponse updatePointSaveRule(PointSaveRuleUpdateRequest pointSaveRuleUpdateRequest) {
+        ResponseEntity<MessageResponse> response = pointSaveRuleAdapter.updatePointSaveRule(pointSaveRuleUpdateRequest);
+
+        try {
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return response.getBody();
+            }
+            throw new PointSaveRuleCreateFailedException("포인트 적립 정책 수정에 실패하였습니다.");
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            throw new PointSaveRuleCreateFailedException("포인트 적립 정책 수정에 실패하였습니다.");
         }
     }
 }
