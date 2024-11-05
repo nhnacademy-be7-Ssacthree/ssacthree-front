@@ -21,14 +21,7 @@ public class MemberMyPageController {
     public String myPage(Model model, HttpServletRequest request) {
 
         memberService.getMemberInfo(request);
-
-        model.addAttribute("member");
-        model.addAttribute("recentOrders");
-        model.addAttribute("wishlist");
-
-        model.addAttribute("coupons");
-        model.addAttribute("accountInfo");
-        model.addAttribute("addresses");
+        model.addAttribute("memberInfo", memberService.getMemberInfo(request));
         return "myPage";
     }
 }
