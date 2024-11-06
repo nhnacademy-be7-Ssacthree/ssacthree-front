@@ -8,6 +8,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.exception.Autho
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.service.AuthorService;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthorServiceImpl implements AuthorService {
     private static final String AUTHOR_SEARCH_ERROR = "작가 정보 조회에 실패했습니다.";
     private static final String AUTHOR_CREATE_ERROR = "작가 정보 생성에 실패했습니다.";
@@ -82,7 +84,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public MessageResponse deleteAuthor(long authorId){
-        ResponseEntity<MessageResponse> response = authorAdapter.deleteAuthor();
+        ResponseEntity<MessageResponse> response = authorAdapter.deleteAuthor(authorId);
 
         try{
             if(response.getStatusCode().is2xxSuccessful()){

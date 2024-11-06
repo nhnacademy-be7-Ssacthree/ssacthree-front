@@ -30,7 +30,7 @@ public class AuthorController {
     }
 
     //기본 값 나오게...
-    @GetMapping("/update/{authorId}")
+    @GetMapping("/{authorId}")
     public String updateAuthorForm(@PathVariable long authorId, Model model) {
         AuthorUpdateRequest authorUpdateRequest = authorService.getAuthorById(authorId);
         model.addAttribute("authorUpdateRequest", authorUpdateRequest);
@@ -49,7 +49,7 @@ public class AuthorController {
         return "redirect:/admin/authors";
     }
 
-    @PostMapping("/update")
+    @PostMapping
     public String updateAuthor(@Valid @ModelAttribute AuthorUpdateRequest authorUpdateRequest,
                                BindingResult bindingResult, Model model){
         if(bindingResult.hasErrors()){
@@ -60,8 +60,8 @@ public class AuthorController {
         return "redirect:/admin/authors";
     }
 
-    @PostMapping("/delete/{authorId}")
-    public String deleteAuthor(@PathVariable long authorId) {
+    @PostMapping("/{authorId}")
+    public String deleteAuthor(@PathVariable(name = "authorId") Long authorId) {
         authorService.deleteAuthor(authorId);
         return "redirect:/admin/authors";
     }

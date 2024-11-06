@@ -17,14 +17,14 @@ public interface AuthorAdapter {
     @GetMapping("/authors")
     ResponseEntity<List<AuthorGetResponse>> getAllAuthors();
 
-    @PostMapping("/authors/create")
+    @PostMapping("/authors")
     ResponseEntity<MessageResponse> createAuthor(@RequestBody AuthorCreateRequest authorCreateRequest);
 
-    @PostMapping("/authors/update")
+    @PutMapping("/authors")
     ResponseEntity<MessageResponse> updateAuthor(@RequestBody AuthorUpdateRequest authorUpdateRequest);
 
-    @DeleteMapping("/authors/delete}")
-    ResponseEntity<MessageResponse> deleteAuthor();
+    @DeleteMapping("/authors/{authorId}")
+    ResponseEntity<MessageResponse> deleteAuthor(@PathVariable long authorId);
 
     @GetMapping("/authors/{authorId}")
     ResponseEntity<AuthorUpdateRequest> getAuthorById(@PathVariable long authorId);

@@ -16,7 +16,8 @@
                     <h3>작가 정보 수정</h3>
                 </div>
                 <div class="card-body">
-                    <form th:action="@{/admin/authors/update}" th:method="post" th:object="${authorUpdateRequest}">
+                    <form th:action="@{/admin/authors}" th:method="post" th:object="${authorUpdateRequest}">
+                        <input type="hidden" th:field="*{authorId}" class="form-control">
                         <div class="mb-3">
                             <label for="authorName" class="form-label">작가 이름</label>
                             <input type="text" th:field="*{authorName}" class="form-control" id="authorName" required>
@@ -28,12 +29,8 @@
                         <div class="text-center">
                             <button type="submit" class="btn btn-primary">수정</button>
                             <a href="/admin/authors" class="btn btn-secondary">취소</a>
-                            <form th:action="@{/admin/authors/delete/{authorId}(authorId=${authorUpdateRequest.authorId})}" th:method="post" class="d-inline">
-                                <button class="btn btn-danger" type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
-                            </form>
                         </div>
                     </form>
-
                 </div>
             </div>
         </div>

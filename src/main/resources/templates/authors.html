@@ -30,10 +30,10 @@
                             <td th:text="${author.authorName}"></td>
                             <td th:text="${author.authorInfo}"></td>
                             <td>
-                                <a th:href="@{/admin/authors/update/{authorId}(authorId=${author.authorId})}">수정</a>
+                                <a th:href="@{/admin/authors/{authorId}(authorId=${author.authorId})}">수정</a>
                             </td>
                             <td>
-                                <form th:action="@{/admin/authors/delete}" method="post" class="d-inline">
+                                <form th:action="@{/admin/authors/{authorId}(authorId=${author.authorId})}" method="post" class="d-inline">
                                     <input type="hidden" name="authorId" th:value="${author.authorId}" />
                                     <button class="btn btn-danger" type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
                                 </form>
