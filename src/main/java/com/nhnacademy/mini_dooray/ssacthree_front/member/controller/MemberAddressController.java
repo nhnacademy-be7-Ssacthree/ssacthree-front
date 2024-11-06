@@ -21,7 +21,7 @@ public class MemberAddressController {
     @PostMapping("/address")
     public String addNewAddress(@Valid @ModelAttribute AddressRequest addressRequest) {
         addressService.addNewAddress(addressRequest);  // API 서버로 요청 전달
-        return "redirect:/myPage";
+        return "redirect:/my-page";
     }
 
     @GetMapping("/address") //주소 추가 페이지로 이동
