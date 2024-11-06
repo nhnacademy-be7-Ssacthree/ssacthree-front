@@ -1,4 +1,4 @@
-package com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.exception;
+package com.nhnacademy.mini_dooray.ssacthree_front.commons.exception.exception;
 
 import java.util.stream.Collectors;
 import org.springframework.validation.BindingResult;
