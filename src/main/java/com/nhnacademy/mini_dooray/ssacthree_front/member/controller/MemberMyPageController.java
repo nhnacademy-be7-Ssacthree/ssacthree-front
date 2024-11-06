@@ -1,6 +1,8 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.member.controller;
 
+import com.nhnacademy.mini_dooray.ssacthree_front.commons.aop.annotation.LoginRequired;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.MemberService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
