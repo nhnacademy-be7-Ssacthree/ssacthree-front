@@ -1,13 +1,15 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.member.adapter;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
-import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.AddressRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberLoginRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberRegisterRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 @FeignClient(name="gateway-service", url = "${member.url}",contextId = "memberClient")
 public interface MemberAdapter {
@@ -18,12 +20,12 @@ public interface MemberAdapter {
     @PostMapping("/auth/login")
     ResponseEntity<MessageResponse> memberLogin(@RequestBody MemberLoginRequest memberLoginRequest);
 
+
+
     @PostMapping("/auth/logout")
     ResponseEntity<MessageResponse> memberLogout();
 
-    @PostMapping("/auth/authenticate")
-    ResponseEntity<MessageResponse> memberAuthenticate();
+    @GetMapping("/shop/members/my-page")
+    ResponseEntity<MemberInfoResponse> memberInfo(@RequestHeader("Authorization") String authorizationHeader);
 
-    @PostMapping("/shop/members/address") // 주소 추가
-    ResponseEntity<MessageResponse> addNewAddress(@RequestBody AddressRequest addressRequest);
 }

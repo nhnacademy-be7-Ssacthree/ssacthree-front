@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -15,18 +14,12 @@ public class MemberMyPageController {
 
     private final MemberService memberService;
 
-    @GetMapping("/myPage")
-    public String myPage(Model model) {
-//        if(!memberService.isAuthenticated()) {
-//            return "redirect:/";
-//        }
-        model.addAttribute("member");
-        model.addAttribute("recentOrders");
-        model.addAttribute("wishlist");
+    @LoginRequired
+    @GetMapping("/my-page")
+    public String myPage(Model model, HttpServletRequest request) {
 
-        model.addAttribute("coupons");
-        model.addAttribute("accountInfo");
-        model.addAttribute("addresses");
+        memberService.getMemberInfo(request);
+        model.addAttribute("memberInfo", memberService.getMemberInfo(request));
         return "myPage";
     }
 }
