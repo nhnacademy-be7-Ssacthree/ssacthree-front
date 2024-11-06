@@ -32,7 +32,7 @@
               <td th:text="${rule.pointSaveType}">기본</td>
               <td th:text="${#temporals.format(rule.pointSaveRuleGenerateDate, 'yyyy-MM-dd HH:mm')}">2024-10-29</td>
               <td>
-                <form th:action="@{/admin/pointSaveRules}" method="post">
+                <form th:action="@{/admin/point-save-rules}" method="post">
                   <input type="hidden" name="pointSaveRuleId" th:value="${rule.pointSaveRuleId}" />
                   <button class="btn btn-warning btn-sm" th:if="${!rule.pointSaveRuleIsSelected}" type="submit" style="padding: 0.5rem 2.625rem;">선택</button>
                   <button class="btn btn-warning btn-sm" th:if="${rule.pointSaveRuleIsSelected}" type="submit" style="padding: 0.5rem 2.625rem; background-color: darkturquoise;">해제</button>
@@ -43,7 +43,7 @@
           </table>
         </div>
         <div class="card-footer text-center">
-          <button class="btn btn-primary" th:onclick="|location.href='@{/admin/pointSaveRules/create}'|">새 포인트 정책 추가</button>
+          <button class="btn btn-primary" th:onclick="|location.href='@{/admin/point-save-rules/create}'|">새 포인트 정책 추가</button>
         </div>
       </div>
     </div>

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/admin/pointSaveRules")
+@RequestMapping("/admin/point-save-rules")
 public class PointSaveRuleController {
 
     private final PointSaveRuleService pointSaveRuleService;
@@ -34,7 +34,7 @@ public class PointSaveRuleController {
 
         pointSaveRuleService.updatePointSaveRule(pointSaveRuleUpdateRequest);
 
-        return "redirect:/admin/pointSaveRules";
+        return "redirect:/admin/point-save-rules";
     }
 
     @GetMapping("/create")
@@ -51,6 +51,6 @@ public class PointSaveRuleController {
 
         pointSaveRuleService.createPointSaveRule(pointSaveRuleCreateRequest);
 
-        return "redirect:/admin/pointSaveRules";
+        return "redirect:/admin/point-save-rules";
     }
 }

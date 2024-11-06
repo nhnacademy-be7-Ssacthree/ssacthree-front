@@ -19,11 +19,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DeliveryRuleServiceImpl implements DeliveryRuleService {
 
-    private final DeliveryRuleAdapter deliveryRUleAdapter;
+    private final DeliveryRuleAdapter deliveryRuleAdapter;
 
     @Override
     public MessageResponse createDeliveryRule(DeliveryRuleCreateRequest deliveryRuleCreateRequest) {
-        ResponseEntity<MessageResponse> response = deliveryRUleAdapter.createDeliveryRule(deliveryRuleCreateRequest);
+        ResponseEntity<MessageResponse> response = deliveryRuleAdapter.createDeliveryRule(deliveryRuleCreateRequest);
 
         try {
             if(response.getStatusCode().is2xxSuccessful()) {
@@ -38,7 +38,7 @@ public class DeliveryRuleServiceImpl implements DeliveryRuleService {
 
     @Override
     public List<DeliveryRuleGetResponse> getAllDeliveryRules() {
-        ResponseEntity<List<DeliveryRuleGetResponse>> response = deliveryRUleAdapter.getAllDeliveryRules();
+        ResponseEntity<List<DeliveryRuleGetResponse>> response = deliveryRuleAdapter.getAllDeliveryRules();
 
         try {
             if (response.getStatusCode().is2xxSuccessful()) {
@@ -52,7 +52,7 @@ public class DeliveryRuleServiceImpl implements DeliveryRuleService {
 
     @Override
     public MessageResponse updateDeliveryRule(DeliveryRuleUpdateRequest deliveryRuleUpdateRequest) {
-        ResponseEntity<MessageResponse> response = deliveryRUleAdapter.updateDeliveryRule(deliveryRuleUpdateRequest);
+        ResponseEntity<MessageResponse> response = deliveryRuleAdapter.updateDeliveryRule(deliveryRuleUpdateRequest);
 
         try {
             if(response.getStatusCode().is2xxSuccessful()) {
