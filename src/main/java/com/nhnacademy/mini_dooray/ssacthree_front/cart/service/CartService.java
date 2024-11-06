@@ -23,6 +23,7 @@ public class CartService {
 
     private final RedisTemplate<String, Object> redisTemplate; // RedisTemplate<String, Object>로 변경
     private static final long CART_EXPIRATION_HOURS = 3;
+    private static final String CARTID = "cartId";
 
     /**
      *
@@ -42,12 +43,12 @@ public class CartService {
      * 빈 장바구니 초기화 및 cartId 관리
      */
     public List<CartItem> initializeCart(HttpSession session) {
-        String cartId = (String) session.getAttribute("cartId");
+        String cartId = (String) session.getAttribute(CARTID);
 
         // 세션에 cartId가 없으면 새로 생성
         if (cartId == null) {
             cartId = generateCartId(); // 새로운 cartId 생성
-            session.setAttribute("cartId", cartId); // 세션에 cartId 저장
+            session.setAttribute(CARTID, cartId); // 세션에 cartId 저장
             // 빈 장바구니 생성 후 특정 물품 추가
             List<CartItem> cartItems = createEmptyCart(cartId); // 빈 장바구니 생성
             addDefaultItems(cartItems); // 기본 물품 추가(확인용 나중에 삭제 예정)
@@ -113,7 +114,7 @@ public class CartService {
      * 도서의 수량 업데이트
      */
     public void updateItemQuantity(HttpSession session, Long itemId, int quantityChange) { //수량 추가
-        String cartId = (String) session.getAttribute("cartId");
+        String cartId = (String) session.getAttribute(CARTID);
         List<CartItem> cartItems = getCartItemsByCartId(cartId);
 
         // 수량이 변경된 새 CartItem 리스트 생성
@@ -142,7 +143,7 @@ public class CartService {
      */
     public void deleteItem(HttpSession session, Long itemId) {
         // 세션에서 cartId 가져오기
-        String cartId = (String) session.getAttribute("cartId");
+        String cartId = (String) session.getAttribute(CARTID);
 
         if (cartId != null) {
             // Redis에서 현재 장바구니 항목 가져오기
@@ -173,7 +174,7 @@ public class CartService {
      * 장바구니에 새로운 책을 등록할 때 쓰는 서비스
      */
     public void addNewBook(HttpSession session, Long itemId, String title, int price, byte[] image) {
-        String cartId = (String) session.getAttribute("cartId");
+        String cartId = (String) session.getAttribute(CARTID);
         List<CartItem> cartItems = getCartItemsByCartId(cartId);
         for (CartItem cartItem : cartItems) {
             if(cartItem.getId() == itemId) { //만약에 똑같은 도서 가져오면 개수만 늘려주기
