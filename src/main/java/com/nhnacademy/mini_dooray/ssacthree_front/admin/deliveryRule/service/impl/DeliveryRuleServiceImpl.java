@@ -5,6 +5,8 @@ import com.nhnacademy.mini_dooray.ssacthree_front.admin.deliveryRule.dto.Deliver
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.deliveryRule.dto.DeliveryRuleGetResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.deliveryRule.dto.DeliveryRuleUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.deliveryRule.exception.DeliveryRuleCreateFailedException;
+import com.nhnacademy.mini_dooray.ssacthree_front.admin.deliveryRule.exception.DeliveryRuleGetFailedException;
+import com.nhnacademy.mini_dooray.ssacthree_front.admin.deliveryRule.exception.DeliveryRuleUpdateFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.deliveryRule.service.DeliveryRuleService;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
 import lombok.RequiredArgsConstructor;
@@ -44,9 +46,9 @@ public class DeliveryRuleServiceImpl implements DeliveryRuleService {
             if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             }
-            throw new DeliveryRuleCreateFailedException("배송정책 조회에 실패하였습니다.");
+            throw new DeliveryRuleGetFailedException("배송정책 조회에 실패하였습니다.");
         } catch (HttpClientErrorException | HttpServerErrorException e ) {
-            throw new DeliveryRuleCreateFailedException("배송정책 조회에 실패하였습니다.");
+            throw new DeliveryRuleGetFailedException("배송정책 조회에 실패하였습니다.");
         }
     }
 
@@ -58,10 +60,10 @@ public class DeliveryRuleServiceImpl implements DeliveryRuleService {
             if(response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             }
-            throw new DeliveryRuleCreateFailedException("배송정책 수정에 실패하였습니다.");
+            throw new DeliveryRuleUpdateFailedException("배송정책 수정에 실패하였습니다.");
         }
         catch (HttpClientErrorException | HttpServerErrorException e ) {
-            throw new DeliveryRuleCreateFailedException("배송정책 수정에 실패하였습니다.");
+            throw new DeliveryRuleUpdateFailedException("배송정책 수정에 실패하였습니다.");
         }
     }
 }

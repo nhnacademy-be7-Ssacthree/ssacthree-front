@@ -5,6 +5,8 @@ import com.nhnacademy.mini_dooray.ssacthree_front.admin.pointSaveRule.dto.PointS
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.pointSaveRule.dto.PointSaveRuleGetResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.pointSaveRule.dto.PointSaveRuleUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.pointSaveRule.exception.PointSaveRuleCreateFailedException;
+import com.nhnacademy.mini_dooray.ssacthree_front.admin.pointSaveRule.exception.PointSaveRuleGetFailedException;
+import com.nhnacademy.mini_dooray.ssacthree_front.admin.pointSaveRule.exception.PointSaveRuleUpdateFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.pointSaveRule.service.PointSaveRuleService;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +31,9 @@ public class PointSaveRuleServiceImpl implements PointSaveRuleService {
             if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             }
-            throw new PointSaveRuleCreateFailedException("포인트 적립 정책 조회에 실패하였습니다.");
+            throw new PointSaveRuleGetFailedException("포인트 적립 정책 조회에 실패하였습니다.");
         } catch (HttpClientErrorException | HttpServerErrorException e) {
-            throw new PointSaveRuleCreateFailedException("포인트 적립 정책 조회에 실패하였습니다.");
+            throw new PointSaveRuleGetFailedException("포인트 적립 정책 조회에 실패하였습니다.");
         }
     }
 
@@ -57,9 +59,9 @@ public class PointSaveRuleServiceImpl implements PointSaveRuleService {
             if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             }
-            throw new PointSaveRuleCreateFailedException("포인트 적립 정책 수정에 실패하였습니다.");
+            throw new PointSaveRuleUpdateFailedException("포인트 적립 정책 수정에 실패하였습니다.");
         } catch (HttpClientErrorException | HttpServerErrorException e) {
-            throw new PointSaveRuleCreateFailedException("포인트 적립 정책 수정에 실패하였습니다.");
+            throw new PointSaveRuleUpdateFailedException("포인트 적립 정책 수정에 실패하였습니다.");
         }
     }
 }
