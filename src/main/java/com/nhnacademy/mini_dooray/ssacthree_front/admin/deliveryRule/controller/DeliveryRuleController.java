@@ -24,7 +24,7 @@ public class DeliveryRuleController {
         return "admin/deliveryRule/deliveryRules";
     }
 
-    @PutMapping
+    @PostMapping
     public String updateDeliveryRule(@Valid @ModelAttribute DeliveryRuleUpdateRequest deliveryRuleUpdateRequest,
                                      BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
