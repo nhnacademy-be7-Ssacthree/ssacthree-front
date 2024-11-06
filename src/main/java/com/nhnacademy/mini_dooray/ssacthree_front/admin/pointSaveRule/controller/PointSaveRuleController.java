@@ -24,7 +24,7 @@ public class PointSaveRuleController {
         return "admin/pointSaveRule/pointSaveRules";
     }
 
-    @PutMapping
+    @PostMapping
     public String updatePointSaveRule(@Valid @ModelAttribute PointSaveRuleUpdateRequest pointSaveRuleUpdateRequest,
                                      BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
