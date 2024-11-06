@@ -25,7 +25,7 @@ public interface MemberAdapter {
     @PostMapping("/auth/logout")
     ResponseEntity<MessageResponse> memberLogout();
 
-    @GetMapping("/shop/members/mypage")
+    @GetMapping("/shop/members/my-page")
     ResponseEntity<MemberInfoResponse> memberInfo(@RequestHeader("Authorization") String authorizationHeader);
 
 }

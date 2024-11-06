@@ -17,7 +17,7 @@ public class MemberMyPageController {
     private final MemberService memberService;
 
     @LoginRequired
-    @GetMapping("/myPage")
+    @GetMapping("/my-page")
     public String myPage(Model model, HttpServletRequest request) {
 
         memberService.getMemberInfo(request);
