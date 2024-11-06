@@ -2,8 +2,6 @@ package com.nhnacademy.mini_dooray.ssacthree_front.order.controller;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.domain.CartItem;
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.service.CartService;
-import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.GuestCartInfoResponse;
-import com.nhnacademy.mini_dooray.ssacthree_front.order.service.OrderService;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.service.impl.OrderServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -13,12 +11,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.net.http.HttpRequest;
 import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/orderSheet")
+@RequestMapping("/orders")
 public class OrderController {
 
     private OrderServiceImpl orderService;
@@ -44,7 +41,7 @@ public class OrderController {
 
         // 리스트 형식으로 레디스의 상품 정보들 들어감.
         model.addAttribute("guestCartInfo", cartItems);
-        return "/order/ordersheet";
+        return "order/orderSheet";
     }
 
     // 2. 비회원, 회원 주문 구현
