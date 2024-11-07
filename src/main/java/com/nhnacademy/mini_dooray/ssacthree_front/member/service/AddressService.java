@@ -12,4 +12,6 @@ public interface AddressService {
     List<AddressResponse> getAddresses(HttpServletRequest request);
 
     void deleteAddress(long addressId, HttpServletRequest request);
+
+    String getAccessToken(HttpServletRequest request);
 }
