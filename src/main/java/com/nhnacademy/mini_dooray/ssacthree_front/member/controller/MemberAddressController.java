@@ -64,7 +64,7 @@ public class MemberAddressController {
      * @return 해당 주소 삭제 처리
      */
     @PostMapping("/address/{id}") // 주소 삭제
-    public String deleteAddress(@PathVariable("id") long addressId, HttpServletRequest request) {
+    public String deleteAddress(@PathVariable("id") Long addressId, HttpServletRequest request) {
         addressService.deleteAddress(addressId,request);
         return "redirect:/address-page";
     }

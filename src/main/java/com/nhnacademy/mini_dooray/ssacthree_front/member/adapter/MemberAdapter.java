@@ -39,6 +39,6 @@ public interface MemberAdapter {
 
     @DeleteMapping("/shop/members/address/{id}")
     ResponseEntity<Void> deleteAddress(@RequestHeader("Authorization") String authorizationHeader,
-        @PathVariable long id);
+        @PathVariable Long id);
 
 }
