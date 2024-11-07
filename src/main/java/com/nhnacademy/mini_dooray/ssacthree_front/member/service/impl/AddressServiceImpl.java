@@ -26,19 +26,7 @@ public class AddressServiceImpl implements AddressService {
 
 
     public AddressResponse addNewAddress(HttpServletRequest request, AddressRequest addressRequest) {
-        // 쿠키에서 access-token 추출
-        Cookie[] cookies = request.getCookies();
-        String accessToken = null;
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("access-token")) {
-                accessToken = cookie.getValue();
-                break;
-            }
-        }
-
-        if (accessToken == null) {
-            throw new RuntimeException("Access token이 존재하지 않습니다.");
-        }
+        String accessToken = getAccessToken(request);
 
         try {
             // Authorization 헤더에 Bearer 토큰 포함하여 요청 전송
@@ -57,18 +45,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public List<AddressResponse> getAddresses(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        String accessToken = null;
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("access-token")) {
-                accessToken = cookie.getValue();
-                break;
-            }
-        }
-
-        if (accessToken == null) {
-            throw new RuntimeException("Access token이 존재하지 않습니다.");
-        }
+        String accessToken = getAccessToken(request);
 
         try {
             // Authorization 헤더에 Bearer 토큰 포함하여 요청 전송
@@ -87,6 +64,22 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public void deleteAddress(long addressId, HttpServletRequest request) {
+        String accessToken = getAccessToken(request);
+        try {
+            // Authorization 헤더에 Bearer 토큰 포함하여 요청 전송
+            ResponseEntity<Void> response = memberAdapter.deleteAddress(
+                "Bearer " + accessToken,addressId);
+
+            if (!response.getStatusCode().is2xxSuccessful()) {
+                throw new AddressFailedException("주소 삭제에 실패하였습니다.");
+            }
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            throw new AddressFailedException("주소 삭제에 실패하였습니다.");
+        }
+
+    }
+
+    public String getAccessToken(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         String accessToken = null;
         for (Cookie cookie : cookies) {
@@ -95,22 +88,6 @@ public class AddressServiceImpl implements AddressService {
                 break;
             }
         }
-
-        if (accessToken == null) {
-            throw new RuntimeException("Access token이 존재하지 않습니다.");
-        }
-
-        try {
-            // Authorization 헤더에 Bearer 토큰 포함하여 요청 전송
-            ResponseEntity<Void> response = memberAdapter.deleteAddress(
-                "Bearer " + accessToken,addressId);
-
-            if (!response.getStatusCode().is2xxSuccessful()) {
-                throw new AddressFailedException("주소 응답에 실패하였습니다.");
-            }
-        } catch (HttpClientErrorException | HttpServerErrorException e) {
-            throw new AddressFailedException("주소 응답에 실패하였습니다.");
-        }
-
+        return accessToken;
     }
 }
