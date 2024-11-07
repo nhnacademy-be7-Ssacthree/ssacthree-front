@@ -15,8 +15,8 @@
     <aside class="col-lg-3 mb-4">
       <h5 class="mb-3">마이페이지</h5>
       <ul class="list-group">
-<!--        <li class="list-group-item"><strong>회원 등급</strong>: <span th:text="${member.grade}">일반회원</span></li>-->
-<!--        <li class="list-group-item">포인트: <span th:text="${member.points}">3,000점</span></li>-->
+        <!--        <li class="list-group-item"><strong>회원 등급</strong>: <span th:text="${member.grade}">일반회원</span></li>-->
+        <!--        <li class="list-group-item">포인트: <span th:text="${member.points}">3,000점</span></li>-->
         <li class="list-group-item"><a href="#orders">최근 주문 내역</a></li>
         <li class="list-group-item"><a href="#wishlist">찜 목록</a></li>
         <li class="list-group-item"><a href="#account">나의 계좌</a></li>
@@ -31,42 +31,44 @@
       <!-- 회원 등급 섹션 -->
       <h3>회원 정보</h3>
       <div class="card-body p-4">
-        <form action="/register" method="post">
+        <form action="/members/my-page/update" method="post">
 
           <!-- Login ID (Readonly) -->
           <div class="mb-3">
             <label for="loginId" class="form-label">아이디</label>
-            <input type="text" id="loginId" name="loginId" class="form-control" th:value="${memberInfo.memberLoginId}" readonly>
-          </div>
-
-          <!-- Password -->
-          <div class="mb-3">
-            <label for="loginPassword" class="form-label">비밀번호</label>
-            <input type="password" id="loginPassword" name="loginPassword" class="form-control" minlength="8" maxlength="20" pattern=".{8,20}" title="비밀번호는 8자에서 20자 사이로 입력하십시오." required>
+            <input type="text" id="loginId" name="loginId" class="form-control"
+                   th:value="${memberInfo.memberLoginId}" readonly>
           </div>
 
           <!-- Name -->
           <div class="mb-3">
             <label for="customerName" class="form-label">이름</label>
-            <input type="text" id="customerName" name="customerName" class="form-control" th:value="${memberInfo.customerName}" maxlength="10" required>
+            <input type="text" id="customerName" name="customerName" class="form-control"
+                   th:value="${memberInfo.customerName}" maxlength="10" required>
           </div>
 
           <!-- Phone Number -->
           <div class="mb-3">
             <label for="customerPhoneNumber" class="form-label">전화번호</label>
-            <input type="text" id="customerPhoneNumber" name="customerPhoneNumber" class="form-control" placeholder="예) 010-3622-0514" th:value="${memberInfo.customerPhoneNumber}" pattern="010-[0-9]{4}-[0-9]{4}" title="010-1234-5678 형식으로 입력해 주세요" required>
+            <input type="text" id="customerPhoneNumber" name="customerPhoneNumber"
+                   class="form-control" placeholder="예) 010-3622-0514"
+                   th:value="${memberInfo.customerPhoneNumber}" pattern="010-[0-9]{4}-[0-9]{4}"
+                   title="010-1234-5678 형식으로 입력해 주세요" required>
           </div>
 
           <!-- Email -->
           <div class="mb-3">
             <label for="customerEmail" class="form-label">이메일</label>
-            <input type="email" id="customerEmail" name="customerEmail" class="form-control" th:value="${memberInfo.customerEmail}" placeholder="test@naver.com" required>
+            <input type="email" id="customerEmail" name="customerEmail" class="form-control"
+                   th:value="${memberInfo.customerEmail}" placeholder="test@naver.com" required>
           </div>
 
           <!-- Birth Date -->
           <div class="mb-3">
             <label for="birth" class="form-label">생년월일</label>
-            <input type="text" id="birth" name="birth" class="form-control" placeholder="예) 19990101" th:value="${memberInfo.memberBirthdate}" pattern="\d{8}" title="YYYYMMDD 형식으로 입력해주세요." required>
+            <input type="text" id="birth" name="birth" class="form-control"
+                   placeholder="예) 19990101" th:value="${memberInfo.memberBirthdate}"
+                   pattern="\d{8}" title="YYYYMMDD 형식으로 입력해주세요." required>
           </div>
 
           <!-- Sign Up Button -->
@@ -78,8 +80,8 @@
       <!-- 회원 탈퇴 섹션 -->
       <section id="withdraw" class="mb-4">
         <form>
-        <h3>회원 탈퇴</h3>
-<!--        <form th:action="@{/member/withdraw}" method="post">-->
+          <h3>회원 탈퇴</h3>
+          <!--        <form th:action="@{/member/withdraw}" method="post">-->
           <button type="submit" class="btn btn-danger">탈퇴하기</button>
         </form>
       </section>

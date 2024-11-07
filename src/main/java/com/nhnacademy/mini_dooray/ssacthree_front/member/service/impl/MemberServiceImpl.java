@@ -3,6 +3,7 @@ package com.nhnacademy.mini_dooray.ssacthree_front.member.service.impl;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.adapter.MemberAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberLoginRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberRegisterRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.LoginFailedException;
@@ -16,7 +17,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -26,6 +26,7 @@ import org.springframework.web.client.HttpServerErrorException;
 @RequiredArgsConstructor
 @Slf4j
 public class MemberServiceImpl implements MemberService {
+
 
     private final MemberAdapter memberAdapter;
 
@@ -103,6 +104,30 @@ public class MemberServiceImpl implements MemberService {
             throw new RuntimeException("회원 정보를 불러올 수 없습니다.");
         }
 
-        return null;
+        throw new RuntimeException("회원 정보를 불러올 수 없습니다.");
     }
+
+    @Override
+    public MessageResponse memberInfoUpdate(MemberInfoUpdateRequest requestBody,
+        HttpServletRequest request) {
+
+        String accessToken = null;
+        for (Cookie cookie : request.getCookies()) {
+            if (cookie.getName().equals("access-token")) {
+                accessToken = cookie.getValue();
+            }
+        }
+        try {
+            ResponseEntity<MessageResponse> response = memberAdapter.memberInfoUpdate(
+                "Bearer " + accessToken, requestBody);
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return response.getBody();
+            }
+        } catch (FeignException e) {
+            throw new RuntimeException("회원 수정이 불가합니다.");
+        }
+
+        throw new RuntimeException("회원 정보를 불러올 수 없습니다.");
+    }
+
 }
