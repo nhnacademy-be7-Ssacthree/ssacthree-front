@@ -5,6 +5,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.member.adapter.MemberAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberLoginRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberRegisterRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.CustomerNotFoundException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.LoginFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.LogoutIllegalAccessException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.MemberRegisterFailedException;
@@ -29,6 +30,8 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberAdapter memberAdapter;
 
+    private static final String SET_COOKIE = "Set-Cookie";
+
     @Override
     public MessageResponse memberRegister(MemberRegisterRequest request) {
         ResponseEntity<MessageResponse> response = memberAdapter.memberRegister(request);
@@ -50,10 +53,7 @@ public class MemberServiceImpl implements MemberService {
         ResponseEntity<MessageResponse> response = memberAdapter.memberLogin(requestBody);
 
         try {
-            if (response.getStatusCode().is2xxSuccessful()) {
-                List<String> cookies = response.getHeaders().get("Set-Cookie");
-                httpServletResponse.addHeader("Set-Cookie", cookies.get(0));
-                httpServletResponse.addHeader("Set-Cookie", cookies.get(1));
+            if (isHaveCookie(httpServletResponse, response)) {
                 return response.getBody();
             }
 
@@ -69,10 +69,7 @@ public class MemberServiceImpl implements MemberService {
 
         try {
 
-            if (response.getStatusCode().is2xxSuccessful()) {
-                List<String> cookies = response.getHeaders().get("Set-Cookie");
-                httpServletResponse.addHeader("Set-Cookie", cookies.get(0));
-                httpServletResponse.addHeader("Set-Cookie", cookies.get(1));
+            if (isHaveCookie(httpServletResponse, response)) {
                 return response.getBody();
             }
 
@@ -80,6 +77,18 @@ public class MemberServiceImpl implements MemberService {
         } catch (HttpClientErrorException | HttpServerErrorException e) {
             throw new LogoutIllegalAccessException("잘못된 접근입니다.");
         }
+    }
+
+    private boolean isHaveCookie(HttpServletResponse httpServletResponse,
+        ResponseEntity<MessageResponse> response) {
+        if (response.getStatusCode().is2xxSuccessful()) {
+            List<String> cookies = response.getHeaders().get(SET_COOKIE);
+            assert cookies != null;
+            httpServletResponse.addHeader(SET_COOKIE, cookies.get(0));
+            httpServletResponse.addHeader(SET_COOKIE, cookies.get(1));
+            return true;
+        }
+        return false;
     }
 
 
@@ -100,7 +109,7 @@ public class MemberServiceImpl implements MemberService {
                 return response.getBody();
             }
         } catch (FeignException e) {
-            throw new RuntimeException("회원 정보를 불러올 수 없습니다.");
+            throw new CustomerNotFoundException("회원 정보를 불러올 수 없습니다.");
         }
 
         return null;

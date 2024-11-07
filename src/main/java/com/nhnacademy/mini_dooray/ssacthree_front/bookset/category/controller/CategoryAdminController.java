@@ -18,6 +18,8 @@ public class CategoryAdminController {
     private final CategoryCommonService categoryCommonService;
     private final CategoryAdminService categoryAdminService;
 
+    private static final String REDIRECT_ADMIN_CATEGORIES = "redirect:/admin/categories";
+
     public CategoryAdminController(CategoryCommonService categoryCommonService, CategoryAdminService categoryAdminService) {
         this.categoryCommonService = categoryCommonService;
         this.categoryAdminService = categoryAdminService;
@@ -29,8 +31,6 @@ public class CategoryAdminController {
     @GetMapping
     public String viewAdminCategories(Model model) {
         ResponseEntity<List<CategoryInfoResponse>> response = categoryCommonService.getAllCategories();
-
-        List<CategoryInfoResponse> categories = response.getBody();
 
         model.addAttribute("categories", response.getBody());
         return "admin/category/categoryManagement";
@@ -54,7 +54,7 @@ public class CategoryAdminController {
     @PostMapping("/create")
     public String createCategory(CategorySaveRequest request, Model model) {
         categoryAdminService.createCategory(request);
-        return "redirect:/admin/categories";
+        return REDIRECT_ADMIN_CATEGORIES;
     }
 
     /**
@@ -73,7 +73,7 @@ public class CategoryAdminController {
     @PostMapping("/update/{categoryId}")
     public String updateCategory(@PathVariable Long categoryId, CategoryUpdateRequest request, Model model) {
         categoryAdminService.updateCategory(categoryId, request);
-        return "redirect:/admin/categories";
+        return REDIRECT_ADMIN_CATEGORIES;
     }
 
     /**
@@ -82,7 +82,7 @@ public class CategoryAdminController {
     @PostMapping("/delete/{categoryId}")
     public String deleteCategory(@PathVariable Long categoryId, Model model) {
         categoryAdminService.deleteCategory(categoryId);
-        return "redirect:/admin/categories";
+        return REDIRECT_ADMIN_CATEGORIES;
     }
 
     /**
