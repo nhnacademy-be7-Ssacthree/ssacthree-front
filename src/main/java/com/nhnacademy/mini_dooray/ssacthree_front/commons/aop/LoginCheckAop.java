@@ -25,7 +25,6 @@ public class LoginCheckAop {
         Cookie[] cookies = request.getCookies();
         if(cookies == null) {
             throw new NotLoginException("로그인이 필요합니다.");
-            //todo 배고파요.....
         }
 
     }
