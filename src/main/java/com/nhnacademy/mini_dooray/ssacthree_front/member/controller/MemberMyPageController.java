@@ -32,7 +32,6 @@ public class MemberMyPageController {
     @PostMapping("/my-page/update")
     public String updateUser(@ModelAttribute MemberInfoUpdateRequest memberInfoUpdateRequest,
         HttpServletRequest request) {
-
         memberService.memberInfoUpdate(memberInfoUpdateRequest, request);
         return "redirect:/members/my-page";
     }

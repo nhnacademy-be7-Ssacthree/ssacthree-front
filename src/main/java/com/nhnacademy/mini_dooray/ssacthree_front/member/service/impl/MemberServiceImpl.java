@@ -39,7 +39,7 @@ public class MemberServiceImpl implements MemberService {
                 return response.getBody();
             }
             throw new MemberRegisterFailedException("회원가입에 실패하였습니다.");
-        } catch (HttpClientErrorException | HttpServerErrorException e) {
+        } catch (HttpClientErrorException | HttpServerErrorException | FeignException e) {
             throw new MemberRegisterFailedException("회원가입에 실패하였습니다.");
         }
 
