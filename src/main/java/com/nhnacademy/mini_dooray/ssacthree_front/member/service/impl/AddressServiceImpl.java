@@ -29,7 +29,6 @@ public class AddressServiceImpl implements AddressService {
         String accessToken = getAccessToken(request);
 
         try {
-            // Authorization 헤더에 Bearer 토큰 포함하여 요청 전송
             ResponseEntity<AddressResponse> response = memberAdapter.addNewAddress(
                 "Bearer " + accessToken, addressRequest);
 
@@ -48,7 +47,6 @@ public class AddressServiceImpl implements AddressService {
         String accessToken = getAccessToken(request);
 
         try {
-            // Authorization 헤더에 Bearer 토큰 포함하여 요청 전송
             ResponseEntity<List<AddressResponse>> response = memberAdapter.getAddresses(
                 "Bearer " + accessToken);
 
@@ -66,7 +64,6 @@ public class AddressServiceImpl implements AddressService {
     public void deleteAddress(long addressId, HttpServletRequest request) {
         String accessToken = getAccessToken(request);
         try {
-            // Authorization 헤더에 Bearer 토큰 포함하여 요청 전송
             ResponseEntity<Void> response = memberAdapter.deleteAddress(
                 "Bearer " + accessToken,addressId);
 
