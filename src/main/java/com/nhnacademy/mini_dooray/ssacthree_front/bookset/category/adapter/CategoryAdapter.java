@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name="gateway-service", url = "shop.url", contextId = "categoryClient")
+@FeignClient(name="gateway-service", url = "${shop.url}", contextId = "categoryClient")
 public interface CategoryAdapter {
 
     /**
