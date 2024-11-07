@@ -2,7 +2,6 @@ package com.nhnacademy.mini_dooray.ssacthree_front.admin.publisher.controller;
 
 
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.publisher.dto.PublisherCreateRequest;
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.publisher.dto.PublisherDeleteRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.publisher.dto.PublisherUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.publisher.service.PublisherService;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.exception.exception.ValidationFailedException;
@@ -37,18 +36,6 @@ public class PublisherController {
         }
 
         publisherService.updatePublisher(publisherUpdateRequest);
-
-        return "redirect:/admin/publishers";
-    }
-
-    @PostMapping("/delete")
-    public String deletePublisher(@Valid @ModelAttribute PublisherDeleteRequest publisherDeleteRequest,
-                                 BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            throw new ValidationFailedException(bindingResult);
-        }
-
-        publisherService.deletePublisher(publisherDeleteRequest);
 
         return "redirect:/admin/publishers";
     }

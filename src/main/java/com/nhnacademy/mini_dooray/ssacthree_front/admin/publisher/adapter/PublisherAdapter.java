@@ -1,7 +1,6 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.admin.publisher.adapter;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.publisher.dto.PublisherCreateRequest;
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.publisher.dto.PublisherDeleteRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.publisher.dto.PublisherGetResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.publisher.dto.PublisherUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
@@ -21,7 +20,4 @@ public interface PublisherAdapter {
 
     @PutMapping("/publishers")
     ResponseEntity<MessageResponse> updatePublisher(@RequestBody PublisherUpdateRequest publisherUpdateRequest);
-
-    @DeleteMapping("/publishers")
-    ResponseEntity<MessageResponse> deletePublisher(@RequestBody PublisherDeleteRequest publisherDeleteRequest);
 }
