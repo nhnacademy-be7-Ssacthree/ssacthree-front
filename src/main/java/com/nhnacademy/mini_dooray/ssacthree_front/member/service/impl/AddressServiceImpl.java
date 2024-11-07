@@ -81,7 +81,7 @@ public class AddressServiceImpl implements AddressService {
         String accessToken = getAccessToken(request);
         try {
             ResponseEntity<Void> response = memberAdapter.deleteAddress(
-                "Bearer " + accessToken);
+                "Bearer " + accessToken, addressId);
 
             if (!response.getStatusCode().is2xxSuccessful()) {
                 throw new AddressFailedException("주소 삭제에 실패하였습니다.");
