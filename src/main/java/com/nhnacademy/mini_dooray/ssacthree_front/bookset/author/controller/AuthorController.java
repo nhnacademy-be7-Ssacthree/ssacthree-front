@@ -3,7 +3,6 @@ package com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.controller;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.dto.AuthorCreateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.dto.AuthorUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.service.AuthorService;
-import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.exception.ValidationFailedException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
