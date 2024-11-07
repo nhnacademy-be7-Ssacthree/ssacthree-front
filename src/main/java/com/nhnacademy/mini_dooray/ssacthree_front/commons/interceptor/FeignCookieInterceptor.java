@@ -1,4 +1,4 @@
-package com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.interceptor;
+package com.nhnacademy.mini_dooray.ssacthree_front.commons.interceptor;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
@@ -9,7 +9,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 
 /**
- * FiegnClient에 쿠키를 담기 위한 인터셉터
+ * FiegnClient에 쿠키를 담기 위한 인터셉터 요청 쏠 때
  * @author : 김희망
  * @Date : 2024/11/03
  */

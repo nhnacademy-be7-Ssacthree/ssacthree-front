@@ -1,4 +1,4 @@
-package com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.interceptor;
+package com.nhnacademy.mini_dooray.ssacthree_front.commons.interceptor;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,7 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 /**
- * 로그인을 체크하기위한 interceptor
+ * 로그인을 체크하기위한 interceptor - (FE header)
  * @author : 김희망
  * @Date : 2024/11/03
  */
