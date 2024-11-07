@@ -1,6 +1,6 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.member.controller;
 
-import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.exception.ValidationFailedException;
+import com.nhnacademy.mini_dooray.ssacthree_front.commons.exception.exception.ValidationFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberRegisterRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.MemberService;
 import jakarta.validation.Valid;

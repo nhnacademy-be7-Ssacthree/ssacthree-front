@@ -1,6 +1,6 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.config;
 
-import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.interceptor.FeignCookieInterceptor;
+import com.nhnacademy.mini_dooray.ssacthree_front.commons.interceptor.FeignCookieInterceptor;
 import feign.RequestInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
