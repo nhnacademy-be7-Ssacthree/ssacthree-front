@@ -41,7 +41,11 @@
   </table>
 
   <div class="d-flex justify-content-between mt-3">
-    <button class="btn btn-success" onclick="window.location.href='/address'">주소 추가</button>
+    <button class="btn btn-success"
+            onclick="window.location.href='/address'"
+            th:if="${#lists.size(addresses) < 10}">
+      주소 추가
+    </button>
     <button class="btn btn-secondary" onclick="window.location.href='/members/my-page'">마이페이지로 돌아가기</button>
   </div>
 </div>

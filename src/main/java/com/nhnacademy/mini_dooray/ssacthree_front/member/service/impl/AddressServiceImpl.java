@@ -81,7 +81,7 @@ public class AddressServiceImpl implements AddressService {
         String accessToken = getAccessToken(request);
         try {
             ResponseEntity<Void> response = memberAdapter.deleteAddress(
-                "Bearer " + accessToken,addressId);
+                "Bearer " + accessToken);
 
             if (!response.getStatusCode().is2xxSuccessful()) {
                 throw new AddressFailedException("주소 삭제에 실패하였습니다.");
@@ -95,7 +95,6 @@ public class AddressServiceImpl implements AddressService {
     /**
      *
      * @param request 요청
-     * @return 접근 권한 가져오기
      */
     public String getAccessToken(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
