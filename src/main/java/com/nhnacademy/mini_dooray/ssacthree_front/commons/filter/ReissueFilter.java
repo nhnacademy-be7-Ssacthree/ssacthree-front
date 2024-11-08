@@ -19,6 +19,8 @@ public class ReissueFilter extends OncePerRequestFilter {
 
     private final ReissueAdapter adapter;
 
+    private static final String SET_COOKIE_HEADER = "Set-Cookie";
+
 
     @Override
     public void doFilterInternal(HttpServletRequest httpRequest, HttpServletResponse httpResponse,
@@ -42,9 +44,10 @@ public class ReissueFilter extends OncePerRequestFilter {
 
             if (accessToken == null && refreshToken != null) {
                 ResponseEntity<MessageResponse> response = adapter.reissueToken();
-                List<String> cookies = response.getHeaders().get("Set-Cookie");
-                httpResponse.addHeader("Set-Cookie", cookies.get(0));
-                httpResponse.addHeader("Set-Cookie", cookies.get(1));
+                List<String> cookies = response.getHeaders().get(SET_COOKIE_HEADER);
+                assert cookies != null;
+                httpResponse.addHeader(SET_COOKIE_HEADER, cookies.get(0));
+                httpResponse.addHeader(SET_COOKIE_HEADER, cookies.get(1));
             }
 
             filterChain.doFilter(httpRequest, httpResponse);

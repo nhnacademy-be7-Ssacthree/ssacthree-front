@@ -16,10 +16,9 @@ import org.springframework.stereotype.Component;
 public class LoginCheckAop {
 
     private final HttpServletRequest request;
-    private final MemberService memberService;
 
     @Before("@annotation(com.nhnacademy.mini_dooray.ssacthree_front.commons.aop.annotation.LoginRequired)")
-    public void checkLoginStatus() throws Exception {
+    public void checkLoginStatus() {
 
 
         Cookie[] cookies = request.getCookies();

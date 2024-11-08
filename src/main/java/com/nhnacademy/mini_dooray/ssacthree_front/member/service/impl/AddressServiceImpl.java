@@ -24,6 +24,9 @@ public class AddressServiceImpl implements AddressService {
 
     private final MemberAdapter memberAdapter;
 
+
+    private static final String BEARER = "Bearer ";
+
     /**
      *  주소 추가
      * @param request 요청
@@ -35,7 +38,7 @@ public class AddressServiceImpl implements AddressService {
 
         try {
             ResponseEntity<AddressResponse> response = memberAdapter.addNewAddress(
-                "Bearer " + accessToken, addressRequest);
+                BEARER + accessToken, addressRequest);
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
@@ -58,7 +61,7 @@ public class AddressServiceImpl implements AddressService {
 
         try {
             ResponseEntity<List<AddressResponse>> response = memberAdapter.getAddresses(
-                "Bearer " + accessToken);
+                BEARER + accessToken);
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
@@ -81,7 +84,7 @@ public class AddressServiceImpl implements AddressService {
         String accessToken = getAccessToken(request);
         try {
             ResponseEntity<Void> response = memberAdapter.deleteAddress(
-                "Bearer " + accessToken, addressId);
+                BEARER + accessToken, addressId);
 
             if (!response.getStatusCode().is2xxSuccessful()) {
                 throw new AddressFailedException("주소 삭제에 실패하였습니다.");
