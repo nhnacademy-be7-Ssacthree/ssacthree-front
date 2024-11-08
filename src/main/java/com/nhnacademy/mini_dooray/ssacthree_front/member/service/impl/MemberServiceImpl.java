@@ -9,6 +9,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberRegisterReque
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.CustomerNotFoundException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.LoginFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.LogoutIllegalAccessException;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.MemberNotFoundException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.MemberRegisterFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.MemberService;
 import feign.FeignException;
@@ -139,4 +140,25 @@ public class MemberServiceImpl implements MemberService {
         throw new RuntimeException("회원 정보를 불러올 수 없습니다.");
     }
 
+
+    @Override
+    public MessageResponse memberWithdraw(HttpServletRequest request) {
+
+        String accessToken = null;
+        for (Cookie cookie : request.getCookies()) {
+            if (cookie.getName().equals("access-token")) {
+                accessToken = cookie.getValue();
+            }
+        }
+        try {
+            ResponseEntity<MessageResponse> response = memberAdapter.memberDelete(
+                "Bearer " + accessToken);
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return response.getBody();
+            }
+        } catch (FeignException e) {
+            throw new MemberNotFoundException("회원을 찾을 수 없습니다.");
+        }
+        throw new MemberNotFoundException("회원을 찾을 수 없습니다.");
+    }
 }

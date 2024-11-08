@@ -21,4 +21,6 @@ public interface MemberService {
 
     MessageResponse memberInfoUpdate(MemberInfoUpdateRequest requestDto,
         HttpServletRequest request);
+
+    MessageResponse memberWithdraw(HttpServletRequest request);
 }
