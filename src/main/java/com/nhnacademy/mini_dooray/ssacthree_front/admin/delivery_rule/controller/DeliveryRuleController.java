@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/admin/deliveryRules")
+@RequestMapping("/admin/delivery-rules")
 public class DeliveryRuleController {
 
     private final DeliveryRuleService deliveryRuleService;
@@ -34,7 +34,7 @@ public class DeliveryRuleController {
 
         deliveryRuleService.updateDeliveryRule(deliveryRuleUpdateRequest);
 
-        return "redirect:/admin/deliveryRules";
+        return "redirect:/admin/delivery-rules";
     }
 
     @GetMapping("/create")
@@ -51,6 +51,6 @@ public class DeliveryRuleController {
 
         deliveryRuleService.createDeliveryRule(deliveryRuleCreateRequest);
 
-        return "redirect:/admin/deliveryRules";
+        return "redirect:/admin/delivery-rules";
     }
 }

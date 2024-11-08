@@ -12,12 +12,12 @@ import java.util.List;
 
 @FeignClient(name="gateway-service", url = "${admin-client.url}", contextId = "pointSaveRuleClient")
 public interface PointSaveRuleAdapter {
-    @GetMapping("/pointSaveRules")
+    @GetMapping("/point-save-rules")
     ResponseEntity<List<PointSaveRuleGetResponse>> getAllPointSaveRules();
 
-    @PutMapping("/pointSaveRules")
+    @PutMapping("/point-save-rules")
     ResponseEntity<MessageResponse> updatePointSaveRule(@RequestBody PointSaveRuleUpdateRequest pointSaveRuleUpdateRequest);
 
-    @PostMapping("/pointSaveRules")
+    @PostMapping("/point-save-rules")
     ResponseEntity<MessageResponse> createPointSaveRule(@RequestBody PointSaveRuleCreateRequest pointSaveRuleCreateRequest);
 }

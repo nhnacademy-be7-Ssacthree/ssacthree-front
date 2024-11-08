@@ -15,12 +15,12 @@ import java.util.List;
 
 @FeignClient(name="gateway-service", url = "${admin-client.url}", contextId = "deliveryRuleClient")
 public interface DeliveryRuleAdapter {
-    @GetMapping("/deliveryRules")
+    @GetMapping("/delivery-rules")
     ResponseEntity<List<DeliveryRuleGetResponse>> getAllDeliveryRules();
 
-    @PutMapping("/deliveryRules")
+    @PutMapping("/delivery-rules")
     ResponseEntity<MessageResponse> updateDeliveryRule(@RequestBody DeliveryRuleUpdateRequest deliveryRuleUpdateRequest);
 
-    @PostMapping("/deliveryRules")
+    @PostMapping("/delivery-rules")
     ResponseEntity<MessageResponse> createDeliveryRule(@RequestBody DeliveryRuleCreateRequest deliveryRuleCreateRequest);
 }

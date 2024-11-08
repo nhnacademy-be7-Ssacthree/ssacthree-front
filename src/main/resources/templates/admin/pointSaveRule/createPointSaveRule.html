@@ -15,7 +15,7 @@
           <h3>새 포인트 적립 정책 추가</h3>
         </div>
         <div class="card-body">
-          <form th:action="@{/admin/pointSaveRules/create}" th:method="post">
+          <form th:action="@{/admin/point-save-rules/create}" th:method="post">
             <div class="mb-3">
               <label for="pointSaveRuleName" class="form-label">포인트 적립 정책 이름</label>
               <input type="text" class="form-control" id="pointSaveRuleName" name="pointSaveRuleName" required>
@@ -33,7 +33,7 @@
             </div>
             <div class="text-center">
               <button type="submit" class="btn btn-primary">저장</button>
-              <a href="/admin/pointSaveRules" class="btn btn-secondary">취소</a>
+              <a href="/admin/point-save-rules" class="btn btn-secondary">취소</a>
             </div>
           </form>
         </div>
