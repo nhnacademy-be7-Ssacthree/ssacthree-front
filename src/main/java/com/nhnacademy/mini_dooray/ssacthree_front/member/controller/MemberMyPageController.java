@@ -1,12 +1,15 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.member.controller;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.aop.annotation.LoginRequired;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -24,4 +27,13 @@ public class MemberMyPageController {
         model.addAttribute("memberInfo", memberService.getMemberInfo(request));
         return "myPage";
     }
+
+    @LoginRequired
+    @PostMapping("/my-page/update")
+    public String updateUser(@ModelAttribute MemberInfoUpdateRequest memberInfoUpdateRequest,
+        HttpServletRequest request) {
+        memberService.memberInfoUpdate(memberInfoUpdateRequest, request);
+        return "redirect:/members/my-page";
+    }
+
 }
