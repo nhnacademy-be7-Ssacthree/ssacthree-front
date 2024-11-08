@@ -18,6 +18,8 @@ public class AuthorController {
 
     private final AuthorService authorService;
 
+    private static final String REDIRECT_ADDRESS = "redirect:/admin/authors";
+
     @GetMapping
     public String getAuthors(Model model){
         model.addAttribute("authors", authorService.getAllAuthors());
@@ -46,7 +48,7 @@ public class AuthorController {
 
         authorService.createAuthor(authorCreateRequest);
 
-        return "redirect:/admin/authors";
+        return REDIRECT_ADDRESS;
     }
 
     @PostMapping
@@ -57,13 +59,13 @@ public class AuthorController {
         }
 
         authorService.updateAuthor(authorUpdateRequest);
-        return "redirect:/admin/authors";
+        return REDIRECT_ADDRESS;
     }
 
     @PostMapping("/{authorId}")
     public String deleteAuthor(@PathVariable(name = "authorId") Long authorId) {
         authorService.deleteAuthor(authorId);
-        return "redirect:/admin/authors";
+        return REDIRECT_ADDRESS;
     }
 
 }
