@@ -14,19 +14,19 @@ import java.util.List;
 @FeignClient(name="authorSendClient", url = "${admin-client.url}")
 public interface AuthorAdapter {
 
-    @GetMapping("/authors")
+    @GetMapping("/admin/authors")
     ResponseEntity<List<AuthorGetResponse>> getAllAuthors();
 
-    @PostMapping("/authors")
+    @PostMapping("/admin/authors")
     ResponseEntity<MessageResponse> createAuthor(@RequestBody AuthorCreateRequest authorCreateRequest);
 
-    @PutMapping("/authors")
+    @PutMapping("/admin/authors")
     ResponseEntity<MessageResponse> updateAuthor(@RequestBody AuthorUpdateRequest authorUpdateRequest);
 
-    @DeleteMapping("/authors/{authorId}")
+    @DeleteMapping("/admin/authors/{authorId}")
     ResponseEntity<MessageResponse> deleteAuthor(@PathVariable long authorId);
 
-    @GetMapping("/authors/{authorId}")
+    @GetMapping("/admin/authors/{authorId}")
     ResponseEntity<AuthorUpdateRequest> getAuthorById(@PathVariable long authorId);
 
 }
