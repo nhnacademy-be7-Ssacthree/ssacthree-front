@@ -155,19 +155,22 @@ public class MemberServiceImpl implements MemberService {
             ResponseEntity<MessageResponse> feignResponse = memberAdapter.memberDelete(
                 "Bearer " + accessToken);
             if (feignResponse.getStatusCode().is2xxSuccessful()) {
-
-                Cookie accessCookie = new Cookie("access-token", null);
-                Cookie refreshCookie = new Cookie("refresh-token", null);
-
-                accessCookie.setPath("/");
-                refreshCookie.setPath("/");
-
-                accessCookie.setMaxAge(0);
-                refreshCookie.setMaxAge(0);
-
-                response.addCookie(accessCookie);
-                response.addCookie(refreshCookie);
                 
+                memberAdapter.memberLogout();
+
+                // 쿠키 터뜨려서 로그아웃
+//                Cookie accessCookie = new Cookie("access-token", null);
+//                Cookie refreshCookie = new Cookie("refresh-token", null);
+//
+//                accessCookie.setPath("/");
+//                refreshCookie.setPath("/");
+//
+//                accessCookie.setMaxAge(0);
+//                refreshCookie.setMaxAge(0);
+//
+//                response.addCookie(accessCookie);
+//                response.addCookie(refreshCookie);
+//
                 return feignResponse.getBody();
             }
         } catch (FeignException e) {
