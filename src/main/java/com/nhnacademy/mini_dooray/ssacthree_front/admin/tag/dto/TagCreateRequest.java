@@ -1,11 +1,11 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.admin.tag.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 
 @Getter
-@Setter
+@AllArgsConstructor
 public class TagCreateRequest {
 
     private String tagName;

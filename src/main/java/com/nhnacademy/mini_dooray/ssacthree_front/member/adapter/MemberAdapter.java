@@ -25,6 +25,10 @@ public interface MemberAdapter {
     ResponseEntity<MessageResponse> memberRegister(
         @RequestBody MemberRegisterRequest memberRegisterRequest);
 
+    @DeleteMapping("/shop/members")
+    ResponseEntity<MessageResponse> memberDelete(
+        @RequestHeader("Authorization") String authorizationHeader);
+
     @PostMapping("/auth/login")
     ResponseEntity<MessageResponse> memberLogin(@RequestBody MemberLoginRequest memberLoginRequest);
 
@@ -40,11 +44,15 @@ public interface MemberAdapter {
         @RequestHeader("Authorization") String authorizationHeader, @RequestBody
     MemberInfoUpdateRequest memberInfoUpdateRequest);
 
+
     @PostMapping("/shop/members/address")
-    ResponseEntity<AddressResponse> addNewAddress(@RequestHeader("Authorization") String authorizationHeader, @RequestBody AddressRequest addressRequest);
+    ResponseEntity<AddressResponse> addNewAddress(
+        @RequestHeader("Authorization") String authorizationHeader,
+        @RequestBody AddressRequest addressRequest);
 
     @GetMapping("/shop/members/address")
-    ResponseEntity<List<AddressResponse>> getAddresses(@RequestHeader("Authorization") String authorizationHeader);
+    ResponseEntity<List<AddressResponse>> getAddresses(
+        @RequestHeader("Authorization") String authorizationHeader);
 
     @DeleteMapping("/shop/members/address/{id}")
     ResponseEntity<Void> deleteAddress(@RequestHeader("Authorization") String authorizationHeader,

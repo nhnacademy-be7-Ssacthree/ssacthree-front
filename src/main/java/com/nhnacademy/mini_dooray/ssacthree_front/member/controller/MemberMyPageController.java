@@ -36,4 +36,11 @@ public class MemberMyPageController {
         return "redirect:/members/my-page";
     }
 
+    @LoginRequired
+    @PostMapping("/withdraw")
+    public String updateUser(HttpServletRequest request) {
+        memberService.memberWithdraw(request);
+        return "redirect:/";
+    }
+
 }
