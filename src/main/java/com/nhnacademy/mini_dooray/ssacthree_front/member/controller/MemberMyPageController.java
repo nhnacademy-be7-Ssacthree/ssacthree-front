@@ -4,6 +4,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.commons.aop.annotation.LoginRe
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,8 +39,8 @@ public class MemberMyPageController {
 
     @LoginRequired
     @PostMapping("/withdraw")
-    public String updateUser(HttpServletRequest request) {
-        memberService.memberWithdraw(request);
+    public String updateUser(HttpServletRequest request, HttpServletResponse response) {
+        memberService.memberWithdraw(request, response);
         return "redirect:/";
     }
 
