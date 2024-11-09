@@ -1,4 +1,4 @@
-package com.nhnacademy.mini_dooray.ssacthree_front.member.address.controller;
+package com.nhnacademy.mini_dooray.ssacthree_front.member.controller;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.member.controller.MemberMyPageController;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoResponse;

@@ -1,4 +1,4 @@
-package com.nhnacademy.mini_dooray.ssacthree_front.member.address.service;
+package com.nhnacademy.mini_dooray.ssacthree_front.member.service;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.adapter.MemberAdapter;
