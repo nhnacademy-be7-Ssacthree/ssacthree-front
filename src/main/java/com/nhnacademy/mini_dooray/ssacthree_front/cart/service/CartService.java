@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 public class CartService {
 
     private final RedisTemplate<String, Object> redisTemplate; // RedisTemplate<String, Object>로 변경
-    private static final long CART_EXPIRATION_HOURS = 3;
+    static final long CART_EXPIRATION_HOURS = 3;
     private static final String CARTID = "cartId";
 
     /**
