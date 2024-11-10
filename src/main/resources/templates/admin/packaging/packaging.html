@@ -43,7 +43,11 @@
                                 <div class="gift-price mt-2">
                                     <strong>포장지 가격:</strong> <span th:text="${packaging.getPackagingPrice()}">₩0</span>
                                 </div>
-                                <!-- 수정, 삭제 버튼 dto에 id 필요할듯-->
+                                <!-- 수정 및 삭제 버튼 id필요 -->
+                                <div class="mt-3 d-flex justify-content-between">
+                                    <a href="#" th:href="@{/admin/packaging/update/{id}(id=${packaging.id})}" class="btn btn-warning btn-sm w-auto">수정</a>
+                                    <a href="#" th:href="@{/admin/packaging/delete/{id}(id=${packaging.id})}" class="btn btn-danger btn-sm w-auto">삭제</a>
+                                </div>
                             </div>
                         </div>
 
