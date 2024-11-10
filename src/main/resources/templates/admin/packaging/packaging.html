@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/config :: config}">
+    <title>포장지 관리</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <style>
+        .gift-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .gift-name {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .gift-price {
+            margin-top: 5px;
+            color: #FF5733;
+        }
+    </style>
+</head>
+<body>
+<header th:replace="~{common/adminHeader :: header}" />
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3>포장지 관리</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div th:each="packaging : ${packagingList}" class="col-md-4 mb-4">
+                            <div class="gift-card border p-3 rounded text-center">
+                                <img th:src="${packaging.getPackagingImageUrl()}" alt="Gift Image" class="gift-image" />
+
+                                <div class="gift-name mt-3">
+                                    <strong>포장지 이름:</strong> <span th:text="${packaging.getPackagingName()}">Gift Name</span>
+                                </div>
+
+                                <div class="gift-price mt-2">
+                                    <strong>포장지 가격:</strong> <span th:text="${packaging.getPackagingPrice()}">₩0</span>
+                                </div>
+                                <!-- 수정, 삭제 버튼 dto에 id 필요할듯-->
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="text-center mt-4">
+                        <a href="/admin/packaging/create" class="btn btn-success">포장지 추가</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{common/footer :: footer}"/>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
