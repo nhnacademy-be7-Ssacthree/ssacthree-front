@@ -142,7 +142,8 @@ public class MemberServiceImpl implements MemberService {
 
 
     @Override
-    public MessageResponse memberWithdraw(HttpServletRequest request) {
+    public MessageResponse memberWithdraw(HttpServletRequest request,
+        HttpServletResponse response) {
 
         String accessToken = null;
         for (Cookie cookie : request.getCookies()) {
@@ -151,10 +152,26 @@ public class MemberServiceImpl implements MemberService {
             }
         }
         try {
-            ResponseEntity<MessageResponse> response = memberAdapter.memberDelete(
+            ResponseEntity<MessageResponse> feignResponse = memberAdapter.memberDelete(
                 "Bearer " + accessToken);
-            if (response.getStatusCode().is2xxSuccessful()) {
-                return response.getBody();
+            if (feignResponse.getStatusCode().is2xxSuccessful()) {
+                
+                memberAdapter.memberLogout();
+
+                // 쿠키 터뜨려서 로그아웃
+//                Cookie accessCookie = new Cookie("access-token", null);
+//                Cookie refreshCookie = new Cookie("refresh-token", null);
+//
+//                accessCookie.setPath("/");
+//                refreshCookie.setPath("/");
+//
+//                accessCookie.setMaxAge(0);
+//                refreshCookie.setMaxAge(0);
+//
+//                response.addCookie(accessCookie);
+//                response.addCookie(refreshCookie);
+//
+                return feignResponse.getBody();
             }
         } catch (FeignException e) {
             throw new MemberNotFoundException("회원을 찾을 수 없습니다.");
