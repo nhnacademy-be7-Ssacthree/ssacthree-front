@@ -19,7 +19,7 @@ public class CartController {
     private final CartService cartService;
     private static final String CART_REDIRECT = "redirect:/shop";
 
-    @LoginRequired
+
     @GetMapping("/shop")
     public String viewCart(HttpServletRequest request, Model model) {
         List<CartItem> cartItems = cartService.initializeCart(request); // 서비스에서 장바구니 초기화
@@ -32,7 +32,7 @@ public class CartController {
     public String addNewBook(HttpSession session, @RequestParam Long itemId,
                                                   @RequestParam String title,
                                                   @RequestParam int price,
-                                                  @RequestParam byte[] image) { //새로운 책 장바구니에 추가
+                                                  @RequestParam String image) { //새로운 책 장바구니에 추가
         cartService.addNewBook(session,itemId,title,price,image);
         return CART_REDIRECT;
     }

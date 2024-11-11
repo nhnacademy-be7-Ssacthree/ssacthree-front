@@ -2,7 +2,6 @@ package com.nhnacademy.mini_dooray.ssacthree_front.cart.service;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.adapter.CartAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.domain.CartItem;
-import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.AddressResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -31,7 +30,7 @@ public class CartService {
     private final RedisTemplate<String, Object> redisTemplate; // RedisTemplate<String, Object>로 변경
     private final CartAdapter cartAdapter;
 
-    static final long CART_EXPIRATION_HOURS = 3;
+    static final long CART_EXPIRATION_HOURS = 1;
     private static final String CARTID = "cartId";
     private static final String BEARER = "Bearer ";
 
@@ -61,7 +60,7 @@ public class CartService {
             addDefaultItems(cartItems); // 기본 물품 추가(확인용 나중에 삭제 예정)
             saveNewCart(cartId, cartItems);
             return cartItems; // 장바구니 반환
-        }else if(cartId == null) { // 로그인 한 사용자인데 세션만 없으면
+        }else if(accessToken != null && cartId == null || cartId.contains("Guest") ) { // 로그인 한 사용자인데 세션만 없으면
             try{
                 ResponseEntity<List<CartItem>> response = cartAdapter.getCartItems(
                     BEARER + accessToken);
@@ -96,7 +95,14 @@ public class CartService {
     }
 
     public void saveNewCart(String cartId,List<CartItem> cartItems) {
+        // 원래 키를 1시간 동안 Redis에 저장
         redisTemplate.opsForValue().set(cartId, cartItems, CART_EXPIRATION_HOURS, TimeUnit.HOURS);
+
+//        // 경고 키 생성
+//        String alertKey = "alert:" + cartId;
+//
+//        // 경고 키를 59분으로 설정하여 만료 1분 전에 알림 받기
+//        redisTemplate.opsForValue().set(alertKey, "expiring soon", CART_EXPIRATION_HOURS - 1, TimeUnit.HOURS);
     }
 
     /**
@@ -149,7 +155,7 @@ public class CartService {
             if (cartItem.getId() == (itemId)) {
                 int newQuantity = cartItem.getQuantity() + quantityChange;
                 if (newQuantity > 0) { // 수량이 0보다 큰 경우에만 새 객체 추가
-                    CartItem newCartItem = new CartItem(cartItem.getId(), cartItem.getTitle(), newQuantity, cartItem.getPrice(), cartItem.getImage());
+                    CartItem newCartItem = new CartItem(cartItem.getId(), cartItem.getTitle(), newQuantity, cartItem.getPrice(), cartItem.getImageUrl());
                     updatedCartItems.add(newCartItem);
                 }
             } else {
@@ -199,7 +205,7 @@ public class CartService {
      * @param image 도서 이미지
      * 장바구니에 새로운 책을 등록할 때 쓰는 서비스
      */
-    public void addNewBook(HttpSession session, Long itemId, String title, int price, byte[] image) {
+    public void addNewBook(HttpSession session, Long itemId, String title, int price, String image) {
         String cartId = (String) session.getAttribute(CARTID);
         List<CartItem> cartItems = getCartItemsByCartId(cartId);
         for (CartItem cartItem : cartItems) {
@@ -230,5 +236,9 @@ public class CartService {
             }
         }
         return accessToken;
+    }
+
+    public void saveCartInDB(Long itemId, int quantity) {
+
     }
 }
