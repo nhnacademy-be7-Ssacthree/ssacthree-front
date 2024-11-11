@@ -53,11 +53,7 @@
   <!-- 새로운 책 추가 버튼 -->
   <div class="row mt-4">
     <div class="col-md-12 text-center">
-      <form th:action="@{/shop/}" method="post">
-        <input type="hidden" name="itemId" value="3" />
-        <input type="hidden" name="title" value="새로운 책 제목" />
-        <input type="hidden" name="price" value="15000" />
-        <input type="hidden" name="image" value="" />
+      <form th:action="@{/shop/1}" method="get">
         <button type="submit" class="btn btn-primary">새로운 책 추가</button>
       </form>
     </div>

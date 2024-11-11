@@ -134,6 +134,7 @@ public class CartService {
     // 장바구니에 기본 물품 추가
     private void addDefaultItems(List<CartItem> cartItems) {
         // 예시로 물품을 추가 (나중에 삭제 예정)
+
         cartItems.add(new CartItem(1, "책 제목 1", 1, 20000, null));
         cartItems.add(new CartItem(2, "책 제목 2", 1, 25000, null));
     }
@@ -240,5 +241,21 @@ public class CartService {
 
     public void saveCartInDB(Long itemId, int quantity) {
 
+    }
+
+    public CartItem getRandomBook(Long bookId, HttpServletRequest request) {
+        String accessToken = getAccessToken(request);
+        try{
+            ResponseEntity<CartItem> response = cartAdapter.getRandomBook(
+                BEARER + accessToken, bookId);
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return response.getBody();
+            }
+
+        }catch (HttpClientErrorException | HttpServerErrorException e){
+            throw new RuntimeException("요청 오류");
+        }
+        return null;
     }
 }

@@ -2,7 +2,6 @@ package com.nhnacademy.mini_dooray.ssacthree_front.controller;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.domain.CartItem;
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.service.CartService;
-import com.nhnacademy.mini_dooray.ssacthree_front.commons.aop.annotation.LoginRequired;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -50,5 +49,12 @@ public class CartController {
         return CART_REDIRECT;
     }
 
+    @GetMapping("/shop/{bookId}") // 장바구니에 필요한 책 데이터 가져오기 나중에 삭제 예정
+    public String getBookInDB(HttpServletRequest request, @PathVariable Long bookId) {
+        CartItem cartItem = cartService.getRandomBook(bookId, request);
+        HttpSession session = request.getSession();
+        cartService.addNewBook(session,cartItem.getId(),cartItem.getTitle(),cartItem.getPrice(),cartItem.getImageUrl());
+        return CART_REDIRECT;
+    }
 
 }
