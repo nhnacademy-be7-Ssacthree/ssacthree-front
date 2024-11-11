@@ -48,7 +48,8 @@ class MemberServiceTest {
 
     @Test
     void testMemberRegister_success() {
-        MemberRegisterRequest request = new MemberRegisterRequest(/* 필요한 필드 초기화 */);
+        MemberRegisterRequest request = new MemberRegisterRequest("test", "test", "test", "test",
+            "test", "test");
         MessageResponse responseMessage = new MessageResponse("회원가입 성공");
         ResponseEntity<MessageResponse> responseEntity = new ResponseEntity<>(responseMessage,
             HttpStatus.OK);
@@ -61,7 +62,7 @@ class MemberServiceTest {
 
     @Test
     void testMemberLogin_success() {
-        MemberLoginRequest loginRequest = new MemberLoginRequest(/* 필요한 필드 초기화 */);
+        MemberLoginRequest loginRequest = new MemberLoginRequest("test", "test");
         MessageResponse responseMessage = new MessageResponse("로그인 성공");
         HttpHeaders headers = new HttpHeaders();
 

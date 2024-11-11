@@ -50,7 +50,7 @@ class MemberMyPageControllerTest {
             .andExpect(view().name("myPage"))
             .andExpect(model().attribute("memberInfo", memberInfoResponse));
 
-        verify(memberService, times(2)).getMemberInfo(any(HttpServletRequest.class));
+        verify(memberService, times(1)).getMemberInfo(any(HttpServletRequest.class));
     }
 
     @Test
