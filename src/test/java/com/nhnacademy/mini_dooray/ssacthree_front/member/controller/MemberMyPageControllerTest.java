@@ -65,6 +65,7 @@ class MemberMyPageControllerTest {
             any(HttpServletRequest.class));
     }
 
+
     @Test
     void testWithdraw() throws Exception {
         mockMvc.perform(post("/members/withdraw"))
@@ -73,4 +74,5 @@ class MemberMyPageControllerTest {
         verify(memberService, times(1)).memberWithdraw(any(HttpServletRequest.class), any(
             HttpServletResponse.class));
     }
+
 }

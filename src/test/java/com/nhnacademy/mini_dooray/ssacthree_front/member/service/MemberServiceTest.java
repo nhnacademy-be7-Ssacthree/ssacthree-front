@@ -136,6 +136,7 @@ class MemberServiceTest {
         assertEquals("회원정보 수정 성공", result.getMessage());
     }
 
+
     @Test
     void testMemberWithdraw_success() {
         Cookie accessTokenCookie = new Cookie("access-token", ACCESS_TOKEN);
@@ -166,6 +167,7 @@ class MemberServiceTest {
         // 결과 확인
         assertEquals("회원 탈퇴 성공", result.getMessage());
     }
+
 
 
 }
