@@ -1,6 +1,6 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.commons.filter;
 
-import com.nhnacademy.mini_dooray.ssacthree_front.commons.adapter.ReissueAdapter;
+import com.nhnacademy.mini_dooray.ssacthree_front.commons.adapter.AuthAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -17,7 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @RequiredArgsConstructor
 public class ReissueFilter extends OncePerRequestFilter {
 
-    private final ReissueAdapter adapter;
+    private final AuthAdapter adapter;
 
     private static final String SET_COOKIE_HEADER = "Set-Cookie";
 
