@@ -41,11 +41,12 @@
   </table>
 
   <div class="d-flex justify-content-between mt-3">
-    <button class="btn btn-success"
-            onclick="window.location.href='/address'"
-            th:if="${#lists.size(addresses) < 10}">
-      주소 추가
-    </button>
+    <form th:action="@{/address}" method="get" style="display: inline;">
+      <button type="button" class="btn btn-success btn-sm"
+              th:onclick="|return checkAddressLimit(${#lists.size(addresses)})|">
+        <i class="fas fa-plus"></i> 주소 추가
+      </button>
+    </form>
     <button class="btn btn-secondary" onclick="window.location.href='/members/my-page'">마이페이지로 돌아가기</button>
   </div>
 </div>
@@ -60,6 +61,18 @@
 <script>
   function setDefault(addressId) {
     alert('기본 주소로 설정되었습니다.');
+  }
+</script>
+<script>
+  function checkAddressLimit(addressCount) {
+    if (addressCount >= 10) {
+      alert("주소가 이미 10개 이상입니다. 더 이상 추가할 수 없습니다.");
+      return false;
+    } else {
+      // 주소 추가 페이지로 이동
+      window.location.href = '/address';
+      return true;
+    }
   }
 </script>
 </body>
