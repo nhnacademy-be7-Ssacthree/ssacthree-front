@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/config :: config}">
+    <title>새 배송 정책 추가</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+</head>
+<body>
+<header th:replace="~{common/adminHeader :: header}" />
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3>새 배송 정책 추가</h3>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/admin/delivery-rules/create}" th:method="post">
+                        <div class="mb-3">
+                            <label for="deliveryRuleName" class="form-label">배송 정책 이름</label>
+                            <input type="text" class="form-control" id="deliveryRuleName" name="deliveryRuleName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="deliveryFee" class="form-label">배송비</label>
+                            <input type="number" class="form-control" id="deliveryFee" name="deliveryFee" step="100" min="0" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="deliveryDiscountCost" class="form-label">할인 기준 금액</label>
+                            <input type="number" class="form-control" id="deliveryDiscountCost" name="deliveryDiscountCost" step="100" min="0">
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">저장</button>
+                            <a href="/admin/delivery-rules" class="btn btn-secondary">취소</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{common/footer :: footer}"/>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

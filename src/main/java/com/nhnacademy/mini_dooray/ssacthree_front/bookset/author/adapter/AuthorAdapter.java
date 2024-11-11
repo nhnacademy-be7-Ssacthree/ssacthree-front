@@ -11,22 +11,22 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name="authorSendClient", url = "${admin-client.url}")
+@FeignClient(name="authorSendClient", url = "${admin-client.url}", contextId = "authorClient")
 public interface AuthorAdapter {
 
-    @GetMapping("/admin/authors")
+    @GetMapping("/authors")
     ResponseEntity<List<AuthorGetResponse>> getAllAuthors();
 
-    @PostMapping("/admin/authors")
+    @PostMapping("/authors")
     ResponseEntity<MessageResponse> createAuthor(@RequestBody AuthorCreateRequest authorCreateRequest);
 
-    @PutMapping("/admin/authors")
+    @PutMapping("/authors")
     ResponseEntity<MessageResponse> updateAuthor(@RequestBody AuthorUpdateRequest authorUpdateRequest);
 
-    @DeleteMapping("/admin/authors/{authorId}")
+    @DeleteMapping("/authors/{authorId}")
     ResponseEntity<MessageResponse> deleteAuthor(@PathVariable long authorId);
 
-    @GetMapping("/admin/authors/{authorId}")
+    @GetMapping("/authors/{authorId}")
     ResponseEntity<AuthorUpdateRequest> getAuthorById(@PathVariable long authorId);
 
 }
