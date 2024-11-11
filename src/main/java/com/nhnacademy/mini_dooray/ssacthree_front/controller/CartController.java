@@ -2,6 +2,7 @@ package com.nhnacademy.mini_dooray.ssacthree_front.controller;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.domain.CartItem;
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.service.CartService;
+import com.nhnacademy.mini_dooray.ssacthree_front.commons.aop.annotation.LoginRequired;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +19,10 @@ public class CartController {
     private final CartService cartService;
     private static final String CART_REDIRECT = "redirect:/shop";
 
+    @LoginRequired
     @GetMapping("/shop")
     public String viewCart(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
-        List<CartItem> cartItems = cartService.initializeCart(session); // 서비스에서 장바구니 초기화
+        List<CartItem> cartItems = cartService.initializeCart(request); // 서비스에서 장바구니 초기화
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("totalPrice", cartService.calculateTotalPrice(cartItems));
         return "cart";
@@ -48,4 +49,6 @@ public class CartController {
         cartService.deleteItem(session,itemId);
         return CART_REDIRECT;
     }
+
+
 }

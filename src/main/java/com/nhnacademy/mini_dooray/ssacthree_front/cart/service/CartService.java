@@ -1,15 +1,22 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.cart.service;
 
+import com.nhnacademy.mini_dooray.ssacthree_front.cart.adapter.CartAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.domain.CartItem;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.AddressResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Iterator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 
 /**
  * 장바구니에 필요한 service
@@ -22,8 +29,11 @@ import java.util.concurrent.TimeUnit;
 public class CartService {
 
     private final RedisTemplate<String, Object> redisTemplate; // RedisTemplate<String, Object>로 변경
+    private final CartAdapter cartAdapter;
+
     static final long CART_EXPIRATION_HOURS = 3;
     private static final String CARTID = "cartId";
+    private static final String BEARER = "Bearer ";
 
     /**
      *
@@ -36,27 +46,43 @@ public class CartService {
         return cartItems instanceof List ? (List<CartItem>) cartItems : new ArrayList<>(); // 캐스팅을 통해 안전하게 반환, 없으면 빈 리스트 반환
     }
 
-    /**
-     *
-     * @param session 세션
-     * @return cartItems
-     * 빈 장바구니 초기화 및 cartId 관리
-     */
-    public List<CartItem> initializeCart(HttpSession session) {
+
+    public List<CartItem> initializeCart(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        String accessToken = getAccessToken(request);
         String cartId = (String) session.getAttribute(CARTID);
 
-        // 세션에 cartId가 없으면 새로 생성
-        if (cartId == null) {
-            cartId = generateCartId(); // 새로운 cartId 생성
+        // 세션에 cartId가 없고 엑세스 토큰도 없으면 새로 생성 (비회원)
+        if (cartId == null && accessToken == null) {
+            cartId = generateCartId(); // 새로운 memberCartId 생성
             session.setAttribute(CARTID, cartId); // 세션에 cartId 저장
             // 빈 장바구니 생성 후 특정 물품 추가
             List<CartItem> cartItems = createEmptyCart(cartId); // 빈 장바구니 생성
             addDefaultItems(cartItems); // 기본 물품 추가(확인용 나중에 삭제 예정)
             saveNewCart(cartId, cartItems);
             return cartItems; // 장바구니 반환
-        } else {
-            return getCartItemsByCartId(cartId); // 기존 cartId로 장바구니 항목 가져오기
+        }else if(cartId == null) { // 로그인 한 사용자인데 세션만 없으면
+            try{
+                ResponseEntity<List<CartItem>> response = cartAdapter.getCartItems(
+                    BEARER + accessToken);
+
+                if (response.getStatusCode().is2xxSuccessful()) {
+                    cartId = generateLoginCartId();
+                    session.setAttribute(CARTID, cartId);
+                    saveNewCart(cartId, response.getBody());
+                    return response.getBody();
+                }
+                return response.getBody();
+            }catch (HttpClientErrorException | HttpServerErrorException e){
+                throw new RuntimeException("요청 오류");
+            }
         }
+
+        return getCartItemsByCartId(cartId); // 기존 cartId로 장바구니 항목 가져오기
+    }
+
+    private String generateLoginCartId() {
+        return"memberCart:" + System.currentTimeMillis();
     }
 
     /**
@@ -186,5 +212,23 @@ public class CartService {
         cartItems.add(new CartItem(itemId, title, 1, price, image));
 
         redisTemplate.opsForValue().set(cartId, cartItems, CART_EXPIRATION_HOURS, TimeUnit.HOURS);
+    }
+
+
+
+    /**
+     *
+     * @param request 요청
+     */
+    public String getAccessToken(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        String accessToken = null;
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("access-token")) {
+                accessToken = cookie.getValue();
+                break;
+            }
+        }
+        return accessToken;
     }
 }
