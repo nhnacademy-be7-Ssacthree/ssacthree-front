@@ -1,10 +1,10 @@
-package com.nhnacademy.mini_dooray.ssacthree_front.admin.tag.service.impl;
+package com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.service.impl;
 
 
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.tag.adapter.TagAdapter;
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.tag.dto.TagCreateRequest;
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.tag.dto.TagGetResponse;
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.tag.service.TagService;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.adapter.TagMgmtAdapter;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.dto.TagCreateRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.dto.TagInfoResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.service.TagMgmtService;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
 import feign.FeignException;
 import java.util.Collections;
@@ -15,15 +15,15 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class TagServiceImpl implements TagService {
+public class TagMgmtServiceImpl implements TagMgmtService {
 
-    private final TagAdapter tagAdapter;
+    private final TagMgmtAdapter tagMgmtAdapter;
 
     @Override
-    public List<TagGetResponse> getAllTags() {
+    public List<TagInfoResponse> getAllTags() {
 
         try {
-            ResponseEntity<List<TagGetResponse>> response = tagAdapter.getAllTags();
+            ResponseEntity<List<TagInfoResponse>> response = tagMgmtAdapter.getAllTags();
             if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             }
@@ -38,7 +38,7 @@ public class TagServiceImpl implements TagService {
     public MessageResponse createTag(TagCreateRequest tagCreateRequest) {
 
         try {
-            ResponseEntity<MessageResponse> response = tagAdapter.createTag(tagCreateRequest);
+            ResponseEntity<MessageResponse> response = tagMgmtAdapter.createTag(tagCreateRequest);
             if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             }

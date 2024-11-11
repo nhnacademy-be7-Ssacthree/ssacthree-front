@@ -1,4 +1,4 @@
-package com.nhnacademy.mini_dooray.ssacthree_front.admin.tag.dto;
+package com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

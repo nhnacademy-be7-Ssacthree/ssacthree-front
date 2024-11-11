@@ -1,4 +1,4 @@
-package com.nhnacademy.mini_dooray.ssacthree_front.admin.publisher.dto;
+package com.nhnacademy.mini_dooray.ssacthree_front.bookset.publisher.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

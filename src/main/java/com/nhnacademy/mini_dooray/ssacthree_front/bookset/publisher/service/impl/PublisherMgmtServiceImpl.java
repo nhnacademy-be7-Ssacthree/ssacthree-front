@@ -1,13 +1,13 @@
-package com.nhnacademy.mini_dooray.ssacthree_front.admin.publisher.service.impl;
+package com.nhnacademy.mini_dooray.ssacthree_front.bookset.publisher.service.impl;
 
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.publisher.adapter.PublisherAdapter;
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.publisher.dto.PublisherCreateRequest;
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.publisher.dto.PublisherGetResponse;
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.publisher.dto.PublisherUpdateRequest;
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.publisher.exception.PublisherCreateFailedException;
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.publisher.exception.PublisherGetFailedException;
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.publisher.exception.PublisherUpdateFailedException;
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.publisher.service.PublisherService;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.publisher.adapter.PublisherMgmtAdapter;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.publisher.dto.PublisherCreateRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.publisher.dto.PublisherGetResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.publisher.dto.PublisherUpdateRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.publisher.exception.PublisherCreateFailedException;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.publisher.exception.PublisherGetFailedException;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.publisher.exception.PublisherUpdateFailedException;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.publisher.service.PublisherMgmtService;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,13 +19,13 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class PublisherServiceImpl implements PublisherService {
+public class PublisherMgmtServiceImpl implements PublisherMgmtService {
 
-    private final PublisherAdapter publisherAdapter;
+    private final PublisherMgmtAdapter publisherMgmtAdapter;
 
     @Override
     public List<PublisherGetResponse> getAllPublishers() {
-        ResponseEntity<List<PublisherGetResponse>> response = publisherAdapter.getAllPublishers();
+        ResponseEntity<List<PublisherGetResponse>> response = publisherMgmtAdapter.getAllPublishers();
 
         try {
             if (response.getStatusCode().is2xxSuccessful()) {
@@ -39,7 +39,7 @@ public class PublisherServiceImpl implements PublisherService {
 
     @Override
     public MessageResponse createPublisher(PublisherCreateRequest publisherCreateRequest) {
-        ResponseEntity<MessageResponse> response = publisherAdapter.createPublisher(publisherCreateRequest);
+        ResponseEntity<MessageResponse> response = publisherMgmtAdapter.createPublisher(publisherCreateRequest);
 
         try {
             if (response.getStatusCode().is2xxSuccessful()) {
@@ -53,7 +53,7 @@ public class PublisherServiceImpl implements PublisherService {
 
     @Override
     public MessageResponse updatePublisher(PublisherUpdateRequest publisherUpdateRequest) {
-        ResponseEntity<MessageResponse> response = publisherAdapter.updatePublisher(publisherUpdateRequest);
+        ResponseEntity<MessageResponse> response = publisherMgmtAdapter.updatePublisher(publisherUpdateRequest);
 
         try {
             if (response.getStatusCode().is2xxSuccessful()) {

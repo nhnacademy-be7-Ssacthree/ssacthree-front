@@ -1,9 +1,9 @@
-package com.nhnacademy.mini_dooray.ssacthree_front.admin.publisher.controller;
+package com.nhnacademy.mini_dooray.ssacthree_front.bookset.publisher.controller;
 
 
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.publisher.dto.PublisherCreateRequest;
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.publisher.dto.PublisherUpdateRequest;
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.publisher.service.PublisherService;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.publisher.dto.PublisherCreateRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.publisher.dto.PublisherUpdateRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.publisher.service.PublisherMgmtService;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.exception.exception.ValidationFailedException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin/publishers")
-public class PublisherController {
+public class PublisherMgmtController {
 
-    private final PublisherService publisherService;
+    private final PublisherMgmtService publisherMgmtService;
 
     @GetMapping
     public String publisher(Model model) {
-        model.addAttribute("publishers", publisherService.getAllPublishers());
+        model.addAttribute("publishers", publisherMgmtService.getAllPublishers());
         return "admin/publisher/publishers";
     }
 
@@ -35,7 +35,7 @@ public class PublisherController {
             throw new ValidationFailedException(bindingResult);
         }
 
-        publisherService.updatePublisher(publisherUpdateRequest);
+        publisherMgmtService.updatePublisher(publisherUpdateRequest);
 
         return "redirect:/admin/publishers";
     }
@@ -52,7 +52,7 @@ public class PublisherController {
             throw new ValidationFailedException(bindingResult);
         }
 
-        publisherService.createPublisher(publisherCreateRequest);
+        publisherMgmtService.createPublisher(publisherCreateRequest);
 
         return "redirect:/admin/publishers";
     }
