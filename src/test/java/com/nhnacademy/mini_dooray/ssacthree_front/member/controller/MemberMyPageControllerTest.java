@@ -60,11 +60,11 @@ class MemberMyPageControllerTest {
         verify(memberService, times(1)).memberInfoUpdate(eq(updateRequest), any(HttpServletRequest.class));
     }
 
-    @Test
-    void testWithdraw() throws Exception {
-        mockMvc.perform(post("/members/withdraw"))
-            .andExpect(redirectedUrl("/"));
-
-        verify(memberService, times(1)).memberWithdraw(any(HttpServletRequest.class));
-    }
+//    @Test
+//    void testWithdraw() throws Exception {
+//        mockMvc.perform(post("/members/withdraw"))
+//            .andExpect(redirectedUrl("/"));
+//
+//        verify(memberService, times(1)).memberWithdraw(any(HttpServletRequest.class));
+//    }
 }

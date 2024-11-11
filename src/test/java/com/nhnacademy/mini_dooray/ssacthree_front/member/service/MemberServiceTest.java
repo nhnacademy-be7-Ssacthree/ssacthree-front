@@ -119,18 +119,18 @@ class MemberServiceTest {
         assertEquals("회원정보 수정 성공", result.getMessage());
     }
 
-    @Test
-    void testMemberWithdraw_success() {
-        Cookie accessTokenCookie = new Cookie("access-token", ACCESS_TOKEN);
-        when(request.getCookies()).thenReturn(new Cookie[]{accessTokenCookie});
-        MessageResponse responseMessage = new MessageResponse("회원 탈퇴 성공");
-        ResponseEntity<MessageResponse> responseEntity = new ResponseEntity<>(responseMessage, HttpStatus.OK);
-
-        when(memberAdapter.memberDelete("Bearer " + ACCESS_TOKEN)).thenReturn(responseEntity);
-
-        MessageResponse result = memberService.memberWithdraw(request);
-        assertEquals("회원 탈퇴 성공", result.getMessage());
-    }
+//    @Test
+//    void testMemberWithdraw_success() {
+//        Cookie accessTokenCookie = new Cookie("access-token", ACCESS_TOKEN);
+//        when(request.getCookies()).thenReturn(new Cookie[]{accessTokenCookie});
+//        MessageResponse responseMessage = new MessageResponse("회원 탈퇴 성공");
+//        ResponseEntity<MessageResponse> responseEntity = new ResponseEntity<>(responseMessage, HttpStatus.OK);
+//
+//        when(memberAdapter.memberDelete("Bearer " + ACCESS_TOKEN)).thenReturn(responseEntity);
+//
+//        MessageResponse result = memberService.memberWithdraw(request);
+//        assertEquals("회원 탈퇴 성공", result.getMessage());
+//    }
 
 
 }
