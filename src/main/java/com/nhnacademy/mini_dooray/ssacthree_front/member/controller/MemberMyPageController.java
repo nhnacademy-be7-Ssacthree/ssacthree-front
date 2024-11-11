@@ -24,7 +24,6 @@ public class MemberMyPageController {
     @GetMapping("/my-page")
     public String myPage(Model model, HttpServletRequest request) {
 
-        memberService.getMemberInfo(request);
         model.addAttribute("memberInfo", memberService.getMemberInfo(request));
         return "myPage";
     }
