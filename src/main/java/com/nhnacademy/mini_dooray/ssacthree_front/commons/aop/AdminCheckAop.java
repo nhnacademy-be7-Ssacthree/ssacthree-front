@@ -22,7 +22,7 @@ public class AdminCheckAop {
     @Before("@annotation(com.nhnacademy.mini_dooray.ssacthree_front.commons.aop.annotation.Admin)")
     public void checkAdmin() {
 
-l        if (!CookieUtil.checkAccessTokenCookie(request)) {
+        if (!CookieUtil.checkAccessTokenCookie(request)) {
             throw new RuntimeException("로그인 해야합니다");
         }
         try {
