@@ -6,7 +6,7 @@
 <!--TODO : 구현하면서 하나씩 주석 지우기 ... -->
 <body>
 <!-- Header -->
-<header th:replace="~{common/loginedHeader}"/>
+<header th:replace="~{common/header}"/>
 
 <!-- Main Container -->
 <div class="container mypage-container py-5">
@@ -15,14 +15,16 @@
     <aside class="col-lg-3 mb-4">
       <h5 class="mb-3">마이페이지</h5>
       <ul class="list-group">
-        <!--        <li class="list-group-item"><strong>회원 등급</strong>: <span th:text="${member.grade}">일반회원</span></li>-->
-        <!--        <li class="list-group-item">포인트: <span th:text="${member.points}">3,000점</span></li>-->
         <li class="list-group-item"><a href="#orders">최근 주문 내역</a></li>
         <li class="list-group-item"><a href="#wishlist">찜 목록</a></li>
         <li class="list-group-item"><a href="#account">나의 계좌</a></li>
         <li class="list-group-item"><a href="#coupon">쿠폰 목록</a></li>
         <li class="list-group-item"><a href="/address-page">주소록</a></li>
-        <li class="list-group-item"><a href="#withdraw">회원 탈퇴</a></li>
+        <li class="list-group-item">
+          <a href="#"
+             onclick="if(confirm('정말로 회원 탈퇴를 하시겠습니까?')) { document.getElementById('withdrawForm').submit(); } else { event.preventDefault(); }">회원
+            탈퇴</a>
+        </li>
       </ul>
     </aside>
 
@@ -30,7 +32,10 @@
     <main class="col-lg-9">
       <!-- 회원 등급 섹션 -->
       <h3>회원 정보</h3>
-      <div class="card-body p-4">
+      <p th:utext="'회원 등급 : <b>' + ${memberInfo.memberGradeName} + '</b>'"></p>
+      <p th:utext="'등급 혜택 : 순수 금액 당 <b>' + ${memberInfo.memberGradePointSave}*100 + '%</b> 포인트 적립 (순수금액 = 주문금액 - (쿠폰 + 배송비 + 취소금액 + 포장비))'"></p>
+      <hr>
+      <div class="card-body p-4" style="max-width: 600px; margin: 0 auto;">
         <form action="/members/my-page/update" method="post">
 
           <!-- Login ID (Readonly) -->
@@ -77,13 +82,8 @@
           </div>
         </form>
       </div>
-      <!-- 회원 탈퇴 섹션 -->
-      <section id="withdraw" class="mb-4">
-        <h3>회원 탈퇴</h3>
-        <form th:action="@{/members/withdraw}" method="post">
-          <button type="submit" class="btn btn-danger">탈퇴하기</button>
-        </form>
-      </section>
+      <form id="withdrawForm" th:action="@{/members/withdraw}" method="post"
+            style="display: none;"></form>
     </main>
   </div>
 </div>
@@ -93,6 +93,25 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
+<script>
+  // 수정 버튼 확인
+  document.querySelector('form[action="/members/my-page/update"]').addEventListener('submit',
+      function (event) {
+        const confirmUpdate = confirm("정말로 회원 정보를 수정하시겠습니까?");
+        if (!confirmUpdate) {
+          event.preventDefault(); // 사용자가 취소를 누르면 form 제출을 막음
+        }
+      });
+
+  // 회원 탈퇴 버튼 확인
+  document.querySelector('form[action="/members/withdraw"]').addEventListener('submit',
+      function (event) {
+        const confirmWithdraw = confirm("정말로 회원 탈퇴를 하시겠습니까?");
+        if (!confirmWithdraw) {
+          event.preventDefault(); // 사용자가 취소를 누르면 form 제출을 막음
+        }
+      });
+</script>
 
 </body>
 </html>

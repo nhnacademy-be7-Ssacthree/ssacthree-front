@@ -155,8 +155,8 @@ public class MemberServiceImpl implements MemberService {
             ResponseEntity<MessageResponse> feignResponse = memberAdapter.memberDelete(
                 "Bearer " + accessToken);
             if (feignResponse.getStatusCode().is2xxSuccessful()) {
-                
-                memberAdapter.memberLogout();
+
+                this.memberLogout(response);
 
                 // 쿠키 터뜨려서 로그아웃
 //                Cookie accessCookie = new Cookie("access-token", null);
