@@ -4,20 +4,9 @@
     <title>포장지 관리</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
     <style>
-        .gift-image {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-        .gift-name {
-            margin-top: 10px;
-            font-weight: bold;
-        }
-        .gift-price {
-            margin-top: 5px;
-            color: #FF5733;
-        }
+        .gift-image { width: 100%; height: 150px; object-fit: cover; border-radius: 10px; }
+        .gift-name { margin-top: 10px; font-weight: bold; }
+        .gift-price { margin-top: 5px; color: #FF5733; }
     </style>
 </head>
 <body>
@@ -35,26 +24,22 @@
                         <div th:each="packaging : ${packagingList}" class="col-md-4 mb-4">
                             <div class="gift-card border p-3 rounded text-center">
                                 <img th:src="${packaging.getPackagingImageUrl()}" alt="Gift Image" class="gift-image" />
-
                                 <div class="gift-name mt-3">
                                     <strong>포장지 이름:</strong> <span th:text="${packaging.getPackagingName()}">Gift Name</span>
                                 </div>
-
                                 <div class="gift-price mt-2">
                                     <strong>포장지 가격:</strong> <span th:text="${packaging.getPackagingPrice()}">₩0</span>
                                 </div>
-                                <!-- 수정 및 삭제 버튼 id필요 -->
                                 <div class="mt-3 d-flex justify-content-between">
-                                    <a href="#" th:href="@{/admin/packaging/update/{id}(id=${packaging.id})}" class="btn btn-warning btn-sm w-auto">수정</a>
-                                    <a href="#" th:href="@{/admin/packaging/delete/{id}(id=${packaging.id})}" class="btn btn-danger btn-sm w-auto">삭제</a>
+                                    <button th:data-id="${packaging.id}" class="btn btn-warning btn-sm w-auto" onclick="editPackaging(this)">수정</button>
+                                    <button th:data-id="${packaging.id}" class="btn btn-danger btn-sm w-auto" onclick="deletePackaging(this)">삭제</button>
                                 </div>
+
                             </div>
                         </div>
-
                     </div>
                     <div class="text-center mt-4">
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#packagingModal">새 포장지 추가
-                        </button>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#packagingModal" onclick="openCreateModal()">새 포장지 추가</button>
                     </div>
                 </div>
             </div>
@@ -62,16 +47,17 @@
     </div>
 </div>
 
-<!-- 포장지 추가 모달 -->
+<!-- 포장지 추가/수정 모달 -->
 <div class="modal fade" id="packagingModal" tabindex="-1" aria-labelledby="packagingModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form th:action="@{/admin/packaging}" method="post">
+            <form id="packagingForm">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="packagingModalLabel">새 포장지 추가</h5>
+                    <h5 class="modal-title" id="packagingModalLabel">포장지 추가</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <input type="hidden" id="packagingId" name="id">
                     <div class="mb-3">
                         <label for="name" class="form-label">포장지 이름</label>
                         <input type="text" class="form-control" id="name" name="name" required>
@@ -87,16 +73,89 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                    <button type="submit" class="btn btn-primary">확인</button>
+                    <button type="button" class="btn btn-primary" onclick="submitPackagingForm()">확인</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-
 <footer th:replace="~{common/footer :: footer}"/>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // 모달을 열어 새 포장지 추가 시 초기화
+    function openCreateModal() {
+        document.getElementById("packagingForm").reset();
+        document.getElementById("packagingId").value = "";
+        document.getElementById("packagingModalLabel").innerText = "새 포장지 추가";
+    }
+
+    // 수정 버튼 클릭 시 포장지 정보 불러오기
+    function editPackaging(button) {
+        // 'this' 버튼 요소에서 'data-id' 속성을 가져옵니다.
+        const id = button.getAttribute('data-id');
+        console.log(id);  // 콘솔에 ID를 출력하여 확인
+
+        // 해당 ID로 서버에서 포장지 정보를 요청합니다.
+        fetch(`/api/shop/admin/packaging/${id}`)
+            .then(response => response.json())
+            .then(data => {
+                // 폼의 각 필드에 데이터를 채워넣습니다.
+                document.getElementById("packagingId").value = data.id;
+                document.getElementById("name").value = data.packagingName;
+                document.getElementById("price").value = data.packagingPrice;
+                document.getElementById("imageUrl").value = data.packagingImageUrl;
+
+                // 모달 제목을 '수정'으로 변경합니다.
+                document.getElementById("packagingModalLabel").innerText = "포장지 수정";
+
+                // 수정 모달을 표시합니다.
+                new bootstrap.Modal(document.getElementById("packagingModal")).show();
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+
+    // 폼 제출 시 새 포장지 추가 또는 수정
+    function submitPackagingForm() {
+        const id = document.getElementById("packagingId").value;
+        const url = id ? `/api/shop/admin/packaging/${id}` : '/api/shop/admin/packaging';
+        const method = id ? 'PUT' : 'POST';
+
+        const formData = {
+            packagingName: document.getElementById("name").value,
+            packagingPrice: document.getElementById("price").value,
+            packagingImageUrl: document.getElementById("imageUrl").value
+        };
+
+        fetch(url, {
+            method: method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                location.reload();
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    // 삭제 버튼 클릭 시 포장지 삭제 요청
+    function deletePackaging(button) {
+        const id = button.getAttribute('data-id');
+        console.log(id);  // 확인을 위해 콘솔에 출력
+        if (confirm("정말 삭제하시겠습니까?")) {
+            fetch(`/api/shop/admin/packaging/${id}`, { method: 'DELETE' })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    location.reload();
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    }
+</script>
 </body>
 </html>
