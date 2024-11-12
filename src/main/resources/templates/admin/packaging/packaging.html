@@ -53,13 +53,47 @@
 
                     </div>
                     <div class="text-center mt-4">
-                        <a href="/admin/packaging/create" class="btn btn-success">포장지 추가</a>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#packagingModal">새 포장지 추가
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- 포장지 추가 모달 -->
+<div class="modal fade" id="packagingModal" tabindex="-1" aria-labelledby="packagingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form th:action="@{/admin/packaging}" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="packagingModalLabel">새 포장지 추가</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">포장지 이름</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="price" class="form-label">포장지 가격</label>
+                        <input type="number" class="form-control" id="price" name="price" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="imageUrl" class="form-label">이미지 URL</label>
+                        <input type="text" class="form-control" id="imageUrl" name="imageUrl" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <button type="submit" class="btn btn-primary">확인</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 <footer th:replace="~{common/footer :: footer}"/>
 

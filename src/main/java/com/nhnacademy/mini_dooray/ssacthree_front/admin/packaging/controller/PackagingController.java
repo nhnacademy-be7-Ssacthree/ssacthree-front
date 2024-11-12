@@ -1,11 +1,11 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.controller;
 
+import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.dto.PackagingCreateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.service.PackagingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -20,5 +20,10 @@ public class PackagingController {
         return "admin/packaging/packaging";
     }
 
+    @PostMapping
+    public String createPackaging(@ModelAttribute PackagingCreateRequest packagingCreateRequest) {
+        packagingService.createPackaging(packagingCreateRequest);
+        return "redirect:/admin/packaging";
+    }
 
 }
