@@ -1,6 +1,7 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.controller;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.dto.PackagingCreateRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.dto.PackagingUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.service.PackagingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -27,8 +28,9 @@ public class PackagingController {
     }
 
     @PostMapping("/update/{packaging-id}")
-    public String updatePackaging(@PathVariable("packaging-id") Long packagingId) {
-//        packagingService.updatePackaging(packagingId, );
+    public String updatePackaging(@PathVariable("packaging-id") Long packagingId,
+                                  @ModelAttribute PackagingUpdateRequest packagingUpdateRequest) {
+        packagingService.updatePackaging(packagingId, packagingUpdateRequest);
         return "redirect:/admin/packaging";
     }
 

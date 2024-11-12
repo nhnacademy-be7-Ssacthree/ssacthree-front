@@ -3,6 +3,7 @@ package com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.service.impl;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.adapter.PackagingAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.dto.PackagingCreateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.dto.PackagingGetResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.dto.PackagingUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.exception.PackagingCreateFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.exception.PackagingGetFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.service.PackagingService;
@@ -37,6 +38,16 @@ public class PackagingServiceImpl implements PackagingService {
             }
 
         throw new PackagingCreateFailedException("포장지 추가에 실패했습니다.");
+    }
+
+    @Override
+    public MessageResponse updatePackaging(Long packagingId, PackagingUpdateRequest packagingUpdateRequest) {
+        ResponseEntity<MessageResponse> response = packagingAdapter.updatePackaging(packagingId, packagingUpdateRequest);
+        if (response.getStatusCode().is2xxSuccessful()) {
+            return response.getBody();
+        }
+
+        throw new RuntimeException("포장지 수정에 실패했습니다.");
     }
 
     @Override
