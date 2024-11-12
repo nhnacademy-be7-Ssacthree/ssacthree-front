@@ -16,5 +16,7 @@ public class MemberInfoResponse {
     private String customerEmail;
     private String memberBirthdate;
     private long memberPoint;
+    private String memberGradeName;
+    private float memberGradePointSave;
 
 }
