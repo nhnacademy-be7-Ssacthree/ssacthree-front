@@ -4,13 +4,8 @@
   </head>
   <body>
 
-  <div th:if="${accessTokenExists==true}">
-  <header th:replace="~{common/loginedHeader}"/>
-  </div>
 
-  <div th:if="${accessTokenExists==false}">
     <header th:replace="~{common/header}"/>
-  </div>
 
     <section id="billboard" class="position-relative d-flex align-items-center py-5 bg-light-gray"
       style="background-image: url(/images/banner-image-bg.jpg); background-size: cover; background-repeat: no-repeat; background-position: center; height: 800px;">
