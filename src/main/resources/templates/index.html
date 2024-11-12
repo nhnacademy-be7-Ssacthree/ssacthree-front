@@ -423,14 +423,12 @@
               <!-- 액션 버튼 -->
               <div class="card-concern position-absolute start-0 end-0 d-flex gap-2">
                 <button type="button" href="#" class="btn btn-dark"
-                        <!-- todo: 카트 url 변경 필요 -->
-                        th:onclick="|window.location.href='/cart/add?bookId=' + ${book.bookId}|"
+                        th:onclick="|window.location.href='/cart/add?bookId='+${book.bookId}|"
                         data-bs-toggle="tooltip" data-bs-placement="top"
                         data-bs-title="Tooltip on top">
                   <svg class="cart"><use xlink:href="#cart"></use></svg>
                 </button>
                 <a href="#" class="btn btn-dark">
-                  <!-- todo: 좋아요 연결 필요 -->
                   <span><svg class="wishlist"><use xlink:href="#heart"></use></svg></span>
                 </a>
               </div>
