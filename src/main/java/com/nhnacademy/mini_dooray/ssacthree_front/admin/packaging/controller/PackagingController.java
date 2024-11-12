@@ -29,8 +29,16 @@ public class PackagingController {
 
     @PostMapping("/update/{packaging-id}")
     public String updatePackaging(@PathVariable("packaging-id") Long packagingId,
-                                  @ModelAttribute PackagingUpdateRequest packagingUpdateRequest) {
+                                  @RequestParam("packagingName") String packagingName,
+                                  @RequestParam("packagingPrice") int packagingPrice,
+                                  @RequestParam("packagingImageUrl") String packagingImageUrl) {
+
+        // PackagingUpdateRequest 객체 생성
+        PackagingUpdateRequest packagingUpdateRequest = new PackagingUpdateRequest(packagingName, packagingPrice, packagingImageUrl);
+
+        // 서비스 호출하여 업데이트 처리
         packagingService.updatePackaging(packagingId, packagingUpdateRequest);
+
         return "redirect:/admin/packaging";
     }
 
