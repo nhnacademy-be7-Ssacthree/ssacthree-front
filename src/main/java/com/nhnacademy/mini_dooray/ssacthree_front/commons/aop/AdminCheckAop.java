@@ -2,6 +2,7 @@ package com.nhnacademy.mini_dooray.ssacthree_front.commons.aop;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.adapter.AuthAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.util.CookieUtil;
+import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +22,18 @@ public class AdminCheckAop {
     @Before("@annotation(com.nhnacademy.mini_dooray.ssacthree_front.commons.aop.annotation.Admin)")
     public void checkAdmin() {
 
-        if (CookieUtil.checkAccessTokenCookie(request)) {
+l        if (!CookieUtil.checkAccessTokenCookie(request)) {
             throw new RuntimeException("로그인 해야합니다");
         }
+        try {
+            if (authAdapter.roleCheck().getStatusCode().is2xxSuccessful()) {
+                return;
+            }
+        } catch (FeignException e) {
+            throw e;
+        }
 
-        authAdapter.roleCheck();
+
     }
 
 }
