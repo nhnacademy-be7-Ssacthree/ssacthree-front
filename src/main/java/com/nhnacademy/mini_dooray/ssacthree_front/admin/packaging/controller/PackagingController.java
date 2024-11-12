@@ -26,4 +26,15 @@ public class PackagingController {
         return "redirect:/admin/packaging";
     }
 
+    @PostMapping("/update/{packaging-id}")
+    public String updatePackaging(@PathVariable("packaging-id") Long packagingId) {
+//        packagingService.updatePackaging(packagingId, );
+        return "redirect:/admin/packaging";
+    }
+
+    @PostMapping("/delete/{packaging-id}")
+    public String deletePackaging(@PathVariable("packaging-id") Long id) {
+        packagingService.deletePackaging(id);
+        return "redirect:/admin/packaging";
+    }
 }

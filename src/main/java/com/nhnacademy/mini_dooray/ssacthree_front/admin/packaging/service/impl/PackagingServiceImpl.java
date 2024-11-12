@@ -38,4 +38,16 @@ public class PackagingServiceImpl implements PackagingService {
 
         throw new PackagingCreateFailedException("포장지 추가에 실패했습니다.");
     }
+
+    @Override
+    public MessageResponse deletePackaging(Long packagingId) {
+        // Adapter를 호출하여 delete 요청을 보냄
+        ResponseEntity<MessageResponse> response = packagingAdapter.deletePackaging(packagingId);
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            return response.getBody();
+        }
+
+        throw new RuntimeException("포장지 삭제에 실패했습니다.");
+    }
 }

@@ -11,4 +11,6 @@ public interface PackagingService {
     List<PackagingGetResponse> getAllPackaging();
 
     MessageResponse createPackaging(PackagingCreateRequest packagingCreateRequest);
+
+    MessageResponse deletePackaging(Long packagingId);
 }

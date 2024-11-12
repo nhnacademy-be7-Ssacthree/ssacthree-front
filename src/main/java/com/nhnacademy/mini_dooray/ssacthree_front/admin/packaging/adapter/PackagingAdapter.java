@@ -5,9 +5,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.dto.PackagingG
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,4 +18,7 @@ public interface PackagingAdapter {
 
     @PostMapping("/packaging")
     ResponseEntity<MessageResponse> createPackaging(@RequestBody PackagingCreateRequest packagingCreateRequest);
+
+    @DeleteMapping("/packaging/{packaging-id}")
+    ResponseEntity<MessageResponse> deletePackaging(@PathVariable("packaging-id") Long packagingId);
 }
