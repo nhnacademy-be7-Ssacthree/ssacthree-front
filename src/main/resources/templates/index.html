@@ -381,101 +381,82 @@
 
 <!-- best-selling-items 섹션 -->
 <section id="best-selling-items" class="position-relative padding-large">
-  <div class="container">
-    <div class="section-title d-md-flex justify-content-between align-items-center mb-4">
-      <h3 class="d-flex align-items-center">한강 2024 노벨문학상 수상 <img src="/images/award-icon.png"
-                                                                  style="padding-bottom:5px; margin-left:10px;"/>
-      </h3>
-      <a href="index.html" class="btn">View All</a>
-    </div>
-    <!-- Swiper navigation buttons -->
-    <div class="position-absolute top-50 end-0 pe-0 pe-xxl-5 me-0 me-xxl-5 swiper-button-next">
-      <svg class="chevron-forward-circle d-flex justify-content-center align-items-center p-2"
-           width="80" height="80">
-        <use xlink:href="#alt-arrow-right-outline"></use>
-      </svg>
-    </div>
-    <div class="position-absolute top-50 start-0 ps-0 ps-xxl-5 ms-0 ms-xxl-5 swiper-button-prev">
-      <svg class="chevron-back-circle d-flex justify-content-center align-items-center p-2"
-           width="80" height="80">
-        <use xlink:href="#alt-arrow-left-outline"></use>
-      </svg>
-    </div>
+    <div class="container">
+      <div class="section-title d-md-flex justify-content-between align-items-center mb-4">
+        <h3 class="d-flex align-items-center">한강 2024 노벨문학상 수상 <img src="/images/award-icon.png" style="padding-bottom:5px; margin-left:10px;"/></h3>
+        <a href="index.html" class="btn">View All</a>
+      </div>
+      <!-- Swiper navigation buttons -->
+      <div class="position-absolute top-50 end-0 pe-0 pe-xxl-5 me-0 me-xxl-5 swiper-button-next">
+        <svg class="chevron-forward-circle d-flex justify-content-center align-items-center p-2" width="80" height="80">
+          <use xlink:href="#alt-arrow-right-outline"></use>
+        </svg>
+      </div>
+      <div class="position-absolute top-50 start-0 ps-0 ps-xxl-5 ms-0 ms-xxl-5 swiper-button-prev">
+        <svg class="chevron-back-circle d-flex justify-content-center align-items-center p-2" width="80" height="80">
+          <use xlink:href="#alt-arrow-left-outline"></use>
+        </svg>
+      </div>
 
-    <div class="swiper product-swiper">
-      <div class="swiper-wrapper">
-        <!-- 책 리스트를 반복하여 렌더링 -->
-        <div class="swiper-slide" th:each="book : ${books}">
-          <!-- 카드 전체 클릭 시 링크 이동 -->
-          <div class="card position-relative p-4 border rounded-3"
-               th:onclick="|window.location.href='/books/' + ${book.bookId}|"
-               style="cursor: pointer; height: 525px;">
+      <div class="swiper product-swiper">
+        <div class="swiper-wrapper">
+          <!-- 책 리스트를 반복하여 렌더링 -->
+          <div class="swiper-slide" th:each="book : ${books}">
+            <!-- 카드 전체 클릭 시 링크 이동 -->
+            <div class="card position-relative p-4 border rounded-3"
+                 th:onclick="|window.location.href='/books/' + ${book.bookId}|"
+                 style="cursor: pointer; height: 525px;">
 
-            <!-- 할인 정보 -->
-            <div class="position-absolute">
-              <p class="bg-primary py-1 px-3 fs-6 text-white rounded-2"
-                 th:text="${book.bookDiscount} + '% off'">10% off</p>
-            </div>
+              <!-- 할인 정보 -->
+              <div class="position-absolute">
+                <p class="bg-primary py-1 px-3 fs-6 text-white rounded-2" th:text="${book.bookDiscount} + '% off'">10% off</p>
+              </div>
 
-            <!-- 책 이미지 -->
-            <img th:src="${book.bookThumbnailImageUrl}" class="img-fluid shadow-sm"
-                 alt="book cover">
+              <!-- 책 이미지 -->
+              <img th:src="${book.bookThumbnailImageUrl}" class="img-fluid shadow-sm" alt="book cover">
 
-            <!-- 책 제목 및 상세 정보 -->
-            <h6 class="mt-4 mb-0 fw-bold" th:text="${book.bookName}">Book Title</h6>
+              <!-- 책 제목 및 상세 정보 -->
+              <h6 class="mt-4 mb-0 fw-bold" th:text="${book.bookName}">Book Title</h6>
 
-            <!-- 작가 이름 -->
-            <!--              <p class="my-2 me-2 fs-6 text-black-50"><span th:each="item, iterStat : ${book.authors}"><span th:text="${item.authorName}"></span><span th:if="${!iterStat.last}">, </span></span></p>-->
+              <!-- 작가 이름 -->
+<!--              <p class="my-2 me-2 fs-6 text-black-50"><span th:each="item, iterStat : ${book.authors}"><span th:text="${item.authorName}"></span><span th:if="${!iterStat.last}">, </span></span></p>-->
 
+              <!-- 리뷰 별점 -->
+              <div class="review-content d-flex">
+                <div class="rating text-warning d-flex align-items-center">
+                  <svg class="star star-fill"><use xlink:href="#star-fill"></use></svg>
+                  <svg class="star star-fill"><use xlink:href="#star-fill"></use></svg>
+                  <svg class="star star-fill"><use xlink:href="#star-fill"></use></svg>
+                  <svg class="star star-fill"><use xlink:href="#star-fill"></use></svg>
+                  <svg class="star star-fill"><use xlink:href="#star-fill"></use></svg>
+                </div>
+              </div>
 
-            <!-- 리뷰 별점 -->
-            <div class="review-content d-flex">
-              <div class="rating text-warning d-flex align-items-center">
-                <svg class="star star-fill">
-                  <use xlink:href="#star-fill"></use>
-                </svg>
-                <svg class="star star-fill">
-                  <use xlink:href="#star-fill"></use>
-                </svg>
-                <svg class="star star-fill">
-                  <use xlink:href="#star-fill"></use>
-                </svg>
-                <svg class="star star-fill">
-                  <use xlink:href="#star-fill"></use>
-                </svg>
-                <svg class="star star-fill">
-                  <use xlink:href="#star-fill"></use>
-                </svg>
+              <!-- 가격 정보 -->
+              <span class="price text-primary fw-bold mb-2 fs-5" th:text="${book.salePrice} + ' 원'">$0.00</span>
 
-             
-
-            <!-- 가격 정보 -->
-            <span class="price text-primary fw-bold mb-2 fs-5" th:text="${book.salePrice} + ' 원'">$0.00</span>
-
-            <!-- 액션 버튼 (카드 클릭 제외) -->
-            <div class="card-concern position-absolute start-0 end-0 d-flex gap-2">
-              <button type="button" class="btn btn-dark cart-button"
-                      th:onclick="|window.location.href='/shop/carts/add?bookId=' + ${book.bookId}|"
-                      data-bs-toggle="tooltip" data-bs-placement="top"
-                      data-bs-title="Tooltip on top">
-                <svg class="cart">
-                  <use xlink:href="#cart"></use>
-                </svg>
-              </button>
-              <a href="#" class="btn btn-dark wishlist-button">
-                <span><svg class="wishlist"><use xlink:href="#heart"></use></svg></span>
-              </a>
+              <!-- 액션 버튼 (카드 클릭 제외) -->
+              <div class="card-concern position-absolute start-0 end-0 d-flex gap-2">
+                <button type="button" class="btn btn-dark cart-button"
+                        th:onclick="|window.location.href='/shop/carts/add?' + ${book.bookId}|"
+                        data-bs-toggle="tooltip" data-bs-placement="top"
+                        data-bs-title="Tooltip on top">
+                  <svg class="cart"><use xlink:href="#cart"></use></svg>
+                </button>
+                <a href="#" class="btn btn-dark wishlist-button">
+                  <span><svg class="wishlist"><use xlink:href="#heart"></use></svg></span>
+                </a>
+              </div>
             </div>
           </div>
         </div>
+
+
       </div>
-
-
+      <!-- 페이지네이션 추가 -->
+      <div class="swiper-pagination" style="margin-bottom: 2em"></div>
     </div>
-    <!-- 페이지네이션 추가 -->
-    <div class="swiper-pagination" style="margin-bottom: 2em"></div>
-  </div>
-</section>
+  </section>
 
 <section id="items-listing" class="padding-large">
   <div class="container">
