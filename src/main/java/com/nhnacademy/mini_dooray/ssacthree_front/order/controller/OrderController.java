@@ -35,7 +35,7 @@ public class OrderController {
         // 이 세션에서 attribute의 cartId 알아낸 다음 redis에서 cartId로 상품 정보 가져오기(아이디랑 수량만 받으면 안되나?)
 //        GuestCartInfoResponse guestCartInfoResponse = orderService.createGusetOrderSheet(session);
 
-        List<CartItem> cartItems = cartService.initializeCart(session); // 서비스에서 장바구니 초기화
+        List<CartItem> cartItems = cartService.initializeCart(request); // 서비스에서 장바구니 초기화
         // 비회원 장바구니 정보 넣어주기
 //        model.addAttribute("guestCartInfo", guestCartInfoResponse);
 

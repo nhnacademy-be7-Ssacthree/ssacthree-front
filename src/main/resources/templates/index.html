@@ -427,6 +427,7 @@
             <!-- 작가 이름 -->
             <!--              <p class="my-2 me-2 fs-6 text-black-50"><span th:each="item, iterStat : ${book.authors}"><span th:text="${item.authorName}"></span><span th:if="${!iterStat.last}">, </span></span></p>-->
 
+
             <!-- 리뷰 별점 -->
             <div class="review-content d-flex">
               <div class="rating text-warning d-flex align-items-center">
@@ -445,8 +446,8 @@
                 <svg class="star star-fill">
                   <use xlink:href="#star-fill"></use>
                 </svg>
-              </div>
-            </div>
+
+             
 
             <!-- 가격 정보 -->
             <span class="price text-primary fw-bold mb-2 fs-5" th:text="${book.salePrice} + ' 원'">$0.00</span>
