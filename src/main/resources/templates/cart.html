@@ -21,7 +21,7 @@
       <div class="col-md-3">
         <div class="input-group">
           <!-- 수량 감소 버튼 -->
-          <form th:action="@{/shop/{itemId}(itemId=${item.id})}" method="post" style="display:inline;">
+          <form th:action="@{/shop/carts/{itemId}(itemId=${item.id})}" method="post" style="display:inline;">
             <input type="hidden" name="_method" value="PUT">
             <input type="hidden" name="quantityChange" value="-1">
             <button type="submit" class="btn btn-outline-secondary">-</button>
@@ -31,7 +31,7 @@
           <input type="text" class="form-control text-center" th:value="${item.quantity}" readonly>
 
           <!-- 수량 증가 버튼 -->
-          <form th:action="@{/shop/{itemId}(itemId=${item.id})}" method="post" style="display:inline;">
+          <form th:action="@{/shop/carts/{itemId}(itemId=${item.id})}" method="post" style="display:inline;">
             <input type="hidden" name="_method" value="PUT">
             <input type="hidden" name="quantityChange" value="+1">
             <button type="submit" class="btn btn-outline-secondary">+</button>
@@ -42,7 +42,7 @@
         <span class="price" th:text="${item.price} + '원'">20,000원</span>
       </div>
       <div class="col-md-1">
-        <form th:action="@{/shop/{itemId}(itemId=${item.id})}" method="post" style="display:inline;">
+        <form th:action="@{/shop/carts/{itemId}(itemId=${item.id})}" method="post" style="display:inline;">
           <input type="hidden" name="_method" value="DELETE" />
           <button class="btn btn-danger">X</button>
         </form>
@@ -53,11 +53,7 @@
   <!-- 새로운 책 추가 버튼 -->
   <div class="row mt-4">
     <div class="col-md-12 text-center">
-      <form th:action="@{/shop/}" method="post">
-        <input type="hidden" name="itemId" value="3" />
-        <input type="hidden" name="title" value="새로운 책 제목" />
-        <input type="hidden" name="price" value="15000" />
-        <input type="hidden" name="image" value="" />
+      <form th:action="@{/shop/carts/1}" method="get">
         <button type="submit" class="btn btn-primary">새로운 책 추가</button>
       </form>
     </div>
@@ -85,9 +81,9 @@
     <div class="col-md-6">
       <h4>결제 방법</h4>
       <ul class="list-unstyled">
-        <li><img src="images/visa.jpg" alt="Visa" width="50"> Visa</li>
-        <li><img src="images/mastercard.jpg" alt="MasterCard" width="50"> MasterCard</li>
-        <li><img src="images/paypal.jpg" alt="PayPal" width="50"> PayPal</li>
+        <li><img src="/images/visa.jpg" alt="Visa" width="50"> Visa</li>
+        <li><img src="/images/mastercard.jpg" alt="MasterCard" width="50"> MasterCard</li>
+        <li><img src="/images/paypal.jpg" alt="PayPal" width="50"> PayPal</li>
       </ul>
     </div>
   </div>

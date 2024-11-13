@@ -1,6 +1,5 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.request;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
