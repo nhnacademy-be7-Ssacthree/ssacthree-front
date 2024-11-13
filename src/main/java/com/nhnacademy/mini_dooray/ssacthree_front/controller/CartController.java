@@ -3,14 +3,12 @@ package com.nhnacademy.mini_dooray.ssacthree_front.controller;
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.domain.CartItem;
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.service.CartService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 @Controller
 @RequiredArgsConstructor
 public class CartController {
@@ -28,33 +26,44 @@ public class CartController {
     }
 
     @PostMapping("/shop/")
-    public String addNewBook(HttpSession session, @RequestParam Long itemId,
+    public String addNewBook(HttpServletRequest request, @RequestParam Long itemId,
                                                   @RequestParam String title,
+                                                  @RequestParam int quantity,
                                                   @RequestParam int price,
                                                   @RequestParam String image) { //새로운 책 장바구니에 추가
-        cartService.addNewBook(session,itemId,title,price,image);
+        cartService.addNewBook(request,itemId,title,quantity,price,image);
         return CART_REDIRECT;
     }
 
     @PutMapping("/shop/{itemId}")
-    public String changeQuantity(HttpSession session, @PathVariable Long itemId, @RequestParam int quantityChange) { //수량 변경
-        cartService.updateItemQuantity(session, itemId, quantityChange);
+    public String changeQuantity(HttpServletRequest request, @PathVariable Long itemId, @RequestParam int quantityChange) { //수량 변경
+        cartService.updateItemQuantity(request, itemId, quantityChange);
         return CART_REDIRECT; // 변경 후 장바구니 페이지로 리다이렉트
     }
 
 
     @DeleteMapping("/shop/{itemId}")
-    public String deleteCartItem(HttpSession session, @PathVariable Long itemId) {
-        cartService.deleteItem(session,itemId);
+    public String deleteCartItem(HttpServletRequest request, @PathVariable Long itemId) {
+        cartService.deleteItem(request,itemId);
         return CART_REDIRECT;
     }
 
     @GetMapping("/shop/{bookId}") // 장바구니에 필요한 책 데이터 가져오기 나중에 삭제 예정
     public String getBookInDB(HttpServletRequest request, @PathVariable Long bookId) {
         CartItem cartItem = cartService.getRandomBook(bookId, request);
-        HttpSession session = request.getSession();
-        cartService.addNewBook(session,cartItem.getId(),cartItem.getTitle(),cartItem.getPrice(),cartItem.getImageUrl());
+        cartService.addNewBook(request,cartItem.getId(),cartItem.getTitle(),1,cartItem.getPrice(),cartItem.getImageUrl());
         return CART_REDIRECT;
     }
 
+    @GetMapping("/shop/customers")
+    public String makeLoginSession(HttpServletRequest request){
+        cartService.getMemberCart(request);
+        return "redirect:/";
+    }
+
+
+    @PostMapping("/shop")
+    public void saveInDB(List<CartItem> cartItems, Long customerId) {
+        cartService.saveCartInDB(cartItems,customerId);
+    }
 }

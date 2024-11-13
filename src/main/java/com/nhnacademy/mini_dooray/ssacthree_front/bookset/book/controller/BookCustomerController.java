@@ -2,6 +2,8 @@ package com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.controller;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.service.BookCommonService;
+import com.nhnacademy.mini_dooray.ssacthree_front.cart.service.CartService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import java.awt.print.Book;
 public class BookCustomerController {
 
     private final BookCommonService bookCommonService;
+    private final CartService cartService;
 
     @GetMapping("/author/{author-id}")
     public String getBooksByAuthorId(
@@ -41,12 +44,12 @@ public class BookCustomerController {
     public String showBestSelling(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
-            Model model) {
+            Model model,
+            HttpServletRequest request) {
         String[] sort = {"bookName"};
         Long authorId = 365L;
 
         Page<BookInfoResponse> books = bookCommonService.getBooksByAuthorId(page, size, sort, authorId);
-
         model.addAttribute("books", books.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", books.getTotalPages());
