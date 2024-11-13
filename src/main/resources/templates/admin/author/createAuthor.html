@@ -1,0 +1,119 @@
+<meta charset="UTF-8">
+<form th:action="@{/admin/books/create}" th:method="post" enctype="multipart/form-data">
+  <!-- 도서 이름 -->
+  <div class="mb-3">
+    <label for="bookName" class="form-label">도서 이름</label>
+    <input type="text" class="form-control" id="bookName" th:field="*{bookName}" required>
+  </div>
+
+  <!-- 목차 -->
+  <div class="mb-3">
+    <label for="bookIndex" class="form-label">목차</label>
+    <textarea class="form-control" id="bookIndex" th:field="*{bookIndex}" rows="4" required></textarea>
+  </div>
+
+  <!-- 책 설명 -->
+  <div class="mb-3">
+    <label for="bookInfo" class="form-label">책 설명</label>
+    <textarea class="form-control" id="bookInfo" th:field="*{bookInfo}" rows="4" required></textarea>
+  </div>
+
+  <!-- ISBN -->
+  <div class="mb-3">
+    <label for="bookIsbn" class="form-label">ISBN</label>
+    <input type="text" class="form-control" id="bookIsbn" th:field="*{bookIsbn}" required>
+  </div>
+
+  <!-- 출판일 -->
+  <div class="mb-3">
+    <label for="publicationDate" class="form-label">출판일</label>
+    <input type="datetime-local" class="form-control" id="publicationDate" th:field="*{publicationDate}" required>
+  </div>
+
+  <!-- 판매가 -->
+  <div class="mb-3">
+    <label for="regularPrice" class="form-label">판매가</label>
+    <input type="number" class="form-control" id="regularPrice" th:field="*{regularPrice}" required>
+  </div>
+
+  <!-- 할인 가격 -->
+  <div class="mb-3">
+    <label for="salePrice" class="form-label">할인 가격</label>
+    <input type="number" class="form-control" id="salePrice" th:field="*{salePrice}">
+  </div>
+
+  <!-- 포장 여부 -->
+  <div class="mb-3">
+    <label class="form-label">포장 여부</label>
+    <div>
+      <input type="radio" id="isPackedYes" th:field="*{isPacked}" value="true">
+      <label for="isPackedYes">예</label>
+      <input type="radio" id="isPackedNo" th:field="*{isPacked}" value="false" checked>
+      <label for="isPackedNo">아니오</label>
+    </div>
+  </div>
+
+  <!-- 재고 -->
+  <div class="mb-3">
+    <label for="stock" class="form-label">재고</label>
+    <input type="number" class="form-control" id="stock" th:field="*{stock}" required>
+  </div>
+
+  <!-- 썸네일 이미지 URL -->
+  <div class="mb-3">
+    <label for="bookThumbnailImageUrl" class="form-label">썸네일 이미지 URL</label>
+    <input type="text" class="form-control" id="bookThumbnailImageUrl" th:field="*{bookThumbnailImageUrl}">
+  </div>
+
+  <!-- 도서 조회 수 -->
+  <div class="mb-3">
+    <label for="bookViewCount" class="form-label">도서 조회 수</label>
+    <input type="number" class="form-control" id="bookViewCount" th:field="*{bookViewCount}" value="0" readonly>
+  </div>
+
+  <!-- 할인율 -->
+  <div class="mb-3">
+    <label for="bookDiscount" class="form-label">할인율 (%)</label>
+    <input type="number" class="form-control" id="bookDiscount" th:field="*{bookDiscount}" min="0" max="100">
+  </div>
+
+  <!-- 배송 상태 -->
+  <div class="mb-3">
+    <label for="bookStatus" class="form-label">배송 상태</label>
+    <input type="text" class="form-control" id="bookStatus" th:field="*{bookStatus}" required>
+  </div>
+
+  <!-- 카테고리 선택 -->
+  <div class="mb-3">
+    <label for="categories" class="form-label">카테고리</label>
+    <select id="categories" name="categories" class="form-select" multiple th:field="*{categories}">
+      <option th:each="category : ${categories}" th:value="${category.categoryId}" th:text="${category.categoryName}"></option>
+    </select>
+  </div>
+
+  <!-- 작가 입력 -->
+  <div class="mb-3">
+    <label for="authors" class="form-label">작가</label>
+    <input type="text" class="form-control" id="authors" th:field="*{authors}" placeholder="작가를 입력하세요">
+  </div>
+
+  <!-- 태그 선택 -->
+  <div class="mb-3">
+    <label for="tags" class="form-label">태그</label>
+    <select id="tags" name="tags" class="form-select" multiple th:field="*{tags}">
+      <option th:each="tag : ${tags}" th:value="${tag.tagId}" th:text="${tag.tagName}"></option>
+    </select>
+  </div>
+
+  <!-- 출판사 입력 -->
+  <div class="mb-3">
+    <label for="publisher" class="form-label">출판사</label>
+    <input type="text" class="form-control" id="publisher" th:field="*{publisher}" placeholder="출판사를 입력하세요">
+  </div>
+
+  <!-- 제출 버튼 -->
+  <div class="text-center">
+    <button type="submit" class="btn btn-primary">도서 등록</button>
+    <a href="/admin/books" class="btn btn-secondary">취소</a>
+  </div>
+</form>

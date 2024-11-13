@@ -23,12 +23,12 @@ public class AuthorController {
     @GetMapping
     public String getAuthors(Model model){
         model.addAttribute("authors", authorService.getAllAuthors());
-        return "authors";
+        return "admin/author/authors";
     }
 
     @GetMapping("/create")
     public String createAuthor(){
-        return "createAuthor";
+        return "admin/author/createAuthor";
     }
 
     //기본 값 나오게...
@@ -36,7 +36,7 @@ public class AuthorController {
     public String updateAuthorForm(@PathVariable long authorId, Model model) {
         AuthorUpdateRequest authorUpdateRequest = authorService.getAuthorById(authorId);
         model.addAttribute("authorUpdateRequest", authorUpdateRequest);
-        return "updateAuthor";
+        return "admin/author/updateAuthor";
      }
 
     @PostMapping("/create")
