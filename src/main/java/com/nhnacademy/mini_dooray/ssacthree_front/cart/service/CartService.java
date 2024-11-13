@@ -89,7 +89,6 @@ public class CartService {
             String cartId = session.getId();
             // 빈 장바구니 생성 후 특정 물품 추가
             List<CartItem> cartItems = new ArrayList<>(); // 빈 장바구니 생성
-            addDefaultItems(cartItems);
             saveCart(cartId,cartItems,null);
             return cartItems; // 장바구니 반환
         }
