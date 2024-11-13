@@ -89,7 +89,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="updateImageUrl" class="form-label">이미지 URL</label>
-                        <input type="text" class="form-control" id="updateImageUrl" name="packagingImageUrl" required>
+                        <input type="file" class="form-control" id="updateImageUrl" name="packagingImageUrl" accept="image/*" required>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -106,7 +106,7 @@
 <div class="modal fade" id="packagingModal" tabindex="-1" aria-labelledby="packagingModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form th:action="@{/admin/packaging}" method="post">
+            <form th:action="@{/admin/packaging}" method="post" enctype="multipart/form-data">
                 <div class="modal-header">
                     <h5 class="modal-title" id="packagingModalLabel">새 포장지 추가</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -122,7 +122,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="imageUrl" class="form-label">이미지 URL</label>
-                        <input type="text" class="form-control" id="imageUrl" name="imageUrl" required>
+                        <input type="file" class="form-control" id="imageUrl" name="imageUrl" accept="image/*" required>
                     </div>
                 </div>
                 <div class="modal-footer">

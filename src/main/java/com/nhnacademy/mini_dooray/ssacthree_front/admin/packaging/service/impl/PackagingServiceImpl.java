@@ -8,9 +8,11 @@ import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.exception.Pack
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.exception.PackagingGetFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.service.PackagingService;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.image.adapter.ImageUploadAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -18,6 +20,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PackagingServiceImpl implements PackagingService {
     private final PackagingAdapter packagingAdapter;
+
+    private  final ImageUploadAdapter imageUploadAdapter;
 
     // 모든 포장지 정보 가져오기
     @Override
@@ -48,6 +52,11 @@ public class PackagingServiceImpl implements PackagingService {
         }
 
         throw new RuntimeException("포장지 수정에 실패했습니다.");
+    }
+
+    @Override
+    public String uploadImage(MultipartFile imageFile) {
+        return imageUploadAdapter.uploadImage(imageFile);
     }
 
     @Override

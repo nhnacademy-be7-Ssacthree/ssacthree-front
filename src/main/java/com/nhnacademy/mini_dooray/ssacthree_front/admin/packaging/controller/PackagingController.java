@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequiredArgsConstructor
@@ -22,7 +23,14 @@ public class PackagingController {
     }
 
     @PostMapping
-    public String createPackaging(@ModelAttribute PackagingCreateRequest packagingCreateRequest) {
+    public String createPackaging(@RequestParam("name") String name,
+                                  @RequestParam("price") int price,
+                                  @RequestParam("imageUrl") MultipartFile imageFile) {
+        String imageUrl = packagingService.uploadImage(imageFile);
+
+        // DTO 생성 시 생성자를 이용하는 방법
+        PackagingCreateRequest packagingCreateRequest = new PackagingCreateRequest(name, price, imageUrl);
+
         packagingService.createPackaging(packagingCreateRequest);
         return "redirect:/admin/packaging";
     }

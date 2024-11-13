@@ -4,6 +4,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.dto.PackagingC
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.dto.PackagingGetResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.dto.PackagingUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -16,4 +17,6 @@ public interface PackagingService {
     MessageResponse deletePackaging(Long packagingId);
 
     MessageResponse updatePackaging(Long packagingId, PackagingUpdateRequest packagingUpdateRequest);
+
+    String uploadImage(MultipartFile imageFile);
 }
