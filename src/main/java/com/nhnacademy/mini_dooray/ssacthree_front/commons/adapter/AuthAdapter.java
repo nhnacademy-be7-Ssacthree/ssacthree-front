@@ -11,6 +11,6 @@ public interface AuthAdapter {
     @PostMapping("/auth/reissue")
     ResponseEntity<MessageResponse> reissueToken();
 
-    @PostMapping("/auth/roleCheck")
+    @PostMapping("/auth/admin")
     ResponseEntity<MessageResponse> roleCheck();
 }

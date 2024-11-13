@@ -2,8 +2,9 @@ package com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.controller;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.service.BookCommonService;
-import com.nhnacademy.mini_dooray.ssacthree_front.cart.service.CartService;
-import jakarta.servlet.http.HttpServletRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryInfoResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryNameResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.service.CategoryCommonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.awt.print.Book;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -19,7 +22,7 @@ import java.awt.print.Book;
 public class BookCustomerController {
 
     private final BookCommonService bookCommonService;
-    private final CartService cartService;
+    private final CategoryCommonService categoryCommonService;
 
     @GetMapping("/author/{author-id}")
     public String getBooksByAuthorId(
@@ -43,14 +46,15 @@ public class BookCustomerController {
     @GetMapping("/")
     public String showBestSelling(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size,
-            Model model,
-            HttpServletRequest request) {
+            @RequestParam(defaultValue = "10") int size,
+            Model model) {
         String[] sort = {"bookName"};
         Long authorId = 365L;
 
         Page<BookInfoResponse> books = bookCommonService.getBooksByAuthorId(page, size, sort, authorId);
+
         model.addAttribute("books", books.getContent());
+
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", books.getTotalPages());
 
@@ -60,6 +64,14 @@ public class BookCustomerController {
     @GetMapping("/books/{book-id}")
     public String showBook(@PathVariable("book-id") Long bookId, Model model) {
         model.addAttribute("book", bookCommonService.getBookById(bookId));
+
+        List<CategoryNameResponse> categories = bookCommonService.getCategoriesByBookId(bookId);
+        List<List<CategoryInfoResponse>> categoryPaths = new ArrayList<>();
+        for (CategoryNameResponse category : categories) {
+            categoryPaths.add(categoryCommonService.getCategoryPath(category.getCategoryId()));
+        }
+
+        model.addAttribute("categoryPaths", categoryPaths);
         return "bookDetails";
     }
 
