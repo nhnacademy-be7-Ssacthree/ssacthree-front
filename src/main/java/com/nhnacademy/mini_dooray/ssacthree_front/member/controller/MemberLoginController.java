@@ -1,10 +1,14 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.member.controller;
 
+import com.nhnacademy.mini_dooray.ssacthree_front.cart.service.CartService;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberLoginRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.MemberService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -21,16 +25,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class MemberLoginController {
 
     private final MemberService memberService;
+    private final CartService cartService;
 
     @PostMapping("/login")
-    public String login(@ModelAttribute MemberLoginRequest requestBody, Model model, HttpServletResponse httpServletResponse) {
-        memberService.memberLogin(requestBody,httpServletResponse);
-        return "redirect:/";
+    public String login(@ModelAttribute MemberLoginRequest requestBody, Model model, HttpServletResponse httpServletResponse, HttpServletRequest request) {
+        memberService.memberLogin(requestBody,httpServletResponse);;
+        return "redirect:/shop/carts/customers";
     }
 
 
     @PostMapping("/logout")
-    public String logout(HttpServletResponse httpServletResponse) {
+    public String logout(HttpServletResponse httpServletResponse, HttpServletRequest request) {
+        cartService.saveCartInDBUseRequest(request);
         memberService.memberLogout(httpServletResponse);
         return "redirect:/";
     }
