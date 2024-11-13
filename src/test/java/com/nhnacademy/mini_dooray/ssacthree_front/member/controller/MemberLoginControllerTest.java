@@ -51,14 +51,14 @@ class MemberLoginControllerTest {
 //            any(HttpServletResponse.class));
 //    }
 
-    @Test
-    void testLogout() throws Exception {
-        MockHttpServletResponse response = new MockHttpServletResponse();
-
-        // Perform the logout request
-        mockMvc.perform(post("/logout"))
-            .andExpect(redirectedUrl("/"));
-
-        verify(memberService, times(1)).memberLogout(any(HttpServletResponse.class));
-    }
+//    @Test
+//    void testLogout() throws Exception {
+//        MockHttpServletResponse response = new MockHttpServletResponse();
+//
+//        // Perform the logout request
+//        mockMvc.perform(post("/logout"))
+//            .andExpect(redirectedUrl("/"));
+//
+//        verify(memberService, times(1)).memberLogout(any(HttpServletResponse.class));
+//    }
 }

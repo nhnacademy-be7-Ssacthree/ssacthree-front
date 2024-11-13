@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class MemberLoginController {
 
     private final MemberService memberService;
+    private final CartService cartService;
 
     @PostMapping("/login")
     public String login(@ModelAttribute MemberLoginRequest requestBody, Model model, HttpServletResponse httpServletResponse, HttpServletRequest request) {
@@ -34,7 +35,8 @@ public class MemberLoginController {
 
 
     @PostMapping("/logout")
-    public String logout(HttpServletResponse httpServletResponse) {
+    public String logout(HttpServletResponse httpServletResponse, HttpServletRequest request) {
+        cartService.saveCartInDBUseRequest(request);
         memberService.memberLogout(httpServletResponse);
         return "redirect:/";
     }

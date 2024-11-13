@@ -40,7 +40,6 @@ public class CartService {
 
     static final long CART_EXPIRATION_MINUTES = 30;
     private static final String BEARER = "Bearer ";
-    private final NativeWebRequest nativeWebRequest;
 
     /**
      *
@@ -308,6 +307,43 @@ public class CartService {
         } catch (Exception e) {
             // 예외 로깅 및 처리
             throw new RuntimeException("API 호출 중 예외 발생", e);
+        }
+    }
+
+    public void saveCartInDBUseRequest(HttpServletRequest request) {
+        String accessToken = getAccessToken(request);
+
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            throw new RuntimeException("세션이 없습니다.");
+        }
+
+        // 세션 ID 가져오기
+        String sessionId = session.getId();
+
+        // Redis에서 cartItem 리스트 가져오기
+        Map<String, Object> cartData = (Map<String, Object>) redisTemplate.opsForValue().get(sessionId);
+        Object cartItemsObj = cartData.get("cartItems");
+
+        List<CartItem> cartItems = (List<CartItem>) cartItemsObj;
+
+        // cartRequests 생성
+        List<CartRequest> cartRequests = new ArrayList<>();
+        for (CartItem cartItem : cartItems) {
+            Long id = cartItem.getId();
+            int quantity = cartItem.getQuantity();
+            cartRequests.add(new CartRequest(id, quantity));
+        }
+
+        try {
+            // 데이터베이스에 저장 요청
+            ResponseEntity<Void> response = cartAdapter.saveCartInDBUseHeader(BEARER + accessToken, cartRequests); // customerId 대신 sessionId 사용
+
+            if (!response.getStatusCode().is2xxSuccessful()) {
+                throw new AddressFailedException("장바구니 저장에 실패하였습니다.");
+            }
+        } catch (FeignException e) {
+            throw new RuntimeException("요청 오류: " + e.getMessage(), e);
         }
     }
 }

@@ -30,4 +30,6 @@ public interface CartAdapter {
     @GetMapping("/shop/carts/add")
     ResponseEntity<CartItem> getBook(@RequestParam Long bookId);
 
+    @PostMapping("/shop/carts/logout")
+    ResponseEntity<Void> saveCartInDBUseHeader(@RequestHeader("Authorization") String authorizationHeader,@RequestBody List<CartRequest> cartRequests);
 }
