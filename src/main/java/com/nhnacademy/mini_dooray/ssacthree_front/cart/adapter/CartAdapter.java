@@ -15,15 +15,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name = "gateway-service", url = "${member.url}", contextId = "CartClient")
 public interface CartAdapter {
 
-    @GetMapping("/shop")
+    @GetMapping("/shop/carts")
     ResponseEntity<List<CartItem>> getCartItems(@RequestHeader("Authorization") String authorizationHeader);
 
-    @GetMapping("/shop/{bookId}")
+    @GetMapping("/shop/carts/{bookId}")
     ResponseEntity<CartItem> getRandomBook(@RequestHeader("Authorization") String authorizationHeader, @PathVariable("bookId") Long bookId);
 
-    @PostMapping("/shop/carts") // 만들어야함
+    @PostMapping("/shop/carts/cart") // 만들어야함
     ResponseEntity<Void> saveCartInDB(@RequestBody List<CartRequest> cartItems,@RequestParam Long customerId);
 
     @GetMapping("/shop/members/id")
     ResponseEntity<Long> getCustomerId(@RequestHeader("Authorization") String authorizationHeader);
+
+    @GetMapping("/shop/carts/add")
+    ResponseEntity<CartItem> getBook(@RequestParam Long bookId);
+
 }

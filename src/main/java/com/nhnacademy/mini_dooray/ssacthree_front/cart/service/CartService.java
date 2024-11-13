@@ -296,4 +296,19 @@ public class CartService {
         }
         return accessToken;
     }
+
+    public CartItem getBook(Long bookId) {
+        try {
+            ResponseEntity<CartItem> responseEntity = cartAdapter.getBook(bookId);
+            if (responseEntity.getStatusCode().is2xxSuccessful()) {
+                return responseEntity.getBody();
+            } else {
+                // 필요한 에러 처리 로직 추가
+                throw new RuntimeException("API 호출 실패: " + responseEntity.getStatusCode());
+            }
+        } catch (Exception e) {
+            // 예외 로깅 및 처리
+            throw new RuntimeException("API 호출 중 예외 발생", e);
+        }
+    }
 }
