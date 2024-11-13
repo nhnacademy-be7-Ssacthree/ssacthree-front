@@ -1,0 +1,31 @@
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="pagination">
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <!-- Previous page -->
+            <li class="page-item" th:classappend="${!books.hasPrevious()} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/books/author/{author-id}(author-id=${authorId}, page=${books.number - 1}, size=${books.size})}"
+                   aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+
+            <!-- Page numbers -->
+            <li class="page-item" th:each="i : ${#numbers.sequence(0, books.totalPages - 1)}"
+                th:classappend="${i == books.number} ? 'active'">
+                <a class="page-link"
+                   th:href="@{/books/author/{author-id}(author-id=${authorId}, page=${i}, size=${books.size})}"
+                   th:text="${i + 1}"></a>
+            </li>
+
+            <!-- Next page -->
+            <li class="page-item" th:classappend="${!books.hasNext()} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/books/author/{author-id}(author-id=${authorId}, page=${books.number + 1}, size=${books.size})}"
+                   aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>

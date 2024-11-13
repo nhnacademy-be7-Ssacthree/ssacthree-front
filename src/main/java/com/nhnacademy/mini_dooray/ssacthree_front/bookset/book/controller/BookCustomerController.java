@@ -7,12 +7,13 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.service.CategoryCommonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.awt.print.Book;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,27 +25,33 @@ public class BookCustomerController {
     private final BookCommonService bookCommonService;
     private final CategoryCommonService categoryCommonService;
 
-    @GetMapping("/author/{author-id}")
+    @GetMapping("books")
     public String getBooksByAuthorId(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "bookName") String[] sort,
-            @PathVariable("author-id") Long authorId,
+            @RequestParam(name = "author-id", required = false) Long authorId,
             Model model) {
 
-        Page<BookInfoResponse> books = bookCommonService.getBooksByAuthorId(page, size, sort, authorId);
+        List<CategoryInfoResponse> rootCategories = categoryCommonService.getRootCategories();
 
-        model.addAttribute("books", books.getContent()); // 실제 데이터 리스트
-        model.addAttribute("totalPages", books.getTotalPages()); // 전체 페이지 수
-        model.addAttribute("currentPage", books.getNumber()); // 현재 페이지
-        model.addAttribute("pageSize", books.getSize()); // 페이지 크기
-        model.addAttribute("authorId", authorId); // authorId 값
+        model.addAttribute("rootCategories", rootCategories);
 
-        return "bookLists"; // bookList.html로 데이터를 전달
+        if (authorId != null) {
+            Page<BookInfoResponse> books = bookCommonService.getBooksByAuthorId(page, size, sort, authorId);
+
+            model.addAttribute("books", books); // Page 객체 전체를 전달
+            model.addAttribute("authorId", authorId); // authorId 값
+        } else {
+
+        }
+
+
+        return "bookList"; // bookList.html로 데이터를 전달
     }
 
-    @GetMapping("/")
-    public String showBestSelling(
+    @GetMapping
+    public String showAwardBook(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             Model model) {
@@ -53,8 +60,7 @@ public class BookCustomerController {
 
         Page<BookInfoResponse> books = bookCommonService.getBooksByAuthorId(page, size, sort, authorId);
 
-        model.addAttribute("books", books.getContent());
-
+        model.addAttribute("books", books);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", books.getTotalPages());
 
