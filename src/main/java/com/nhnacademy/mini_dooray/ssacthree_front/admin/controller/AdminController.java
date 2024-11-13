@@ -3,8 +3,7 @@ package com.nhnacademy.mini_dooray.ssacthree_front.admin.controller;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.dto.AdminLoginRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.service.AdminService;
-import com.nhnacademy.mini_dooray.ssacthree_front.commons.util.CookieUtil;
-import jakarta.servlet.http.HttpServletRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.commons.aop.annotation.Admin;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -19,15 +18,12 @@ public class AdminController {
     private final AdminService adminService;
 
 
+    @Admin
     @GetMapping("/admin")
-    public String admin(HttpServletRequest request) {
+    public String admin() {
 
         //구현 고민 중 ㅠ
-        if (CookieUtil.checkAccessTokenCookie(request)) {
-            return "admin/admin";
-        }
-        return "redirect:/admin-login";
-
+        return "admin/admin";
     }
 
     @GetMapping("/admin-login")
@@ -41,5 +37,5 @@ public class AdminController {
         adminService.login(response, adminLoginRequest);
         return "redirect:/admin";
     }
-    
+
 }
