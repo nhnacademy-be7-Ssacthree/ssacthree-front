@@ -27,6 +27,7 @@ public class SearchController {
     return "books";  // books.html을 반환하여 화면을 로드
   }
 
+
   @GetMapping("/books")
   public String searchBooks(@RequestParam String keyword,
                             @RequestParam(defaultValue = "1") int page,

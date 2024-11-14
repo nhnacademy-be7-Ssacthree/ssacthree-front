@@ -9,9 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name = "gateway-service", url = "http://localhost:8081/api/shop", contextId = "searchClient")  // 백엔드 API 호출
 public interface SearchAdapter {
 
-//  @GetMapping("/search/books")  // 백엔드의 search/books API 호출
-//  List<BookDocument> searchBooks(@RequestBody SearchRequest searchRequest);  // 검색 요청을 전달
-
   @GetMapping("/search/books")  // 백엔드의 search/books API 호출
   List<BookDocument> searchBooks(@RequestParam String keyword,
                                  @RequestParam int page,
