@@ -438,7 +438,7 @@
               <!-- 액션 버튼 (카드 클릭 제외) -->
               <div class="card-concern position-absolute start-0 end-0 d-flex gap-2">
                 <button type="button" class="btn btn-dark cart-button"
-                        th:onclick="|window.location.href='/shop/carts/add?' + ${book.bookId}|"
+                        th:onclick="|window.location.href='/shop/carts/add?bookId=' + ${book.bookId}|"
                         data-bs-toggle="tooltip" data-bs-placement="top"
                         data-bs-title="Tooltip on top">
                   <svg class="cart"><use xlink:href="#cart"></use></svg>
