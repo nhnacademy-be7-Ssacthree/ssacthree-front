@@ -21,12 +21,12 @@ public class MemberGradeController {
     @GetMapping
     public String memberGrade(Model model) {
         model.addAttribute("memberGrades", memberGradeService.getAllMemberGrade());
-        return "/admin/memberGrade/memberGrade";
+        return "admin/memberGrade/memberGrade";
     }
 
     @GetMapping("/create")
     public String createMemberGrade() {
-        return "/admin/memberGrade/createMemberGrade";
+        return "admin/memberGrade/createMemberGrade";
     }
 
     @PostMapping("/create")
