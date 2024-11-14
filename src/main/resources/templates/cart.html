@@ -11,7 +11,8 @@
   <h2>장바구니</h2>
 
   <div class="cart-items">
-    <div th:each="item : ${cartItems}" class="row cart-item border-bottom py-3">
+    <div th:each="item : ${cartItems}" class="row cart-item border-bottom py-3"
+         th:data-price="${item.price}" th:data-quantity="${item.quantity}">
       <div class="col-md-2">
         <img th:src="@{/images/book1.jpg}" class="img-fluid" alt="Book Image">
       </div>
@@ -20,17 +21,14 @@
       </div>
       <div class="col-md-3">
         <div class="input-group">
-          <!-- 수량 감소 버튼 -->
           <form th:action="@{/shop/carts/{itemId}(itemId=${item.id})}" method="post" style="display:inline;">
             <input type="hidden" name="_method" value="PUT">
             <input type="hidden" name="quantityChange" value="-1">
             <button type="submit" class="btn btn-outline-secondary">-</button>
           </form>
 
-          <!-- 현재 수량 표시 (읽기 전용) -->
           <input type="text" class="form-control text-center" th:value="${item.quantity}" readonly>
 
-          <!-- 수량 증가 버튼 -->
           <form th:action="@{/shop/carts/{itemId}(itemId=${item.id})}" method="post" style="display:inline;">
             <input type="hidden" name="_method" value="PUT">
             <input type="hidden" name="quantityChange" value="+1">
@@ -73,7 +71,7 @@
       <p>무료 배송 - 2~3 영업일 소요</p>
     </div>
     <div class="col-md-6 text-right">
-      <h4>총 금액: <span id="total-price" th:text="${totalPrice} + '원'">20,000원</span></h4>
+      <h4>총 금액: <span id="total-price">0원</span></h4>
     </div>
   </div>
 
@@ -93,5 +91,40 @@
 
 <script th:src="@{/js/jquery-1.11.0.min.js}"></script>
 <script th:src="@{/js/script.js}"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // 총 금액 계산 함수
+    function calculateTotalPrice() {
+      let totalPrice = 0;
+      const cartItems = document.querySelectorAll(".cart-item");
+
+      cartItems.forEach(item => {
+        const quantity = parseInt(item.dataset.quantity, 10);
+        const price = parseInt(item.dataset.price, 10);
+        totalPrice += quantity * price;
+      });
+
+      // 계산된 금액을 화면에 표시
+      const totalPriceElement = document.getElementById("total-price");
+      totalPriceElement.textContent = `${totalPrice.toLocaleString()}원`;
+
+      // 배송 정보 섹션의 총 금액도 업데이트
+      const shippingTotalPriceElement = document.querySelector(".col-md-6.text-right h4 span");
+      if (shippingTotalPriceElement) {
+        shippingTotalPriceElement.textContent = `${totalPrice.toLocaleString()}원`;
+      }
+    }
+
+    // 페이지 로드 시 초기 계산 수행
+    calculateTotalPrice();
+
+    // 버튼 클릭 시 총 금액 다시 계산
+    document.querySelectorAll(".btn").forEach(button => {
+      button.addEventListener("click", () => {
+        setTimeout(calculateTotalPrice, 200); // DOM 업데이트 후 실행
+      });
+    });
+  });
+</script>
 </body>
 </html>

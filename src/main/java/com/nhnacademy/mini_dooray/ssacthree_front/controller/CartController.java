@@ -21,7 +21,6 @@ public class CartController {
     public String viewCart(HttpServletRequest request, Model model) {
         List<CartItem> cartItems = cartService.initializeCart(request); // 서비스에서 장바구니 초기화
         model.addAttribute("cartItems", cartItems);
-        model.addAttribute("totalPrice", cartService.calculateTotalPrice(cartItems));
         return "cart";
     }
 
