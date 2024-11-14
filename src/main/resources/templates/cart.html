@@ -14,7 +14,7 @@
     <div th:each="item : ${cartItems}" class="row cart-item border-bottom py-3"
          th:data-price="${item.price}" th:data-quantity="${item.quantity}">
       <div class="col-md-2">
-        <img th:src="@{/images/book1.jpg}" class="img-fluid" alt="Book Image">
+        <img th:src="${item.getBookThumbnailImageUrl}" class="img-fluid" alt="Book Image">
       </div>
       <div class="col-md-4">
         <h5 th:text="${item.title}">책 제목</h5>

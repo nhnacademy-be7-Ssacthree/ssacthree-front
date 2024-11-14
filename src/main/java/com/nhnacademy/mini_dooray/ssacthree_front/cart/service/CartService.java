@@ -150,7 +150,7 @@ public class CartService {
             if (cartItem.getId() == (itemId)) {
                 int newQuantity = cartItem.getQuantity() + quantityChange;
                 if (newQuantity > 0) {
-                    CartItem newCartItem = new CartItem(cartItem.getId(), cartItem.getTitle(), newQuantity, cartItem.getPrice(), cartItem.getImageUrl());
+                    CartItem newCartItem = new CartItem(cartItem.getId(), cartItem.getTitle(), newQuantity, cartItem.getPrice(), cartItem.getBookThumbnailImageUrl());
                     updatedCartItems.add(newCartItem);
                 }
             } else {
@@ -190,8 +190,6 @@ public class CartService {
         for (CartItem cartItem : cartItems) {
             if (cartItem.getId() == (itemId)) {
                 updateItemQuantity(request, itemId, quantity);
-                Long customerId = getCustomerIdByCartId(cartId);
-                saveCart(cartId, cartItems, customerId);
                 return;
             }
         }

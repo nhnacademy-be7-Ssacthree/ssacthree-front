@@ -23,6 +23,6 @@ public class CartItem {
 
     private int price; // 가격(int 수정)
 
-    private String imageUrl; //이미지
+    private String bookThumbnailImageUrl; //이미지
 
 }

@@ -50,7 +50,7 @@ public class CartController {
     @GetMapping("/shop/carts/{bookId}") // 장바구니에 필요한 책 데이터 가져오기 나중에 삭제 예정
     public String getBookInDB(HttpServletRequest request, @PathVariable Long bookId) {
         CartItem cartItem = cartService.getRandomBook(bookId, request);
-        cartService.addNewBook(request,cartItem.getId(),cartItem.getTitle(),1,cartItem.getPrice(),cartItem.getImageUrl());
+        cartService.addNewBook(request,cartItem.getId(),cartItem.getTitle(),1,cartItem.getPrice(),cartItem.getBookThumbnailImageUrl());
         return CART_REDIRECT;
     }
 
@@ -67,10 +67,11 @@ public class CartController {
     }
 
     @GetMapping("/shop/carts/add")
-    public String getBookAndSaveInRedis(HttpServletRequest request, @RequestParam String bookId){
+    public String getBookAndSaveInRedis(HttpServletRequest request, @RequestParam String bookId, @RequestParam String quantity){
         Long longBookId = Long.parseLong(bookId);
+        int intQuantity = Integer.parseInt(quantity);
         CartItem cartItem = cartService.getBook(longBookId);
-        cartService.addNewBook(request,cartItem.getId(),cartItem.getTitle(),1,cartItem.getPrice(),cartItem.getImageUrl());
+        cartService.addNewBook(request,cartItem.getId(),cartItem.getTitle(),intQuantity,cartItem.getPrice(),cartItem.getBookThumbnailImageUrl());
         return "redirect:/shop/carts";
     }
 }
