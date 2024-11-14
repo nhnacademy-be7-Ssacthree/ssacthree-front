@@ -16,7 +16,7 @@
                 <div class="card-header bg-primary text-white text-center">
                     <h3>주문서 작성</h3>
                 </div>
-                <form method="post" action="/payment" class="container mb-4">
+                <form method="post" action="/order" class="container mb-4">
                     <div class="card-body">
                         <!-- 1. 주문 상품 정보 -->
                         <section id="order-items" class="mb-4">
@@ -52,17 +52,18 @@
                         <!-- 비회원인 경우, 모든 칸이 비어있고, 회원인 경우 구매자 정보 입력칸을 해당 회원의 정보로 채워야함.-->
                         <section id="buyer-info" class="mb-4">
                             <h4 class="text-primary">구매자 정보 입력</h4>
+                            <!-- 상품 정보도 넘겨주기 -->
                             <div class="mb-3">
                                 <label for="buyer-name" class="form-label">이름</label>
-                                <input type="text" class="form-control" id="buyer-name" required>
+                                <input type="text" class="form-control" id="buyer-name" name="buyerName" required>
                             </div>
                             <div class="mb-3">
                                 <label for="buyer-email" class="form-label">이메일</label>
-                                <input type="email" class="form-control" id="buyer-email" required>
+                                <input type="email" class="form-control" id="buyer-email" name="buyerEmail" required>
                             </div>
                             <div class="mb-3">
                                 <label for="buyer-phone" class="form-label">휴대폰번호</label>
-                                <input type="tel" class="form-control" id="buyer-phone" required>
+                                <input type="tel" class="form-control" id="buyer-phone" name="buyerPhone" required>
                             </div>
                         </section>
 
@@ -78,66 +79,87 @@
                             </div>
                             <div class="mb-3">
                                 <label for="recipient-name" class="form-label">받는 사람 이름</label>
-                                <input type="text" class="form-control" id="recipient-name" required>
+                                <input type="text" class="form-control" id="recipient-name" name="recipientName" required>
                             </div>
                             <div class="mb-3">
                                 <label for="recipient-name" class="form-label">받는 사람 연락처</label>
-                                <input type="text" class="form-control" id="recipient-phone" required>
+                                <input type="text" class="form-control" id="recipient-phone" name="recipientPhone" required>
                             </div>
                             <div class="mb-3">
                                 <button type="button" class="btn btn-outline-secondary" onclick="openPostcodeSearch()">주소 조회</button>
                             </div>
                             <div class="mb-3">
                                 <label for="postal-code" class="form-label">우편 주소</label>
-                                <input type="text" class="form-control" id="postal-code" readonly onclick="openPostcodeSearch()">
+                                <input type="text" class="form-control" id="postal-code" name="postalCode" readonly="readonly">
                             </div>
                             <div class="mb-3">
                                 <label for="road-address" class="form-label">도로명 주소</label>
-                                <input type="text" class="form-control" id="road-address" readonly onclick="openPostcodeSearch()">
+                                <input type="text" class="form-control" id="road-address" name="roadAddress" readonly="readonly">
                             </div>
                             <div class="mb-3">
                                 <label for="detail-address" class="form-label">상세 주소</label>
-                                <input type="text" class="form-control" id="detail-address" required>
+                                <input type="text" class="form-control" id="detail-address" name="detailAddress" required>
                             </div>
                             <div class="mb-3">
                                 <label for="delivery-date" class="form-label">배송 날짜 지정</label>
-                                <input type="date" class="form-control" id="delivery-date">
-                                <!-- 5일 이후까지만 선택 가능 -->
+                                <input type="date" class="form-control" id="delivery-date" name="deliveryDate">
+                                <small id="date-message" class="form-text text-muted">
+                                    오늘부터 5일 후까지 선택 가능합니다.
+                                </small>
+
                                 <script>
                                     const deliveryDateInput = document.getElementById("delivery-date");
+                                    const dateMessage = document.getElementById("date-message");
                                     const today = new Date();
+
+                                    // 설정할 날짜 포맷 (YYYY-MM-DD)
+                                    const formatDate = date => date.toISOString().split("T")[0];
+
+                                    // 오늘 날짜 설정
+                                    deliveryDateInput.min = formatDate(today);
 
                                     // 오늘로부터 5일 이후 날짜 설정
                                     const maxDate = new Date(today);
                                     maxDate.setDate(today.getDate() + 5);
+                                    deliveryDateInput.max = formatDate(maxDate);
 
-                                    // YYYY-MM-DD 형식으로 min과 max 속성 설정
-                                    deliveryDateInput.max = maxDate.toISOString().split("T")[0];
+                                    // 날짜 선택 시 범위 체크
+                                    deliveryDateInput.addEventListener("input", () => {
+                                        const selectedDate = new Date(deliveryDateInput.value);
+                                        if (selectedDate < today || selectedDate > maxDate) {
+                                            alert("선택 가능한 날짜는 오늘부터 5일 후까지입니다.");
+                                            deliveryDateInput.value = ""; // 잘못된 입력 제거
+                                        }
+                                    });
                                 </script>
                             </div>
+
+
+
                         </section>
 
                         <!-- 4. 포인트 사용 -->
                         <section id="point-use" class="mb-4">
                             <h4 class="text-primary">포인트 사용</h4>
-                            <p>보유 포인트: <span id="user-points">2000 포인트</span></p>
+                            <p>보유 포인트: <span id="user-points"></span></p>
                             <!-- 가진 포인트보다 많으면 안됨. -->
                             <div class="mb-3">
                                 <label for="points-to-use" class="form-label">사용할 포인트</label>
-                                <input type="number" class="form-control" id="points-to-use" max="2000" onchange="applyPoints()">
+                                <input type="number" class="form-control" id="points-to-use" max="2000" onchange="applyPoints()" name="pointToUse">
                             </div>
                         </section>
 
                         <!-- 5. 전체 주문에 대한 포인트 적립(등급 정책 적용), 계산 필요 -->
                         <section id="point-save" class="mb-4">
                             <h4 class="text-primary">포인트 적립</h4>
-                            <p>적립 포인트: <span id="user-points-save">100 포인트</span></p>
+                            <p>적립 포인트: <span id="user-points-save"></span></p>
                         </section>
 
                         <!-- 6. 결제 버튼, 총 결제 금액 계산 필요 js -->
                         <div class="text-center">
-                            <h4>총 결제 금액: <span id="PaymentPrice">0원</span></h4>
-                            <button type="button" class="btn btn-primary" onclick="processOrder()">결제하기</button>
+                            <h4>총 결제 금액: <span id="PaymentPrice">원</span></h4>
+                            <input type="hidden" id="payment-price" name="paymentPrice" value="0">
+                            <button type="submit" class="btn btn-primary">결제하기</button>
                         </div>
                     </div>
                 </form>
