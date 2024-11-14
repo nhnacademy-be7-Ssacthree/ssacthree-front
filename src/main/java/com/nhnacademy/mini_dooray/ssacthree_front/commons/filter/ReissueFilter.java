@@ -10,11 +10,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 
 @RequiredArgsConstructor
+@Order(1)
 public class ReissueFilter extends OncePerRequestFilter {
 
     private final AuthAdapter adapter;
@@ -41,7 +43,6 @@ public class ReissueFilter extends OncePerRequestFilter {
         }
 
         try {
-
             if (accessToken == null && refreshToken != null) {
                 ResponseEntity<MessageResponse> response = adapter.reissueToken();
                 List<String> cookies = response.getHeaders().get(SET_COOKIE_HEADER);

@@ -13,4 +13,7 @@ public interface AuthAdapter {
 
     @PostMapping("/auth/admin")
     ResponseEntity<MessageResponse> roleCheck();
+
+    @PostMapping("/auth/validation")
+    ResponseEntity<MessageResponse> validateToken();
 }
