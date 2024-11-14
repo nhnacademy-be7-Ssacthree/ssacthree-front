@@ -21,4 +21,5 @@ public class WebControllerAdvice {
         redirectAttributes.addFlashAttribute("loginFailedMessage", e.getMessage());
         return "redirect:/";
     }
+
 }
