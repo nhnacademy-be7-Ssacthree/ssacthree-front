@@ -8,6 +8,8 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.service.Categ
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CategoryAdminServiceImpl implements CategoryAdminService {
 
@@ -31,5 +33,11 @@ public class CategoryAdminServiceImpl implements CategoryAdminService {
     public ResponseEntity<Boolean> deleteCategory(Long categoryId) {
         return categoryAdapter.deleteCategory(categoryId);
     }
+
+    @Override
+    public ResponseEntity<List<CategoryInfoResponse>> getAllCategoriesForAdmin() {
+        return categoryAdapter.getAllCategoriesForAdmin();
+    }
+
 
 }

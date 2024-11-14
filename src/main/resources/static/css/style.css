@@ -272,6 +272,18 @@ h6{
   border-radius: 200px;
   cursor: pointer;
 }
+.book-save-button{
+    font-weight: 500;
+    text-transform: capitalize;
+    letter-spacing: 0.09em;
+    color: var(--white-color);
+    background-color: var(--primary-color);
+    border: none;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    border-radius: 20px;
+    cursor: pointer;
+}
 .btn:hover,
 .btn:focus-visible,
 .btn-check:checked+.btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check)+.btn:active {
@@ -329,10 +341,16 @@ textarea.form-control::placeholder {
   line-height: normal;
   width: 180px;
 }
-.form-select:focus {
-  box-shadow: none;
+
+/* custom.css 또는 별도 CSS 파일에 추가 */
+.select-hidden {
+  display: none !important;
 }
 
+.form-select:focus {
+  box-shadow: none;
+
+}
 .form-check-input:checked {
   background-color: var(--primary-color);
   border-color: var(--primary-color);

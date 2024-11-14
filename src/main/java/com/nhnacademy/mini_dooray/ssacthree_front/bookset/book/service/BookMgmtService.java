@@ -2,16 +2,20 @@ package com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.service;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.request.BookSaveRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookInfoResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookSearchResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 public interface BookMgmtService {
 
-    List<BookInfoResponse> getAllBooks();
+    Page<BookSearchResponse> getAllBooks();
 
     MessageResponse createBook(BookSaveRequest bookSaveRequest);
 
     MessageResponse updateBook(Long bookId, BookSaveRequest bookSaveRequest);
+
+    MessageResponse deleteBook(Long bookId, BookSaveRequest bookSaveRequest);
 
 }
