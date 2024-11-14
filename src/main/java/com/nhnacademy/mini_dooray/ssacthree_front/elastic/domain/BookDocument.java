@@ -19,13 +19,13 @@ public class BookDocument {
   private String bookInfo;
   private String bookIsbn;
   private String publicationDate;
-  private int regularPrice;
-  private int salePrice;
+  private Integer regularPrice; // int -> Integer로 변경
+  private Integer salePrice;    // int -> Integer로 변경
   private boolean isPacked;
-  private int stock;
+  private Integer stock;        // int -> Integer로 변경
   private String bookThumbnailImageUrl;
-  private int bookViewCount;
-  private int bookDiscount;
+  private Integer bookViewCount; // int -> Integer로 변경
+  private Integer bookDiscount;  // int -> Integer로 변경
   private String publisherNames;
   private String authorNames;
 

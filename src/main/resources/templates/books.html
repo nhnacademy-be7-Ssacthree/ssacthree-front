@@ -1,0 +1,132 @@
+<!--작성자: 정현우-->
+<!--검색 결과 창 구현중-->
+
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>책 검색</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- 헤더 (검색 폼 및 필터링 옵션) -->
+<header>
+  <div class="container">
+    <h1>책 검색</h1>
+
+    <!-- 검색 폼 -->
+    <form id="search-form" action="/search/books" method="GET">
+      <input type="text" id="search-keyword" name="keyword" placeholder="검색어를 입력하세요" required>
+
+      <!-- 필터 (카테고리, 태그) -->
+      <div class="filters">
+        <select id="category-filter" name="category">
+          <option value="">카테고리</option>
+          <option value="자기계발">자기계발</option>
+          <option value="문학">문학</option>
+          <option value="과학">과학</option>
+        </select>
+        <select id="tag-filter" name="tag">
+          <option value="">태그</option>
+          <option value="베스트셀러">베스트셀러</option>
+          <option value="신간">신간</option>
+          <option value="인기">인기</option>
+        </select>
+
+        <!-- 정렬 (가격, 인기, 최신) -->
+        <select id="sort-filter" name="sort">
+          <option value="newest">등록일순</option>
+          <option value="priceLow">최저가격순</option>
+          <option value="priceHigh">최고가격순</option>
+          <option value="popularity">인기도순</option>
+        </select>
+
+        <button type="submit">검색</button>
+      </div>
+    </form>
+  </div>
+</header>
+
+<!-- 검색 결과 (책 리스트) -->
+<main>
+  <div class="container">
+    <div id="book-list">
+      <!-- 검색된 책 목록이 여기에 표시됩니다. -->
+    </div>
+  </div>
+</main>
+
+<!-- 자바스크립트 -->
+<script>
+  // 페이지 로드 후 자동으로 검색을 요청
+  document.addEventListener('DOMContentLoaded', function () {
+    const searchForm = document.getElementById('search-form');
+    searchForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const keyword = document.getElementById('search-keyword').value;
+      const category = document.getElementById('category-filter').value;
+      const tag = document.getElementById('tag-filter').value;
+      const sort = document.getElementById('sort-filter').value;
+
+      // 필터를 하나만 적용하는 로직
+      let filters = {};
+      if (category) {
+        filters['category'] = category;
+      } else if (tag) {
+        filters['tag'] = tag;
+      }
+
+      // URLSearchParams로 쿼리 파라미터 구성
+      const params = new URLSearchParams({
+        keyword: keyword,
+        sort: sort,
+        page: 1,
+        ...filters
+      });
+
+      // GET 요청으로 검색 요청
+      fetch(`/search/books?${params.toString()}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      .then(response => response.json())
+      .then(data => {
+        displayBooks(data);
+      })
+      .catch(error => console.error('Error:', error));
+    });
+
+    // 책 리스트를 화면에 표시하는 함수
+    function displayBooks(books) {
+      const bookListElement = document.getElementById('book-list');
+      bookListElement.innerHTML = ''; // 기존 리스트 초기화
+
+      books.forEach(book => {
+        const bookItem = document.createElement('div');
+        bookItem.classList.add('book-item');
+
+        bookItem.innerHTML = `
+          <div class="book-thumbnail">
+            <img src="${book.bookThumbnailImageUrl}" alt="${book.bookName}" />
+          </div>
+          <div class="book-info">
+            <h3>${book.bookName}</h3>
+            <p>${book.bookInfo}</p>
+            <p><strong>${book.salePrice}원</strong></p>
+            <p>저자: ${book.authorNames}</p>
+            <p>출판사: ${book.publisherNames}</p>
+          </div>
+        `;
+
+        bookListElement.appendChild(bookItem);
+      });
+    }
+  });
+
+</script>
+</body>
+</html>
