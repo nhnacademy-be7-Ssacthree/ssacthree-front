@@ -43,7 +43,8 @@ public class BookCustomerController {
             model.addAttribute("books", books); // Page 객체 전체를 전달
             model.addAttribute("authorId", authorId); // authorId 값
         } else {
-
+            Page<BookInfoResponse> books = bookCommonService.getAllAvailableBooks(page, size, sort);
+            model.addAttribute("books", books);
         }
 
 

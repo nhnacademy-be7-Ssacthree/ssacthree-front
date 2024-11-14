@@ -4,7 +4,7 @@
             <!-- Previous page -->
             <li class="page-item" th:classappend="${!books.hasPrevious()} ? 'disabled'">
                 <a class="page-link"
-                   th:href="@{/books/author/{author-id}(author-id=${authorId}, page=${books.number - 1}, size=${books.size})}"
+                   th:href="@{/books(page=${books.number - 1}, size=${books.size}, author-id=${authorId})}"
                    aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
@@ -14,14 +14,14 @@
             <li class="page-item" th:each="i : ${#numbers.sequence(0, books.totalPages - 1)}"
                 th:classappend="${i == books.number} ? 'active'">
                 <a class="page-link"
-                   th:href="@{/books/author/{author-id}(author-id=${authorId}, page=${i}, size=${books.size})}"
+                   th:href="@{/books(page=${i}, size=${books.size}, author-id=${authorId})}"
                    th:text="${i + 1}"></a>
             </li>
 
             <!-- Next page -->
             <li class="page-item" th:classappend="${!books.hasNext()} ? 'disabled'">
                 <a class="page-link"
-                   th:href="@{/books/author/{author-id}(author-id=${authorId}, page=${books.number + 1}, size=${books.size})}"
+                   th:href="@{/books(page=${books.number + 1}, size=${books.size}, author-id=${authorId})}"
                    aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
