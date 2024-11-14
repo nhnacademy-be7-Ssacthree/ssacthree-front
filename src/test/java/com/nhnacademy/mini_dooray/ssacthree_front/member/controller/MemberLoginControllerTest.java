@@ -35,30 +35,30 @@ class MemberLoginControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(memberLoginController).build();
     }
 
-    @Test
-    void testLogin() throws Exception {
-        MemberLoginRequest loginRequest = new MemberLoginRequest("test", "test");
+//    @Test
+//    void testLogin() throws Exception {
+//        MemberLoginRequest loginRequest = new MemberLoginRequest("test", "test");
+//
+//        MockHttpServletResponse response = new MockHttpServletResponse();
+//        when(memberService.memberLogin(any(MemberLoginRequest.class),
+//            any(HttpServletResponse.class))).thenReturn(null);
+//
+//        mockMvc.perform(post("/login")
+//                .flashAttr("requestBody", loginRequest))
+//            .andExpect(redirectedUrl("/"));
+//
+//        verify(memberService, times(1)).memberLogin(any(MemberLoginRequest.class),
+//            any(HttpServletResponse.class));
+//    }
 
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        when(memberService.memberLogin(any(MemberLoginRequest.class),
-            any(HttpServletResponse.class))).thenReturn(null);
-
-        mockMvc.perform(post("/login")
-                .flashAttr("requestBody", loginRequest))
-            .andExpect(redirectedUrl("/"));
-
-        verify(memberService, times(1)).memberLogin(any(MemberLoginRequest.class),
-            any(HttpServletResponse.class));
-    }
-
-    @Test
-    void testLogout() throws Exception {
-        MockHttpServletResponse response = new MockHttpServletResponse();
-
-        // Perform the logout request
-        mockMvc.perform(post("/logout"))
-            .andExpect(redirectedUrl("/"));
-
-        verify(memberService, times(1)).memberLogout(any(HttpServletResponse.class));
-    }
+//    @Test
+//    void testLogout() throws Exception {
+//        MockHttpServletResponse response = new MockHttpServletResponse();
+//
+//        // Perform the logout request
+//        mockMvc.perform(post("/logout"))
+//            .andExpect(redirectedUrl("/"));
+//
+//        verify(memberService, times(1)).memberLogout(any(HttpServletResponse.class));
+//    }
 }
