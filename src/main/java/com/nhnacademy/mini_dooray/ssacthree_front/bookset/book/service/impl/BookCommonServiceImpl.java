@@ -45,6 +45,17 @@ public class BookCommonServiceImpl implements BookCommonService {
 
     @Override
     public Page<BookInfoResponse> getAllAvailableBooks(int page, int size, String[] sort) {
-        return adapter.getRecentBooks(page, size, sort).getBody();
+        try {
+            ResponseEntity<Page<BookInfoResponse>> responseEntity = adapter.getAllAvailableBooks(page, size, sort);
+            if (responseEntity.getStatusCode().is2xxSuccessful()) {
+                return responseEntity.getBody();
+            } else {
+                // 필요한 에러 처리 로직 추가
+                throw new RuntimeException("API 호출 실패: " + responseEntity.getStatusCode());
+            }
+        } catch (Exception e) {
+            // 예외 로깅 및 처리
+            throw new RuntimeException("API 호출 중 예외 발생", e);
+        }
     }
 }

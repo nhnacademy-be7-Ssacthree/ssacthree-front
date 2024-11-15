@@ -91,71 +91,131 @@
                 </div>
 
                 <div class="d-flex justify-content-between mt-3">
-                    <button class="btn btn-outline-secondary flex-fill me-1">장바구니</button>
+                    <button class="btn btn-outline-secondary flex-fill me-1"
+                            th:onclick="|window.location.href='/shop/carts/add?bookId=' + ${book.bookId}+'&quantity='+document.getElementById('quantity').value|">
+                        장바구니
+                    </button>
                     <button class="btn btn-success flex-fill me-1">바로구매</button>
                 </div>
             </div>
         </div>
     </div>
-</main>
-
-<!-- 책 설명 섹션 -->
-<div class="row" th:each="book : ${book}">
-    <!-- 기존 책 이미지 및 정보 코드 -->
 
     <!-- 책 설명 섹션 -->
     <div class="container my-5">
         <div class="card mb-3 shadow-sm">
-            <div class="card-header bg-light text-primary fw-bold border-0" style="font-size: 1.5rem;">
+            <div class="card-header bg-light text-primary fw-bold" style="font-size: 2.2rem; padding: 20px;">
                 책 소개
             </div>
             <div class="list-group list-group-flush">
-                <!-- 책이 속한 분야 -->
-                <div class="list-group-item">
-                    <h6 class="text-dark fw-bold mb-3" style="font-size: 1.1rem;">이 책이 속한 분야</h6>
-                    <ul class="list-inline ps-3" style="font-size: 0.9rem;">
-                        <!--                        <li th:each="category : ${book.categories}" class="list-inline-item me-2">-->
-                        <!--                            <a th:href="@{/categories/{id}(id=${category.categoryId})}" th:text="${category.categoryName}" class="text-decoration-none text-dark" style="pointer-events: none;"></a>-->
-                        <!--                        </li>-->
-                    </ul>
+
+                <!-- 스타일을 통일하기 위해 row와 col 스타일을 별도로 설정 -->
+                <style>
+                    .info-row {
+                        margin: 0;
+                        padding: 20px 30px;
+                        border-bottom: 1px solid #ddd;
+                    }
+
+                    .info-title {
+                        font-size: 1.8rem;
+                        font-weight: bold;
+                        color: #333;
+                    }
+
+                    .info-content {
+                        font-size: 1.5rem;
+                        color: #333;
+                        line-height: 1.6;
+                    }
+
+                    .last-row {
+                        border-bottom: none;
+                    }
+                </style>
+
+                <!-- 주제 분류 -->
+                <div class="row info-row">
+                    <div class="col-md-3">
+                        <h6 class="info-title">주제 분류</h6>
+                    </div>
+                    <div class="col-md-9">
+                        <div th:each="path : ${categoryPaths}">
+                            <ol class="breadcrumb mb-0" style="font-size: 1.3rem; padding: 0; margin: 0;">
+                                <li th:each="category, iterStat : ${path}"
+                                    th:classappend="${iterStat.last} ? 'breadcrumb-item active' : 'breadcrumb-item'">
+                                    <a th:href="@{/categories/{id}(id=${category.categoryId})}"
+                                       th:text="${category.categoryName}"></a>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- 책 설명 -->
-                <div class="list-group-item">
-                    <h6 class="text-dark fw-bold mb-3" style="font-size: 1.1rem;">책 설명</h6>
-                    <!--                    <p th:text="${book.description}" class="text-muted" style="line-height: 1.6; font-size: 0.9rem;"></p>-->
+                <div class="row info-row">
+                    <div class="col-md-3">
+                        <h6 class="info-title">책 설명</h6>
+                    </div>
+                    <div class="col-md-9">
+                        <p th:text="${book.bookInfo}" class="info-content"></p>
+                    </div>
                 </div>
 
                 <!-- 목차 -->
-                <div class="list-group-item">
-                    <h6 class="text-dark fw-bold mb-3" style="font-size: 1.1rem;">목차</h6>
-                    <!--                    <p th:text="${book.tableOfContents}" class="text-muted" style="line-height: 1.6; font-size: 0.9rem;"></p>-->
+                <div class="row info-row">
+                    <div class="col-md-3">
+                        <h6 class="info-title">목차</h6>
+                    </div>
+                    <div class="col-md-9">
+                        <p th:text="${book.bookIndex}" class="info-content"></p>
+                    </div>
                 </div>
 
                 <!-- 작가 소개 -->
-                <div class="list-group-item">
-                    <h6 class="text-dark fw-bold mb-3" style="font-size: 1.1rem;">작가 소개</h6>
-                    <!--                    <p th:each="author : ${book.authors}" th:text="${author.bio}" class="text-muted" style="line-height: 1.6; font-size: 0.9rem;"></p>-->
+                <div class="row info-row">
+                    <div class="col-md-3">
+                        <h6 class="info-title">작가 소개</h6>
+                    </div>
+                    <div class="col-md-9">
+                        <p class="info-content">저자:
+                            <span th:each="item, iterStat : ${book.authors}">
+                            <span th:text="${item.authorName}"></span><span th:if="${!iterStat.last}">, </span>
+                        </span>
+                        </p>
+                    </div>
                 </div>
 
                 <!-- 출판사 소개 -->
-                <div class="list-group-item">
-                    <h6 class="text-dark fw-bold mb-3" style="font-size: 1.1rem;">출판사 소개</h6>
-                    <!--                    <p th:text="${book.publisher.description}" class="text-muted" style="line-height: 1.6; font-size: 0.9rem;"></p>-->
+                <div class="row info-row">
+                    <div class="col-md-3">
+                        <h6 class="info-title">출판사 소개</h6>
+                    </div>
+                    <div class="col-md-9">
+                        <p th:text="${book.publisher.publisherName}" class="info-content"></p>
+                    </div>
                 </div>
 
                 <!-- 기본 정보 -->
-                <div class="list-group-item">
-                    <h6 class="text-dark fw-bold mb-3" style="font-size: 1.1rem;">기본 정보</h6>
-                    <ul class="list-unstyled ps-3" style="font-size: 0.9rem;">
-                        <!--                        <li><strong>ISBN:</strong> <span th:text="${book.isbn}"></span></li>-->
-                        <!--                        <li><strong>발행일:</strong> <span th:text="${#temporals.format(book.publicationDate, 'yyyy-MM-dd')}"></span></li>-->
-                    </ul>
+                <div class="row info-row last-row">
+                    <div class="col-md-3">
+                        <h6 class="info-title">기본 정보</h6>
+                    </div>
+                    <div class="col-md-9">
+                        <ul class="info-content" style="list-style-type: none; padding-left: 0;">
+                            <li><strong>ISBN:</strong> <span th:text="${book.bookIsbn}"></span></li>
+                            <li><strong>발행일:</strong> <span
+                                    th:text="${#temporals.format(book.publicationDate, 'yyyy-MM-dd')}"></span></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
+
+</main>
+
 
 <footer th:replace="~{common/footer :: footer}"></footer>
 

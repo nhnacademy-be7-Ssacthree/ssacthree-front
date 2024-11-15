@@ -135,7 +135,8 @@
 </div>
 
 <!-- 페이징 네비게이션 -->
-<div th:replace="~{common/pagination :: pagination}"></div>
+<!--<div th:replace="~{common/pagination :: pagination}"></div>-->
+<div th:replace="~{common/pagination :: pagination(${baseUrl}, ${books}, ${extraParams})}"></div>
 
 <footer th:replace="~{common/footer :: footer}"></footer>
 

@@ -14,9 +14,9 @@ import java.util.List;
 @FeignClient(name = "gateway-service", url = "${member.url}", contextId = "bookCustomerClient")
 public interface BookCustomerAdapter {
     @GetMapping("/shop/books")
-    ResponseEntity<Page<BookInfoResponse>> getRecentBooks(@RequestParam("page") int page,
-                                                          @RequestParam("size") int size,
-                                                          @RequestParam("sort") String[] sort);
+    ResponseEntity<Page<BookInfoResponse>> getAllAvailableBooks(@RequestParam("page") int page,
+                                                                @RequestParam("size") int size,
+                                                                @RequestParam("sort") String[] sort);
 
     @GetMapping("/shop/books/author/{author-id}")
     ResponseEntity<Page<BookInfoResponse>> getBooksByAuthorId(@RequestParam("page") int page,

@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -34,21 +37,33 @@ public class BookCustomerController {
             Model model) {
 
         List<CategoryInfoResponse> rootCategories = categoryCommonService.getRootCategories();
-
         model.addAttribute("rootCategories", rootCategories);
 
-        if (authorId != null) {
-            Page<BookInfoResponse> books = bookCommonService.getBooksByAuthorId(page, size, sort, authorId);
+        Map<String, Object> allParams = new HashMap<>();
+        allParams.put("page", String.valueOf(page));
+        allParams.put("size", String.valueOf(size));
 
-            model.addAttribute("books", books); // Page 객체 전체를 전달
-            model.addAttribute("authorId", authorId); // authorId 값
+        if (authorId != null) {
+            allParams.put("author-id", authorId);
+
+            Page<BookInfoResponse> books = bookCommonService.getBooksByAuthorId(page, size, sort, authorId);
+            model.addAttribute("books", books);
+            model.addAttribute("authorId", authorId);
         } else {
             Page<BookInfoResponse> books = bookCommonService.getAllAvailableBooks(page, size, sort);
             model.addAttribute("books", books);
         }
 
+        String extraParams = allParams.entrySet().stream()
+                .filter(entry -> !"page".equals(entry.getKey()) && !"size".equals(entry.getKey()))
+                .map(entry -> entry.getKey() + "=" + entry.getValue())
+                .collect(Collectors.joining("&"));
 
-        return "bookList"; // bookList.html로 데이터를 전달
+        model.addAttribute("baseUrl", "/books");
+        model.addAttribute("allParams", allParams);
+        model.addAttribute("extraParams", extraParams);
+
+        return "bookList";
     }
 
     @GetMapping
