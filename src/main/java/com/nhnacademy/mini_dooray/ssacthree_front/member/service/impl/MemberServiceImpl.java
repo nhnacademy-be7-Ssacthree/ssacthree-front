@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -52,15 +53,15 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MessageResponse memberLogin(MemberLoginRequest requestBody,
         HttpServletResponse httpServletResponse) {
-        ResponseEntity<MessageResponse> response = memberAdapter.memberLogin(requestBody);
-
         try {
+            ResponseEntity<MessageResponse> response = memberAdapter.memberLogin(requestBody);
             if (isHaveCookie(httpServletResponse, response)) {
                 return response.getBody();
             }
 
             throw new LoginFailedException("로그인에 실패하였습니다.");
-        } catch (HttpClientErrorException | HttpServerErrorException e) {
+        } catch (HttpClientErrorException | HttpServerErrorException | FeignException e) {
+            log.debug(e.getMessage());
             throw new LoginFailedException("로그인에 실패하였습니다.");
         }
     }
