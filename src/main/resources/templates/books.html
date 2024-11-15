@@ -51,7 +51,6 @@
     <tr>
       <th>썸네일</th>
       <th>책 이름</th>
-      <th>목차</th>
       <th>설명</th>
       <th>ISBN</th>
       <th>출판일</th>
@@ -60,8 +59,6 @@
       <th>할인율</th>
       <th>재고</th>
       <th>조회수</th>
-      <th>포장 여부</th>
-      <th>배송 상태</th>
     </tr>
     </thead>
     <tbody>
@@ -69,17 +66,14 @@
     <tr th:each="book : ${books}">
       <td><img th:src="${book.bookThumbnailImageUrl}" alt="Thumbnail" style="width: 80px;"></td>
       <td th:text="${book.bookName}">책 이름</td>
-      <td th:text="${book.bookIndex}">목차</td>
       <td th:text="${book.bookInfo}">설명</td>
       <td th:text="${book.bookIsbn}">ISBN</td>
-      <td th:text="${#dates.format(book.publicationDate, 'yyyy-MM-dd')}">출판일</td>
+      <td th:text="${book.publicationDate.substring(0, 10)}">출판일</td>
       <td th:text="${book.regularPrice} + ' 원'">정가</td>
       <td th:text="${book.salePrice} + ' 원'">할인가</td>
       <td th:text="${book.bookDiscount} + '%'">할인율</td>
       <td th:text="${book.stock}">재고</td>
       <td th:text="${book.bookViewCount}">조회수</td>
-      <td th:text="${book.isPacked ? '포장됨' : '미포장'}">포장 여부</td>
-      <td th:text="${book.bookStatus ?: '배송 대기중'}">배송 상태</td>
     </tr>
     </tbody>
   </table>

@@ -21,13 +21,14 @@ public class SearchController {
 
   private final SearchService searchService;
 
-  // 화면 로드를 위한 GET 메서드
-  @GetMapping("/bookPage")
+  // 화면 로드를 위한 GET 메서드 ( 아무입력 없을 때 화면 띄우기 )
+  @GetMapping
   public String showSearchPage() {
     return "books";  // books.html을 반환하여 화면을 로드
   }
 
 
+  //#TODO 잘못된 검색일 때, 백엔드 응답 없을 때 에러 페이지 만들기
   @GetMapping("/books")
   public String searchBooks(@RequestParam String keyword,
                             @RequestParam(defaultValue = "1") int page,
