@@ -2,20 +2,22 @@ package com.nhnacademy.mini_dooray.ssacthree_front.order.controller;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.domain.CartItem;
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.service.CartService;
+import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderCreateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.service.impl.OrderServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/orderSheet")
+@RequestMapping
 public class OrderController {
 
     private OrderServiceImpl orderService;
@@ -27,9 +29,12 @@ public class OrderController {
     // 장바구니 -> 주문
     // 책 -> 바로 주문
 
-    @GetMapping
-    public String OrderSheet(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession(false);
+    @GetMapping("/orderSheet")
+    public String orderSheet(HttpServletRequest request, Model model) {
+        //회원 주문인지 비회원 주문인지 확인
+
+        //배송비 정책 끌어오기 - 현재 사용중인 ture인거(api요청)
+
 
         // 일단 비회원 장바구니부터 처리? 회원일때랑 비회원일때 response다름
         // 이 세션에서 attribute의 cartId 알아낸 다음 redis에서 cartId로 상품 정보 가져오기(아이디랑 수량만 받으면 안되나?)
@@ -44,9 +49,32 @@ public class OrderController {
         return "order/orderSheet";
     }
 
-    // 2. 비회원, 회원 주문 구현
+    // 2. 비회원, 회원 장바구니 주문 구현
+    @PostMapping("/order")
+    public String order(@ModelAttribute OrderCreateRequest orderCreateRequest, Model model) {
+        // 트랜잭션 시작
+
+        // 재고 체크? - or 장바구니에서 ?
+
+        // 주문 저장 API 호출 - 주문 DB에 저장 + 주문 상세 저장
+
+        // 결제시 사용한 쿠폰, 포인트 차감
+
+        // 쿠폰 포인트 내역 생성
+
+        // 재고 차감
+
+        // 장바구니 비우기
+
+        // 트랜잭션 커밋, 실패시 롤백 -> 까지가 API로 뒷단에서 처리
+
+        // 후에 결제, 모델에 넣고 토스 페이먼트 결제창으로 이제 이동
+        return "payment/checkout";
+    }
+
+    // 3. 비회원, 회원 바로 주문 구현
 
 
-    // 3. 비회원, 회원 주문 내역 페이지 구현
+    // 4. 비회원, 회원 주문 내역 페이지 구현
 
 }
