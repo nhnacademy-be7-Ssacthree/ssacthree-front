@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 /**
  * 회원가입을 처리하는 컨트롤러
+ *
  * @author : 김희망
  * @date : 2024/11/03
  */
@@ -32,9 +33,14 @@ public class MemberRegisterController {
     @PostMapping("/register")
     public String memberRegister(@Valid @ModelAttribute MemberRegisterRequest memberRegisterRequest,
         BindingResult bindingResult, Model model) {
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             throw new ValidationFailedException(bindingResult);
         }
+        // 휴대폰 번호 패턴만 변경..
+        memberRegisterRequest.setCustomerPhoneNumber(
+            memberRegisterRequest.getCustomerPhoneNumber().replaceAll("(\\d{3})(\\d{4})(\\d{4})",
+                "$1-$2-$3"));
+
         memberService.memberRegister(memberRegisterRequest);
         return "redirect:/";
     }

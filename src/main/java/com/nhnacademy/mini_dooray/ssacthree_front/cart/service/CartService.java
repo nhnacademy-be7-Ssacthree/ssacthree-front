@@ -113,31 +113,6 @@ public class CartService {
         redisTemplate.opsForValue().set(alertKey, "expiring soon", 29, TimeUnit.MINUTES);
     }
 
-    /**
-     *
-     * @param cartItems 장바구니에 담겨있는 도서들
-     * @return 도서의 총 합
-     * 총 가격 계산
-     */
-    public int calculateTotalPrice(List<CartItem> cartItems) {
-        return cartItems.stream()
-            .mapToInt(item -> (int) (item.getPrice() * item.getQuantity()))
-            .sum();
-    }
-
-    /**
-     * GET localhost:/shop
-     * @param cartItems 물품추가
-     * 삭제예정
-     */
-    // 장바구니에 기본 물품 추가
-    private void addDefaultItems(List<CartItem> cartItems) {
-        // 예시로 물품을 추가 (나중에 삭제 예정)
-
-        cartItems.add(new CartItem(1, "책 제목 1", 1, 20000, null));
-        cartItems.add(new CartItem(2, "책 제목 2", 1, 25000, null));
-    }
-
 
     public void updateItemQuantity(HttpServletRequest request, Long itemId, int quantityChange) {
         HttpSession session = request.getSession();
@@ -150,7 +125,7 @@ public class CartService {
             if (cartItem.getId() == (itemId)) {
                 int newQuantity = cartItem.getQuantity() + quantityChange;
                 if (newQuantity > 0) {
-                    CartItem newCartItem = new CartItem(cartItem.getId(), cartItem.getTitle(), newQuantity, cartItem.getPrice(), cartItem.getImageUrl());
+                    CartItem newCartItem = new CartItem(cartItem.getId(), cartItem.getTitle(), newQuantity, cartItem.getPrice(), cartItem.getBookThumbnailImageUrl());
                     updatedCartItems.add(newCartItem);
                 }
             } else {
@@ -190,8 +165,6 @@ public class CartService {
         for (CartItem cartItem : cartItems) {
             if (cartItem.getId() == (itemId)) {
                 updateItemQuantity(request, itemId, quantity);
-                Long customerId = getCustomerIdByCartId(cartId);
-                saveCart(cartId, cartItems, customerId);
                 return;
             }
         }
