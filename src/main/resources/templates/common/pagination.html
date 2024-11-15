@@ -1,0 +1,68 @@
+<!--<div xmlns:th="http://www.thymeleaf.org" th:fragment="pagination">-->
+<!--    <nav aria-label="Page navigation" class="mt-4">-->
+<!--        <ul class="pagination justify-content-center">-->
+<!--            &lt;!&ndash; Previous page &ndash;&gt;-->
+<!--            <li class="page-item" th:classappend="${!books.hasPrevious()} ? 'disabled'">-->
+<!--                <a class="page-link"-->
+<!--                   th:href="@{/books(page=${books.number - 1}, size=${books.size}, author-id=${authorId})}"-->
+<!--                   aria-label="Previous">-->
+<!--                    <span aria-hidden="true">&laquo;</span>-->
+<!--                </a>-->
+<!--            </li>-->
+
+<!--            &lt;!&ndash; Page numbers &ndash;&gt;-->
+<!--            <li class="page-item" th:each="i : ${#numbers.sequence(0, books.totalPages - 1)}"-->
+<!--                th:classappend="${i == books.number} ? 'active'">-->
+<!--                <a class="page-link"-->
+<!--                   th:href="@{/books(page=${i}, size=${books.size}, author-id=${authorId})}"-->
+<!--                   th:text="${i + 1}"></a>-->
+<!--            </li>-->
+
+<!--            &lt;!&ndash; Next page &ndash;&gt;-->
+<!--            <li class="page-item" th:classappend="${!books.hasNext()} ? 'disabled'">-->
+<!--                <a class="page-link"-->
+<!--                   th:href="@{/books(page=${books.number + 1}, size=${books.size}, author-id=${authorId})}"-->
+<!--                   aria-label="Next">-->
+<!--                    <span aria-hidden="true">&raquo;</span>-->
+<!--                </a>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </nav>-->
+<!--</div>-->
+
+<!-- templates/fragments/pagination.html -->
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="pagination(baseUrl, paging, extraParams)">
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <!-- 이전 페이지 -->
+            <li class="page-item" th:classappend="${paging.number == 0} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{|${baseUrl}?page=${paging.number - 1}&size=${paging.size}&sort=${paging.sort}&${extraParams}|}"
+                   aria-label="Previous">
+                    &laquo;
+                </a>
+            </li>
+
+            <!-- 현재 페이지를 중심으로 일부 페이지만 표시 -->
+            <li class="page-item"
+                th:each="i : ${#numbers.sequence(
+                    paging.number > 2 ? paging.number - 2 : 0,
+                    paging.number + 2 < paging.totalPages ? paging.number + 2 : paging.totalPages - 1
+                )}"
+                th:classappend="${i == paging.number} ? 'active'">
+                <a class="page-link"
+                   th:href="@{|${baseUrl}?page=${i}&size=${paging.size}&sort=${paging.sort}&${extraParams}|}"
+                   th:text="${i + 1}">1</a>
+            </li>
+
+            <!-- 다음 페이지 -->
+            <li class="page-item" th:classappend="${paging.number == paging.totalPages - 1} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{|${baseUrl}?page=${paging.number + 1}&size=${paging.size}&sort=${paging.sort}&${extraParams}|}"
+                   aria-label="Next">
+                    &raquo;
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
