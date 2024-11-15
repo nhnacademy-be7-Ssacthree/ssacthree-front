@@ -127,7 +127,9 @@
         </div>
         <div class="col-md-2 text-end">
 
-            <button class="btn btn-outline-secondary btn-sm w-100 mb-2">장바구니</button>
+            <button class="btn btn-outline-secondary btn-sm w-100 mb-2"
+                    th:onclick="|window.location.href='/shop/carts/add?bookId=' + ${book.bookId}+'&quantity='+1|">장바구니
+            </button>
             <button class="btn btn-primary btn-sm w-100">바로구매</button>
         </div>
     </div>
