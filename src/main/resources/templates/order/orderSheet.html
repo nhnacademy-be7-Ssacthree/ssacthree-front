@@ -16,9 +16,14 @@
                     <h3>주문서 작성</h3>
                 </div>
                 <form method="post" action="/order" class="container mb-4">
-                    <div class="card-body">
                         <!-- 1. 주문 상품 정보 -->
                         <section id="order-items" class="mb-4">
+                            <div>
+                                <h5 th:if="${isMember}" class="member-order-title">회원 주문</h5>
+                            </div>
+                            <div>
+                                <h5 th:if="${!isMember}" class="non-member-order-title">비회원 주문</h5>
+                            </div>
                             <h4 class="text-primary">주문 상품 정보</h4>
                             <table class="table table-bordered mt-3">
                                 <thead class="table-light">
@@ -35,14 +40,14 @@
                                 <tbody id="items-table-body">
                                 <!-- 상품 행이 JavaScript로 추가됩니다 -->
                                 <!-- 여기서,  ${cartInfo.getBookInfos()} 이런식으로 해서, book정보 받아올 수 있게 구현 -->
-                                <tr th:each="item : ${guestCartInfo}">
+                                <tr th:each="book : ${bookLists}">
                                     <td>
-                                        <img th:src="${item.bookThumbnailImageUrl}" class="img-fluid" alt="Book Image">
+                                        <img th:src="${book.bookThumbnailImageUrl}" class="img-fluid" alt="Book Image">
                                     </td>
-                                    <td th:text="${item.title}"></td>
-                                    <!-- 가격은 정가? 판매가?-->
-                                    <td th:text="${item.price}"></td>
-                                    <td th:text="${item.quantity}"></td>
+                                    <td th:text="${book.bookName}"></td>
+                                    <!-- 정가 -->
+                                    <td th:text="${book.regularPrice}"></td>
+                                    <td th:text="${book.quantity}"></td>
                                     <td th:text="'쿠폰 적용하려면? 회원이 가진 쿠폰 중, 도서에 쓸 수 있는? 주문?'"></td>
                                     <td>
                                         <button type="button" class="btn btn-outline-primary"

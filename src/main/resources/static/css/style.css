@@ -1513,3 +1513,34 @@ select#input-sort {
 .breadcrumb-item + .breadcrumb-item::before {
     content: " > ";
 }
+
+
+/* Styling for Member Order section */
+.member-order-title {
+    font-size: 1.5rem;
+    color: #28a745; /* Green color for member order */
+    font-weight: bold;
+    background-color: #f0f9f0; /* Light green background */
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+/* Styling for Non-Member Order section */
+.non-member-order-title {
+    font-size: 1.5rem;
+    color: #dc3545; /* Red color for non-member order */
+    font-weight: bold;
+    background-color: #f8d7da; /* Light red background */
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+/* Styling for Order Info title */
+.order-info-title {
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin-top: 20px;
+    color: #007bff; /* Blue color for order info title */
+}

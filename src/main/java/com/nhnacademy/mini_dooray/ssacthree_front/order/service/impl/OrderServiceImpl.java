@@ -1,6 +1,7 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.order.service.impl;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.domain.CartItem;
+import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.BookOrderRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.GuestCartInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.service.OrderService;
 import jakarta.servlet.http.HttpSession;

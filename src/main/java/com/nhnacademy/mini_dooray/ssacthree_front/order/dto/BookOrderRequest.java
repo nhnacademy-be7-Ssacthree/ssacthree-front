@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookOrderRequest {
+    // 책 정보
 
     private Long bookId;
     private String bookName;
@@ -20,4 +21,7 @@ public class BookOrderRequest {
     private boolean isPacked;
     private int stock;
     private String bookThumbnailImageUrl;
+    private int quantity;
+
+    //각각의 책
 }

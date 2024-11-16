@@ -1,14 +1,19 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.order.controller;
 
+import com.nhnacademy.mini_dooray.ssacthree_front.admin.delivery_rule.dto.DeliveryRuleGetResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.admin.delivery_rule.service.DeliveryRuleService;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.adapter.PackagingCustomerAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.dto.PackagingGetResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.service.PackagingService;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookInfoResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.service.BookCommonService;
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.domain.CartItem;
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.service.CartService;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.adapter.MemberAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.AddressService;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.MemberService;
+import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.BookOrderRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderCreateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.service.impl.OrderServiceImpl;
 import jakarta.servlet.http.Cookie;
@@ -33,7 +38,8 @@ public class OrderController {
     private final PackagingService packagingService;
     private final MemberService memberService;
     private final AddressService addressService;
-    private final MemberAdapter memberAdapter;
+    private final BookCommonService bookCommonService;
+    private final DeliveryRuleService deliveryRuleService;
 
 
     // 1. 비회원, 회원 주문 페이지 이동 -> 각각 다르게 처리?
@@ -85,35 +91,46 @@ public class OrderController {
 
     // 바로 주문
     @GetMapping("/order-now")
-    public String orderNow(HttpServletRequest request, @RequestParam String bookId, @RequestParam String quantity, Model model) {
+    public String orderNow(HttpServletRequest request, @RequestParam Long bookId, @RequestParam int quantity, Model model) {
             // 회원인지 비회원인지 확인
             boolean isMember = false;
             MemberInfoResponse memberInfoResponse = memberService.getMemberInfo(request);
 
-            // 여기도 수정 필요
-            List<CartItem> cartItems = cartService.initializeCart(request); // 서비스에서 장바구니 초기화
-
-            // 비회원 - redis에서 끌어오기
-            if (memberInfoResponse == null) {
-            }
-            // 회원 - DB에서 끌어오기
-            else {
+            // 회원정보 가져오기 : 회원이면 isMember=true , 주소, 회원정보 모델에 넘김
+            if (memberInfoResponse != null) {
                 isMember = true;
-                //id로 고치고픔
+                //id로 고치고픔..info정보에 필요 저장하려면 필요할듯.
                 String memberLoginId = memberInfoResponse.getMemberLoginId();
-                //db에서 멤버 카트 정보 가져오기
-                //주소
+
                 model.addAttribute("memberAddressList", addressService.getAddresses(request));
                 model.addAttribute("memberInfo", memberInfoResponse);
             }
+            model.addAttribute("isMember", isMember);
 
-            // 리스트 형식으로 레디스의 상품 정보들 들어감.
-            model.addAttribute("guestCartInfo", cartItems);
+
+            // 책 정보 가져오기 - 단일 책
+            BookInfoResponse book = bookCommonService.getBookById(bookId);
+
+            // 요청 만들기, 필요한 정보 추가. 수량 등
+            BookOrderRequest bookOrderRequest = new BookOrderRequest(
+                    book.getBookId(),
+                    book.getBookName(),
+                    book.getRegularPrice(),
+                    book.getSalePrice(),
+                    book.getBookDiscount(),
+                    book.isPacked(),
+                    book.getStock(),
+                    book.getBookThumbnailImageUrl(),
+                    quantity);
+            List<BookOrderRequest> bookLists = new ArrayList<>();
+            bookLists.add(bookOrderRequest);
+            model.addAttribute("bookLists", bookLists);
 
             // 포장지 가져오기
             List<PackagingGetResponse> packagingList = packagingService.getAllCustomerPackaging();
             model.addAttribute("packagingList", packagingList);
-            model.addAttribute("isMember", isMember);
+
+            // 배달정책 true인거 가져오기 - 배송정책 서비스에 구현필요..
 
             return "order/orderSheet";
     }
