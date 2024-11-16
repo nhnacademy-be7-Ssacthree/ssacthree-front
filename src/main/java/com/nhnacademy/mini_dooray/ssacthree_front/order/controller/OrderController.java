@@ -1,5 +1,8 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.order.controller;
 
+import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.adapter.PackagingCustomerAdapter;
+import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.dto.PackagingGetResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.service.PackagingService;
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.domain.CartItem;
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.service.CartService;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderCreateRequest;
@@ -23,6 +26,7 @@ public class OrderController {
     private OrderServiceImpl orderService;
 
     private final CartService cartService;
+    private final PackagingService packagingService;
 
 
     // 1. 비회원, 회원 주문 페이지 이동 -> 각각 다르게 처리?
@@ -46,6 +50,13 @@ public class OrderController {
 
         // 리스트 형식으로 레디스의 상품 정보들 들어감.
         model.addAttribute("guestCartInfo", cartItems);
+
+        // 포장지 가져오기
+        List<PackagingGetResponse> packagingList = packagingService.getAllCustomerPackaging();
+        model.addAttribute("packagingList", packagingList);
+
+        // 임의의 주문 번호호 생성해서 model에 넣기
+
         return "order/orderSheet";
     }
 

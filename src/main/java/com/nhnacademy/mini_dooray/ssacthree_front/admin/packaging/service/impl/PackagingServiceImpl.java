@@ -1,6 +1,7 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.service.impl;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.adapter.PackagingAdapter;
+import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.adapter.PackagingCustomerAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.dto.PackagingCreateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.dto.PackagingGetResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.dto.PackagingUpdateRequest;
@@ -20,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PackagingServiceImpl implements PackagingService {
     private final PackagingAdapter packagingAdapter;
+    private final PackagingCustomerAdapter packagingCustomerAdapter;
 
     private  final ImageUploadAdapter imageUploadAdapter;
 
@@ -28,6 +30,16 @@ public class PackagingServiceImpl implements PackagingService {
     public List<PackagingGetResponse> getAllPackaging() {
 
         ResponseEntity<List<PackagingGetResponse>> response = packagingAdapter.getAllPackaging();
+        if (response.getStatusCode().is2xxSuccessful()) {
+            return response.getBody();
+        }
+        throw new PackagingGetFailedException("포장지 정보를 가져올 수 없습니다.");
+    }
+
+    @Override
+    public List<PackagingGetResponse> getAllCustomerPackaging() {
+
+        ResponseEntity<List<PackagingGetResponse>> response = packagingCustomerAdapter.getAllPackaging();
         if (response.getStatusCode().is2xxSuccessful()) {
             return response.getBody();
         }

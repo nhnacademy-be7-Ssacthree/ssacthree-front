@@ -10,6 +10,8 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 public class OrderCreateRequest {
+    //ordernum
+
     // 주문 상품 정보 -
 
     // 구매자 정보
