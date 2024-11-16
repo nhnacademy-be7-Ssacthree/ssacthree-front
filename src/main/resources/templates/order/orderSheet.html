@@ -95,25 +95,27 @@
                         <!-- 비회원인 경우, 모든 칸이 비어있고, 회원인 경우 구매자 정보 입력칸을 해당 회원의 정보로 채워야함.-->
                         <section id="buyer-info" class="mb-4">
                             <h4 class="text-primary">구매자 정보 입력</h4>
-                            <!-- 상품 정보도 넘겨주기 -->
                             <div class="mb-3">
                                 <label for="buyer-name" class="form-label">이름</label>
-                                <input type="text" class="form-control" id="buyer-name" name="buyerName" th:value="${memberInfo.getCustomerName()}" required>
+                                <input type="text" class="form-control" id="buyer-name" name="buyerName"
+                                       th:value="${isMember} ? ${memberInfo.customerName} : ''" required>
                             </div>
                             <div class="mb-3">
                                 <label for="buyer-email" class="form-label">이메일</label>
-                                <input type="email" class="form-control" id="buyer-email" name="buyerEmail" th:value="${memberInfo.getCustomerEmail()}" required>
+                                <input type="email" class="form-control" id="buyer-email" name="buyerEmail"
+                                       th:value="${isMember} ? ${memberInfo.customerEmail} : ''" required>
                             </div>
                             <div class="mb-3">
                                 <label for="buyer-phone" class="form-label">휴대폰번호</label>
-                                <input type="tel" class="form-control" id="buyer-phone" name="buyerPhone" th:value="${memberInfo.getCustomerPhoneNumber()}" required>
+                                <input type="tel" class="form-control" id="buyer-phone" name="buyerPhone"
+                                       th:value="${isMember} ? ${memberInfo.customerPhoneNumber} : ''" required>
                             </div>
                         </section>
 
                         <!-- 3. 배송지 입력 -->
                         <section id="delivery-info" class="mb-4">
                             <h4 class="text-primary">배송지 입력</h4>
-                            <div class="mb-3">
+                            <div class="mb-3"  th:if="${isMember}">
                                 <button type="button" class="btn btn-outline-primary"
                                         data-bs-toggle="modal"
                                         data-bs-target="#addressModal">
@@ -125,7 +127,7 @@
                                 <input type="text" class="form-control" id="recipient-name" name="recipientName" required>
                             </div>
                             <div class="mb-3">
-                                <label for="recipient-name" class="form-label">받는 사람 연락처</label>
+                                <label for="recipient-phone" class="form-label">받는 사람 연락처</label>
                                 <input type="text" class="form-control" id="recipient-phone" name="recipientPhone" required>
                             </div>
                             <div class="mb-3">
@@ -149,7 +151,6 @@
                                 <small id="date-message" class="form-text text-muted">
                                     오늘부터 5일 후까지 선택 가능합니다.
                                 </small>
-
                                 <script>
                                     const deliveryDateInput = document.getElementById("delivery-date");
                                     const dateMessage = document.getElementById("date-message");
@@ -160,6 +161,9 @@
 
                                     // 오늘 날짜 설정
                                     deliveryDateInput.min = formatDate(today);
+
+                                    // 기본값을 오늘 날짜로 설정
+                                    deliveryDateInput.value = formatDate(today);
 
                                     // 오늘로부터 5일 이후 날짜 설정
                                     const maxDate = new Date(today);
@@ -179,7 +183,7 @@
                         </section>
 
                         <!-- 배송지 주소록 선택 모달 -->
-                        <div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true" th:if="${isMember}">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -212,7 +216,7 @@
                         </div>
 
                         <!-- 4. 포인트 사용 -->
-                        <section id="point-use" class="mb-4">
+                        <section id="point-use" class="mb-4" th:if="${isMember}">
                             <h4 class="text-primary">포인트 사용</h4>
                             <p>보유 포인트: <span id="user-points" th:value="${memberInfo.getMemberPoint()}"></span></p>
                             <!-- 가진 포인트보다 많으면 안됨. -->
@@ -223,7 +227,7 @@
                         </section>
 
                         <!-- 5. 전체 주문에 대한 포인트 적립(등급 정책 적용), 계산 필요 -->
-                        <section id="point-save" class="mb-4">
+                        <section id="point-save" class="mb-4" th:if="${isMember}">
                             <h4 class="text-primary">포인트 적립</h4>
                             <p>적립 포인트: <span id="user-points-save"></span></p>
                         </section>
@@ -273,7 +277,8 @@
         document.getElementById("road-address").value = roadAddress;
         document.getElementById("detail-address").value = detailAddress;
         // 모달을 닫습니다.
-        $('#addressModal').modal('hide');
+        var myModal = new bootstrap.Modal(document.getElementById('addressModal'));
+        myModal.hide();
     }
 </script>
 <script>
@@ -304,5 +309,6 @@
         document.getElementById("PaymentPrice").innerText = paymentPrice + "원";
     }
 </script>
+<script src="js/order.js"></script>
 </body>
 </html>
