@@ -79,6 +79,7 @@ public class OrderController {
                     book.getRegularPrice(),
                     book.getSalePrice(),
                     book.getBookDiscount(),
+                    // 왜 다 false?
                     book.isPacked(),
                     book.getStock(),
                     book.getBookThumbnailImageUrl(),
