@@ -75,7 +75,7 @@
                                             포장지를 지원하지 않는 도서입니다
                                         </div>
                                     </td>
-                                    <td th:text="${book.salePrice * book.quantity}">원</td>
+                                    <td th:text="${book.salePrice * book.quantity + '원'}"></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -315,15 +315,15 @@
 </script>
 <script th:inline="javascript">
     /* Thymeleaf를 통해 서버의 데이터를 JSON 형태로 자바스크립트에 전달 */
-    let guestCartInfo = /*[[${guestCartInfo}]]*/ [];
+    let bookLists = /*[[${bookLists}]]*/ [];
 </script>
 
 <script>
     function calculatePaymentPrice() {
         let paymentPrice = 0;
 
-        guestCartInfo.forEach(item => {
-            paymentPrice += item.price * item.quantity;
+        bookLists.forEach(book => {
+            paymentPrice += book.salePrice * book.quantity;
         });
 
         document.getElementById("PaymentPrice").innerText = paymentPrice + "원";
