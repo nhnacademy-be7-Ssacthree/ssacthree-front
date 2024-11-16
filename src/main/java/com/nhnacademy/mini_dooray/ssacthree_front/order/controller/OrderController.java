@@ -11,8 +11,9 @@ import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.AddressService;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.MemberService;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.BookOrderRequest;
-import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderCreateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.service.impl.OrderServiceImpl;
+import com.nhnacademy.mini_dooray.ssacthree_front.order.utils.OrderUtil;
+import com.nhnacademy.mini_dooray.ssacthree_front.payment.dto.PaymentRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -147,7 +148,10 @@ public class OrderController {
 
     // 2. 비회원, 회원 장바구니 주문 구현
     @PostMapping("/order")
-    public String order(@ModelAttribute OrderCreateRequest orderCreateRequest, Model model) {
+    public String order(@ModelAttribute BookOrderRequest bookOrderRequest,
+                        @ModelAttribute MemberInfoResponse memberInfoResponse,
+                        @RequestParam(name = "paymentPrice") int paymentPrice,
+                        Model model) {
         // 트랜잭션 시작
 
         // 재고 체크? - or 장바구니에서 ?
@@ -174,6 +178,10 @@ public class OrderController {
         //TODO : orderservice로
 
         //TODO : 결제에 필요한 정보 넘기기 !!!
+        String orderNumber = OrderUtil.generateOrderNumber();
+        PaymentRequest paymentRequest = new PaymentRequest("", orderNumber, paymentPrice);
+        model.addAttribute("paymentRequest", paymentRequest);
+
         return "payment/checkout";
         // TODO 이 결제 완료 후에 주문이 저장.
     }

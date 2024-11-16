@@ -9,10 +9,11 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @AllArgsConstructor
-public class OrderCreateRequest {
+public class OrderSaveRequest {
     //ordernum
 
     // 주문 상품 정보 -
+
 
     // 구매자 정보
     private String buyerName;
