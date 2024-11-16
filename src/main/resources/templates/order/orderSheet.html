@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{common/config :: config}">
     <meta charset="UTF-8">
     <title>주문서 작성</title>
@@ -99,15 +98,15 @@
                             <!-- 상품 정보도 넘겨주기 -->
                             <div class="mb-3">
                                 <label for="buyer-name" class="form-label">이름</label>
-                                <input type="text" class="form-control" id="buyer-name" name="buyerName" required>
+                                <input type="text" class="form-control" id="buyer-name" name="buyerName" th:value="${memberInfo.getCustomerName()}" required>
                             </div>
                             <div class="mb-3">
                                 <label for="buyer-email" class="form-label">이메일</label>
-                                <input type="email" class="form-control" id="buyer-email" name="buyerEmail" required>
+                                <input type="email" class="form-control" id="buyer-email" name="buyerEmail" th:value="${memberInfo.getCustomerEmail()}" required>
                             </div>
                             <div class="mb-3">
                                 <label for="buyer-phone" class="form-label">휴대폰번호</label>
-                                <input type="tel" class="form-control" id="buyer-phone" name="buyerPhone" required>
+                                <input type="tel" class="form-control" id="buyer-phone" name="buyerPhone" th:value="${memberInfo.getCustomerPhoneNumber()}" required>
                             </div>
                         </section>
 
@@ -115,11 +114,11 @@
                         <section id="delivery-info" class="mb-4">
                             <h4 class="text-primary">배송지 입력</h4>
                             <div class="mb-3">
-                                <label for="address-list" class="form-label">주소 선택</label>
-                                <select class="form-select" id="address-list" onchange="setSelectedAddress()">
-                                    <option>주소 선택</option>
-                                    <!-- 회원 주소 리스트 추가 -->
-                                </select>
+                                <button type="button" class="btn btn-outline-primary"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#addressModal">
+                                    배송지주소록 선택
+                                </button>
                             </div>
                             <div class="mb-3">
                                 <label for="recipient-name" class="form-label">받는 사람 이름</label>
@@ -133,7 +132,7 @@
                                 <button type="button" class="btn btn-outline-secondary" onclick="openPostcodeSearch()">주소 조회</button>
                             </div>
                             <div class="mb-3">
-                                <label for="postal-code" class="form-label">우편 주소</label>
+                                <label for="postal-code" class="form-label">우편 번호</label>
                                 <input type="text" class="form-control" id="postal-code" name="postalCode" readonly="readonly">
                             </div>
                             <div class="mb-3">
@@ -177,15 +176,45 @@
                                     });
                                 </script>
                             </div>
-
-
-
                         </section>
+
+                        <!-- 배송지 주소록 선택 모달 -->
+                        <div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="addressModalLabel">배송지 선택</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="list-group">
+                                            <!-- 회원 주소 목록을 반복해서 출력 -->
+                                            <div th:each="address : ${memberAddressList}" class="list-group-item d-flex justify-content-between align-items-center">
+                                                <div class="d-flex align-items-center">
+                                                    <div>
+                                                        <p>별칭 : <span th:text="${address.addressAlias}"></span></p>
+                                                        <p>우편 번호 : <span th:text="${address.addressPostalNumber}"></span></p>
+                                                        <p>도로명 주소 : <span th:text="${address.addressRoadname}"></span></p>
+                                                        <p>상세 주소 : <span th:text="${address.addressDetail}"></span></p>
+                                                    </div>
+                                                </div>
+                                                <button type="button" class="btn btn-sm btn-primary" onclick="selectAddress('${address.addressPostalNumber}', '${address.addressRoadname}', '${address.addressDetail}')">
+                                                    배송지 선택
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- 4. 포인트 사용 -->
                         <section id="point-use" class="mb-4">
                             <h4 class="text-primary">포인트 사용</h4>
-                            <p>보유 포인트: <span id="user-points"></span></p>
+                            <p>보유 포인트: <span id="user-points" th:value="${memberInfo.getMemberPoint()}"></span></p>
                             <!-- 가진 포인트보다 많으면 안됨. -->
                             <div class="mb-3">
                                 <label for="points-to-use" class="form-label">사용할 포인트</label>
@@ -234,6 +263,17 @@
         // 모달 닫기
         const packagingModal = new bootstrap.Modal(document.getElementById('packagingModal'));
         packagingModal.hide();
+    }
+</script>
+<script>
+    // 주소를 선택했을 때 입력창에 자동으로 채워주는 함수
+    function selectAddress(postalCode, roadAddress, detailAddress) {
+        // 각 입력 필드에 값을 넣어줍니다.
+        document.getElementById("postal-code").value = postalCode;
+        document.getElementById("road-address").value = roadAddress;
+        document.getElementById("detail-address").value = detailAddress;
+        // 모달을 닫습니다.
+        $('#addressModal').modal('hide');
     }
 </script>
 <script>
