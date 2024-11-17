@@ -7,13 +7,16 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.Book
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.service.BookCommonService;
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.domain.CartItem;
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.service.CartService;
+import com.nhnacademy.mini_dooray.ssacthree_front.customer.dto.CustomerCreateRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.customer.service.CustomerService;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.AddressService;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.MemberService;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.BookOrderRequest;
-import com.nhnacademy.mini_dooray.ssacthree_front.order.service.impl.OrderServiceImpl;
+import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderFormRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.utils.OrderUtil;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,6 +35,7 @@ public class OrderController {
     private final MemberService memberService;
     private final AddressService addressService;
     private final BookCommonService bookCommonService;
+    private final CustomerService customerService;
     private final DeliveryRuleService deliveryRuleService;
 
     // TODO : 각각의 중복되는거 service로 빼기
@@ -48,7 +52,7 @@ public class OrderController {
         if (memberInfoResponse != null) {
             isMember = true;
             //TODO : id로 고치고픔..info정보에 필요 저장하려면 필요할듯. - info 정보에 id 넣어달라하기
-            String memberLoginId = memberInfoResponse.getMemberLoginId();
+            Long customerId = memberInfoResponse.getCustomerId();
 
             model.addAttribute("memberAddressList", addressService.getAddresses(request));
             model.addAttribute("memberInfo", memberInfoResponse);
@@ -104,7 +108,7 @@ public class OrderController {
             if (memberInfoResponse != null) {
                 isMember = true;
                 //id로 고치고픔..info정보에 필요 저장하려면 필요할듯.
-                String memberLoginId = memberInfoResponse.getMemberLoginId();
+                Long customerId = memberInfoResponse.getCustomerId();
 
                 model.addAttribute("memberAddressList", addressService.getAddresses(request));
                 model.addAttribute("memberInfo", memberInfoResponse);
@@ -140,46 +144,47 @@ public class OrderController {
 
 
     // 3. 주문서 -> 결제하기
-    @PostMapping("/order")
-    // TODO : loginId말고 id로 바꾸기?
-    public String order(@ModelAttribute("memberLoginId") String memberLoginId,
+    @PostMapping("/payment")
+    public String order(@ModelAttribute("memberId") String memberId,
                         @RequestParam(name = "paymentPrice") Integer paymentPrice,
+                        @ModelAttribute OrderFormRequest orderFormRequest,
+                        HttpSession httpSession,
                         Model model) {
-        // 트랜잭션 시작 -> API로?
+        // 회원이 아니라면 customer만들어서 id저장, 멤버면 바로 전달
+        long customerId;
+        if (memberId.equals("")) {
+            // 비회원 만들기
+            CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
+                    orderFormRequest.getBuyerName(),
+                    orderFormRequest.getBuyerPhone(),
+                    orderFormRequest.getBuyerEmail()
+            );
+            customerId = customerService.createCustomer(customerCreateRequest);
+        } else {
+            // 회원이면
+            customerId = Long.parseLong(memberId);
+        }
+        orderFormRequest.setCustomerId(customerId);
 
-        // 재고 체크? - or 장바구니에서 ?
-
-        // 주문 저장 API 호출 - 주문 DB에 저장 + 주문 상세 저장
-
-        // 결제시 사용한 쿠폰, 포인트 차감
-
-        // 쿠폰 포인트 내역 생성
-
-        // 재고 차감
-
-        // 장바구니 비우기
-
-        // 트랜잭션 커밋, 실패시 롤백 -> 까지가 API로 뒷단에서 처리
-
-        // 후에 결제, 모델에 넣고 토스 페이먼트 결제창으로 이제 이동
-
-        //TODO : orderservice로 주문 저장하는거
-
+        //TODO : 입력폼에서 넘어온 정보 저장하기 - 세션으로 유지
+        httpSession.setAttribute("orderFormRequest", orderFormRequest);
 
         // 결제에 필요한 정보 넘기기
         String orderNumber = OrderUtil.generateOrderNumber();
         model.addAttribute("orderId", orderNumber);
         model.addAttribute("paymentPrice", paymentPrice);
-        model.addAttribute("customerId", memberLoginId);
 
+        // 결제창 넘어가기
         return "payment/checkout";
         // TODO 이 결제 완료 후에 주문이 저장.
     }
+
+    // TODO 결제 후 주문 상세 보여주기
 
     // TODO 4. 비회원 주문 내역 페이지 구현
 
     // TODO 5. 회원 주문 내역 페이지 구현
 
-    // TODO 5. 주문 상태 변경 -> 관리자에서
+    // TODO 5. 주문 상태 변경 -> 관리자
 
 }

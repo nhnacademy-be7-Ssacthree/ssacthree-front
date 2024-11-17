@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @AllArgsConstructor
-public class OrderSaveRequest {
+public class OrderFormRequest {
     //ordernum
 
     // 주문 상품 정보 -
@@ -26,13 +26,26 @@ public class OrderSaveRequest {
     private String postalCode;
     private String roadAddress;
     private String detailAddress;
+    private String orderRequest;
     private LocalDate deliveryDate;
 
     // 포인트 사용
-    private int pointToUse;
+    // TODO : null가능하게 !
+    private Integer pointToUse;
 
-    // 총 금액
-    private int paymentPrice;
+    // 적립 포인트
+
+    // 순수 금액
+
+    // 총 주문 금액
+    private Integer paymentPrice;
+
+    // 고객 정보 customerinfo -id
+    private Long customerId;
+
+    // 쿠폰 정보
+
+    // 주문 도서 정보 list
 
 
 }
