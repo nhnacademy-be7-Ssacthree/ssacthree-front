@@ -473,9 +473,109 @@
 
 
         </div>
-        <!-- 페이지네이션 추가 -->
+
         <div class="swiper-pagination" style="margin-bottom: 2em"></div>
     </div>
+</section>
+
+<!-- New Items Section -->
+<section id="new-items" class="position-relative padding-large">
+    <div class="container">
+        <div class="section-title d-flex align-items-center mb-3">
+            <h3 class="fw-bold text-dark me-3">화제의 🌟 신간이에요</h3>
+        </div>
+
+        <div class="filter-buttons d-flex flex-wrap gap-2 mb-4">
+            <button class="btn btn-filter active">종합</button>
+            <button class="btn btn-filter">소설/에세이/시</button>
+            <button class="btn btn-filter">자녀교육/건강/여행/요리</button>
+            <button class="btn btn-filter">유아/어린이/초등학습</button>
+            <button class="btn btn-filter">중/고학습</button>
+            <button class="btn btn-filter">인문/역사</button>
+            <button class="btn btn-filter">외국어</button>
+            <button class="btn btn-filter">예술</button>
+            <button class="btn btn-filter">컴퓨터/IT</button>
+            <button class="btn btn-filter">종교</button>
+            <button class="btn btn-filter">기술/공학</button>
+        </div>
+
+        <div class="swiper new-items-swiper">
+            <!-- 책 리스트 반복 -->
+            <div class="swiper-slide">
+                <div class="row justify-content-center">
+                    <!-- 책 리스트를 반복적으로 렌더링 -->
+                    <div class="custom-col mb-3" th:each="book : ${books}">
+                        <div class="card position-relative p-4 border rounded-3"
+                             th:onclick="|window.location.href='/books/' + ${book.bookId}|"
+                             style="cursor: pointer; height: 525px;">
+                            <!-- 할인 정보 -->
+                            <div class="position-absolute">
+                                <p class="bg-primary py-1 px-3 fs-6 text-white rounded-2"
+                                   th:text="${book.bookDiscount} + '% off'">10% off</p>
+                            </div>
+
+                            <!-- 책 이미지 -->
+                            <img th:src="${book.bookThumbnailImageUrl}" class="img-fluid shadow-sm" alt="book cover"
+                                 style="width: 100%; height: auto; object-fit: cover;">
+
+                            <!-- 책 제목 -->
+                            <h6 class="mt-4 mb-0 fw-bold" th:text="${book.bookName}">Book Title</h6>
+
+                            <!-- 리뷰 별점 -->
+                            <div class="review-content d-flex mt-2">
+                                <div class="rating text-warning d-flex align-items-center">
+                                    <svg class="star star-fill">
+                                        <use xlink:href="#star-fill"></use>
+                                    </svg>
+                                    <svg class="star star-fill">
+                                        <use xlink:href="#star-fill"></use>
+                                    </svg>
+                                    <svg class="star star-fill">
+                                        <use xlink:href="#star-fill"></use>
+                                    </svg>
+                                    <svg class="star star-fill">
+                                        <use xlink:href="#star-fill"></use>
+                                    </svg>
+                                    <svg class="star star-fill">
+                                        <use xlink:href="#star-fill"></use>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <!-- 가격 정보 -->
+                            <span class="price text-primary fw-bold mb-2 fs-5"
+                                  th:text="${book.salePrice} + ' 원'">$0.00</span>
+
+                            <!-- 액션 버튼 (장바구니, 위시리스트) -->
+                            <div class="card-concern position-absolute start-0 end-0 d-flex gap-2">
+                                <button type="button" class="btn btn-dark cart-button"
+                                        th:onclick="|window.location.href='/shop/carts/add?bookId=' + ${book.bookId}+'&quantity='+1|"
+                                        data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="장바구니에 추가">
+                                    <svg class="cart">
+                                        <use xlink:href="#cart"></use>
+                                    </svg>
+                                </button>
+                                <a href="#" class="btn btn-dark wishlist-button">
+                                    <span><svg class="wishlist"><use xlink:href="#heart"></use></svg></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="swiper-wrapper">
+
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <!--        <div class="swiper-pagination new-items-pagination" style="margin-bottom: 2em"></div>-->
+
 </section>
 
 <section id="items-listing" class="padding-large">
@@ -1002,6 +1102,30 @@
         </div>
     </div>
 </section>
+
+<style>
+    /* 필터 버튼 스타일 */
+    .btn-filter {
+        background-color: #f1f1f1;
+        color: #333;
+        border: none;
+        border-radius: 20px;
+        padding: 5px 15px;
+        font-size: 0.9rem;
+        transition: background-color 0.2s, color 0.2s;
+    }
+
+    .btn-filter:hover {
+        background-color: #e0e0e0;
+    }
+
+    .btn-filter.active {
+        background-color: #f86d72;
+        color: #fff;
+    }
+
+
+</style>
 
 <footer th:replace="~{common/footer :: footer}"/>
 <script src="/js/index.js"></script>

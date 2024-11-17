@@ -22,13 +22,13 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping()
+@RequestMapping
 public class BookCustomerController {
 
     private final BookCommonService bookCommonService;
     private final CategoryCommonService categoryCommonService;
 
-    @GetMapping("books")
+    @GetMapping("/books")
     public String getBooksByAuthorId(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
