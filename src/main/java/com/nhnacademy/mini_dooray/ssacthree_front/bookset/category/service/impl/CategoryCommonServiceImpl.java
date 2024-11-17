@@ -34,8 +34,8 @@ public class CategoryCommonServiceImpl implements CategoryCommonService {
     }
 
     @Override
-    public ResponseEntity<List<CategoryInfoResponse>> getRootCategories() {
-        return categoryAdapter.getRootCategories();
+    public List<CategoryInfoResponse> getRootCategories() {
+        return categoryAdapter.getRootCategories().getBody();
     }
 
     @Override

@@ -38,4 +38,10 @@ public class AdminController {
         return "redirect:/admin";
     }
 
+    @PostMapping("/admin-logout")
+    public String adminLogout(HttpServletResponse response) {
+        adminService.logout(response);
+        return "redirect:/";
+    }
+
 }

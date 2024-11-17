@@ -41,4 +41,12 @@ public class CookieUtil {
         httpServletResponse.addHeader(SET_COOKIE, cookies.get(0));
         httpServletResponse.addHeader(SET_COOKIE, cookies.get(1));
     }
+
+    public static Cookie cookieDestroyer(String cookieName) {
+
+        Cookie cookie = new Cookie(cookieName, null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        return cookie;
+    }
 }

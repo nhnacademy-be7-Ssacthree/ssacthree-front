@@ -1,0 +1,82 @@
+<!--작성자: 정현우-->
+<!--검색 결과 창 구현중-->
+
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<!--<head th:replace="~{common/config :: config}">-->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>책 목록</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+</head>
+<body>
+<header th:replace="~{common/header}"></header>
+
+<div class="container mt-5">
+  <h1 class="mb-4">책 목록</h1>
+
+  <!-- 검색 폼 -->
+  <form id="searchForm" class="mb-4" th:action="@{/search/books}" method="get">
+    <div class="row">
+      <div class="col-md-4">
+        <input type="text" name="keyword" id="searchInput" class="form-control" placeholder="검색어 입력" required>
+      </div>
+      <div class="col-md-2">
+        <select name="sort" id="sortSelect" class="form-control">
+          <option value="relevance">정확도순</option>
+          <option value="popularity">인기도순</option>
+          <option value="priceLow">낮은 가격순</option>
+          <option value="priceHigh">높은 가격순</option>
+          <option value="newest">최신 발매일순</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <select name="pageSize" id="pageSizeSelect" class="form-control">
+          <option value="20">20개씩 보기</option>
+          <option value="50">50개씩 보기</option>
+          <option value="100">100개씩 보기</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100">검색</button>
+      </div>
+    </div>
+  </form>
+
+  <!-- 책 목록 테이블 -->
+  <table class="table table-bordered table-hover">
+    <thead>
+    <tr>
+      <th>썸네일</th>
+      <th>책 이름</th>
+      <th>설명</th>
+      <th>ISBN</th>
+      <th>출판일</th>
+      <th>정가</th>
+      <th>할인가</th>
+      <th>할인율</th>
+      <th>재고</th>
+      <th>조회수</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- books 리스트 출력 -->
+    <tr th:each="book : ${books}">
+      <td><img th:src="${book.bookThumbnailImageUrl}" alt="Thumbnail" style="width: 80px;"></td>
+      <td th:text="${book.bookName}">책 이름</td>
+      <td th:text="${book.bookInfo}">설명</td>
+      <td th:text="${book.bookIsbn}">ISBN</td>
+      <td th:text="${book.publicationDate.substring(0, 10)}">출판일</td>
+      <td th:text="${book.regularPrice} + ' 원'">정가</td>
+      <td th:text="${book.salePrice} + ' 원'">할인가</td>
+      <td th:text="${book.bookDiscount} + '%'">할인율</td>
+      <td th:text="${book.stock}">재고</td>
+      <td th:text="${book.bookViewCount}">조회수</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

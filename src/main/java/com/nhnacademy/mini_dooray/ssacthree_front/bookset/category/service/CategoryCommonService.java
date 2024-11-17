@@ -13,7 +13,7 @@ public interface CategoryCommonService {
 
     ResponseEntity<List<CategoryInfoResponse>> getChildCategories(Long parentCategoryId);
 
-    ResponseEntity<List<CategoryInfoResponse>> getRootCategories();
+    List<CategoryInfoResponse> getRootCategories();
 
     ResponseEntity<List<CategoryInfoResponse>> searchCategoriesByName(String name);
 
