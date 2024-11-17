@@ -69,7 +69,7 @@ class CartControllerTest {
                 .param("image", "image_url")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED))
             .andExpect(status().is3xxRedirection())
-            .andExpect(redirectedUrl("/shop/carts?accessTokenExists=false"));
+            .andExpect(redirectedUrl("/shop/carts"));
 
         verify(cartService, times(1)).addNewBook(any(HttpServletRequest.class), eq(1L), eq("New Book"), eq(1), eq(15000), eq("image_url"));
     }
@@ -79,7 +79,7 @@ class CartControllerTest {
         mockMvc.perform(put("/shop/carts/1")
                 .param("quantityChange", "1"))
             .andExpect(status().is3xxRedirection())
-            .andExpect(redirectedUrl("/shop/carts?accessTokenExists=false"));
+            .andExpect(redirectedUrl("/shop/carts"));
 
         verify(cartService, times(1)).updateItemQuantity(any(HttpServletRequest.class), eq(1L), eq(1));
     }
@@ -88,7 +88,7 @@ class CartControllerTest {
     void testDeleteCartItem() throws Exception {
         mockMvc.perform(delete("/shop/carts/1"))
             .andExpect(status().is3xxRedirection())
-            .andExpect(redirectedUrl("/shop/carts?accessTokenExists=false"));
+            .andExpect(redirectedUrl("/shop/carts"));
 
         verify(cartService, times(1)).deleteItem(any(HttpServletRequest.class), eq(1L));
     }
