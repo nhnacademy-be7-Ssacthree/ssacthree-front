@@ -260,7 +260,7 @@
                         <!-- 6. 결제 버튼, 총 결제 금액 계산 필요 js -->
                         <div class="text-center">
                             <h4>총 결제 금액: <span id="PaymentPrice">원</span></h4>
-                            <input type="hidden" name="memberLoginId" th:value="${memberInfo.memberLoginId}">
+                            <input type="hidden" name="memberLoginId" th:value="${memberInfo.memberLoginId}" th:if="${isMember}">
                             <input type="hidden" id="payment-price" name="paymentPrice">
                             <button type="submit" class="btn btn-primary">결제하기</button>
                         </div>
