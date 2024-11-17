@@ -15,7 +15,7 @@
                 <div class="card-header bg-primary text-white text-center">
                     <h3>주문서 작성</h3>
                 </div>
-                <form method="post" action="/order" class="container mb-4">
+                <form method="post" action="/payment" class="container mb-4">
                         <!-- 1. 주문 상품 정보 -->
                         <section id="order-items" class="mb-4">
                             <div>
@@ -247,7 +247,7 @@
                             <!-- 가진 포인트보다 많으면 안됨. -->
                             <div class="mb-3">
                                 <label for="points-to-use" class="form-label">사용할 포인트</label>
-                                <input type="number" class="form-control" id="points-to-use" max="2000" onchange="applyPoints()" name="pointToUse">
+                                <input type="number" class="form-control" id="points-to-use" onchange="applyPoints()" name="pointToUse" value="0">
                             </div>
                         </section>
 
@@ -260,7 +260,7 @@
                         <!-- 6. 결제 버튼, 총 결제 금액 계산 필요 js -->
                         <div class="text-center">
                             <h4>총 결제 금액: <span id="PaymentPrice">원</span></h4>
-                            <input type="hidden" name="memberLoginId" th:value="${memberInfo.memberLoginId}" th:if="${isMember}">
+                            <input type="hidden" name="memberId" th:value="${memberInfo.customerId}" th:if="${isMember}">
                             <input type="hidden" id="payment-price" name="paymentPrice">
                             <button type="submit" class="btn btn-primary">결제하기</button>
                         </div>
@@ -322,6 +322,7 @@
     /* Thymeleaf를 통해 서버의 데이터를 JSON 형태로 자바스크립트에 전달 */
     let bookLists = /*[[${bookLists}]]*/ [];
 </script>
+
 
 <script>
     function calculatePaymentPrice() {

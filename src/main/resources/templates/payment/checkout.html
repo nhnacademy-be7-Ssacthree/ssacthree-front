@@ -34,7 +34,8 @@
         const coupon = document.getElementById("coupon-box");
         // 결제 금액 model에서 꺼내기
         const price = [[${paymentPrice}]];
-        const customerId = [[${customerId}]];
+        const customerIdLong = [[${orderFormRequest.customerId}]]; // Long 값 그대로 전달
+        const customerId = customerIdLong.toString(); // JS에서 문자열로 변환
         const orderId = [[${orderId}]];
         console.log("price" + price);
         console.log("customerId" + customerId);
