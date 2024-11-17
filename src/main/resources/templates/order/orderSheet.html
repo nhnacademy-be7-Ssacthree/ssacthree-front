@@ -167,7 +167,7 @@
                                 <input type="text" class="form-control" id="detail-address" name="detailAddress" required>
                             </div>
                             <div class="mb-3">
-                                <label for="order-request" class="form-label">상세 주소</label>
+                                <label for="order-request" class="form-label">배송 요청 사항</label>
                                 <input type="text" class="form-control" id="order-request" name="orderRequest" required>
                             </div>
                             <div class="mb-3">
@@ -260,7 +260,8 @@
                         <!-- 6. 결제 버튼, 총 결제 금액 계산 필요 js -->
                         <div class="text-center">
                             <h4>총 결제 금액: <span id="PaymentPrice">원</span></h4>
-                            <input type="hidden" id="payment-price" name="paymentPrice" value="0">
+                            <input type="hidden" name="memberLoginId" th:value="${memberInfo.memberLoginId}">
+                            <input type="hidden" id="payment-price" name="paymentPrice">
                             <button type="submit" class="btn btn-primary">결제하기</button>
                         </div>
                 </form>
@@ -331,6 +332,9 @@
         });
 
         document.getElementById("PaymentPrice").innerText = paymentPrice + "원";
+
+        // 결과를 hidden input 필드에 설정
+        document.getElementById("payment-price").value = paymentPrice;
     }
 </script>
 <script src="js/order.js"></script>

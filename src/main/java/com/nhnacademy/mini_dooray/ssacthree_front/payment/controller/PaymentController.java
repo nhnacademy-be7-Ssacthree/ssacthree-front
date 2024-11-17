@@ -91,11 +91,6 @@ public class PaymentController {
         return "payment/success";
     }
 
-//    @RequestMapping(value = "/", method = RequestMethod.GET)
-//    public String index(HttpServletRequest request, Model model) throws Exception {
-//        return "payment/checkout";
-//    }
-
     /**
      * 인증실패처리
      * @param request
@@ -113,4 +108,6 @@ public class PaymentController {
 
         return "payment/fail";
     }
+
+    // TODO : 결제 취소
 }
