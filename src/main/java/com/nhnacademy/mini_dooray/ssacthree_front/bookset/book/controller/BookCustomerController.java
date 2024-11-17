@@ -32,7 +32,7 @@ public class BookCustomerController {
     public String getBooksByAuthorId(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "bookName") String[] sort,
+            @RequestParam(defaultValue = "bookName:asc") String[] sort,
             @RequestParam(name = "author-id", required = false) Long authorId,
             Model model) {
 
