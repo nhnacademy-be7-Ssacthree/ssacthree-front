@@ -133,51 +133,38 @@
 
 
     <nav id="header-nav" class="navbar navbar-expand-lg py-4">
-        <div class="container">
-            <a class="navbar-brand" href="/">
+        <div class="container  d-flex">
+            <a class="navbar-brand align-self-end" href="/">
                 <img src="/images/main-logo.png" class="logo">
             </a>
-            <button class="navbar-toggler d-flex d-lg-none order-3 p-2" type="button"
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#bdNavbar" aria-controls="bdNavbar" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                <svg class="navbar-icon">
-                    <use xlink:href="#navbar-icon"></use>
-                </svg>
-            </button>
-            <div class="offcanvas offcanvas-end  d-flex align-items-center justify-content-between" tabindex="-1"
+
+
+            <div class="search-container align-self-end d-flex align-items-center rounded-pill border p-2 py-0"
+                 style="height:50px; width: 700px; overflow: hidden;">
+                <form role="search" method="get" class="d-flex align-items-center w-100" action="">
+                    <!-- 검색 입력 필드 -->
+                    <input type="search" id="search-form" class="search-input form-control border-0"
+                           placeholder="Type and press enter" value="" name="s"
+                           style="flex: 1; min-width: 0;">
+
+                    <!-- 검색 버튼 -->
+                    <button type="submit" class="search-submit btn border-0 bg-transparent p-0 pb-1">
+                        <svg class="search-icon mx-3"
+                             style="width: 24px; height: 24px; color:#272727;">
+                            <use xlink:href="#search"></use>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+
+            <div class="align-self-center d-flex justify-content-between" tabindex="-1"
                  id="bdNavbar"
-                 aria-labelledby="bdNavbarOffcanvasLabel">
-                <div class="offcanvas-header px-4 pb-0">
-                    <a class="navbar-brand" href="index.html">
-                        <img src="/images/main-logo.png" class="logo">
-                    </a>
-                    <button type="button" class="btn-close btn-close-black" data-bs-dismiss="offcanvas"
-                            aria-label="Close"
-                            data-bs-target="#bdNavbar"></button>
-                </div>
+                 aria-labelledby="bdNavbarOffcanvasLabel" style="margin-top:1.5em">
 
 
                 <div class="d-flex align-items-center justify-content-between pb-0">
-                    <div class="search-container d-flex align-items-center rounded-pill border p-2"
-                         style="height:50px; width: 700px; overflow: hidden;">
-                        <form role="search" method="get" class="d-flex align-items-center w-100" action="">
-                            <!-- 검색 입력 필드 -->
-                            <input type="search" id="search-form" class="search-input form-control border-0"
-                                   placeholder="Type and press enter" value="" name="s"
-                                   style="flex: 1; min-width: 0;">
 
-                            <!-- 검색 버튼 -->
-                            <button type="submit" class="search-submit btn border-0 bg-transparent p-0 pb-1">
-                                <svg class="search-icon mx-3"
-                                     style="width: 24px; height: 24px; color:#272727;">
-                                    <use xlink:href="#search"></use>
-                                </svg>
-                            </button>
-                        </form>
-                    </div>
-
-                    <div class="user-items flex-grow-1">
+                    <div class="user-items">
 
 
                         <ul class="d-flex align-items-center justify-content-end list-unstyled mb-0">
@@ -300,7 +287,8 @@
     <nav class="navbar navbar-expand-lg py-0 flex-grow-1">
         <div class="container">
             <ul id="navbar"
-                class="navbar-nav text-uppercase justify-content-start justify-content-lg-start align-items-start align-items-lg-center flex-grow-1">
+                class="navbar-nav text-uppercase justify-content-start justify-content-lg-start align-items-center align-items-lg-center flex-grow-1"
+                style="font-size:22px;">
                 <li class="nav-item">
                     <a class="nav-link me-4 active" href="/">Home</a>
                 </li>
