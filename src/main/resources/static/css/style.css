@@ -1,9 +1,9 @@
 /*
-Theme Name: Bookly
+Theme Name: SSACTHREEF
 Theme URI: https://templatejungle.com/
 Author: TemplatesJungle
 Author URI: https://templatesjungle.com/
-Description: Bookly - Bookstore eCommerce Bootstrap 5 HTML CSS Website Template
+Description: SSACTHREE - Bookstore eCommerce Bootstrap 5 HTML CSS Website Template
 Version: 1.1
 */
 
@@ -1514,7 +1514,6 @@ select#input-sort {
     content: " > ";
 }
 
-
 /* Styling for Member Order section */
 .member-order-title {
     font-size: 1.5rem;
@@ -1543,4 +1542,9 @@ select#input-sort {
     font-weight: bold;
     margin-top: 20px;
     color: #007bff; /* Blue color for order info title */
+}
+/** 커스텀 표형태 **/
+.custom-col {
+    flex: 0 0 20%; /* 한 줄에 5개가 들어가도록 너비를 20%로 설정 */
+    max-width: 20%;
 }
