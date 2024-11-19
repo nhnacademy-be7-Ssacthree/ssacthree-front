@@ -5,15 +5,16 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.publisher.dto.Publishe
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.publisher.dto.PublisherUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-@FeignClient(name="gateway-service", url = "${admin-client.url}", contextId = "publisherClient")
+@FeignClient(name = "gateway-service", url = "${admin-client.url}", contextId = "publisherClient")
 public interface PublisherMgmtAdapter {
     @GetMapping("/publishers")
-    ResponseEntity<List<PublisherGetResponse>> getAllPublishers();
+    ResponseEntity<Page<PublisherGetResponse>> getAllPublishers(@RequestParam("page") int page,
+                                                                @RequestParam("size") int size,
+                                                                @RequestParam("sort") String[] sort);
 
     @PostMapping("/publishers")
     ResponseEntity<MessageResponse> createPublisher(@RequestBody PublisherCreateRequest publisherCreateRequest);
