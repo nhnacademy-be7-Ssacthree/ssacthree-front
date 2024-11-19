@@ -18,6 +18,13 @@
             margin-top: 5px;
             color: #FF5733;
         }
+        .gift-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%; /* 카드 높이를 100%로 맞춤 */
+            min-height: 250px; /* 최소 높이 설정 */
+        }
     </style>
 </head>
 <body>
@@ -34,7 +41,7 @@
                     <div class="row">
                         <div th:each="packaging : ${packagingList}" class="col-md-4 mb-4">
                             <div class="gift-card border p-3 rounded text-center">
-                                <img th:src="${packaging.getPackagingImageUrl()}" alt="Gift Image" class="gift-image" />
+                                <img th:src="${packaging.getPackagingImageUrl()}" alt="Gift Image" class="gift-image, img-fluid" />
 
                                 <div class="gift-name mt-3">
                                     <strong>포장지 이름:</strong> <span th:text="${packaging.getPackagingName()}">Gift Name</span>

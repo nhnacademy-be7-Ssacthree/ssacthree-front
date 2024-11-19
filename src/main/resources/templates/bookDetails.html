@@ -97,7 +97,9 @@
                             th:onclick="|window.location.href='/shop/carts/add?bookId=' + ${book.bookId}+'&quantity='+document.getElementById('quantity').value|">
                         장바구니
                     </button>
-                    <button class="btn btn-success flex-fill me-1">바로구매</button>
+                    <button class="btn btn-success flex-fill me-1"
+                            th:onclick="|window.location.href='/order-now?bookId=' + ${book.bookId}+'&quantity='+document.getElementById('quantity').value|">
+                        바로구매</button>
                 </div>
             </div>
         </div>
