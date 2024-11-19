@@ -29,42 +29,68 @@ public class BookCustomerController {
     private final CategoryCommonService categoryCommonService;
 
     @GetMapping("/books")
-    public String getBooksByAuthorId(
+    public String getBooksByFilters(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "bookName:asc") String[] sort,
             @RequestParam(name = "author-id", required = false) Long authorId,
+            @RequestParam(name = "category-id", required = false) Long categoryId,
+            @RequestParam(name = "tag-id", required = false) Long tagId,
             Model model) {
 
+        // 카테고리 정보 가져오기
         List<CategoryInfoResponse> rootCategories = categoryCommonService.getRootCategories();
         model.addAttribute("rootCategories", rootCategories);
 
+        // 공통 필터 파라미터를 Map으로 정리
         Map<String, Object> allParams = new HashMap<>();
-        allParams.put("page", String.valueOf(page));
-        allParams.put("size", String.valueOf(size));
+        allParams.put("page", page);
+        allParams.put("size", size);
+        allParams.put("sort", sort);
 
+        // 추가 필터 파라미터 설정
         if (authorId != null) {
             allParams.put("author-id", authorId);
-
-            Page<BookInfoResponse> books = bookCommonService.getBooksByAuthorId(page, size, sort, authorId);
-            model.addAttribute("books", books);
-            model.addAttribute("authorId", authorId);
-        } else {
-            Page<BookInfoResponse> books = bookCommonService.getAllAvailableBooks(page, size, sort);
-            model.addAttribute("books", books);
+        }
+        if (categoryId != null) {
+            allParams.put("category-id", categoryId);
+        }
+        if (tagId != null) {
+            allParams.put("tag-id", tagId);
         }
 
+        // 데이터 가져오기
+        Page<BookInfoResponse> books = getBooksByFilter(page, size, sort, authorId, categoryId, tagId);
+
+        // `sort`를 제외한 추가 파라미터 문자열 생성
         String extraParams = allParams.entrySet().stream()
-                .filter(entry -> !"page".equals(entry.getKey()) && !"size".equals(entry.getKey()))
+                .filter(entry -> !"page".equals(entry.getKey()) && !"size".equals(entry.getKey()) && !"sort".equals(entry.getKey()))
                 .map(entry -> entry.getKey() + "=" + entry.getValue())
                 .collect(Collectors.joining("&"));
 
+        model.addAttribute("books", books);
         model.addAttribute("baseUrl", "/books");
-        model.addAttribute("allParams", allParams);
-        model.addAttribute("extraParams", extraParams);
+        model.addAttribute("extraParams", extraParams.isEmpty() ? "" : "&" + extraParams); // 항상 &로 시작
+        model.addAttribute("sort", sort[0]); // 현재 선택된 정렬 방식 추가
 
         return "bookList";
     }
+
+    private Page<BookInfoResponse> getBooksByFilter(
+            int page, int size, String[] sort,
+            Long authorId, Long categoryId, Long tagId) {
+
+        if (authorId != null) {
+            return bookCommonService.getBooksByAuthorId(page, size, sort, authorId);
+        } else if (categoryId != null) {
+            return bookCommonService.getBooksByCategoryId(page, size, sort, categoryId);
+        } else if (tagId != null) {
+            return bookCommonService.getBooksByTagId(page, size, sort, tagId);
+        } else {
+            return bookCommonService.getAllAvailableBooks(page, size, sort);
+        }
+    }
+
 
     @GetMapping
     public String showAwardBook(
