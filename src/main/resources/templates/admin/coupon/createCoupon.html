@@ -90,17 +90,23 @@
             effectivePeriodSection.style.display = 'block';
             expiredAtSection.style.display = 'none';
             couponEffectivePeriod.disabled = false;
+            couponEffectivePeriod.required = true;
             couponEffectivePeriodUnit.disabled = false;
+            couponEffectivePeriodUnit.required = true;
             couponExpiredAt.disabled = true;
+            couponExpiredAt.required = false;
             couponExpiredAt.value = ''; // 만료일 초기화
         } else if (selectedOption === 'expiredAt') {
             effectivePeriodSection.style.display = 'none';
             expiredAtSection.style.display = 'block';
             couponEffectivePeriod.disabled = true;
+            couponEffectivePeriod.required = false;
             couponEffectivePeriodUnit.disabled = true;
+            couponEffectivePeriodUnit.required = false;
             couponEffectivePeriod.value = ''; // 유효 기간 초기화
             couponEffectivePeriodUnit.value = ''; // 유효 기간 단위 초기화
             couponExpiredAt.disabled = false;
+            couponExpiredAt.required = true;
         }
     }
 </script>
