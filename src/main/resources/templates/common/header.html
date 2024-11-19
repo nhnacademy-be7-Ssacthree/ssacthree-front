@@ -141,11 +141,17 @@
 
             <div class="search-container align-self-end d-flex align-items-center rounded-pill border p-2 py-0"
                  style="height:50px; width: 700px; overflow: hidden;">
-                <form role="search" method="get" class="d-flex align-items-center w-100" action="">
+                <form role="search" method="get" class="d-flex align-items-center w-100" action="/search/books" onsubmit="return validateSearchForm();">
                     <!-- 검색 입력 필드 -->
                     <input type="search" id="search-form" class="search-input form-control border-0"
-                           placeholder="Type and press enter" value="" name="s"
-                           style="flex: 1; min-width: 0;">
+                           placeholder="Type and press enter" name="keyword"
+                           th:value="${keyword}" style="flex: 1; min-width: 0;" required />
+
+                    <!-- 정렬값 전달 -->
+                    <input type="hidden" name="sort" th:value="${paging?.sort ?: 'score'}" />
+
+                    <!-- 페이지 크기 기본값 설정 -->
+                    <input type="hidden" name="pageSize" th:value="${paging?.size ?: 20}" />
 
                     <!-- 검색 버튼 -->
                     <button type="submit" class="search-submit btn border-0 bg-transparent p-0 pb-1">
@@ -157,6 +163,16 @@
                 </form>
             </div>
 
+            <script>
+                function validateSearchForm() {
+                    const searchField = document.getElementById('search-form');
+                    if (!searchField.value.trim()) {
+                        alert('검색어를 입력해 주세요.');
+                        return false; // 폼 제출 중단
+                    }
+                    return true;
+                }
+            </script>
             <div class="align-self-center d-flex justify-content-between" tabindex="-1"
                  id="bdNavbar"
                  aria-labelledby="bdNavbarOffcanvasLabel" style="margin-top:1.5em">

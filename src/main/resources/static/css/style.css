@@ -1529,3 +1529,141 @@ select#input-sort {
 .breadcrumb-item + .breadcrumb-item::before {
     content: " > ";
 }
+
+
+
+>>>>>>> a19b1755dd4ab861a0d336be16c4e3d6a77495c2
+/* Styling for Member Order section */
+.member-order-title {
+    font-size: 1.5rem;
+    color: #28a745; /* Green color for member order */
+    font-weight: bold;
+    background-color: #f0f9f0; /* Light green background */
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+/* Styling for Non-Member Order section */
+.non-member-order-title {
+    font-size: 1.5rem;
+    color: #dc3545; /* Red color for non-member order */
+    font-weight: bold;
+    background-color: #f8d7da; /* Light red background */
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+/* Styling for Order Info title */
+.order-info-title {
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin-top: 20px;
+    color: #007bff; /* Blue color for order info title */
+}
+
+/** 커스텀 표형태 **/
+.custom-col {
+    flex: 0 0 20%; /* 한 줄에 5개가 들어가도록 너비를 20%로 설정 */
+    max-width: 20%;
+}
+
+
+/* 전체 컨테이너 */
+.no-results-container {
+    text-align: center;
+    padding: 20px;
+}
+
+
+/* no-results 검색 결과 없을 때 표시할 css */
+
+/* 전체 컨테이너를 Flexbox로 설정 */
+.no-results-container {
+    display: flex; /* Flexbox 레이아웃 사용 */
+    align-items: center; /* 수직 가운데 정렬 */
+    justify-content: center; /* 수평 가운데 정렬 */
+    text-align: center; /* 텍스트 정렬 */
+    height: 100vh; /* 화면 전체 높이에 맞춤 (선택 사항) */
+    padding: 20px;
+}
+
+/* 이미지와 텍스트를 겹치기 위한 컨테이너 */
+.image-text-overlay {
+    position: relative; /* 텍스트가 이미지 위에 겹치도록 설정 */
+    display: inline-block; /* 중앙 정렬 유지 */
+}
+
+/* 이미지 스타일 */
+.flexible-image {
+    width: 100%; /* 부모 컨테이너의 너비에 맞게 조정 */
+    max-width: 600px; /* 최대 크기 제한 */
+    height: auto; /* 비율 유지 */
+    display: block;
+    margin: 0 auto; /* 이미지 중앙 정렬 */
+}
+
+/* 전체 컨테이너를 Flexbox로 설정 */
+.no-results-container {
+    display: flex; /* Flexbox 레이아웃 사용 */
+    align-items: center; /* 수직 가운데 정렬 */
+    justify-content: center; /* 수평 가운데 정렬 */
+    text-align: center; /* 텍스트 정렬 */
+    height: calc(100vh - 100px); /* 화면 높이에서 헤더의 높이를 뺌 */
+    margin-top: 100px; /* 헤더 높이만큼 여백 추가 */
+    padding: 20px;
+}
+
+/* 이미지 위 텍스트와 도움말을 포함한 중앙 컨텐츠 */
+.centered-content {
+    position: absolute; /* 이미지 위에 겹쳐지도록 설정 */
+    top: 50%; /* 수직 가운데 정렬 */
+    left: 50%; /* 수평 가운데 정렬 */
+    transform: translate(-50%, -50%); /* 중앙 정렬 */
+    color: #333; /* 텍스트 색상 */
+    background-color: rgba(255, 255, 255, 0.8); /* 반투명 배경 */
+    padding: 30px 50px; /* 내부 여백 증가 */
+    border-radius: 12px; /* 둥근 테두리 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+    max-width: 70%; /* 텍스트 박스를 더 넓게 */
+    width: 600px; /* 최소 너비 설정 */
+    box-shadow: 0 8px 10px rgba(0, 0, 0, 0.1); /* 선택: 그림자 효과 */
+}
+
+/* 메인 텍스트 스타일 */
+.main-text {
+    font-size: 2rem; /* 메인 텍스트 크기를 더 키움 */
+    font-weight: bold; /* 강조 */
+    margin-bottom: 20px; /* 도움말과 간격 증가 */
+}
+
+/* 도움말 리스트 스타일 */
+.help-text {
+    font-size: 1.2rem; /* 도움말 텍스트 크기를 약간 더 키움 */
+    line-height: 1.8; /* 가독성을 위한 줄 간격 증가 */
+    padding: 0; /* 목록 패딩 제거 */
+    list-style: none; /* 목록 스타일 제거 */
+}
+
+/*no-results 반응형 설정 */
+@media (max-width: 768px) {
+    .no-results-container {
+        height: auto; /* 컨테이너 높이를 자동으로 조정 */
+        margin-top: 80px; /* 헤더 높이를 조정 */
+        padding: 10px;
+    }
+
+    .centered-content {
+        width: 90%; /* 텍스트 박스의 너비를 더 작게 */
+        padding: 20px; /* 내부 여백 축소 */
+    }
+
+    .main-text {
+        font-size: 1.5rem; /* 텍스트 크기를 줄임 */
+    }
+
+    .help-text {
+        font-size: 1rem; /* 도움말 텍스트 크기 축소 */
+    }
+}

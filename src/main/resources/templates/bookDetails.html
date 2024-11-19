@@ -217,6 +217,37 @@
         </div>
     </div>
 
+    <div class="container my-5">
+        <div class="card mb-3 shadow-sm">
+            <div class="card-header bg-light text-primary fw-bold" style="font-size: 2.2rem; padding: 20px;">
+                리뷰
+            </div>
+            <div class="list-group list-group-flush">
+                <!-- 리뷰 리스트 -->
+                <div th:if="${reviews.isEmpty()}" class="p-3 text-center text-muted">
+                    작성된 리뷰가 없습니다. 첫 번째 리뷰를 작성해 보세요!
+                </div>
+                <div th:each="review : ${reviews}" class="p-3 border-bottom">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <span class="fw-bold" th:text="${review.reviewerName}"></span>
+                            <span class="text-muted small" th:text="${#temporals.format(review.createdAt, 'yyyy-MM-dd')}"></span>
+                        </div>
+                        <div>
+                            <!-- 별점 표시 -->
+                            <span th:each="star : ${#numbers.sequence(1, 5)}">
+                            <i class="bi" th:classappend="${star <= review.rating} ? 'bi-star-fill text-warning' : 'bi-star text-muted'"></i>
+                        </span>
+                        </div>
+                    </div>
+                    <p class="mt-2" th:text="${review.content}" style="font-size: 1.2rem;"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
 
 </main>
 
