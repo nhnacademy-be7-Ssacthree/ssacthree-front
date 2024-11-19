@@ -112,10 +112,10 @@ public class MemberServiceImpl implements MemberService {
                 return response.getBody();
             }
         } catch (FeignException e) {
-            return null;
+            throw new CustomerNotFoundException("회원 정보를 불러올 수 없습니다.");
         }
 
-        return null;
+        throw new RuntimeException("회원 정보를 불러올 수 없습니다.");
     }
 
     @Override
