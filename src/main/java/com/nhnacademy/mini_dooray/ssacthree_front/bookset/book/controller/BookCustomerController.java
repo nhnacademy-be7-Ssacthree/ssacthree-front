@@ -93,6 +93,7 @@ public class BookCustomerController {
             categoryPaths.add(categoryCommonService.getCategoryPath(category.getCategoryId()));
         }
 
+        model.addAttribute("reviews", null);
         model.addAttribute("categoryPaths", categoryPaths);
         return "bookDetails";
     }
