@@ -9,12 +9,11 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.service.AuthorS
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,29 +26,29 @@ public class AuthorServiceImpl implements AuthorService {
     private final AuthorAdapter authorAdapter;
 
     @Override
-    public AuthorUpdateRequest getAuthorById(long authorId){
+    public AuthorUpdateRequest getAuthorById(Long authorId) {
         ResponseEntity<AuthorUpdateRequest> request = authorAdapter.getAuthorById(authorId);
 
-        try{
-            if(request.getStatusCode().is2xxSuccessful()){
+        try {
+            if (request.getStatusCode().is2xxSuccessful()) {
                 return request.getBody();
             }
             throw new AuthorFailedException(AUTHOR_SEARCH_ERROR);
-        }catch(HttpClientErrorException | HttpServerErrorException e){
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
             throw new AuthorFailedException(AUTHOR_SEARCH_ERROR);
         }
     }
 
     @Override
-    public List<AuthorGetResponse> getAllAuthors() {
-        ResponseEntity<List<AuthorGetResponse>> response = authorAdapter.getAllAuthors();
+    public Page<AuthorGetResponse> getAllAuthors(int page, int size, String[] sort) {
+        ResponseEntity<Page<AuthorGetResponse>> response = authorAdapter.getAllAuthors(page, size, sort);
 
-        try{
-            if(response.getStatusCode().is2xxSuccessful()){
+        try {
+            if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             }
             throw new AuthorFailedException(AUTHOR_SEARCH_ERROR);
-        }catch(HttpClientErrorException | HttpServerErrorException e){
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
             throw new AuthorFailedException(AUTHOR_SEARCH_ERROR);
         }
     }
@@ -58,40 +57,40 @@ public class AuthorServiceImpl implements AuthorService {
     public MessageResponse createAuthor(AuthorCreateRequest authorCreateRequest) {
         ResponseEntity<MessageResponse> response = authorAdapter.createAuthor(authorCreateRequest);
 
-        try{
-            if(response.getStatusCode().is2xxSuccessful()){
+        try {
+            if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             }
             throw new AuthorFailedException(AUTHOR_CREATE_ERROR);
-        }catch(HttpClientErrorException | HttpServerErrorException e){
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
             throw new AuthorFailedException(AUTHOR_CREATE_ERROR);
         }
     }
 
     @Override
-    public MessageResponse updateAuthor(AuthorUpdateRequest authorUpdateRequest){
+    public MessageResponse updateAuthor(AuthorUpdateRequest authorUpdateRequest) {
         ResponseEntity<MessageResponse> response = authorAdapter.updateAuthor(authorUpdateRequest);
 
-        try{
-            if(response.getStatusCode().is2xxSuccessful()){
+        try {
+            if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             }
             throw new AuthorFailedException(AUTHOR_UPDATE_ERROR);
-        }catch(HttpClientErrorException | HttpServerErrorException e){
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
             throw new AuthorFailedException(AUTHOR_UPDATE_ERROR);
         }
     }
 
     @Override
-    public MessageResponse deleteAuthor(long authorId){
+    public MessageResponse deleteAuthor(Long authorId) {
         ResponseEntity<MessageResponse> response = authorAdapter.deleteAuthor(authorId);
 
-        try{
-            if(response.getStatusCode().is2xxSuccessful()){
+        try {
+            if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             }
             throw new AuthorFailedException(AUTHOR_DELETE_ERROR);
-        }catch(HttpClientErrorException | HttpServerErrorException e){
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
             throw new AuthorFailedException(AUTHOR_DELETE_ERROR);
         }
     }

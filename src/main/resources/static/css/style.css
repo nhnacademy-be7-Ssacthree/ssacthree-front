@@ -1,9 +1,9 @@
 /*
-Theme Name: Bookly
+Theme Name: SSACTHREEF
 Theme URI: https://templatejungle.com/
 Author: TemplatesJungle
 Author URI: https://templatesjungle.com/
-Description: Bookly - Bookstore eCommerce Bootstrap 5 HTML CSS Website Template
+Description: SSACTHREE - Bookstore eCommerce Bootstrap 5 HTML CSS Website Template
 Version: 1.1
 */
 
@@ -1513,3 +1513,44 @@ select#input-sort {
 .breadcrumb-item + .breadcrumb-item::before {
     content: " > ";
 }
+
+
+
+>>>>>>> a19b1755dd4ab861a0d336be16c4e3d6a77495c2
+/* Styling for Member Order section */
+.member-order-title {
+    font-size: 1.5rem;
+    color: #28a745; /* Green color for member order */
+    font-weight: bold;
+    background-color: #f0f9f0; /* Light green background */
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+/* Styling for Non-Member Order section */
+.non-member-order-title {
+    font-size: 1.5rem;
+    color: #dc3545; /* Red color for non-member order */
+    font-weight: bold;
+    background-color: #f8d7da; /* Light red background */
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+/* Styling for Order Info title */
+.order-info-title {
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin-top: 20px;
+    color: #007bff; /* Blue color for order info title */
+}
+
+/** 커스텀 표형태 **/
+.custom-col {
+    flex: 0 0 20%; /* 한 줄에 5개가 들어가도록 너비를 20%로 설정 */
+    max-width: 20%;
+}
+
+

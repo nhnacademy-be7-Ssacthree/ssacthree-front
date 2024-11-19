@@ -23,7 +23,7 @@ public class ImageUploadAdapter {
     private final String API_URL = "https://api-image.nhncloudservice.com/image/v2.0/appkeys/rUN43QEwj1P6jThk/images";
     private final String appKey = "rUN43QEwj1P6jThk";
     private final String secretKey = "I1XLVufp";
-    private final String IMAGE_PATH = "/ssacthree/packaging/sample.png"; // 업로드할 경로와 파일명 지정
+    private String IMAGE_PATH = "/ssacthree/packaging/"; // 업로드할 경로와 파일명 지정
 
     public String uploadImage(MultipartFile imageFile) {
         try {
@@ -41,6 +41,7 @@ public class ImageUploadAdapter {
             };
 
             // URL에 경로와 옵션을 추가
+            IMAGE_PATH = IMAGE_PATH + imageResource.getFilename();
             String encodedPath = URLEncoder.encode(IMAGE_PATH, StandardCharsets.UTF_8.toString());
             String uploadUrl = API_URL + "?path=" + encodedPath + "&overwrite=true";
 

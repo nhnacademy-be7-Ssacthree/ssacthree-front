@@ -7,11 +7,12 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.dto.TagInfoRespons
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.service.TagMgmtService;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
 import feign.FeignException;
-import java.util.Collections;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
@@ -20,18 +21,20 @@ public class TagMgmtServiceImpl implements TagMgmtService {
     private final TagMgmtAdapter tagMgmtAdapter;
 
     @Override
-    public List<TagInfoResponse> getAllTags() {
+    public Page<TagInfoResponse> getAllTags(int page, int size, String[] sort) {
 
         try {
-            ResponseEntity<List<TagInfoResponse>> response = tagMgmtAdapter.getAllTags();
+            ResponseEntity<Page<TagInfoResponse>> response = tagMgmtAdapter.getAllTags(page, size, sort);
             if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             }
         } catch (FeignException e) {
-            return Collections.EMPTY_LIST;
+            // todo: 이렇게 해도 될지 모르겠음. 차라리 예외 처리를 하는 것이..?
+            return (Page<TagInfoResponse>) Collections.EMPTY_LIST;
         }
-        
-        return Collections.EMPTY_LIST;
+
+        // todo: 이렇게 해도 될지 모르겠음. 차라리 예외 처리를 하는 것이..?
+        return (Page<TagInfoResponse>) Collections.EMPTY_LIST;
     }
 
     @Override

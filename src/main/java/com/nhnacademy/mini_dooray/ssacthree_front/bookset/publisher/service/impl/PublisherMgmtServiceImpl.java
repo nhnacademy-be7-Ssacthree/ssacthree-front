@@ -10,12 +10,11 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.publisher.exception.Pu
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.publisher.service.PublisherMgmtService;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,8 +23,8 @@ public class PublisherMgmtServiceImpl implements PublisherMgmtService {
     private final PublisherMgmtAdapter publisherMgmtAdapter;
 
     @Override
-    public List<PublisherGetResponse> getAllPublishers() {
-        ResponseEntity<List<PublisherGetResponse>> response = publisherMgmtAdapter.getAllPublishers();
+    public Page<PublisherGetResponse> getAllPublishers(int page, int size, String[] sort) {
+        ResponseEntity<Page<PublisherGetResponse>> response = publisherMgmtAdapter.getAllPublishers(page, size, sort);
 
         try {
             if (response.getStatusCode().is2xxSuccessful()) {
