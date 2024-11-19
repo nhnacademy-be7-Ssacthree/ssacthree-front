@@ -72,7 +72,7 @@ public class BookCustomerController {
             @RequestParam(defaultValue = "10") int size,
             Model model) {
         String[] sort = {"bookName"};
-        Long authorId = 354L;
+        Long authorId = 336L;
 
         Page<BookInfoResponse> books = bookCommonService.getBooksByAuthorId(page, size, sort, authorId);
 
