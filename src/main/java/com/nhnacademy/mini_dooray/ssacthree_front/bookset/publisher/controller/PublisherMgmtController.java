@@ -10,10 +10,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -23,14 +24,32 @@ public class PublisherMgmtController {
     private final PublisherMgmtService publisherMgmtService;
 
     @GetMapping
-    public String publisher(Model model) {
-        model.addAttribute("publishers", publisherMgmtService.getAllPublishers());
+    public String publisher(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "bookName:asc") String[] sort,
+            Model model) {
+
+        Map<String, Object> allParams = new HashMap<>();
+        allParams.put("page", String.valueOf(page));
+        allParams.put("size", String.valueOf(size));
+
+        String extraParams = allParams.entrySet().stream()
+                .filter(entry -> !"page".equals(entry.getKey()) && !"size".equals(entry.getKey()))
+                .map(entry -> entry.getKey() + "=" + entry.getValue())
+                .collect(Collectors.joining("&"));
+
+        model.addAttribute("baseUrl", "/admin/publishers");
+        model.addAttribute("allParams", allParams);
+        model.addAttribute("extraParams", extraParams);
+
+        model.addAttribute("publishers", publisherMgmtService.getAllPublishers(page, size, sort));
         return "admin/publisher/publishers";
     }
 
     @PostMapping
     public String updatePublisher(@Valid @ModelAttribute PublisherUpdateRequest publisherUpdateRequest,
-                                 BindingResult bindingResult) {
+                                  BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new ValidationFailedException(bindingResult);
         }
@@ -47,7 +66,7 @@ public class PublisherMgmtController {
 
     @PostMapping("/create")
     public String createPublisher(@Valid @ModelAttribute PublisherCreateRequest publisherCreateRequest,
-                                 BindingResult bindingResult) {
+                                  BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new ValidationFailedException(bindingResult);
         }

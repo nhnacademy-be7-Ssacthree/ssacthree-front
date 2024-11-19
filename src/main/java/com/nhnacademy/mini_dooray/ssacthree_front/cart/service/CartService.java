@@ -142,7 +142,6 @@ public class CartService {
         HttpSession session = request.getSession();
         String cartId = session.getId();
         List<CartItem> cartItems = getCartItemsByCartId(cartId);
-
         Iterator<CartItem> iterator = cartItems.iterator();
         while (iterator.hasNext()) {
             CartItem cartItem = iterator.next();
