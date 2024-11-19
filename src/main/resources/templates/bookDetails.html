@@ -37,14 +37,16 @@
 
             <!-- 태그 목록 -->
             <div class="container mb-3" style="margin-top:30px">
-                <!--    <div class="d-flex flex-wrap">-->
-                <!--        <span th:each="tag : ${book.tags}" class="badge bg-light text-dark me-2">#<span th:text="${tag.tagName}"></span></span>-->
-                <!--    </div>-->
-                <div class="text-muted">
-                    <span class="badge bg-light text-dark">#학생</span>
-                    <span class="badge bg-light text-dark">#자기계발</span>
-                    <span class="badge bg-light text-dark">#성적상승</span>
+                <div class="d-flex flex-wrap">
+                    <span th:each="tag : ${book.tags}" class="badge bg-light text-dark me-2"
+                          style="font-size:1em">#<span
+                            th:text="${tag.tagName}"></span></span>
                 </div>
+                <!--                <div class="text-muted">-->
+                <!--                    <span class="badge bg-light text-dark">#학생</span>-->
+                <!--                    <span class="badge bg-light text-dark">#자기계발</span>-->
+                <!--                    <span class="badge bg-light text-dark">#성적상승</span>-->
+                <!--                </div>-->
             </div>
         </div>
 
@@ -95,7 +97,9 @@
                             th:onclick="|window.location.href='/shop/carts/add?bookId=' + ${book.bookId}+'&quantity='+document.getElementById('quantity').value|">
                         장바구니
                     </button>
-                    <button class="btn btn-success flex-fill me-1">바로구매</button>
+                    <button class="btn btn-success flex-fill me-1"
+                            th:onclick="|window.location.href='/order-now?bookId=' + ${book.bookId}+'&quantity='+document.getElementById('quantity').value|">
+                        바로구매</button>
                 </div>
             </div>
         </div>

@@ -11,6 +11,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin/authors")
@@ -21,28 +25,45 @@ public class AuthorController {
     private static final String REDIRECT_ADDRESS = "redirect:/admin/authors";
 
     @GetMapping
-    public String getAuthors(Model model){
-        model.addAttribute("authors", authorService.getAllAuthors());
-        return "admin/author/authors";
+    public String getAuthors(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "bookName:asc") String[] sort,
+            Model model) {
+        Map<String, Object> allParams = new HashMap<>();
+        allParams.put("page", String.valueOf(page));
+        allParams.put("size", String.valueOf(size));
+
+        String extraParams = allParams.entrySet().stream()
+                .filter(entry -> !"page".equals(entry.getKey()) && !"size".equals(entry.getKey()))
+                .map(entry -> entry.getKey() + "=" + entry.getValue())
+                .collect(Collectors.joining("&"));
+
+        model.addAttribute("baseUrl", "/admin/authors");
+        model.addAttribute("allParams", allParams);
+        model.addAttribute("extraParams", extraParams);
+
+        model.addAttribute("authors", authorService.getAllAuthors(page, size, sort));
+        return "authors";
     }
 
     @GetMapping("/create")
-    public String createAuthor(){
-        return "admin/author/createAuthor";
+    public String createAuthor() {
+        return "createAuthor";
     }
 
     //기본 값 나오게...
     @GetMapping("/{authorId}")
-    public String updateAuthorForm(@PathVariable long authorId, Model model) {
+    public String updateAuthorForm(@PathVariable Long authorId, Model model) {
         AuthorUpdateRequest authorUpdateRequest = authorService.getAuthorById(authorId);
         model.addAttribute("authorUpdateRequest", authorUpdateRequest);
-        return "admin/author/updateAuthor";
-     }
+        return "updateAuthor";
+    }
 
     @PostMapping("/create")
     public String createAuthor(@Valid @ModelAttribute AuthorCreateRequest authorCreateRequest,
-                               BindingResult bindingResult, Model model){
-        if(bindingResult.hasErrors()){
+                               BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
             throw new ValidationFailedException(bindingResult);
         }
 
@@ -53,8 +74,8 @@ public class AuthorController {
 
     @PostMapping
     public String updateAuthor(@Valid @ModelAttribute AuthorUpdateRequest authorUpdateRequest,
-                               BindingResult bindingResult, Model model){
-        if(bindingResult.hasErrors()){
+                               BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
             throw new ValidationFailedException(bindingResult);
         }
 

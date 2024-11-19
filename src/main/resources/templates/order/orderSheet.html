@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{common/config :: config}">
     <meta charset="UTF-8">
     <title>주문서 작성</title>
@@ -16,80 +15,147 @@
                 <div class="card-header bg-primary text-white text-center">
                     <h3>주문서 작성</h3>
                 </div>
-                <form method="post" action="/order" class="container mb-4">
-                    <div class="card-body">
+                <form method="post" action="/payment" class="container mb-4">
                         <!-- 1. 주문 상품 정보 -->
                         <section id="order-items" class="mb-4">
+                            <div>
+                                <h5 th:if="${isMember}" class="member-order-title">회원 주문</h5>
+                            </div>
+                            <div>
+                                <h5 th:if="${!isMember}" class="non-member-order-title">비회원 주문</h5>
+                            </div>
                             <h4 class="text-primary">주문 상품 정보</h4>
                             <table class="table table-bordered mt-3">
                                 <thead class="table-light">
                                 <tr>
+                                    <th>도서 이미지</th>
                                     <th>도서명</th>
-                                    <th>가격</th>
-                                    <th>수량</th>
+                                    <th>도서 가격</th>
+                                    <th>주문 수량</th>
                                     <th>쿠폰 적용</th>
                                     <th>포장지 선택</th>
-                                    <th>책별 총 금액</th>
+                                    <th>도서별 총 금액</th>
                                 </tr>
                                 </thead>
                                 <tbody id="items-table-body">
                                 <!-- 상품 행이 JavaScript로 추가됩니다 -->
                                 <!-- 여기서,  ${cartInfo.getBookInfos()} 이런식으로 해서, book정보 받아올 수 있게 구현 -->
-                                <tr th:each="item : ${guestCartInfo}">
-                                    <td th:text="${item.title}"></td>
-                                    <!-- 가격은 정가? 판매가?-->
-                                    <td th:text="${item.price}"></td>
-                                    <td th:text="${item.quantity}"></td>
+                                <tr th:each="book : ${bookLists}">
+                                    <td>
+                                        <img th:src="${book.bookThumbnailImageUrl}" class="img-fluid" alt="Book Image">
+                                    </td>
+                                    <td th:text="${book.bookName}"></td>
+                                    <td>
+                                        <!-- 가격 텍스트를 포함한 div 요소로 감싸기 -->
+                                        <div class="price-wrapper">
+                                            <span class="fs-4 text-danger fw-bold" th:text="${book.salePrice} + '원'"></span>
+                                            <br><del class="fs-6 text-danger">
+                                                <span class="fs-6 text-danger" th:text="${book.regularPrice} + '원'"></span></del>
+                                            <span class="fs-6 text-danger" th:text="${book.bookDiscount} + '% 할인'"></span>
+
+                                        </div>
+                                    </td>
+                                    <td th:text="${book.quantity}"></td>
                                     <td th:text="'쿠폰 적용하려면? 회원이 가진 쿠폰 중, 도서에 쓸 수 있는? 주문?'"></td>
-                                    <td th:text="'도서별 포장 가능 여부에 따라, 없->미지원 도서, 있->포장지 선택으로 바꾸기'"></td>
-                                    <td th:text="'총금액은 어디서 처리해서 주는거지 여기서 js써서 total해주나?'"></td>
+                                    <td>
+                                        <!-- book.isPacked가 true일 때만 포장지 선택 버튼 표시 -->
+                                        <div th:if="${book.isPacked()}">
+                                            <button type="button" class="btn btn-outline-primary"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#packagingModal"
+                                                    onclick="setCurrentRow(this)">
+                                                포장지 선택
+                                            </button>
+                                            <br>
+                                            <span class="selected-packaging" th:text="'(선택된 포장지 없음)'"></span>
+                                        </div>
+
+                                        <!-- book.isPacked가 false일 때는 포장지를 지원하지 않는 도서 메시지 표시 -->
+                                        <div th:if="${not book.isPacked()}">
+                                            포장지를 지원하지 않는 도서입니다
+                                        </div>
+                                    </td>
+                                    <td th:text="${book.salePrice * book.quantity + '원'}"></td>
                                 </tr>
                                 </tbody>
                             </table>
                         </section>
+                        <!-- 포장지 선택 모달 -->
+                        <div class="modal fade" id="packagingModal" tabindex="-1" aria-labelledby="packagingModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="packagingModalLabel">포장지 선택</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="list-group">
+                                            <div th:each="packaging : ${packagingList}" class="list-group-item d-flex justify-content-between align-items-center">
+                                                <div class="d-flex align-items-center">
+                                                    <img th:src="${packaging.packagingImageUrl}" alt="포장지 이미지" class="img-thumbnail me-3" style="width: 80px; height: 80px;">
+                                                    <div>
+                                                        <h6 th:text="${packaging.packagingName}"></h6>
+                                                        <p class="mb-0 text-muted" th:text="'가격: ' + ${packaging.packagingPrice} + '원'"></p>
+                                                    </div>
+                                                </div>
+                                                <button type="button" class="btn btn-sm btn-primary"
+                                                        onclick="selectPackaging('[[${packaging.id}]]', '[[${packaging.packagingName}]]')">
+                                                    선택
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- 2. 구매자 정보 입력 -->
                         <!-- 비회원인 경우, 모든 칸이 비어있고, 회원인 경우 구매자 정보 입력칸을 해당 회원의 정보로 채워야함.-->
                         <section id="buyer-info" class="mb-4">
                             <h4 class="text-primary">구매자 정보 입력</h4>
-                            <!-- 상품 정보도 넘겨주기 -->
                             <div class="mb-3">
                                 <label for="buyer-name" class="form-label">이름</label>
-                                <input type="text" class="form-control" id="buyer-name" name="buyerName" required>
+                                <input type="text" class="form-control" id="buyer-name" name="buyerName"
+                                       th:value="${isMember} ? ${memberInfo.customerName} : ''" required>
                             </div>
                             <div class="mb-3">
                                 <label for="buyer-email" class="form-label">이메일</label>
-                                <input type="email" class="form-control" id="buyer-email" name="buyerEmail" required>
+                                <input type="email" class="form-control" id="buyer-email" name="buyerEmail"
+                                       th:value="${isMember} ? ${memberInfo.customerEmail} : ''" required>
                             </div>
                             <div class="mb-3">
                                 <label for="buyer-phone" class="form-label">휴대폰번호</label>
-                                <input type="tel" class="form-control" id="buyer-phone" name="buyerPhone" required>
+                                <input type="tel" class="form-control" id="buyer-phone" name="buyerPhone"
+                                       th:value="${isMember} ? ${memberInfo.customerPhoneNumber} : ''" required>
                             </div>
                         </section>
 
                         <!-- 3. 배송지 입력 -->
                         <section id="delivery-info" class="mb-4">
                             <h4 class="text-primary">배송지 입력</h4>
-                            <div class="mb-3">
-                                <label for="address-list" class="form-label">주소 선택</label>
-                                <select class="form-select" id="address-list" onchange="setSelectedAddress()">
-                                    <option>주소 선택</option>
-                                    <!-- 회원 주소 리스트 추가 -->
-                                </select>
+                            <div class="mb-3"  th:if="${isMember}">
+                                <button type="button" class="btn btn-outline-primary"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#addressModal">
+                                    배송지주소록 선택
+                                </button>
                             </div>
                             <div class="mb-3">
                                 <label for="recipient-name" class="form-label">받는 사람 이름</label>
                                 <input type="text" class="form-control" id="recipient-name" name="recipientName" required>
                             </div>
                             <div class="mb-3">
-                                <label for="recipient-name" class="form-label">받는 사람 연락처</label>
+                                <label for="recipient-phone" class="form-label">받는 사람 연락처</label>
                                 <input type="text" class="form-control" id="recipient-phone" name="recipientPhone" required>
                             </div>
                             <div class="mb-3">
                                 <button type="button" class="btn btn-outline-secondary" onclick="openPostcodeSearch()">주소 조회</button>
                             </div>
                             <div class="mb-3">
-                                <label for="postal-code" class="form-label">우편 주소</label>
+                                <label for="postal-code" class="form-label">우편 번호</label>
                                 <input type="text" class="form-control" id="postal-code" name="postalCode" readonly="readonly">
                             </div>
                             <div class="mb-3">
@@ -101,12 +167,15 @@
                                 <input type="text" class="form-control" id="detail-address" name="detailAddress" required>
                             </div>
                             <div class="mb-3">
+                                <label for="order-request" class="form-label">배송 요청 사항</label>
+                                <input type="text" class="form-control" id="order-request" name="orderRequest" required>
+                            </div>
+                            <div class="mb-3">
                                 <label for="delivery-date" class="form-label">배송 날짜 지정</label>
                                 <input type="date" class="form-control" id="delivery-date" name="deliveryDate">
                                 <small id="date-message" class="form-text text-muted">
                                     오늘부터 5일 후까지 선택 가능합니다.
                                 </small>
-
                                 <script>
                                     const deliveryDateInput = document.getElementById("delivery-date");
                                     const dateMessage = document.getElementById("date-message");
@@ -117,6 +186,9 @@
 
                                     // 오늘 날짜 설정
                                     deliveryDateInput.min = formatDate(today);
+
+                                    // 기본값을 오늘 날짜로 설정
+                                    deliveryDateInput.value = formatDate(today);
 
                                     // 오늘로부터 5일 이후 날짜 설정
                                     const maxDate = new Date(today);
@@ -133,24 +205,54 @@
                                     });
                                 </script>
                             </div>
-
-
-
                         </section>
 
+                        <!-- 배송지 주소록 선택 모달 -->
+                        <div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true" th:if="${isMember}">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="addressModalLabel">배송지 선택</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="list-group">
+                                            <!-- 회원 주소 목록을 반복해서 출력 -->
+                                            <div th:each="address : ${memberAddressList}" class="list-group-item d-flex justify-content-between align-items-center">
+                                                <div class="d-flex align-items-center">
+                                                    <div>
+                                                        <p>별칭 : <span th:text="${address.addressAlias}"></span></p>
+                                                        <p>우편 번호 : <span th:text="${address.addressPostalNumber}"></span></p>
+                                                        <p>도로명 주소 : <span th:text="${address.addressRoadname}"></span></p>
+                                                        <p>상세 주소 : <span th:text="${address.addressDetail}"></span></p>
+                                                    </div>
+                                                </div>
+                                                <button type="button" class="btn btn-sm btn-primary" onclick="selectAddress('${address.addressPostalNumber}', '${address.addressRoadname}', '${address.addressDetail}')">
+                                                    배송지 선택
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- 4. 포인트 사용 -->
-                        <section id="point-use" class="mb-4">
+                        <section id="point-use" class="mb-4" th:if="${isMember}">
                             <h4 class="text-primary">포인트 사용</h4>
-                            <p>보유 포인트: <span id="user-points"></span></p>
+                            <p>보유 포인트: <span id="user-points" th:value="${memberInfo.getMemberPoint()}"></span></p>
                             <!-- 가진 포인트보다 많으면 안됨. -->
                             <div class="mb-3">
                                 <label for="points-to-use" class="form-label">사용할 포인트</label>
-                                <input type="number" class="form-control" id="points-to-use" max="2000" onchange="applyPoints()" name="pointToUse">
+                                <input type="number" class="form-control" id="points-to-use" onchange="applyPoints()" name="pointToUse" value="0">
                             </div>
                         </section>
 
                         <!-- 5. 전체 주문에 대한 포인트 적립(등급 정책 적용), 계산 필요 -->
-                        <section id="point-save" class="mb-4">
+                        <section id="point-save" class="mb-4" th:if="${isMember}">
                             <h4 class="text-primary">포인트 적립</h4>
                             <p>적립 포인트: <span id="user-points-save"></span></p>
                         </section>
@@ -158,10 +260,10 @@
                         <!-- 6. 결제 버튼, 총 결제 금액 계산 필요 js -->
                         <div class="text-center">
                             <h4>총 결제 금액: <span id="PaymentPrice">원</span></h4>
-                            <input type="hidden" id="payment-price" name="paymentPrice" value="0">
+                            <input type="hidden" name="memberId" th:value="${memberInfo.customerId}" th:if="${isMember}">
+                            <input type="hidden" id="payment-price" name="paymentPrice">
                             <button type="submit" class="btn btn-primary">결제하기</button>
                         </div>
-                    </div>
                 </form>
             </div>
         </div>
@@ -172,6 +274,38 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+    let currentRow; // 현재 포장지 선택을 위한 행 참조
+
+    function setCurrentRow(button) {
+        currentRow = button.closest('tr'); // 현재 버튼이 속한 행을 저장
+    }
+
+    function selectPackaging(packagingId, packagingName) {
+        // 선택한 포장지 이름을 행에 표시
+        if (currentRow) {
+            const packagingSpan = currentRow.querySelector('.selected-packaging');
+            packagingSpan.innerText = packagingName; // 선택된 포장지 이름 표시
+            packagingSpan.dataset.packagingId = packagingId; // 선택한 포장지 ID 저장
+        }
+
+        // 모달 닫기
+        const packagingModal = new bootstrap.Modal(document.getElementById('packagingModal'));
+        packagingModal.hide();
+    }
+</script>
+<script>
+    // 주소를 선택했을 때 입력창에 자동으로 채워주는 함수
+    function selectAddress(postalCode, roadAddress, detailAddress) {
+        // 각 입력 필드에 값을 넣어줍니다.
+        document.getElementById("postal-code").value = postalCode;
+        document.getElementById("road-address").value = roadAddress;
+        document.getElementById("detail-address").value = detailAddress;
+        // 모달을 닫습니다.
+        var myModal = new bootstrap.Modal(document.getElementById('addressModal'));
+        myModal.hide();
+    }
+</script>
 <script>
     // 주문서 스크립트 로직
     function openPostcodeSearch() {
@@ -186,19 +320,24 @@
 </script>
 <script th:inline="javascript">
     /* Thymeleaf를 통해 서버의 데이터를 JSON 형태로 자바스크립트에 전달 */
-    let guestCartInfo = /*[[${guestCartInfo}]]*/ [];
+    let bookLists = /*[[${bookLists}]]*/ [];
 </script>
+
 
 <script>
     function calculatePaymentPrice() {
         let paymentPrice = 0;
 
-        guestCartInfo.forEach(item => {
-            paymentPrice += item.price * item.quantity;
+        bookLists.forEach(book => {
+            paymentPrice += book.salePrice * book.quantity;
         });
 
         document.getElementById("PaymentPrice").innerText = paymentPrice + "원";
+
+        // 결과를 hidden input 필드에 설정
+        document.getElementById("payment-price").value = paymentPrice;
     }
 </script>
+<script src="js/order.js"></script>
 </body>
 </html>

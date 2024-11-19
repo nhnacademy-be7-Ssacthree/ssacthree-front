@@ -22,17 +22,17 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping()
+@RequestMapping
 public class BookCustomerController {
 
     private final BookCommonService bookCommonService;
     private final CategoryCommonService categoryCommonService;
 
-    @GetMapping("books")
+    @GetMapping("/books")
     public String getBooksByAuthorId(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "bookName") String[] sort,
+            @RequestParam(defaultValue = "bookName:asc") String[] sort,
             @RequestParam(name = "author-id", required = false) Long authorId,
             Model model) {
 
@@ -72,7 +72,7 @@ public class BookCustomerController {
             @RequestParam(defaultValue = "10") int size,
             Model model) {
         String[] sort = {"bookName"};
-        Long authorId = 365L;
+        Long authorId = 354L;
 
         Page<BookInfoResponse> books = bookCommonService.getBooksByAuthorId(page, size, sort, authorId);
 
