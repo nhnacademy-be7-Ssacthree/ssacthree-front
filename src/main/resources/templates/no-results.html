@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>검색 결과 없음</title>
+  <style>
+    .no-results-container {
+      text-align: center;
+      margin-top: 100px;
+    }
+    .no-results-container h1 {
+      font-size: 24px;
+      color: #333;
+    }
+    .no-results-container p {
+      font-size: 18px;
+      color: #666;
+    }
+    .no-results-container ul {
+      list-style: none;
+      padding: 0;
+    }
+    .no-results-container ul li {
+      font-size: 16px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+<div class="no-results-container">
+  <h1 th:text="${message}"></h1>
+  <p>다음 사항을 확인해 보세요:</p>
+  <ul>
+    <li>띄어쓰기를 확인하고 다시 검색해 보세요.</li>
+    <li>검색어의 철자가 정확한지 확인해 주세요.</

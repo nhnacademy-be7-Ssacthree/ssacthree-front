@@ -59,14 +59,13 @@ public class ReissueFilter extends OncePerRequestFilter {
                 httpResponse.addHeader(SET_COOKIE_HEADER, cookies.get(0));
                 httpResponse.addHeader(SET_COOKIE_HEADER, cookies.get(1));
             }
-            filterChain.doFilter(httpRequest, httpResponse);
-            return;
 
         } catch (Exception e) {
             httpResponse.sendRedirect("/");
+            return;
         }
-
-
+//HTTP 응답이 커밋된 후에는 응답 상태를 변경하거나 추가적인 헤더/리다이렉트를 설정할 수 없습니다.
+        filterChain.doFilter(httpRequest, httpResponse);
     }
 
 
