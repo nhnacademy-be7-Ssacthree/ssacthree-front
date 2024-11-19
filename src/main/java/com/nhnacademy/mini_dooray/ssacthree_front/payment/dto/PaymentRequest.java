@@ -1,10 +1,18 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.payment.dto;
 
-public class TossPaymentResponse {
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+import java.time.LocalDate;
+
+@Getter
+@AllArgsConstructor
+public class PaymentRequest {
     private String paymentKey;
     private String orderId;
     //결제 금액
-    int amount;
+    Integer amount;
 
     //결제 타입 정보 String - 일반결제 등등
     private String type;

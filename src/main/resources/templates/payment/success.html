@@ -48,6 +48,9 @@
           paymentKey: urlParams.get("paymentKey"),
           orderId: urlParams.get("orderId"),
           amount: urlParams.get("amount"),
+          // TODO : 여기에 결제테이블에 필요한 정보 추가해주기.
+
+
         };
 
         const response = await fetch("/confirm", {

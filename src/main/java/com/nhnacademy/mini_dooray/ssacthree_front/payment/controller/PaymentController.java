@@ -1,6 +1,10 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.payment.controller;
 
+import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderFormRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.payment.dto.PaymentRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.payment.service.PaymentService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -20,8 +24,10 @@ import java.util.Base64;
 @RequiredArgsConstructor
 @Controller
 public class PaymentController {
+
+    private final PaymentService paymentService;
     @RequestMapping(value = "/confirm")
-    public ResponseEntity<JSONObject> confirmPayment(@RequestBody String jsonBody) throws Exception {
+    public ResponseEntity<JSONObject> confirmPayment(HttpServletRequest request, @RequestBody String jsonBody) throws Exception {
 
         JSONParser parser = new JSONParser();
         String orderId;
@@ -74,6 +80,24 @@ public class PaymentController {
         // TODO: 결제 성공 및 실패 비즈니스 로직을 구현하세요.
         Reader reader = new InputStreamReader(responseStream, StandardCharsets.UTF_8);
         JSONObject jsonObject = (JSONObject) parser.parse(reader);
+
+        // TODO : me, jsonObject에서 결제테이블에 필요한거 만들어서 보내기
+        String orderIdd = (String) jsonObject.get("orderId");
+        String paymentKeyy = (String) jsonObject.get("paymentKey");
+        String type = (String) jsonObject.get("type"); // 일반결제 등등
+        String approvedAt = ((String) jsonObject.get("approvedAt"));
+        Integer totalAmount = (Integer) jsonObject.get("totalAmount");
+        String method = (String) jsonObject.get("method");
+        String status = (String) jsonObject.get("status"); // 결제 처리 상태
+        PaymentRequest tossPaymentResponse = new PaymentRequest(paymentKey, orderId, totalAmount, type, method,status, approvedAt);
+
+        // TODO : 결제 성공 ! 주문 저장하기. - 재고차감 등등... shop의 orderService에서 모든 로직 처리하기.
+        HttpSession session = request.getSession(false);
+        OrderFormRequest orderFormRequest = (OrderFormRequest) session.getAttribute("orderFormRequest");
+
+        // TODO : 결제정보 저장하기.
+
+
         responseStream.close();
 
         return ResponseEntity.status(code).body(jsonObject);
