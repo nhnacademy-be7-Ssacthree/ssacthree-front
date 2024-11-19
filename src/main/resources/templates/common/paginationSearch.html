@@ -1,0 +1,37 @@
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="pagination(baseUrl, paging, extraParams)">
+    <!-- 페이지네이션: paging이 null이 아닐 때만 렌더링 -->
+    <div th:if="${paging != null}">
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                <!-- 이전 페이지 -->
+                <li th:classappend="${paging.number == 0} ? 'disabled' : ''" class="page-item">
+                    <a class="page-link"
+                       th:href="@{|${baseUrl}?page=${paging.number - 1}&pageSize=${paging.size}&sort=${paging.sort}&keyword=${extraParams['keyword']}|}"
+                       aria-label="Previous">
+                        &laquo;
+                    </a>
+                </li>
+
+                <!-- 페이지 번호 -->
+                <li th:each="i : ${#numbers.sequence(
+                        (paging.number > 2 ? paging.number - 2 : 0),
+                        (paging.number + 2 < paging.totalPages ? paging.number + 2 : paging.totalPages - 1)
+                    )}"
+                    th:classappend="${i == paging.number} ? 'active' : ''" class="page-item">
+                    <a class="page-link"
+                       th:href="@{|${baseUrl}?page=${i}&pageSize=${paging.size}&sort=${paging.sort}&keyword=${extraParams['keyword']}|}"
+                       th:text="${i + 1}"></a>
+                </li>
+
+                <!-- 다음 페이지 -->
+                <li th:classappend="${paging.number == paging.totalPages - 1} ? 'disabled' : ''" class="page-item">
+                    <a class="page-link"
+                       th:href="@{|${baseUrl}?page=${paging.number + 1}&pageSize=${paging.size}&sort=${paging.sort}&keyword=${extraParams['keyword']}|}"
+                       aria-label="Next">
+                        &raquo;
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
