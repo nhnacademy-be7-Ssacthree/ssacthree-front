@@ -1650,4 +1650,63 @@ select#input-sort {
     .help-text {
         font-size: 1rem; /* 도움말 텍스트 크기 축소 */
     }
+
+    /* 리뷰 카드 스타일 */
+    .card-header {
+        border-bottom: 2px solid var(--primary-color);
+        background-color: #f9f9f9;
+    }
+
+    .stars {
+        display: inline-flex;
+        font-size: 1.4rem;
+        gap: 0.2rem; /* 별 간 간격 */
+        color: var(--gray-color-300); /* 기본 빈 별 색상 */
+    }
+
+    .stars .star {
+        font-size: 1.5rem;
+        color: var(--gray-color-300); /* 빈 별 색상 */
+        cursor: pointer;
+        transition: transform 0.3s ease, color 0.3s ease; /* 애니메이션 효과 */
+    }
+
+    .stars .star.filled {
+        color: var(--primary-color); /* 채워진 별 색상 */
+    }
+
+    .stars .star:hover {
+        transform: scale(1.2); /* 호버 시 확대 */
+        color: var(--primary-color); /* 호버 시 색상 강조 */
+    }
+
+    .stars .star:hover ~ .star {
+        color: var(--gray-color-300); /* 호버 이후의 별은 흐리게 */
+    }
+
+    .review-image {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 리뷰 리스트 간격 */
+    .list-group-item {
+        padding: 1rem 1.5rem;
+        border: none;
+        border-bottom: 1px solid var(--gray-color-200);
+    }
+
+    .list-group-item:last-child {
+        border-bottom: none;
+    }
+
+    /* 세련된 별 디자인 */
+    .stars {
+        display: inline-flex;
+        gap: 0.3rem; /* 별 간 간격 */
+    }
+
+
 }
