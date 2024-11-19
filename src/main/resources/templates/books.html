@@ -12,16 +12,26 @@
 <header th:replace="~{common/header}"></header>
 
 <div class="container my-3">
+
   <!-- 검색 결과가 없을 때 메시지 -->
-  <div id="noResultsMessage" th:if="${books == null || books.isEmpty()}" class="alert alert-warning text-center">
-    <p th:text="'&quot;' + ${keyword} + '&quot;에 대한 검색 결과가 없습니다.'"></p>
-    <ul class="list-unstyled">
-      <li>띄어쓰기를 확인하고 다시 검색해 보세요.</li>
-      <li>검색어의 철자가 정확한지 확인해 주세요.</li>
-      <li>다른 검색어로 시도해 보세요.</li>
-      <li>특수문자는 제외하는 것이 좋습니다.</li>
-    </ul>
+  <div id="noResultsMessage" th:if="${books == null || books.isEmpty()}" class="no-results-container">
+    <!-- 이미지와 텍스트를 겹치기 위한 컨테이너 -->
+    <div class="image-text-overlay">
+      <!-- 이미지 -->
+      <img src="/images/no-results.png" alt="No Results" class="flexible-image">
+      <!-- 이미지 위 텍스트와 도움말 -->
+      <div class="centered-content">
+        <p class="main-text" th:text="'&quot;' + ${keyword} + '&quot;에 대한 검색 결과가 없습니다.'"></p>
+        <ul class="list-unstyled help-text">
+          <li>띄어쓰기를 확인하고 다시 검색해 보세요.</li>
+          <li>검색어의 철자가 정확한지 확인해 주세요.</li>
+          <li>다른 검색어로 시도해 보세요.</li>
+          <li>특수문자는 제외하는 것이 좋습니다.</li>
+        </ul>
+      </div>
+    </div>
   </div>
+
 
   <!-- 검색 결과가 있을 때만 표시 -->
   <div id="searchResultsContainer" th:if="${books != null && !books.isEmpty()}">
@@ -94,6 +104,13 @@
           <p class="text-muted small">
             카테고리:
             <span th:each="cat : ${book.category}" class="badge bg-secondary me-1" th:text="${cat}"></span>
+
+            <!-- 카테고리로 검색 부분 구현하기  -->
+<!--            <a th:each="cat : ${book.category}"-->
+<!--               th:href="@{/search/books(category=${cat})}"-->
+<!--               class="badge bg-secondary me-1"-->
+<!--               th:text="${cat}">-->
+<!--            </a>-->
           </p>
         </div>
 
@@ -111,17 +128,6 @@
 <div th:replace="~{common/paginationSearch :: pagination(${baseUrl}, ${paging}, ${extraParams})}"></div>
 
 <footer th:replace="~{common/footer :: footer}"></footer>
-
-<script>
-  function validateSearchForm() {
-    const searchField = document.getElementById('search-form');
-    if (!searchField.value.trim()) {
-      alert('검색어를 입력해 주세요.');
-      return false; // 폼 제출 중단
-    }
-    return true;
-  }
-</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
