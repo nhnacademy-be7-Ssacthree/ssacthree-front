@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 @FeignClient(name = "gateway-service", url = "${member.url}", contextId = "adminClient")
 public interface AdminAdapter {
 
-    @PostMapping("/auth/login")
+    @PostMapping("/auth/admin-login")
     ResponseEntity<MessageResponse> adminLogin(AdminLoginRequest adminLoginRequest);
+
+    @PostMapping("/auth/logout")
+    ResponseEntity<MessageResponse> logout();
 }

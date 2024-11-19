@@ -8,4 +8,6 @@ public interface AdminService {
 
     MessageResponse login(HttpServletResponse httpServletResponse,
         AdminLoginRequest adminLoginRequest);
+
+    MessageResponse logout(HttpServletResponse httpServletResponse);
 }
