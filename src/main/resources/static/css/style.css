@@ -1514,6 +1514,10 @@ select#input-sort {
     content: " > ";
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> a19b1755dd4ab861a0d336be16c4e3d6a77495c2
 /* Styling for Member Order section */
 .member-order-title {
     font-size: 1.5rem;
@@ -1543,8 +1547,11 @@ select#input-sort {
     margin-top: 20px;
     color: #007bff; /* Blue color for order info title */
 }
+
 /** 커스텀 표형태 **/
 .custom-col {
     flex: 0 0 20%; /* 한 줄에 5개가 들어가도록 너비를 20%로 설정 */
     max-width: 20%;
 }
+
+
