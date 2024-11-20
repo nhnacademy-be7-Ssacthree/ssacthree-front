@@ -4,11 +4,14 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.adapter.Categ
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.request.CategorySaveRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.request.CategoryUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryInfoResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryNameResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.service.CategoryAdminService;
+import jdk.jfr.Category;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryAdminServiceImpl implements CategoryAdminService {
@@ -38,6 +41,5 @@ public class CategoryAdminServiceImpl implements CategoryAdminService {
     public ResponseEntity<List<CategoryInfoResponse>> getAllCategoriesForAdmin() {
         return categoryAdapter.getAllCategoriesForAdmin();
     }
-
 
 }

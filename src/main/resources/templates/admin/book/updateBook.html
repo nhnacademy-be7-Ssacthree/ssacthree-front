@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{common/config :: config}">
-  <title>도서 정보 수정</title>
+  <title>도서 수정</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/css/select2.min.css" rel="stylesheet" />
 </head>
@@ -13,107 +13,166 @@
     <div class="col-md-8">
       <div class="card shadow-lg border-0 rounded-3">
         <div class="card-header bg-primary text-white text-center">
-          <h3>도서 정보 수정</h3>
+          <h3>도서 수정</h3>
         </div>
         <div class="card-body">
-          <form th:action="@{/admin/books/update}" th:method="post" th:object="${bookInfoResponse}" enctype="multipart/form-data">
-            <input type="hidden" th:field="*{bookId}" />
-
+          <form th:action="@{/admin/books/update}" th:method="post" th:object="${bookSaveRequest}">
             <!-- 도서 제목 -->
             <div class="mb-3">
               <label for="bookName" class="form-label">도서 제목</label>
-              <input type="text" th:field="*{bookName}" class="form-control" id="bookName" required>
+              <input type="text" class="form-control" th:field="*{bookName}" id="bookName"
+                     th:value="${bookInfoResponse.bookName}" required>
             </div>
 
             <!-- 목차 -->
             <div class="mb-3">
               <label for="bookIndex" class="form-label">목차</label>
-              <textarea th:field="*{bookIndex}" class="form-control" id="bookIndex" rows="4" required></textarea>
+              <textarea class="form-control" th:field="*{bookIndex}" id="bookIndex" rows="4"
+                        th:text="${bookInfoResponse.bookIndex}" required></textarea>
             </div>
 
             <!-- 도서 설명 -->
             <div class="mb-3">
               <label for="bookInfo" class="form-label">도서 설명</label>
-              <textarea th:field="*{bookInfo}" class="form-control" id="bookInfo" rows="4" required></textarea>
+              <textarea class="form-control" th:field="*{bookInfo}" id="bookInfo" rows="4"
+                        th:text="${bookInfoResponse.bookInfo}" required></textarea>
             </div>
 
             <!-- ISBN -->
             <div class="mb-3">
               <label for="bookIsbn" class="form-label">ISBN13</label>
-              <input type="text" th:field="*{bookIsbn}" class="form-control" id="bookIsbn" required>
+              <input type="text" class="form-control" th:field="*{bookIsbn}" id="bookIsbn"
+                     th:value="${bookInfoResponse.bookIsbn}" readonly required>
             </div>
 
             <!-- 출판일 -->
             <div class="mb-3">
               <label for="publicationDate" class="form-label">출판일</label>
-              <input type="date" th:field="*{publicationDate}" class="form-control" id="publicationDate" required>
+              <input type="date" class="form-control" th:field="*{publicationDate}" id="publicationDate" required>
             </div>
+
 
             <!-- 판매가 -->
             <div class="mb-3">
               <label for="regularPrice" class="form-label">판매가</label>
-              <input type="number" th:field="*{regularPrice}" class="form-control" id="regularPrice" required>
+              <input type="number" class="form-control" th:field="*{regularPrice}" id="regularPrice"
+                     th:value="${bookInfoResponse.regularPrice}" required>
             </div>
 
             <!-- 할인 가격 -->
             <div class="mb-3">
               <label for="salePrice" class="form-label">할인 가격</label>
-              <input type="number" th:field="*{salePrice}" class="form-control" id="salePrice">
+              <input type="number" class="form-control" th:field="*{salePrice}" id="salePrice"
+                     th:value="${bookInfoResponse.salePrice}">
             </div>
 
             <!-- 포장 여부 -->
             <div class="mb-3">
               <label class="form-label">포장 여부</label>
               <div>
-                <input type="radio" id="isPackedYes" th:field="*{isPacked}" value="true">
+                <!-- isPacked 값이 true일 때 예 선택 -->
+                <input type="radio" th:field="*{isPacked}" id="isPackedYes" value="true"
+                       th:checked="${bookInfoResponse.isPacked == true}">
                 <label for="isPackedYes">예</label>
-                <input type="radio" id="isPackedNo" th:field="*{isPacked}" value="false">
+
+                <!-- isPacked 값이 false일 때 아니오 선택 -->
+                <input type="radio" th:field="*{isPacked}" id="isPackedNo" value="false"
+                       th:checked="${bookInfoResponse.isPacked == false}">
                 <label for="isPackedNo">아니오</label>
               </div>
             </div>
 
+
             <!-- 재고 -->
             <div class="mb-3">
               <label for="stock" class="form-label">재고</label>
-              <input type="number" th:field="*{stock}" class="form-control" id="stock" required>
+              <input type="number" class="form-control" th:field="*{stock}" id="stock"
+                     th:value="${bookInfoResponse.stock}" required>
             </div>
 
-            <!-- 썸네일 이미지 -->
+            <!-- 썸네일 이미지 업로드 -->
             <div class="mb-3">
               <label for="file" class="form-label">썸네일 이미지 업로드</label>
-              <input type="file" th:field="*{bookThumbnailImageUrl}" class="form-control" id="file" required>
+              <!-- 현재 이미지 미리보기 -->
+              <div>
+                <img th:if="${bookInfoResponse.bookThumbnailImageUrl != null}"
+                     th:src="${bookInfoResponse.bookThumbnailImageUrl}"
+                     alt="Current Thumbnail" style="max-width: 200px; max-height: 200px; margin-bottom: 10px;">
+              </div>
+
+              <!-- 이미지 업로드 입력 필드 -->
+              <input type="file" class="form-control" th:field="*{bookThumbnailImageUrl}" id="file" name="file">
+            </div>
+
+            <!-- 할인율 -->
+            <div class="mb-3">
+              <label for="bookDiscount" class="form-label">할인율 (%)</label>
+              <input type="number" class="form-control" th:field="*{bookDiscount}" id="bookDiscount" min="0" max="100"
+                     th:value="${bookInfoResponse.bookDiscount}">
             </div>
 
             <!-- 카테고리 선택 -->
             <div class="mb-3">
-              <label for="categories" class="form-label">카테고리</label>
-              <select id="categories" th:field="*{categoryIdList}" class="form-select" multiple>
-                <option th:each="category : ${categories}" th:value="${category.categoryId}" th:text="${category.categoryName}"></option>
-              </select>
+              <div class="form-label-with-button">
+                <label for="categories" class="form-label">카테고리</label>
+                <button type="button" class="book-save-button" onclick="location.href='/admin/categories'">카테고리 추가</button>
+              </div>
+              <div class="input-group">
+                <select id="categories" class="form-select select-hidden" th:field="*{categoryIdList}" multiple>
+                  <option th:each="category : ${categories}"
+                          th:value="${category.categoryId}"
+                          th:selected="${bookSaveRequest.categoryIdList != null ? #lists.contains(bookSaveRequest.categoryIdList, category.categoryId) : false}"
+                          th:text="${category.categoryName}"></option>
+
+                </select>
+              </div>
             </div>
+
 
             <!-- 태그 선택 -->
             <div class="mb-3">
-              <label for="tags" class="form-label">태그</label>
-              <select id="tags" th:field="*{tagIdList}" class="form-select" multiple>
-                <option th:each="tag : ${tags}" th:value="${tag.tagId}" th:text="${tag.tagName}"></option>
-              </select>
+              <div class="form-label-with-button">
+                <label for="tags" class="form-label">태그</label>
+                <button type="button" class="book-save-button" onclick="location.href='/admin/tags'">태그 추가</button>
+              </div>
+              <div class="input-group">
+                <select id="tags" class="form-select select-hidden" th:field="*{tagIdList}" multiple>
+                  <option th:each="tag : ${tags}" th:value="${tag.tagId}"
+                          th:selected="${#lists.contains(bookSaveRequest.tagIdList, tag.tagId)}"
+                          th:text="${tag.tagName}"></option>
+                </select>
+              </div>
             </div>
 
             <!-- 출판사 선택 -->
-            <div class="mb-3">
-              <label for="publishers" class="form-label">출판사</label>
-              <select id="publishers" th:field="*{publisherId}" class="form-select">
-                <option th:each="publisher : ${publishers}" th:value="${publisher.publisherId}" th:text="${publisher.publisherName}"></option>
+            <div>
+              <div class="form-label-with-button">
+                <label for="publishers" class="form-label">출판사</label>
+                <button type="button" class="book-save-button" onclick="location.href='/admin/publishers'">출판사 추가</button>
+              </div>
+              <select id="publishers" class="form-select select-hidden" th:field="*{publisherId}">
+                <option th:each="publisher : ${publishers}"
+                        th:value="${publisher.publisherId}"
+                        th:selected="${bookInfoResponse.publisher != null and bookInfoResponse.publisher.publisherId == publisher.publisherId}"
+                        th:text="${publisher.publisherName}">
+                </option>
               </select>
             </div>
 
+
             <!-- 작가 선택 -->
             <div class="mb-3">
-              <label for="authors" class="form-label">작가</label>
-              <select id="authors" th:field="*{authorIdList}" class="form-select" multiple>
-                <option th:each="author : ${authors}" th:value="${author.authorId}" th:text="${author.authorName}"></option>
-              </select>
+              <div class="form-label-with-button">
+                <label for="authors" class="form-label">작가</label>
+                <button type="button" class="book-save-button" onclick="location.href='/admin/authors/create'">작가 추가</button>
+              </div>
+              <div class="input-group">
+                <select id="authors" class="form-select select-hidden" th:field="*{authorIdList}" multiple>
+                  <option th:each="author : ${authors}" th:value="${author.authorId}"
+                          th:selected="${#lists.contains(bookSaveRequest.authorIdList, author.authorId)}"
+                          th:text="${author.authorName}"></option>
+                </select>
+              </div>
             </div>
 
             <!-- 수정 버튼 -->
@@ -128,19 +187,14 @@
   </div>
 </div>
 
-<footer th:replace="~{common/footer :: footer}"/>
+<footer th:replace="~{common/footer :: footer}" />
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js"></script>
 <script>
   $(document).ready(function() {
-    $('#categories, #tags, #authors').select2({
-      placeholder: "항목을 선택하십시오",
-      allowClear: true
-    });
-    $('#publishers').select2({
-      placeholder: "출판사를 선택하십시오",
-      allowClear: true
+    $('.select-hidden').select2({
+      theme: 'bootstrap-5'
     });
   });
 </script>

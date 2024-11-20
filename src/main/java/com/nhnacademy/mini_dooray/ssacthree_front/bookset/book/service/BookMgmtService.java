@@ -1,6 +1,8 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.service;
 
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.request.BookDeleteRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.request.BookSaveRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.request.BookUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookSearchResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
@@ -14,8 +16,10 @@ public interface BookMgmtService {
 
     MessageResponse createBook(BookSaveRequest bookSaveRequest);
 
-    MessageResponse updateBook(Long bookId, BookSaveRequest bookSaveRequest);
+    MessageResponse updateBook(BookSaveRequest bookSaveRequest);
 
-    MessageResponse deleteBook(Long bookId, BookSaveRequest bookSaveRequest);
+    MessageResponse deleteBook(Long bookId);
+
+    BookInfoResponse getBookById(Long bookId);
 
 }

@@ -44,4 +44,8 @@ public class BookInfoResponse {
 
     @Setter
     private List<AuthorNameResponse> authors;
+
+    public boolean isPacked() {
+        return this.isPacked;
+    }
 }

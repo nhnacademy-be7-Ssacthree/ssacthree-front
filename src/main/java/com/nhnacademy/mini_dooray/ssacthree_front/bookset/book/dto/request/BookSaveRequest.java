@@ -7,12 +7,14 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class BookSaveRequest {
+    private Long bookId;
     private String bookName;
     private String bookIndex; // 목차
     private String bookInfo; // 책 설명
@@ -30,19 +32,23 @@ public class BookSaveRequest {
     private int bookViewCount;
     private int bookDiscount; // 할인율
 
-//    private String bookStatus; // 도서 상태
+    private String bookStatus; // 도서 상태
 
     // FK
     private Long publisherId;
 
 
-    private List<Long> categoryIdList;
+    private List<Long> categoryIdList = new ArrayList<>();
 
-    private List<Long> authorIdList;
+    private List<Long> authorIdList = new ArrayList<>();
 
-    private List<Long> tagIdList;
+    private List<Long> tagIdList = new ArrayList<>();
 
     public boolean getIsPacked() {
         return isPacked;
+    }
+
+    public void setIsPacked(boolean isPacked) {
+        this.isPacked = isPacked;
     }
 }

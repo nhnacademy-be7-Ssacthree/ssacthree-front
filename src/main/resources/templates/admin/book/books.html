@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{common/config :: config}">
+    <meta charset="UTF-8">
     <title>도서 관리</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
     <style>
-        /* 책 정보 열의 너비를 조정 */
+        /* 각 열의 너비를 조정 */
         .book-info-col { width: 30%; }
         .author-info-col { width: 20%; }
+        .status-col { width: 15%; } /* 상태 열의 너비를 넓게 설정 */
     </style>
 </head>
 <body>
@@ -28,6 +30,7 @@
                             <th>Book Name</th>
                             <th class="book-info-col">Book Info</th>
                             <th class="author-info-col">Authors</th>
+                            <th class="status-col">Status</th> <!-- 상태 열 추가 -->
                             <th>수정</th>
                             <th>삭제</th>
                         </tr>
@@ -47,13 +50,14 @@
                                     No Authors Available
                                 </div>
                             </td>
+                            <td th:text="${book.bookStatus.status}"></td> <!-- 도서 상태 표시 -->
                             <td>
-                                <form th:action="@{/admin/books/{bookId}/update(bookId=${book.bookId})}" method="post" class="d-inline">
+                                <form th:action="@{/admin/books/update/{book-id}(book-id=${book.bookId})}" method="get" class="d-inline">
                                     <button class="btn btn-warning" type="submit">수정</button>
                                 </form>
                             </td>
                             <td>
-                                <form th:action="@{/admin/books/{bookId}/delete(bookId=${book.bookId})}" method="post" class="d-inline">
+                                <form th:action="@{/admin/books/delete/{book-id}(book-id=${book.bookId})}" method="post" class="d-inline">
                                     <input type="hidden" name="_method" value="delete" />
                                     <button class="btn btn-danger" type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
                                 </form>
