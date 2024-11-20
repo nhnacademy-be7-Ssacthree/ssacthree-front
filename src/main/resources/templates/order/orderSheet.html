@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="css/style.css" />
 </head>
 <body onload="calculatePaymentPrice()">
-<header th:replace="~{common/header :: header}" />
+<header th:replace="~{common/header :: header}"></header>
 
 <div class="container py-5">
     <div class="row justify-content-center">
@@ -228,7 +228,12 @@
                                                         <p>상세 주소 : <span th:text="${address.addressDetail}"></span></p>
                                                     </div>
                                                 </div>
-                                                <button type="button" class="btn btn-sm btn-primary" onclick="selectAddress('${address.addressPostalNumber}', '${address.addressRoadname}', '${address.addressDetail}')">
+                                                <button type="button"
+                                                        class="btn btn-sm btn-primary"
+                                                        th:onclick="|selectAddress(this.getAttribute('data-postal-code'), this.getAttribute('data-road-address'), this.getAttribute('data-detail-address'))|"
+                                                        th:data-postal-code="${address.addressPostalNumber}"
+                                                        th:data-road-address="${address.addressRoadname}"
+                                                        th:data-detail-address="${address.addressDetail}">
                                                     배송지 선택
                                                 </button>
                                             </div>
@@ -271,41 +276,43 @@
     </div>
 </div>
 
-<footer th:replace="~{common/footer :: footer}"/>
+<footer th:replace="~{common/footer :: footer}"></footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script>
-    let currentRow; // 현재 포장지 선택을 위한 행 참조
+<!--<script>-->
+<!--    let currentRow; // 현재 포장지 선택을 위한 행 참조-->
 
-    function setCurrentRow(button) {
-        currentRow = button.closest('tr'); // 현재 버튼이 속한 행을 저장
-    }
+<!--    function setCurrentRow(button) {-->
+<!--        currentRow = button.closest('tr'); // 현재 버튼이 속한 행을 저장-->
+<!--    }-->
 
-    function selectPackaging(packagingId, packagingName) {
-        // 선택한 포장지 이름을 행에 표시
-        if (currentRow) {
-            const packagingSpan = currentRow.querySelector('.selected-packaging');
-            packagingSpan.innerText = packagingName; // 선택된 포장지 이름 표시
-            packagingSpan.dataset.packagingId = packagingId; // 선택한 포장지 ID 저장
-        }
+<!--    function selectPackaging(packagingId, packagingName) {-->
+<!--        // 선택한 포장지 이름을 행에 표시-->
+<!--        if (currentRow) {-->
+<!--            const packagingSpan = currentRow.querySelector('.selected-packaging');-->
+<!--            packagingSpan.innerText = packagingName; // 선택된 포장지 이름 표시-->
+<!--            packagingSpan.dataset.packagingId = packagingId; // 선택한 포장지 ID 저장-->
+<!--        }-->
 
-        // 모달 닫기
-        const packagingModal = new bootstrap.Modal(document.getElementById('packagingModal'));
-        packagingModal.hide();
-    }
-</script>
+<!--        // 모달 닫기-->
+<!--        const packagingModal = new bootstrap.Modal(document.getElementById('packagingModal'));-->
+<!--        packagingModal.hide();-->
+<!--    }-->
+<!--</script>-->
 <script>
     // 주소를 선택했을 때 입력창에 자동으로 채워주는 함수
     function selectAddress(postalCode, roadAddress, detailAddress) {
-        // 각 입력 필드에 값을 넣어줍니다.
+        console.log(postalCode, roadAddress, detailAddress); // 값 확인
         document.getElementById("postal-code").value = postalCode;
         document.getElementById("road-address").value = roadAddress;
         document.getElementById("detail-address").value = detailAddress;
-        // 모달을 닫습니다.
-        var myModal = new bootstrap.Modal(document.getElementById('addressModal'));
-        myModal.hide();
+
+        var myModalEl = document.getElementById('addressModal');
+        var modalInstance = bootstrap.Modal.getInstance(myModalEl);
+        modalInstance.hide();
     }
+
 </script>
 <script>
     // 주문서 스크립트 로직
@@ -339,6 +346,5 @@
         document.getElementById("payment-price").value = paymentPrice;
     }
 </script>
-<script src="js/order.js"></script>
 </body>
 </html>
