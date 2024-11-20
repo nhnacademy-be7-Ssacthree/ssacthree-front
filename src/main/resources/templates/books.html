@@ -44,7 +44,7 @@
         <input type="hidden" name="keyword" th:value="${keyword}" />
 
         <!-- 페이지 번호 -->
-        <input type="hidden" name="page" th:value="${paging?.number}" />
+        <input type="hidden" name="page" th:value="${paging?.number + 1}" />
 
         <!-- 페이지 크기 -->
         <input type="hidden" name="pageSize" th:value="${paging?.size}" />
@@ -61,14 +61,33 @@
 
         <!-- 페이지 크기 선택 -->
         <label for="pageSize" class="me-2">페이지 크기:</label>
-        <select id="pageSize" name="pageSize" class="form-select w-auto" onchange="this.form.submit()">
+        <select id="pageSize" name="pageSize" class="form-select w-auto" onchange="syncPageSizeAndSubmit(this.value)">
           <option value="20" th:selected="${paging?.size == 20}">20개</option>
           <option value="50" th:selected="${paging?.size == 50}">50개</option>
           <option value="100" th:selected="${paging?.size == 100}">100개</option>
         </select>
       </form>
     </div>
+    <script>
+      function syncPageSizeAndSubmit(selectedPageSize) {
+        const currentUrl = window.location.href; // 현재 URL 가져오기
+        const updatedUrl = updateQueryStringParameter(currentUrl, "pageSize", selectedPageSize); // pageSize 값 갱신
+        const resetPageUrl = updateQueryStringParameter(updatedUrl, "page", 1); // 항상 페이지를 1로 초기화
 
+        // 갱신된 URL로 이동
+        window.location.href = resetPageUrl;
+      }
+
+      // URL의 특정 파라미터 값을 업데이트하는 함수
+      function updateQueryStringParameter(url, key, value) {
+        const baseUrl = url.split("?")[0]; // ? 앞의 URL
+        const queryString = url.split("?")[1]; // ? 뒤의 쿼리스트링
+        const params = new URLSearchParams(queryString || "");
+
+        params.set(key, value); // key 값을 갱신 또는 추가
+        return `${baseUrl}?${params.toString()}`;
+      }
+    </script>
     <!-- 도서 목록 섹션 -->
     <div id="searchResults">
       <div th:each="book : ${books}" class="row align-items-center mb-5 pb-5 border-bottom">
