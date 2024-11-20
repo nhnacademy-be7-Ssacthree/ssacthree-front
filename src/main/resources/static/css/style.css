@@ -1651,3 +1651,51 @@ select#input-sort {
         font-size: 1rem; /* 도움말 텍스트 크기 축소 */
     }
 }
+
+
+/* books.html 카테고리 style */
+.dropdown-container {
+    position: relative;
+    top: 0;
+    right: 0;
+    margin-right: 20px;
+    margin-top: 10px;
+    z-index: 10;
+}
+
+.dropdown-container label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+}
+
+
+
+/* 드롭다운 컨테이너 */
+.dropdown-container .form-select {
+    display: inline-block;
+    width: auto; /* width 조정을 위해 auto 사용 */
+    padding-right: 1.75rem; /* 드롭다운 화살표를 위한 여유 공간 추가 */
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    background-clip: padding-box;
+}
+
+
+/* 정렬 및 페이지 크기 옵션 스타일 */
+.sort-container label,
+.sort-container select {
+    margin-right: 10px;
+    font-size: 1rem;
+}
+
+.sort-container .form-select {
+    width: auto;
+    display: inline-block;
+    font-size: 1rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+}

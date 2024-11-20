@@ -6,7 +6,7 @@
                 <!-- 이전 페이지 -->
                 <li th:classappend="${paging.number == 0} ? 'disabled' : ''" class="page-item">
                     <a class="page-link"
-                       th:href="@{|${baseUrl}?page=${paging.number - 1}&pageSize=${paging.size}&sort=${paging.sort}&keyword=${extraParams['keyword']}|}"
+                       th:href="@{|${baseUrl}?keyword=${keyword}&page=${paging.number - 1}&sort=${paging.sort}&pageSize=${paging.size ?: 20}${extraParams['category'] != null ? '&category=' + extraParams['category'] : ''}|}"
                        aria-label="Previous">
                         &laquo;
                     </a>
@@ -19,14 +19,14 @@
                     )}"
                     th:classappend="${i == paging.number} ? 'active' : ''" class="page-item">
                     <a class="page-link"
-                       th:href="@{|${baseUrl}?page=${i}&pageSize=${paging.size}&sort=${paging.sort}&keyword=${extraParams['keyword']}|}"
-                       th:text="${i + 1}"></a>
+                       th:href="@{|${baseUrl}?keyword=${keyword}&page=${i}&sort=${paging.sort}&pageSize=${paging.size ?: 20}${extraParams['category'] != null ? '&category=' + extraParams['category'] : ''}|}"
+                       th:text="${i + 1}"></a> <!-- 프론트에서 페이지 번호는 1-based -->
                 </li>
 
                 <!-- 다음 페이지 -->
                 <li th:classappend="${paging.number == paging.totalPages - 1} ? 'disabled' : ''" class="page-item">
                     <a class="page-link"
-                       th:href="@{|${baseUrl}?page=${paging.number + 1}&pageSize=${paging.size}&sort=${paging.sort}&keyword=${extraParams['keyword']}|}"
+                       th:href="@{|${baseUrl}?keyword=${keyword}&page=${paging.number + 1}&sort=${paging.sort}&pageSize=${paging.size ?: 20}${extraParams['category'] != null ? '&category=' + extraParams['category'] : ''}|}"
                        aria-label="Next">
                         &raquo;
                     </a>
