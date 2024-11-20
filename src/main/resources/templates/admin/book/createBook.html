@@ -137,6 +137,16 @@
                             <input type="number" class="form-control" th:field="*{bookDiscount}" id="bookDiscount" min="0" max="100">
                         </div>
 
+                        <!-- 도서 상태 선택 -->
+                        <div class="mb-3">
+                            <label for="bookStatus" class="form-label">도서 상태</label>
+                            <select class="form-select" th:field="*{bookStatus}" id="bookStatus">
+                                <option th:each="status : ${T(com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookStatus).values()}"
+                                        th:value="${status}"
+                                        th:text="${status.getStatusName()}"></option>
+                            </select>
+                        </div>
+
                         <!-- 카테고리 선택 -->
                         <div class="mb-3">
                             <div class="form-label-with-button">

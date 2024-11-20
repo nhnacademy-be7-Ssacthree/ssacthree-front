@@ -24,5 +24,9 @@ public enum BookStatus {
                 .orElseThrow(IllegalArgumentException::new);
     }
 
+    public String getStatusName() {
+        return status;
+    }
+
 
 }

@@ -50,7 +50,7 @@
                                     No Authors Available
                                 </div>
                             </td>
-                            <td th:text="${book.bookStatus.status}"></td> <!-- 도서 상태 표시 -->
+                            <td th:text="${book.bookStatus}"></td> <!-- 도서 상태 표시 -->
                             <td>
                                 <form th:action="@{/admin/books/update/{book-id}(book-id=${book.bookId})}" method="get" class="d-inline">
                                     <button class="btn btn-warning" type="submit">수정</button>
@@ -58,7 +58,6 @@
                             </td>
                             <td>
                                 <form th:action="@{/admin/books/delete/{book-id}(book-id=${book.bookId})}" method="post" class="d-inline">
-                                    <input type="hidden" name="_method" value="delete" />
                                     <button class="btn btn-danger" type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
                                 </form>
                             </td>

@@ -32,6 +32,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
+import java.awt.print.Book;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -121,12 +122,12 @@ public class BookMgmtController {
         model.addAttribute("categories", categoryAdminService.getAllCategoriesForAdmin().getBody());
         model.addAttribute("tags", tagMgmtService.getAllTagList());
         model.addAttribute("authors", authorService.getAllAuthorList());
-            return "admin/book/updateBook";
+        return "admin/book/updateBook";
     }
 
     @PostMapping("/create")
     public String createBook(@Valid @ModelAttribute BookSaveRequest bookSaveRequest,
-                               BindingResult bindingResult, Model model){
+                               BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             throw new BookFailedException(BOOK_CREATE_ERROR_MESSAGE);
         }
@@ -136,7 +137,7 @@ public class BookMgmtController {
 
     @PostMapping("/update")
     public String updateBook(@Valid @ModelAttribute BookSaveRequest bookSaveRequest,
-                             BindingResult bindingResult,Model model){
+                             BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             throw new BookFailedException(BOOK_UPDATE_ERROR_MESSAGE);
         }
@@ -146,12 +147,9 @@ public class BookMgmtController {
         return REDIRECT_ADDRESS;
     }
 
+
     @PostMapping("/delete/{book-id}")
-    public String deleteBook(@PathVariable(name = "book-id") Long bookId,
-                             Model model, BindingResult bindingResult){
-        if(bindingResult.hasErrors()){
-            throw new BookFailedException(BOOK_UPDATE_ERROR_MESSAGE);
-        }
+    public String deleteBook(@PathVariable(name = "book-id") Long bookId){
         bookMgmtService.deleteBook(bookId);
 
         return REDIRECT_ADDRESS;

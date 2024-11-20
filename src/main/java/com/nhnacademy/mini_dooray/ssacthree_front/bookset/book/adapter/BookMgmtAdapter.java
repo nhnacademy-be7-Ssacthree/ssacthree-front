@@ -23,7 +23,7 @@ public interface BookMgmtAdapter {
     @PutMapping("/books/update")
     ResponseEntity<MessageResponse> updateBook(@RequestBody BookSaveRequest bookSaveRequest);
 
-    @DeleteMapping("/books/delete/{book-id}")
+    @PutMapping("/books/delete/{book-id}")
     ResponseEntity<MessageResponse> deleteBook(@PathVariable(name = "book-id")Long bookId);
 
     @GetMapping("/books/{book-id}")
