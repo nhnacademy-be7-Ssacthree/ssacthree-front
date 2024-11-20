@@ -42,12 +42,17 @@ public class SearchController {
   @GetMapping("/books")
   public String searchBooks(
                             @RequestParam(required = false, defaultValue = "") String keyword,
-                            @RequestParam(defaultValue = "1") int page,
+                            @RequestParam(defaultValue = "0") int page,
                             @RequestParam(defaultValue = "score") String sort,
                             @RequestParam(defaultValue = "20") int pageSize, //요청 데이터 수
                             @RequestParam(required = false) String category,
                             @RequestParam(required = false) String tag,
                             Model model) {
+
+    // 페이지 번호를 0 기반으로 변환 (0보다 작으면 쿼리 생성 시 오류)
+    if(page < 0 || pageSize < 0){
+      throw new IllegalArgumentException("올바르지 않은 page or pageSize"); // 예외문 만들기?
+    }
 
     log.info("검색 요청 - 키워드: {}, 페이지: {}, 정렬: {}, 페이지 크기: {}, 카테고리: {}, 태그: {}",
         keyword, page, sort, pageSize, category, tag);
@@ -86,7 +91,6 @@ public class SearchController {
     // 검색 서비스 호출
     SearchResponse searchResponse = searchService.searchBooks(keyword, page, sort, pageSize, filters);
     log.info("검색완료, 1회 검색 결과: {}건", searchResponse.getBooks().size());
-    log.info("page2222: {}", page);
 
     // 검색 결과가 없는 경우 처리
     if (searchResponse.getBooks().isEmpty()) {
@@ -100,13 +104,12 @@ public class SearchController {
     model.addAttribute("books", searchResponse.getBooks());
     // Paging 객체 생성
     Paging paging = new Paging(
-        page - 1, // Thymeleaf에서 0부터 시작하도록 조정
+        page, // Thymeleaf에서 0부터 시작하도록 조정
         pageSize,
         calculateTotalPages(searchResponse.getTotalHits(), pageSize),
         sort
     );
     model.addAttribute("paging", paging);
-    log.info("page3333: {}", page);
     // 페이징 및 추가 URL 파라미터 구성
     model.addAttribute("baseUrl", "/search/books");
     model.addAttribute("extraParams", filters);

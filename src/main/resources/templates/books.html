@@ -72,7 +72,7 @@
           </select>
 
           <!-- 페이지 크기 선택 -->
-          <label for="pageSize" class="me-2">페이지 크기:</label>
+          <label for="pageSize" class="me-2">표시 책 개수:</label>
           <select id="pageSize" name="pageSize" class="form-select w-auto" onchange="syncPageSizeAndSubmit(this.value)">
             <option value="20" th:selected="${paging?.size == 20}">20개</option>
             <option value="50" th:selected="${paging?.size == 50}">50개</option>

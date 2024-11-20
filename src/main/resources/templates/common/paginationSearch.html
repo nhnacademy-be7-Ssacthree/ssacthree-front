@@ -19,8 +19,8 @@
                     )}"
                     th:classappend="${i == paging.number} ? 'active' : ''" class="page-item">
                     <a class="page-link"
-                       th:href="@{|${baseUrl}?keyword=${keyword}&page=${i}&sort=${paging.sort}&pageSize=${paging.size ?: 20}${extraParams['category'] != null ? '&category=' + extraParams['category'] : ''}|}"
-                       th:text="${i + 1}"></a> <!-- 프론트에서 페이지 번호는 1-based -->
+                       th:href="@{|${baseUrl}?keyword=${keyword}&page=${i + 1}&sort=${paging.sort}&pageSize=${paging.size ?: 20}${extraParams['category'] != null ? '&category=' + extraParams['category'] : ''}${extraParams['tag'] != null ? '&tag=' + extraParams['tag'] : ''}|}"
+                       th:text="${i + 1}"></a>
                 </li>
 
                 <!-- 다음 페이지 -->
