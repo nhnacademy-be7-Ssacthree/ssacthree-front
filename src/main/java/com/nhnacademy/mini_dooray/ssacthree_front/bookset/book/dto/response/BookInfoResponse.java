@@ -4,6 +4,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.dto.AuthorNameR
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryNameResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.publisher.dto.PublisherNameResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.dto.TagInfoResponse;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class BookInfoResponse {
     private Long bookId;
     private String bookName;
@@ -42,4 +44,8 @@ public class BookInfoResponse {
 
     @Setter
     private List<AuthorNameResponse> authors;
+
+    public boolean isPacked() {
+        return this.isPacked;
+    }
 }

@@ -82,18 +82,17 @@ public class PaymentController {
         JSONObject jsonObject = (JSONObject) parser.parse(reader);
 
         // TODO : me, jsonObject에서 결제테이블에 필요한거 만들어서 보내기
-        String orderIdd = (String) jsonObject.get("orderId");
-        String paymentKeyy = (String) jsonObject.get("paymentKey");
         String type = (String) jsonObject.get("type"); // 일반결제 등등
         String approvedAt = ((String) jsonObject.get("approvedAt"));
-        Integer totalAmount = (Integer) jsonObject.get("totalAmount");
         String method = (String) jsonObject.get("method");
         String status = (String) jsonObject.get("status"); // 결제 처리 상태
-        PaymentRequest tossPaymentResponse = new PaymentRequest(paymentKey, orderId, totalAmount, type, method,status, approvedAt);
+        PaymentRequest paymentRequest = new PaymentRequest(paymentKey, orderId, Integer.parseInt(amount), type, method,status, approvedAt);
 
         // TODO : 결제 성공 ! 주문 저장하기. - 재고차감 등등... shop의 orderService에서 모든 로직 처리하기.
         HttpSession session = request.getSession(false);
         OrderFormRequest orderFormRequest = (OrderFormRequest) session.getAttribute("orderFormRequest");
+
+        // TODO : 주문 정보 저장하기
 
         // TODO : 결제정보 저장하기.
 

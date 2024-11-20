@@ -1,0 +1,34 @@
+<aside class="col-lg-3 mb-4">
+  <div class="sticky-top" style="top: 80px;">
+    <h5 class="mb-3">
+      <a href="/members/my-page" class="text-decoration-none text-dark">마이페이지</a>
+    </h5>
+    <ul class="list-group">
+      <li class="list-group-item"><a href="#orders">최근 주문 내역</a></li>
+      <li class="list-group-item"><a href="#wishlist">찜 목록</a></li>
+      <li class="list-group-item"><a href="#account">나의 계좌</a></li>
+      <li class="list-group-item"><a href="/point-histories">포인트 내역</a></li>
+      <li class="list-group-item"><a href="#coupon">쿠폰 목록</a></li>
+      <li class="list-group-item"><a href="/address-page">주소록</a></li>
+      <li class="list-group-item">
+        <a href="#"
+           onclick="if(confirm('정말로 회원 탈퇴를 하시겠습니까?')) { document.getElementById('withdrawForm').submit(); } else { event.preventDefault(); }">
+          회원 탈퇴
+        </a>
+      </li>
+    </ul>
+
+    <form id="withdrawForm" th:action="@{/members/withdraw}" method="post"
+          style="display: none;"></form>
+  </div>
+</aside>
+
+<script>
+  document.querySelector('form[action="/members/withdraw"]').addEventListener('submit',
+      function (event) {
+        const confirmWithdraw = confirm("정말로 회원 탈퇴를 하시겠습니까?");
+        if (!confirmWithdraw) {
+          event.preventDefault(); // 사용자가 취소를 누르면 form 제출을 막음
+        }
+      });
+</script>

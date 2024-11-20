@@ -10,6 +10,8 @@ import java.util.List;
 public interface CouponRuleService {
     List<CouponRuleGetResponse> getAllCouponRules();
 
+    List<CouponRuleGetResponse> getAllSelectedCouponRules();
+
     MessageResponse createCouponRule(CouponRuleCreateRequest couponRuleCreateRequest);
 
     MessageResponse updateCouponRule(CouponRuleUpdateRequest couponRuleUpdateRequest);

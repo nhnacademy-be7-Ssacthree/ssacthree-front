@@ -18,6 +18,9 @@ public interface CouponRuleAdapter {
     @GetMapping("/coupon-rules")
     ResponseEntity<List<CouponRuleGetResponse>> getAllCouponRules();
 
+    @GetMapping("/coupon-rules/selected")
+    ResponseEntity<List<CouponRuleGetResponse>> getAllSelectedCouponRules();
+
     @PutMapping("/coupon-rules")
     ResponseEntity<MessageResponse> updateCouponRule(@RequestBody CouponRuleUpdateRequest couponRuleUpdateRequest);
 

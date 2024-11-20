@@ -6,38 +6,49 @@
 <!-- Header -->
 <header th:replace="~{common/header}"></header>
 
-<!-- 주소 추가 섹션 -->
-<section id="address" class="container my-5">
-  <h3>주소 추가</h3>
-  <form th:action="@{/address}" method="post">
-    <div class="mb-3">
-      <label for="addressAlias" class="form-label">주소 별칭</label>
-      <input type="text" class="form-control" id="addressAlias" name="addressAlias"
-             placeholder="예: 집, 회사" required>
-    </div>
-    <div class="mb-3">
-      <label for="sample4_postcode" class="form-label">우편번호</label>
-      <div class="input-group">
-        <input type="text" class="form-control" id="sample4_postcode" name="addressPostalNumber"
-               placeholder="우편번호" required>
-        <button type="button" class="btn btn-secondary" onclick="sample4_execDaumPostcode()">우편번호
-          찾기
-        </button>
-      </div>
-    </div>
-    <div class="mb-3">
-      <label for="roadAddress" class="form-label">도로명 주소</label>
-      <input type="text" class="form-control" id="sample4_roadAddress" name="addressRoadname"
-             placeholder="도로명 주소" required>
-    </div>
-    <div class="mb-3">
-      <label for="detailAddress" class="form-label">상세 주소</label>
-      <input type="text" class="form-control" id="sample4_detailAddress" name="addressDetail"
-             placeholder="상세 주소" required>
-    </div>
-    <button type="submit" class="btn btn-primary">주소 추가</button>
-  </form>
-</section>
+<div class="container mypage-container my-5">
+  <div class="row">
+    <!-- Sidebar 포함 -->
+    <div th:replace="~{common/sidebar}"></div>
+
+    <!-- 주소 추가 섹션 -->
+    <main class="col-lg-9">
+      <section id="address">
+        <h3>주소 추가</h3>
+        <form th:action="@{/address}" method="post">
+          <div class="mb-3">
+            <label for="addressAlias" class="form-label">주소 별칭</label>
+            <input type="text" class="form-control" id="addressAlias" name="addressAlias"
+                   placeholder="예: 집, 회사" required>
+          </div>
+          <div class="mb-3">
+            <label for="sample4_postcode" class="form-label">우편번호</label>
+            <div class="input-group">
+              <input type="text" class="form-control" id="sample4_postcode"
+                     name="addressPostalNumber"
+                     placeholder="우편번호" readonly required>
+              <button type="button" class="btn btn-secondary" onclick="sample4_execDaumPostcode()">
+                우편번호
+                찾기
+              </button>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="roadAddress" class="form-label">도로명 주소</label>
+            <input type="text" class="form-control" id="sample4_roadAddress" name="addressRoadname"
+                   placeholder="도로명 주소" readonly required>
+          </div>
+          <div class="mb-3">
+            <label for="detailAddress" class="form-label">상세 주소</label>
+            <input type="text" class="form-control" id="sample4_detailAddress" name="addressDetail"
+                   placeholder="상세 주소" required>
+          </div>
+          <button type="submit" class="btn btn-primary">주소 추가</button>
+        </form>
+      </section>
+    </main>
+  </div>
+</div>
 
 <!-- Footer -->
 <footer th:replace="~{common/footer :: footer}"></footer>
@@ -58,6 +69,5 @@
     }).open();
   }
 </script>
-
 </body>
 </html>
