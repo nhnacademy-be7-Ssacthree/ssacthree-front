@@ -48,22 +48,22 @@ public class AuthorController {
     }
 
     @GetMapping("/create")
-    public String createAuthor() {
+    public String createAuthor(){
         return "createAuthor";
     }
 
     //기본 값 나오게...
     @GetMapping("/{authorId}")
-    public String updateAuthorForm(@PathVariable Long authorId, Model model) {
+    public String updateAuthorForm(@PathVariable long authorId, Model model) {
         AuthorUpdateRequest authorUpdateRequest = authorService.getAuthorById(authorId);
         model.addAttribute("authorUpdateRequest", authorUpdateRequest);
         return "updateAuthor";
-    }
+     }
 
     @PostMapping("/create")
     public String createAuthor(@Valid @ModelAttribute AuthorCreateRequest authorCreateRequest,
-                               BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
+                               BindingResult bindingResult, Model model){
+        if(bindingResult.hasErrors()){
             throw new ValidationFailedException(bindingResult);
         }
 
@@ -74,8 +74,8 @@ public class AuthorController {
 
     @PostMapping
     public String updateAuthor(@Valid @ModelAttribute AuthorUpdateRequest authorUpdateRequest,
-                               BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
+                               BindingResult bindingResult, Model model){
+        if(bindingResult.hasErrors()){
             throw new ValidationFailedException(bindingResult);
         }
 

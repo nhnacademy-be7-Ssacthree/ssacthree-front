@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -49,6 +51,20 @@ public class AuthorServiceImpl implements AuthorService {
             }
             throw new AuthorFailedException(AUTHOR_SEARCH_ERROR);
         } catch (HttpClientErrorException | HttpServerErrorException e) {
+            throw new AuthorFailedException(AUTHOR_SEARCH_ERROR);
+        }
+    }
+
+    @Override
+    public List<AuthorGetResponse> getAllAuthorList() {
+        ResponseEntity<List<AuthorGetResponse>> response = authorAdapter.getAllAuthorList();
+
+        try{
+            if(response.getStatusCode().is2xxSuccessful()){
+                return response.getBody();
+            }
+            throw new AuthorFailedException(AUTHOR_SEARCH_ERROR);
+        }catch(HttpClientErrorException | HttpServerErrorException e){
             throw new AuthorFailedException(AUTHOR_SEARCH_ERROR);
         }
     }

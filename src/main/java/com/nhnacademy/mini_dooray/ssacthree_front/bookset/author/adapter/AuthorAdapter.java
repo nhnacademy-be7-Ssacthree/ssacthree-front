@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @FeignClient(name = "authorSendClient", url = "${admin-client.url}", contextId = "authorClient")
 public interface AuthorAdapter {
 
@@ -16,6 +18,10 @@ public interface AuthorAdapter {
     ResponseEntity<Page<AuthorGetResponse>> getAllAuthors(@RequestParam("page") int page,
                                                           @RequestParam("size") int size,
                                                           @RequestParam("sort") String[] sort);
+
+    @GetMapping("/authors/lists")
+    ResponseEntity<List<AuthorGetResponse>> getAllAuthorList();
+
 
     @PostMapping("/authors")
     ResponseEntity<MessageResponse> createAuthor(@RequestBody AuthorCreateRequest authorCreateRequest);
