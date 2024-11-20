@@ -1,9 +1,11 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.review.service.impl;
 
+import com.nhnacademy.mini_dooray.ssacthree_front.image.adapter.ImageUploadAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.AddressResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.AddAddressFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.adapter.ReviewAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.ReviewRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.ReviewRequestWithUrl;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.ReviewResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.exception.PostReviewFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.exception.UnauthorizedReviewException;
@@ -23,6 +25,8 @@ import org.springframework.web.client.HttpServerErrorException;
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewAdapter adapter;
+    private static final String IMAGE_PATH = "/ssacthree/review/";
+    private final ImageUploadAdapter imageUploadAdapter;
 
     private static final String BEARER = "Bearer ";
 
@@ -44,9 +48,13 @@ public class ReviewServiceImpl implements ReviewService {
     public void postReviewBook(Long bookId,Long orderId,ReviewRequest reviewRequest, HttpServletRequest request) {
         String accessToken = getAccessToken(request);
 
+        String imageurl = imageUploadAdapter.uploadImage(reviewRequest.getReviewImage(),IMAGE_PATH);
+
+        ReviewRequestWithUrl requestWithUrl = new ReviewRequestWithUrl(reviewRequest.getReviewRate(),reviewRequest.getReviewTitle(),reviewRequest.getReviewContent(),imageurl);
+
         try {
             ResponseEntity<Void> response = adapter.postReviewBook(
-                BEARER + accessToken,bookId,orderId,reviewRequest);
+                BEARER + accessToken,bookId,orderId,requestWithUrl);
 
         } catch (HttpClientErrorException | HttpServerErrorException e) {
             throw new PostReviewFailedException("리뷰 등록에 실패하였습니다.");

@@ -1,5 +1,6 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.review.controller;
 
+import com.nhnacademy.mini_dooray.ssacthree_front.image.adapter.ImageUploadAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.ReviewRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.service.ReviewService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ReviewController {
 
     private final ReviewService reviewService;
+
 
     @PostMapping
     public String postReview(

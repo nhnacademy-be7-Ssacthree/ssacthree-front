@@ -1,16 +1,17 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.review.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
+import lombok.Setter;;
 
-@Setter
+@AllArgsConstructor
 @Getter
-public class ReviewRequest {
+@Setter
+public class ReviewRequestWithUrl {
 
     private int reviewRate;
     private String reviewTitle;
     private String reviewContent;
-    private MultipartFile reviewImage;
+    private String reviewImageUrl;
 
 }

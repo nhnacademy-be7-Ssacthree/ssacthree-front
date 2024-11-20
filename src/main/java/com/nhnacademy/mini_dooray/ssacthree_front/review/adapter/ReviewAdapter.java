@@ -1,6 +1,6 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.review.adapter;
 
-import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.ReviewRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.ReviewRequestWithUrl;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.ReviewResponse;
 import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -22,6 +22,6 @@ public interface ReviewAdapter {
     ResponseEntity<Long> authToWriteReview(@RequestHeader("Authorization") String authorizationHeader,@PathVariable("book-id") Long bookId);
 
     @PostMapping("shop/members/reviews")
-    ResponseEntity<Void> postReviewBook(@RequestHeader("Authorization") String authorizationHeader,@RequestParam("book-id") Long bookId,@RequestParam("order-id") Long orderId,@RequestBody ReviewRequest reviewRequest);
+    ResponseEntity<Void> postReviewBook(@RequestHeader("Authorization") String authorizationHeader,@RequestParam("book-id") Long bookId,@RequestParam("order-id") Long orderId,@RequestBody ReviewRequestWithUrl reviewRequestWithUrl);
 
 }
