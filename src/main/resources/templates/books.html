@@ -105,11 +105,22 @@
             발행일: <span th:text="${book.publicationDate}"></span>
           </p>
           <p class="fs-4 text-danger fw-bold">
-            <span th:text="${book.salePrice}"></span>원
+            <span class="sale-price" th:text="${book.salePrice}"></span>원
             <del class="text-dark fs-6">
-              <span th:text="${book.regularPrice}"></span>원
+              <span class="regular-price" th:text="${book.regularPrice}"></span>원
             </del>
           </p>
+          <script>
+            document.querySelectorAll(".sale-price, .regular-price").forEach((element) => {
+              // 숫자로 변환
+              const price = parseFloat(element.textContent.replace(/,/g, '')); // 쉼표 제거 후 숫자로 변환
+              if (!isNaN(price)) {
+                // 쉼표 포맷 적용
+                element.textContent = new Intl.NumberFormat('ko-KR').format(price);
+              }
+            });
+          </script>
+
           <!-- 태그 및 카테고리 -->
           <p class="text-muted small">
             태그:
@@ -151,6 +162,8 @@
     // url.searchParams.set("page", 1);
     window.location.href = url.toString();
   }
+
+
 
   function syncPageSizeAndSubmit(selectedPageSize) {
     const url = new URL(window.location.href);
