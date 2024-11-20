@@ -6,6 +6,7 @@ import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class AdminCheckAop {
 
     private final HttpServletRequest request;
@@ -23,13 +25,14 @@ public class AdminCheckAop {
     public void checkAdmin() {
 
         if (!CookieUtil.checkAccessTokenCookie(request)) {
-            throw new RuntimeException("로그인 해야합니다");
+            throw new RuntimeException("잘못된 접근입니다.");
         }
         try {
             if (authAdapter.roleCheck().getStatusCode().is2xxSuccessful()) {
                 return;
             }
         } catch (FeignException e) {
+            log.info(e.getMessage());
             throw e;
         }
 
