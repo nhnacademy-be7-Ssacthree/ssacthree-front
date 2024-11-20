@@ -336,8 +336,8 @@
 
                     <section id="delivery-cost" class="mb-4">
                         <h4 class="text-primary">배송비</h4>
-                        <p>기본 배송비: <span id="delivery-fee" th:text="${deliveryRule.deliveryFee} + '원'"></span></p>
-                        <p>무료 배송 기준: <span id="delivery-discount-cost" th:text="${deliveryRule.deliveryDiscountCost} + '원 이상'">원 이상</span></p>
+                        <p><span id="delivery-discount-cost" th:text="${deliveryRule.deliveryDiscountCost} + '원 이상  구매시 무료배송'"></span></p>
+                        <p><span id="delivery-fee" th:text="'기본 배송료 +'+ ${deliveryRule.deliveryFee} + '원'"></span></p>
                     </section>
 
                     <!-- 6. 결제 버튼, 총 결제 금액 계산 필요 js -->
