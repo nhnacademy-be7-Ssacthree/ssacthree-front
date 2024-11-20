@@ -82,12 +82,12 @@
                             </table>
                         </section>
                         <!-- 포장지 선택 모달 -->
-                        <div class="modal fade" id="packagingModal" tabindex="-1" aria-labelledby="packagingModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="packagingModal" tabindex="-1">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="packagingModalLabel">포장지 선택</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
                                     <div class="modal-body">
                                         <div class="list-group">
@@ -134,119 +134,118 @@
                             </div>
                         </section>
 
-                        <!-- 3. 배송지 입력 -->
-                        <section id="delivery-info" class="mb-4">
-                            <h4 class="text-primary">배송지 입력</h4>
-                            <div class="mb-3"  th:if="${isMember}">
-                                <button type="button" class="btn btn-outline-primary"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#addressModal">
-                                    배송지주소록 선택
-                                </button>
-                            </div>
-                            <div class="mb-3">
-                                <label for="recipient-name" class="form-label">받는 사람 이름</label>
-                                <input type="text" class="form-control" id="recipient-name" name="recipientName" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="recipient-phone" class="form-label">받는 사람 연락처</label>
-                                <input type="text" class="form-control" id="recipient-phone" name="recipientPhone" required>
-                            </div>
-                            <div class="mb-3">
-                                <button type="button" class="btn btn-outline-secondary" onclick="openPostcodeSearch()">주소 조회</button>
-                            </div>
-                            <div class="mb-3">
-                                <label for="postal-code" class="form-label">우편 번호</label>
-                                <input type="text" class="form-control" id="postal-code" name="postalCode" readonly="readonly">
-                            </div>
-                            <div class="mb-3">
-                                <label for="road-address" class="form-label">도로명 주소</label>
-                                <input type="text" class="form-control" id="road-address" name="roadAddress" readonly="readonly">
-                            </div>
-                            <div class="mb-3">
-                                <label for="detail-address" class="form-label">상세 주소</label>
-                                <input type="text" class="form-control" id="detail-address" name="detailAddress" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="order-request" class="form-label">배송 요청 사항</label>
-                                <input type="text" class="form-control" id="order-request" name="orderRequest" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="delivery-date" class="form-label">배송 날짜 지정</label>
-                                <input type="date" class="form-control" id="delivery-date" name="deliveryDate">
-                                <small id="date-message" class="form-text text-muted">
-                                    오늘부터 5일 후까지 선택 가능합니다.
-                                </small>
-                                <script>
-                                    const deliveryDateInput = document.getElementById("delivery-date");
-                                    const dateMessage = document.getElementById("date-message");
-                                    const today = new Date();
+                    <!-- 배송지 입력 -->
+                    <section id="delivery-info" class="mb-4">
+                        <h4 class="text-primary">배송지 입력</h4>
+                        <div class="mb-3" th:if="${isMember}">
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addressModal">
+                                배송지주소록 선택
+                            </button>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="form-label">받는 사람 이름</label>
+                            <input type="text" class="form-control" id="recipient-name" name="recipientName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipient-phone" class="form-label">받는 사람 연락처</label>
+                            <input type="text" class="form-control" id="recipient-phone" name="recipientPhone" required>
+                        </div>
+                        <div class="mb-3">
+                            <button type="button" class="btn btn-outline-secondary" onclick="openPostcodeSearch()">주소 조회</button>
+                        </div>
+                        <div class="mb-3">
+                            <label for="postal-code" class="form-label">우편 번호</label>
+                            <input type="text" class="form-control" id="postal-code" name="postalCode" readonly="readonly">
+                        </div>
+                        <div class="mb-3">
+                            <label for="road-address" class="form-label">도로명 주소</label>
+                            <input type="text" class="form-control" id="road-address" name="roadAddress" readonly="readonly">
+                        </div>
+                        <div class="mb-3">
+                            <label for="detail-address" class="form-label">상세 주소</label>
+                            <input type="text" class="form-control" id="detail-address" name="detailAddress" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="order-request" class="form-label">배송 요청 사항</label>
+                            <input type="text" class="form-control" id="order-request" name="orderRequest">
+                        </div>
+                        <div class="mb-3">
+                            <label for="delivery-date" class="form-label">배송 날짜 지정</label>
+                            <input type="date" class="form-control" id="delivery-date" name="deliveryDate">
+                            <small id="date-message" class="form-text text-muted">
+                                오늘부터 5일 후까지 선택 가능합니다.
+                            </small>
+                            <script>
+                                const deliveryDateInput = document.getElementById("delivery-date");
+                                const dateMessage = document.getElementById("date-message");
+                                const today = new Date();
 
-                                    // 설정할 날짜 포맷 (YYYY-MM-DD)
-                                    const formatDate = date => date.toISOString().split("T")[0];
+                                // 설정할 날짜 포맷 (YYYY-MM-DD)
+                                const formatDate = date => date.toISOString().split("T")[0];
 
-                                    // 오늘 날짜 설정
-                                    deliveryDateInput.min = formatDate(today);
+                                // 오늘 날짜 설정
+                                deliveryDateInput.min = formatDate(today);
 
-                                    // 기본값을 오늘 날짜로 설정
-                                    deliveryDateInput.value = formatDate(today);
+                                // 기본값을 오늘 날짜로 설정
+                                deliveryDateInput.value = formatDate(today);
 
-                                    // 오늘로부터 5일 이후 날짜 설정
-                                    const maxDate = new Date(today);
-                                    maxDate.setDate(today.getDate() + 5);
-                                    deliveryDateInput.max = formatDate(maxDate);
+                                // 오늘로부터 5일 이후 날짜 설정
+                                const maxDate = new Date(today);
+                                maxDate.setDate(today.getDate() + 5);
+                                deliveryDateInput.max = formatDate(maxDate);
 
-                                    // 날짜 선택 시 범위 체크
-                                    deliveryDateInput.addEventListener("input", () => {
-                                        const selectedDate = new Date(deliveryDateInput.value);
-                                        if (selectedDate < today || selectedDate > maxDate) {
-                                            alert("선택 가능한 날짜는 오늘부터 5일 후까지입니다.");
-                                            deliveryDateInput.value = ""; // 잘못된 입력 제거
-                                        }
-                                    });
-                                </script>
-                            </div>
-                        </section>
+                                // 날짜 선택 시 범위 체크
+                                deliveryDateInput.addEventListener("input", () => {
+                                    const selectedDate = new Date(deliveryDateInput.value);
+                                    if (selectedDate < today || selectedDate > maxDate) {
+                                        alert("선택 가능한 날짜는 오늘부터 5일 후까지입니다.");
+                                        deliveryDateInput.value = ""; // 잘못된 입력 제거
+                                    }
+                                });
+                            </script>
+                        </div>
+                    </section>
 
-                        <!-- 배송지 주소록 선택 모달 -->
-                        <div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true" th:if="${isMember}">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="addressModalLabel">배송지 선택</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="list-group">
-                                            <!-- 회원 주소 목록을 반복해서 출력 -->
-                                            <div th:each="address : ${memberAddressList}" class="list-group-item d-flex justify-content-between align-items-center">
-                                                <div class="d-flex align-items-center">
-                                                    <div>
-                                                        <p>별칭 : <span th:text="${address.addressAlias}"></span></p>
-                                                        <p>우편 번호 : <span th:text="${address.addressPostalNumber}"></span></p>
-                                                        <p>도로명 주소 : <span th:text="${address.addressRoadname}"></span></p>
-                                                        <p>상세 주소 : <span th:text="${address.addressDetail}"></span></p>
-                                                    </div>
+                    <!-- 배송지 주소록 선택 모달 -->
+                    <div class="modal fade" id="addressModal" th:if="${isMember}" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="addressModalLabel">배송지 선택</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="list-group">
+                                        <!-- 회원 주소 목록을 반복해서 출력 -->
+                                        <div th:each="address : ${memberAddressList}" class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-center">
+                                                <div>
+                                                    <p>별칭 : <span th:text="${address.addressAlias}"></span></p>
+                                                    <p>우편 번호 : <span th:text="${address.addressPostalNumber}"></span></p>
+                                                    <p>도로명 주소 : <span th:text="${address.addressRoadname}"></span></p>
+                                                    <p>상세 주소 : <span th:text="${address.addressDetail}"></span></p>
                                                 </div>
-                                                <button type="button"
-                                                        class="btn btn-sm btn-primary"
-                                                        th:onclick="|selectAddress(this.getAttribute('data-postal-code'), this.getAttribute('data-road-address'), this.getAttribute('data-detail-address'))|"
-                                                        th:data-postal-code="${address.addressPostalNumber}"
-                                                        th:data-road-address="${address.addressRoadname}"
-                                                        th:data-detail-address="${address.addressDetail}">
-                                                    배송지 선택
-                                                </button>
                                             </div>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-primary"
+                                                    th:onclick="|selectAddress(this.getAttribute('data-postal-code'), this.getAttribute('data-road-address'), this.getAttribute('data-detail-address'))|"
+                                                    th:data-postal-code="${address.addressPostalNumber}"
+                                                    th:data-road-address="${address.addressRoadname}"
+                                                    th:data-detail-address="${address.addressDetail}">
+                                                배송지 선택
+                                            </button>
                                         </div>
                                     </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- 4. 포인트 사용 -->
+
+                    <!-- 4. 포인트 사용 -->
                         <section id="point-use" class="mb-4" th:if="${isMember}">
                             <h4 class="text-primary">포인트 사용</h4>
                             <p>보유 포인트: <span id="user-points" th:value="${memberInfo.getMemberPoint()}"></span></p>
@@ -263,7 +262,85 @@
                             <p>적립 포인트: <span id="user-points-save"></span></p>
                         </section>
 
-                        <!-- 6. 결제 버튼, 총 결제 금액 계산 필요 js -->
+                    <section id="payment-summary" class="mb-4">
+                        <h4 class="text-primary">결제 내역</h4>
+                        <div class="row">
+                            <!-- 낼 금액 -->
+                            <div class="col-md-6 mb-3">
+                                <div class="card">
+                                    <div class="card-header bg-light">
+                                        <h5 class="mb-0">총 주문 금액</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                상품 주문 총액
+                                                <strong><span class="text-danger">16,020원</span></strong>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                포장료
+                                                <strong><span class="text-danger">0원</span></strong>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                배송료
+                                                <strong><span class="text-danger">0원</span></strong>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <strong>결제 총액</strong>
+                                                <strong><span class="text-danger">16,020원</span></strong>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 차감되는 금액 -->
+                            <div class="col-md-6 mb-3">
+                                <div class="card">
+                                    <div class="card-header bg-light">
+                                        <h5 class="mb-0">할인 내역</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                쿠폰 할인 금액
+                                                <span id="couponDiscount">0원</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                포인트 결제 금액
+                                                <span id="depositMoney">0원</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <strong>할인 총액</strong>
+                                                <span id="totalDiscount">0원</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 남은 결제 금액 -->
+                        <div class="card">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">남은 결제 금액</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>남은 결제 금액</span>
+                                    <strong><span class="text-danger"><span id="remainingPayment">16,020</span>원</span></strong>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="delivery-cost" class="mb-4">
+                        <h4 class="text-primary">배송비</h4>
+                        <p>기본 배송비: <span id="delivery-fee" th:text="${deliveryRule.deliveryFee} + '원'"></span></p>
+                        <p>무료 배송 기준: <span id="delivery-discount-cost" th:text="${deliveryRule.deliveryDiscountCost} + '원 이상'">원 이상</span></p>
+                    </section>
+
+                    <!-- 6. 결제 버튼, 총 결제 금액 계산 필요 js -->
                         <div class="text-center">
                             <h4>총 결제 금액: <span id="PaymentPrice">원</span></h4>
                             <input type="hidden" name="memberId" th:value="${memberInfo.customerId}" th:if="${isMember}">
@@ -280,26 +357,27 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<!--<script>-->
-<!--    let currentRow; // 현재 포장지 선택을 위한 행 참조-->
+<script>
+    let currentRow; // 현재 포장지 선택을 위한 행 참조
 
-<!--    function setCurrentRow(button) {-->
-<!--        currentRow = button.closest('tr'); // 현재 버튼이 속한 행을 저장-->
-<!--    }-->
+    function setCurrentRow(button) {
+        currentRow = button.closest('tr'); // 현재 버튼이 속한 행을 저장
+    }
 
-<!--    function selectPackaging(packagingId, packagingName) {-->
-<!--        // 선택한 포장지 이름을 행에 표시-->
-<!--        if (currentRow) {-->
-<!--            const packagingSpan = currentRow.querySelector('.selected-packaging');-->
-<!--            packagingSpan.innerText = packagingName; // 선택된 포장지 이름 표시-->
-<!--            packagingSpan.dataset.packagingId = packagingId; // 선택한 포장지 ID 저장-->
-<!--        }-->
+    function selectPackaging(packagingId, packagingName) {
+        // 선택한 포장지 이름을 행에 표시
+        if (currentRow) {
+            const packagingSpan = currentRow.querySelector('.selected-packaging');
+            packagingSpan.innerText = packagingName; // 선택된 포장지 이름 표시
+            packagingSpan.dataset.packagingId = packagingId; // 선택한 포장지 ID 저장
+        }
 
-<!--        // 모달 닫기-->
-<!--        const packagingModal = new bootstrap.Modal(document.getElementById('packagingModal'));-->
-<!--        packagingModal.hide();-->
-<!--    }-->
-<!--</script>-->
+        // 모달 닫기
+        const packagingModal = new bootstrap.Modal(document.getElementById('packagingModal'));
+        packagingModal.hide();
+    }
+</script>
+
 <script>
     // 주소를 선택했을 때 입력창에 자동으로 채워주는 함수
     function selectAddress(postalCode, roadAddress, detailAddress) {
@@ -310,9 +388,26 @@
 
         var myModalEl = document.getElementById('addressModal');
         var modalInstance = bootstrap.Modal.getInstance(myModalEl);
-        modalInstance.hide();
+
+        // 모달을 닫을 때 inert 속성을 제거하여 접근 가능하게 만듦
+        myModalEl.setAttribute('aria-hidden', 'true');
+        myModalEl.setAttribute('inert', 'true');
+
+        // 모달을 닫음
+        $('#addressModal').modal('hide');
     }
 
+    // 모달이 열릴 때 inert 속성을 제거하고 focus를 모달로 이동
+    $('#addressModal').on('show.bs.modal', function () {
+        var myModalEl = document.getElementById('addressModal');
+        myModalEl.removeAttribute('aria-hidden');
+        myModalEl.removeAttribute('inert');
+    });
+
+    // 모달이 닫힐 때 focus를 이전 상태로 복원
+    $('#addressModal').on('hidden.bs.modal', function () {
+        document.getElementById("recipient-phone").focus();
+    });
 </script>
 <script>
     // 주문서 스크립트 로직
@@ -332,19 +427,57 @@
 </script>
 
 
-<script>
+<script th:inline="javascript">
     function calculatePaymentPrice() {
         let paymentPrice = 0;
+        let deliveryFee = 0;
 
+        // 상품 가격 계산
         bookLists.forEach(book => {
             paymentPrice += book.salePrice * book.quantity;
         });
 
+        // 배송비 계산 (상품 가격이 무료 배송 기준을 초과하는지 확인)
+        const deliveryDiscountCost = /*[[${deliveryRule.deliveryDiscountCost}]]*/ 0;
+        const deliveryFeeValue = /*[[${deliveryRule.deliveryFee}]]*/ 0;
+        console.log(deliveryDiscountCost);
+        console.log(deliveryFeeValue);
+
+        if (paymentPrice < deliveryDiscountCost) {
+            deliveryFee = deliveryFeeValue;  // 무료 배송 기준 미만이면 배송비 추가
+        }
+
+        // 총 결제 금액 계산
+        paymentPrice += deliveryFee;
+
+        // 결과를 페이지에 반영
         document.getElementById("PaymentPrice").innerText = paymentPrice + "원";
 
-        // 결과를 hidden input 필드에 설정
+        // hidden input 필드에 결제 가격 설정
         document.getElementById("payment-price").value = paymentPrice;
     }
+
+</script>
+
+<script>
+    // 결제 내역 업데이트 함수 (여기에 각 값들을 업데이트)
+    function updatePaymentDetails(orderAmount, couponDiscount, giftWrap, pointPayment, deliveryFee) {
+        // 결제 총액 계산
+        let totalAmount = orderAmount - couponDiscount - pointPayment + giftWrap + deliveryFee;
+
+        // HTML 요소에 값 업데이트
+        document.getElementById('order-product-amount').innerText = `총 1권 ~${orderAmount}원`; // 예시로 1권
+        document.getElementById('total-product-amount').innerText = `${orderAmount}원`;
+        document.getElementById('coupon-discount').innerText = `${couponDiscount}원`;
+        document.getElementById('gift-wrap').innerText = `${giftWrap}원`;
+        document.getElementById('point-payment').innerText = `${pointPayment}원`;
+        document.getElementById('delivery-fee').innerText = `${deliveryFee}원`;
+        document.getElementById('total-payment-amount').innerText = `${orderAmount + giftWrap + deliveryFee - couponDiscount - pointPayment}원`;
+        document.getElementById('remaining-payment').innerText = `${totalAmount}원`;
+    }
+
+    // 페이지 로드 시 결제 내역 업데이트 (예시 데이터 사용)
+    updatePaymentDetails(16020, 0, 0, 0, 0);
 </script>
 </body>
 </html>

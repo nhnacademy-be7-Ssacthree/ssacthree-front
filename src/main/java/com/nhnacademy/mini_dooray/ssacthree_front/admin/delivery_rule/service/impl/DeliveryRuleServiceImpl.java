@@ -1,6 +1,7 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.admin.delivery_rule.service.impl;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.delivery_rule.adapter.DeliveryRuleAdapter;
+import com.nhnacademy.mini_dooray.ssacthree_front.admin.delivery_rule.adapter.DeliveryRuleCustomerAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.delivery_rule.dto.DeliveryRuleCreateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.delivery_rule.dto.DeliveryRuleGetResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.delivery_rule.dto.DeliveryRuleUpdateRequest;
@@ -22,6 +23,7 @@ import java.util.List;
 public class DeliveryRuleServiceImpl implements DeliveryRuleService {
 
     private final DeliveryRuleAdapter deliveryRuleAdapter;
+    private final DeliveryRuleCustomerAdapter deliveryRuleCustomerAdapter;
 
     @Override
     public MessageResponse createDeliveryRule(DeliveryRuleCreateRequest deliveryRuleCreateRequest) {
@@ -64,6 +66,20 @@ public class DeliveryRuleServiceImpl implements DeliveryRuleService {
         }
         catch (HttpClientErrorException | HttpServerErrorException e ) {
             throw new DeliveryRuleUpdateFailedException("배송정책 수정에 실패하였습니다.");
+        }
+    }
+
+    @Override
+    public DeliveryRuleGetResponse getCurrentDeliveryRule() {
+        ResponseEntity<DeliveryRuleGetResponse> response = deliveryRuleCustomerAdapter.getCurrentDeliveryRule();
+
+        try {
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return response.getBody();
+            }
+            throw new DeliveryRuleGetFailedException("배송정책 조회에 실패하였습니다.");
+        } catch (HttpClientErrorException | HttpServerErrorException e ) {
+            throw new DeliveryRuleGetFailedException("배송정책 조회에 실패하였습니다.");
         }
     }
 }
