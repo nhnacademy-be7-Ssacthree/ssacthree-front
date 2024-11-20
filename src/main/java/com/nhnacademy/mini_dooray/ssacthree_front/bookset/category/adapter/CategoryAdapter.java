@@ -38,6 +38,13 @@ public interface CategoryAdapter {
     ResponseEntity<Boolean> deleteCategory(@PathVariable Long categoryId);
 
     /**
+     * 전체 카테고리 조회(관리자 전용)
+     * @return 전체 카테고리 트리 정보
+     * */
+    @GetMapping("/admin/categories")
+    ResponseEntity<List<CategoryInfoResponse>> getAllCategoriesForAdmin();
+
+    /**
      * 전체 카테고리 트리 조회
      * @return 전체 카테고리 트리 정보
      */

@@ -37,6 +37,20 @@ public class CouponRuleServiceImpl implements CouponRuleService {
     }
 
     @Override
+    public List<CouponRuleGetResponse> getAllSelectedCouponRules() {
+        ResponseEntity<List<CouponRuleGetResponse>> response = couponRuleAdapter.getAllSelectedCouponRules();
+
+        try {
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return response.getBody();
+            }
+            throw new CouponRuleGetFailedException("쿠폰 정책 조회에 실패하였습니다.");
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            throw new CouponRuleGetFailedException("쿠폰 정책 조회에 실패하였습니다.");
+        }
+    }
+
+    @Override
     public MessageResponse createCouponRule(CouponRuleCreateRequest couponRuleCreateRequest) {
         ResponseEntity<MessageResponse> response = couponRuleAdapter.createCouponRule(couponRuleCreateRequest);
 
