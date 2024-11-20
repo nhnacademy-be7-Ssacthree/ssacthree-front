@@ -15,6 +15,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.member.service.MemberService;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.BookOrderRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderFormRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.utils.OrderUtil;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -46,10 +47,11 @@ public class OrderController {
     public String orderCart(HttpServletRequest request, Model model) {
         // 회원인지 비회원인지 확인
         boolean isMember = false;
-        MemberInfoResponse memberInfoResponse = memberService.getMemberInfo(request);
+        Cookie[] cookies = request.getCookies();
 
         // 회원정보 가져오기 : 회원이면 isMember=true , 주소, 회원정보 모델에 넘김
-        if (memberInfoResponse != null) {
+        if (cookies != null){
+            MemberInfoResponse memberInfoResponse = memberService.getMemberInfo(request);
             isMember = true;
             //TODO : id로 고치고픔..info정보에 필요 저장하려면 필요할듯. - info 정보에 id 넣어달라하기
             Long customerId = memberInfoResponse.getCustomerId();
@@ -102,10 +104,11 @@ public class OrderController {
     public String orderNow(HttpServletRequest request, @RequestParam Long bookId, @RequestParam int quantity, Model model) {
             // 회원인지 비회원인지 확인
             boolean isMember = false;
-            MemberInfoResponse memberInfoResponse = memberService.getMemberInfo(request);
+            Cookie[] cookies = request.getCookies();
 
             // 회원정보 가져오기 : 회원이면 isMember=true , 주소, 회원정보 모델에 넘김
-            if (memberInfoResponse != null) {
+            if(cookies != null) {
+                MemberInfoResponse memberInfoResponse = memberService.getMemberInfo(request);
                 isMember = true;
                 //id로 고치고픔..info정보에 필요 저장하려면 필요할듯.
                 Long customerId = memberInfoResponse.getCustomerId();
