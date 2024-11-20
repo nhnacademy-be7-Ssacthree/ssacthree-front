@@ -34,6 +34,38 @@ public class BookCommonServiceImpl implements BookCommonService {
     }
 
     @Override
+    public Page<BookInfoResponse> getBooksByCategoryId(int page, int size, String[] sort, Long categoryId) {
+        try {
+            ResponseEntity<Page<BookInfoResponse>> responseEntity = adapter.getBooksByCategoryId(page, size, sort, categoryId);
+            if (responseEntity.getStatusCode().is2xxSuccessful()) {
+                return responseEntity.getBody();
+            } else {
+                // 필요한 에러 처리 로직 추가
+                throw new RuntimeException("API 호출 실패: " + responseEntity.getStatusCode());
+            }
+        } catch (Exception e) {
+            // 예외 로깅 및 처리
+            throw new RuntimeException("API 호출 중 예외 발생", e);
+        }
+    }
+
+    @Override
+    public Page<BookInfoResponse> getBooksByTagId(int page, int size, String[] sort, Long tagId) {
+        try {
+            ResponseEntity<Page<BookInfoResponse>> responseEntity = adapter.getBooksByTagId(page, size, sort, tagId);
+            if (responseEntity.getStatusCode().is2xxSuccessful()) {
+                return responseEntity.getBody();
+            } else {
+                // 필요한 에러 처리 로직 추가
+                throw new RuntimeException("API 호출 실패: " + responseEntity.getStatusCode());
+            }
+        } catch (Exception e) {
+            // 예외 로깅 및 처리
+            throw new RuntimeException("API 호출 중 예외 발생", e);
+        }
+    }
+
+    @Override
     public BookInfoResponse getBookById(Long bookId) {
         return adapter.getBookById(bookId).getBody();
     }
