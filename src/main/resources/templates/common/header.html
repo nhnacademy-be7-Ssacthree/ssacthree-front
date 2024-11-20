@@ -150,8 +150,8 @@
                     <!-- 정렬값 전달 -->
                     <input type="hidden" name="sort" th:value="${paging?.sort ?: 'score'}" />
 
-                    <!-- 페이지 크기 기본값 설정 -->
-                    <input type="hidden" name="pageSize" th:value="${paging?.size ?: 20}" />
+                    <!-- 페이지 크기 기본값 설정 paging?.size 가져오기 -->
+                    <input type="hidden" name="pageSize" id="headerPageSize" th:value="${paging?.size}" />
 
                     <!-- 검색 버튼 -->
                     <button type="submit" class="search-submit btn border-0 bg-transparent p-0 pb-1">
@@ -172,6 +172,7 @@
                     }
                     return true;
                 }
+
             </script>
             <div class="align-self-center d-flex justify-content-between" tabindex="-1"
                  id="bdNavbar"
