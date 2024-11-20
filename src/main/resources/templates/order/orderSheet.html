@@ -60,7 +60,7 @@
                                     <td th:text="'쿠폰 적용하려면? 회원이 가진 쿠폰 중, 도서에 쓸 수 있는? 주문?'"></td>
                                     <td>
                                         <!-- book.isPacked가 true일 때만 포장지 선택 버튼 표시 -->
-                                        <div th:if="${book.isPacked()}">
+                                        <div th:if="${not book.isPacked()}">
                                             <button type="button" class="btn btn-outline-primary"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#packagingModal"
@@ -72,7 +72,7 @@
                                         </div>
 
                                         <!-- book.isPacked가 false일 때는 포장지를 지원하지 않는 도서 메시지 표시 -->
-                                        <div th:if="${not book.isPacked()}">
+                                        <div th:if="${book.isPacked()}">
                                             포장지를 지원하지 않는 도서입니다
                                         </div>
                                     </td>

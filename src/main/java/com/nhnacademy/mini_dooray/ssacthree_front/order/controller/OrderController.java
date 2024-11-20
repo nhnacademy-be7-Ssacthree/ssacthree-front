@@ -15,7 +15,6 @@ import com.nhnacademy.mini_dooray.ssacthree_front.member.service.MemberService;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.BookOrderRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderFormRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.utils.OrderUtil;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -47,14 +46,15 @@ public class OrderController {
     public String orderCart(HttpServletRequest request, Model model) {
         // 회원인지 비회원인지 확인
         boolean isMember = false;
-        Cookie[] cookies = request.getCookies();
 
-        // 회원정보 가져오기 : 회원이면 isMember=true , 주소, 회원정보 모델에 넘김
-        if (cookies != null){
+        // 회원정보 가져오기 : 회원이면 isMember=true , 주소, 회원정보 모델에 넘김.
+        // TODO : access token이 있는 경우는 회원
+        String accessToken = cartService.getAccessToken(request);
+
+        // TODO : null로 해도 되는지 물어보기 !
+        if (!accessToken.equals("")){
             MemberInfoResponse memberInfoResponse = memberService.getMemberInfo(request);
             isMember = true;
-            //TODO : id로 고치고픔..info정보에 필요 저장하려면 필요할듯. - info 정보에 id 넣어달라하기
-            Long customerId = memberInfoResponse.getCustomerId();
 
             model.addAttribute("memberAddressList", addressService.getAddresses(request));
             model.addAttribute("memberInfo", memberInfoResponse);
@@ -102,16 +102,12 @@ public class OrderController {
     // 2. 책 상세 -> 바로 주문하기
     @GetMapping("/order-now")
     public String orderNow(HttpServletRequest request, @RequestParam Long bookId, @RequestParam int quantity, Model model) {
-            // 회원인지 비회원인지 확인
             boolean isMember = false;
-            Cookie[] cookies = request.getCookies();
+            String accessToken = cartService.getAccessToken(request);
 
-            // 회원정보 가져오기 : 회원이면 isMember=true , 주소, 회원정보 모델에 넘김
-            if(cookies != null) {
+            if(!accessToken.equals("")) {
                 MemberInfoResponse memberInfoResponse = memberService.getMemberInfo(request);
                 isMember = true;
-                //id로 고치고픔..info정보에 필요 저장하려면 필요할듯.
-                Long customerId = memberInfoResponse.getCustomerId();
 
                 model.addAttribute("memberAddressList", addressService.getAddresses(request));
                 model.addAttribute("memberInfo", memberInfoResponse);
@@ -121,7 +117,6 @@ public class OrderController {
             // 책 정보 가져오기 - 단일 책
             BookInfoResponse book = bookCommonService.getBookById(bookId);
 
-            // 요청 만들기, 필요한 정보 추가. 수량 등
             BookOrderRequest bookOrderRequest = new BookOrderRequest(
                     book.getBookId(),
                     book.getBookName(),
@@ -137,6 +132,7 @@ public class OrderController {
             model.addAttribute("bookLists", bookLists);
 
             // 포장지 가져오기
+            // TODO : 포장지가 다 false로 들어온다 ..!
             List<PackagingGetResponse> packagingList = packagingService.getAllCustomerPackaging();
             model.addAttribute("packagingList", packagingList);
 
