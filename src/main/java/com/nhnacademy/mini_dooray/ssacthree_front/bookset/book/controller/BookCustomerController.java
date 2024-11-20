@@ -5,6 +5,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.service.BookCommo
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryNameResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.service.CategoryCommonService;
+import com.nhnacademy.mini_dooray.ssacthree_front.review.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -27,6 +28,7 @@ public class BookCustomerController {
 
     private final BookCommonService bookCommonService;
     private final CategoryCommonService categoryCommonService;
+    private final ReviewService reviewService;
 
     @GetMapping("/books")
     public String getBooksByAuthorId(
@@ -92,7 +94,7 @@ public class BookCustomerController {
         for (CategoryNameResponse category : categories) {
             categoryPaths.add(categoryCommonService.getCategoryPath(category.getCategoryId()));
         }
-
+        model.addAttribute("reviews",reviewService.getReviewsByBookId(bookId));
         model.addAttribute("categoryPaths", categoryPaths);
         return "bookDetails";
     }
