@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PublisherMgmtServiceImpl implements PublisherMgmtService {
@@ -25,6 +27,20 @@ public class PublisherMgmtServiceImpl implements PublisherMgmtService {
     @Override
     public Page<PublisherGetResponse> getAllPublishers(int page, int size, String[] sort) {
         ResponseEntity<Page<PublisherGetResponse>> response = publisherMgmtAdapter.getAllPublishers(page, size, sort);
+
+        try {
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return response.getBody();
+            }
+            throw new PublisherGetFailedException("출판사 조회에 실패하였습니다.");
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            throw new PublisherGetFailedException("출판사 조회에 실패하였습니다.");
+        }
+    }
+
+    @Override
+    public List<PublisherGetResponse> getAllPublisherList(){
+        ResponseEntity<List<PublisherGetResponse>> response = publisherMgmtAdapter.getAllPublisherList();
 
         try {
             if (response.getStatusCode().is2xxSuccessful()) {

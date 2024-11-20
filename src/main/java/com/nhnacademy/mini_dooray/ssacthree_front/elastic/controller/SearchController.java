@@ -23,14 +23,6 @@ public class SearchController {
 
   private final SearchService searchService;
 
-  /**
-   * 기본 검색 화면 로드 메서드 (초기 진입)
-   */
-  @GetMapping
-  public String showSearchPage() {
-    log.info("초기 검색 페이지 요청");
-    return "books"; // books.html 로드
-  }
 
   /**
    * 검색 요청 처리 메서드
@@ -62,16 +54,15 @@ public class SearchController {
       model.addAttribute("books", List.of()); // 빈 리스트 전달
       return "books"; // 현재 페이지 유지
     }
-
+    log.info("현재 페이지: {}, 페이지 크기: {}", page, pageSize);
     log.info("검색 요청 - 키워드: {}, 페이지: {}, 정렬: {}", keyword, page, sort);
-
 
     // 정렬 값이 null 또는 비어있는 경우 기본값 "score"로 설정
     if (sort == null || sort.isEmpty()) {
       sort = "score"; // 기본 정렬 값 설정
     }
 
-    // 필터 조건 생성
+    // 필터 조건 생성 -> 수정 필요
     Map<String, String> filters = new HashMap<>();
     addFilterIfNotNull(filters, "category", category);
     addFilterIfNotNull(filters, "tag", tag);

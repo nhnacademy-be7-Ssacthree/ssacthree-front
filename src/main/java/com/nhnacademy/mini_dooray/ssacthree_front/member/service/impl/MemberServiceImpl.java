@@ -1,12 +1,12 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.member.service.impl;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.commons.util.ExceptionParser;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.adapter.MemberAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberLoginRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberRegisterRequest;
-import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.CustomerNotFoundException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.LoginFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.LogoutIllegalAccessException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.MemberNotFoundException;
@@ -19,7 +19,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -37,15 +36,17 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MessageResponse memberRegister(MemberRegisterRequest request) {
-        ResponseEntity<MessageResponse> response = memberAdapter.memberRegister(request);
 
         try {
+            ResponseEntity<MessageResponse> response = memberAdapter.memberRegister(request);
             if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             }
             throw new MemberRegisterFailedException("회원가입에 실패하였습니다.");
-        } catch (HttpClientErrorException | HttpServerErrorException | FeignException e) {
-            throw new MemberRegisterFailedException("회원가입에 실패하였습니다.");
+        } catch (FeignException e) {
+            throw new MemberRegisterFailedException(
+                // e.contentUTF8 --> response body
+                ExceptionParser.getErrorMessageFromFeignException(e.contentUTF8()));
         }
 
     }

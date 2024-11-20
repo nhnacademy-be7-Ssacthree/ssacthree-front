@@ -11,7 +11,7 @@ public class WebControllerAdvice {
 
     @ExceptionHandler(Exception.class)
     public String handleException(Exception e, Model model) {
-        model.addAttribute("exception", e);
+        model.addAttribute("exception", e.getMessage());
         return "error";
     }
 
