@@ -19,9 +19,9 @@ public enum BookStatus {
 
     public static BookStatus getBookStatus(final String status) {
         return Arrays.stream(BookStatus.values())
-                .filter(bookStatus -> bookStatus.getStatus().equals(status))
-                .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
+            .filter(bookStatus -> bookStatus.getStatus().equals(status))
+            .findFirst()
+            .orElseThrow(IllegalArgumentException::new);
     }
 
     public String getStatusName() {
