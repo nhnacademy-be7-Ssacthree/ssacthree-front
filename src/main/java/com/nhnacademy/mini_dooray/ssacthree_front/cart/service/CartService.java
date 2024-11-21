@@ -258,6 +258,9 @@ public class CartService {
     public String getAccessToken(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         String accessToken = "";
+        if (cookies == null) {
+            return accessToken;
+        }
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals("access-token")) {
                 accessToken = cookie.getValue();
