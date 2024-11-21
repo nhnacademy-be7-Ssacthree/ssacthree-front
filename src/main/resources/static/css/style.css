@@ -375,6 +375,11 @@ textarea.form-control::placeholder {
     width: 180px;
 }
 
+/* custom.css 또는 별도 CSS 파일에 추가 */
+.select-hidden {
+    display: none !important;
+}
+
 .form-select:focus {
     box-shadow: none;
 }
