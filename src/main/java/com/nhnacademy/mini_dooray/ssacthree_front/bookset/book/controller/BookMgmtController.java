@@ -152,6 +152,8 @@ public class BookMgmtController {
         if(bindingResult.hasErrors()){
             throw new BookFailedException(BOOK_CREATE_ERROR_MESSAGE);
         }
+
+        log.info("책 정보 확인용 :{}", bookSaveRequest.getBookInfo());
         bookMgmtService.createBook(bookSaveRequest);
         return REDIRECT_ADDRESS;
     }

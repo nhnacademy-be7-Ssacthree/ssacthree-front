@@ -26,7 +26,7 @@ public interface BookMgmtAdapter {
     @PutMapping("/books")
     ResponseEntity<MessageResponse> updateBook(@RequestBody BookSaveRequest bookSaveRequest);
 
-    @PutMapping("/books/{book-id}")
+    @DeleteMapping("/books/{book-id}")
     ResponseEntity<MessageResponse> deleteBook(@PathVariable(name = "book-id") Long bookId);
 
     @GetMapping("/books/{book-id}")

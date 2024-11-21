@@ -301,7 +301,7 @@
     const form = document.querySelector("form");
     form.addEventListener("submit", function () {
       const bookInfoField = document.querySelector("#bookInfo");
-      bookInfoField.value = editor.getMarkdown(); // 마크다운 값 설정
+      bookInfoField.value = editor.getHTML(); // 마크다운 값 설정
     });
   });
 
