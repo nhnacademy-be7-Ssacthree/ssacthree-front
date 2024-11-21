@@ -1,13 +1,16 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.elastic.controller;
 
-import com.nhnacademy.mini_dooray.ssacthree_front.elastic.domain.BookDocument;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryInfoResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.service.CategoryCommonService;
 import com.nhnacademy.mini_dooray.ssacthree_front.elastic.dto.Paging;
+import com.nhnacademy.mini_dooray.ssacthree_front.elastic.dto.SearchResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.elastic.service.SearchService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class SearchController {
 
   private final SearchService searchService;
-
+  private final CategoryCommonService categoryCommonService;
 
   /**
    * 검색 요청 처리 메서드
@@ -30,76 +33,99 @@ public class SearchController {
    * @param keyword  검색 키워드
    * @param page     현재 페이지
    * @param sort     정렬 기준
-   * @param pageSize 페이지 크기
-   * @param category 카테고리 필터
-   * @param tag      태그 필터
+   * @param pageSize 요청 데이터 수
+   * @param category 카테고리 필터 -> 기본 검색 시에는 기본값 null로 검색되게 하고 카테고리 필터를 설정했을 때 값이 들어와 검색이 될 수 있게
+   * @param tag      태그 필터 -> 위와 동일 단, 둘 중 하나만 사용되게
    * @param model    Thymeleaf 모델
    * @return 검색 결과 화면
    */
   @GetMapping("/books")
   public String searchBooks(
-      @RequestParam(required = false, defaultValue = "") String keyword,
-      @RequestParam(defaultValue = "1") int page,
-      @RequestParam(defaultValue = "score") String sort,
-      @RequestParam(defaultValue = "20") int pageSize,
-      @RequestParam(required = false) String category,
-      @RequestParam(required = false) String tag,
-      Model model) {
-    log.info("{}, 정렬정렬", sort);
-    // 키워드 유지 (정렬, 페이지 표시 개수 변경 시 사용)
-    model.addAttribute("keyword", keyword);
+                            @RequestParam(required = false, defaultValue = "") String keyword,
+                            @RequestParam(defaultValue = "1") int page,
+                            @RequestParam(defaultValue = "score") String sort,
+                            @RequestParam(defaultValue = "20") int pageSize, //요청 데이터 수
+                            @RequestParam(required = false) String category,
+                            @RequestParam(required = false) String tag,
+                            Model model) {
 
+    /*
+      프론트에서 page 를 1부터 시작하게 바꾼다면
+      page 검사도 0 부터 예외 발생 시키기 (백엔드에서 -1 되어야 하기 때문)
+      기본값 1로 변경하기
+      1로 받은 걸 0으로 변환 시키기 (백엔드에서 변환? 프론트에서 변환후 전달?)
+
+     */
+
+    // 백엔드에서 사용할 수 있게 -1
+    int requestPageNum = page - 1;
+
+    // 페이지 번호를 0 기반으로 변환 (0보다 작으면 쿼리 생성 시 오류)
+    if(requestPageNum < 0 || pageSize < 0){
+      throw new IllegalArgumentException("올바르지 않은 page or pageSize"); // 예외문 만들기?
+    }
+
+    log.info("검색 요청 - 키워드: {}, 페이지: {}, 정렬: {}, 페이지 크기: {}, 카테고리: {}, 태그: {}",
+        keyword, page, sort, pageSize, category, tag);
+
+    // 키워드 유효성 검증
     if (keyword == null || keyword.trim().isEmpty()) {
       model.addAttribute("message", "검색어를 입력해 주세요.");
       model.addAttribute("books", List.of()); // 빈 리스트 전달
-      return "books"; // 현재 페이지 유지
+      return "searchBooks"; // 검색 페이지 유지
     }
-    log.info("현재 페이지: {}, 페이지 크기: {}", page, pageSize);
-    log.info("검색 요청 - 키워드: {}, 페이지: {}, 정렬: {}", keyword, page, sort);
+
+    // 카테고리 정보를 조회
+    ResponseEntity<List<CategoryInfoResponse>> response = categoryCommonService.getAllCategories();
+    List<CategoryInfoResponse> categories = response.getBody();
+
+    // 키워드 유지 (정렬, 페이지 표시 개수 변경 시 사용)
+    model.addAttribute("keyword", keyword);
+    model.addAttribute("categories", categories);
+    model.addAttribute("category", category);
 
     // 정렬 값이 null 또는 비어있는 경우 기본값 "score"로 설정
     if (sort == null || sort.isEmpty()) {
       sort = "score"; // 기본 정렬 값 설정
     }
 
-    // 필터 조건 생성 -> 수정 필요
+    // 필터 처리: 카테고리와 태그 중 하나만 추가
     Map<String, String> filters = new HashMap<>();
-    addFilterIfNotNull(filters, "category", category);
-    addFilterIfNotNull(filters, "tag", tag);
+    if (category != null && !category.isEmpty()) {
+      filters.put("category", category);
+    }
+    if (tag != null && !tag.isEmpty()) {
+      filters.put("tag", tag);
+    }
+
 
     // 검색 서비스 호출
-    List<BookDocument> books = searchService.searchBooks(keyword, page, sort, pageSize, filters);
-    log.info("검색 결과: {}건", books.size());
+    SearchResponse searchResponse = searchService.searchBooks(keyword, requestPageNum, sort, pageSize, filters);
+    log.info("검색완료, 1회 검색 결과: {}건", searchResponse.getBooks().size());
 
-    // 검색 결과가 없는 경우
-    if (books.isEmpty()) {
+    // 검색 결과가 없는 경우 처리
+    if (searchResponse.getBooks().isEmpty()) {
       model.addAttribute("message", "\"" + keyword + "\"에 대한 검색 결과가 없습니다.");
       model.addAttribute("books", List.of());
-      return "books";
+      return "searchBooks";
     }
 
 
     // 검색 결과와 페이징 정보 구성
-    model.addAttribute("books", books);
-
+    model.addAttribute("books", searchResponse.getBooks());
     // Paging 객체 생성
     Paging paging = new Paging(
-        page - 1, // Thymeleaf에서 0부터 시작하도록 조정
+        page, // Thymeleaf에서 0부터 시작하도록 조정
         pageSize,
-        calculateTotalPages(books.size(), pageSize),
+        calculateTotalPages(searchResponse.getTotalHits(), pageSize),
         sort
     );
     model.addAttribute("paging", paging);
-
     // 페이징 및 추가 URL 파라미터 구성
     model.addAttribute("baseUrl", "/search/books");
-    Map<String, String> extraParams = new HashMap<>();
-    extraParams.put("keyword", keyword);
-    if (category != null) extraParams.put("category", category);
-    if (tag != null) extraParams.put("tag", tag);
-    model.addAttribute("extraParams", extraParams);
+    model.addAttribute("extraParams", filters);
 
-    return "books"; // 검색 결과 페이지 반환
+    return "searchBooks"; // 검색 결과 페이지 반환
   }
 
   /**
@@ -114,16 +140,4 @@ public class SearchController {
   }
 
 
-/**
- * 필터 조건을 Map에 추가하는 유틸 메서드
- *
- * @param filters 필터를 저장할 Map 객체
- * @param key     필터의 키 (예: "category", "tag")
- * @param value   필터의 값 (예: "소설", "베스트셀러")
- */
-  private void addFilterIfNotNull(Map<String, String> filters, String key, String value) {
-    if (value != null && !value.isEmpty()) {
-      filters.put(key, value);
-    }
-  }
 }

@@ -1,7 +1,6 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.elastic.adapter;
 
-import com.nhnacademy.mini_dooray.ssacthree_front.elastic.domain.BookDocument;
-import java.util.List;
+import com.nhnacademy.mini_dooray.ssacthree_front.elastic.dto.SearchResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface SearchAdapter {
 
   @GetMapping("/search/books")  // 백엔드의 search/books API 호출
-  List<BookDocument> searchBooks(@RequestParam String keyword,
+  SearchResponse searchBooks(@RequestParam String keyword,
                                  @RequestParam int page,
                                  @RequestParam(required = false) String sort,
                                  @RequestParam(required = false) int pageSize,
