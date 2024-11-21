@@ -153,6 +153,9 @@
                     <!-- 페이지 크기 기본값 설정 paging?.size 가져오기 -->
                     <input type="hidden" name="pageSize" id="headerPageSize" th:value="${paging?.size}" />
 
+                    <!-- 선택된 카테고리 값 전달 -->
+                    <input type="hidden" name="category" id="selectedCategory" th:value="${category}" />
+
                     <!-- 검색 버튼 -->
                     <button type="submit" class="search-submit btn border-0 bg-transparent p-0 pb-1">
                         <svg class="search-icon mx-3"
@@ -173,7 +176,18 @@
                     return true;
                 }
 
+                // 설정 된 카테고리 필터 가져옴
+                const categoryDropdown = document.getElementById('category'); // Dropdown element
+                const selectedCategoryField = document.getElementById('selectedCategory'); // Hidden input field
+
+                if (categoryDropdown) {
+                    categoryDropdown.addEventListener('change', function () {
+                        selectedCategoryField.value = this.value; // Update hidden input with selected category
+                    });
+                }
+
             </script>
+
             <div class="align-self-center d-flex justify-content-between" tabindex="-1"
                  id="bdNavbar"
                  aria-labelledby="bdNavbarOffcanvasLabel" style="margin-top:1.5em">
