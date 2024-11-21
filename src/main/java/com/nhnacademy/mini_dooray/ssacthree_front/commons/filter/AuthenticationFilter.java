@@ -27,6 +27,14 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
+
+        String uri = request.getRequestURI();
+
+        if (uri.startsWith("/images") || uri.startsWith("/css") || uri.startsWith("/js")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String role = null;
         if (CookieUtil.checkAccessTokenCookie(request)) {
             try {

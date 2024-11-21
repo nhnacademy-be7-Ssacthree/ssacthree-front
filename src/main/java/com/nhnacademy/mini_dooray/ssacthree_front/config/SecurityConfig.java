@@ -2,6 +2,8 @@ package com.nhnacademy.mini_dooray.ssacthree_front.config;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.adapter.AuthAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.filter.AuthenticationFilter;
+import com.nhnacademy.mini_dooray.ssacthree_front.commons.security.CustomAccessDeninedHandler;
+import com.nhnacademy.mini_dooray.ssacthree_front.commons.security.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,12 +27,16 @@ public class SecurityConfig {
             authorizeRequests.requestMatchers("/members/**").hasRole("MEMBER")
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().permitAll()
-
         );
 
         http.addFilterBefore(new AuthenticationFilter(authAdapter),
             UsernamePasswordAuthenticationFilter.class);
-            
+        http.exceptionHandling(exception -> exception.authenticationEntryPoint(
+            new CustomAuthenticationEntryPoint()));
+
+        http.exceptionHandling(
+            exception -> exception.accessDeniedHandler(new CustomAccessDeninedHandler()));
+
         http.formLogin(AbstractHttpConfigurer::disable);
         http.logout(AbstractHttpConfigurer::disable);
         http.csrf(AbstractHttpConfigurer::disable);
