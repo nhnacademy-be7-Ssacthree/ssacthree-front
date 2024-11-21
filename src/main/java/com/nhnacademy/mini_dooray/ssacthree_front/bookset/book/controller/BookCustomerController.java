@@ -95,18 +95,26 @@ public class BookCustomerController {
 
 
     @GetMapping
-    public String showAwardBook(
+    public String showHomeBook(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             Model model) {
         String[] sort = {"bookName"};
         Long authorId = 336L;
 
-        Page<BookInfoResponse> books = bookCommonService.getBooksByAuthorId(page, size, sort, authorId);
+        BookInfoResponse banner1 = bookCommonService.getBookById(483L); // <소년이 온다> 아이디
 
-        model.addAttribute("books", books);
+        // 조회수 많은 하나
+        String[] viewSort = {"bookViewCount"};
+        Page<BookInfoResponse> banner2 = bookCommonService.getAllAvailableBooks(page, 1, viewSort);
+
+        Page<BookInfoResponse> awardBooks = bookCommonService.getBooksByAuthorId(page, size, sort, authorId);
+
+        model.addAttribute("banner1", banner1);
+        model.addAttribute("banner2", banner2);
+        model.addAttribute("books", awardBooks);
         model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", books.getTotalPages());
+        model.addAttribute("totalPages", awardBooks.getTotalPages());
 
         return "index";
     }
@@ -120,7 +128,7 @@ public class BookCustomerController {
         for (CategoryNameResponse category : categories) {
             categoryPaths.add(categoryCommonService.getCategoryPath(category.getCategoryId()));
         }
-        model.addAttribute("reviews",reviewService.getReviewsByBookId(bookId));
+        model.addAttribute("reviews", reviewService.getReviewsByBookId(bookId));
         model.addAttribute("categoryPaths", categoryPaths);
         return "bookDetails";
     }
