@@ -42,7 +42,7 @@ public class SearchController {
   @GetMapping("/books")
   public String searchBooks(
                             @RequestParam(required = false, defaultValue = "") String keyword,
-                            @RequestParam(defaultValue = "0") int page,
+                            @RequestParam(defaultValue = "1") int page,
                             @RequestParam(defaultValue = "score") String sort,
                             @RequestParam(defaultValue = "20") int pageSize, //요청 데이터 수
                             @RequestParam(required = false) String category,
@@ -57,8 +57,11 @@ public class SearchController {
 
      */
 
+    // 백엔드에서 사용할 수 있게 -1
+    int requestPageNum = page - 1;
+
     // 페이지 번호를 0 기반으로 변환 (0보다 작으면 쿼리 생성 시 오류)
-    if(page < 0 || pageSize < 0){
+    if(requestPageNum < 0 || pageSize < 0){
       throw new IllegalArgumentException("올바르지 않은 page or pageSize"); // 예외문 만들기?
     }
 
@@ -97,7 +100,7 @@ public class SearchController {
 
 
     // 검색 서비스 호출
-    SearchResponse searchResponse = searchService.searchBooks(keyword, page, sort, pageSize, filters);
+    SearchResponse searchResponse = searchService.searchBooks(keyword, requestPageNum, sort, pageSize, filters);
     log.info("검색완료, 1회 검색 결과: {}건", searchResponse.getBooks().size());
 
     // 검색 결과가 없는 경우 처리
