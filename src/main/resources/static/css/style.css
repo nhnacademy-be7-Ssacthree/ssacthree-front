@@ -377,7 +377,7 @@ textarea.form-control::placeholder {
 
 /* custom.css 또는 별도 CSS 파일에 추가 */
 .select-hidden {
-  display: none !important;
+    display: none !important;
 }
 
 .form-select:focus {
@@ -1533,7 +1533,6 @@ select#input-sort {
 
 
 /* Styling for Member Order section */
-
 .member-order-title {
     font-size: 1.5rem;
     color: #28a745; /* Green color for member order */
@@ -1725,4 +1724,60 @@ select#input-sort {
     }
 
 
+}
+
+
+/* searchBooks.html 카테고리 style */
+.dropdown-container {
+    position: relative;
+    top: 0;
+    right: 0;
+    margin-right: 20px;
+    margin-top: 10px;
+    z-index: 10;
+}
+
+.dropdown-container label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+}
+
+
+
+/* 드롭다운 컨테이너 */
+.dropdown-container .form-select {
+    display: inline-block;
+    width: auto; /* width 조정을 위해 auto 사용 */
+    padding-right: 1.75rem; /* 드롭다운 화살표를 위한 여유 공간 추가 */
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    background-clip: padding-box;
+}
+
+.sort-container .form-select:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* 포커스 스타일 */
+}
+
+
+/* 정렬 및 페이지 크기 옵션 스타일 */
+.sort-container label,
+.sort-container select {
+    margin-right: 10px;
+    font-size: 1rem;
+}
+
+.sort-container .form-select {
+    width: auto;
+    display: inline-block;
+    font-size: 1rem;
+    padding-right: 2rem; /* 화살표가 충분히 오른쪽으로 떨어지도록 여백 추가 */
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    appearance: none; /* 기본 브라우저 스타일 제거 */
+    background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"%3E%3Cpath fill="%23333" d="M2 0L0 2h4zM2 5L0 3h4z"/%3E%3C/svg%3E') no-repeat right 0.75rem center / 8px 10px;
 }
