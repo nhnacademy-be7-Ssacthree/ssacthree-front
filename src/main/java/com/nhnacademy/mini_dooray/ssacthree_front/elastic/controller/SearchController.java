@@ -49,6 +49,14 @@ public class SearchController {
                             @RequestParam(required = false) String tag,
                             Model model) {
 
+    /*
+      프론트에서 page 를 1부터 시작하게 바꾼다면
+      page 검사도 0 부터 예외 발생 시키기 (백엔드에서 -1 되어야 하기 때문)
+      기본값 1로 변경하기
+      1로 받은 걸 0으로 변환 시키기 (백엔드에서 변환? 프론트에서 변환후 전달?)
+
+     */
+
     // 페이지 번호를 0 기반으로 변환 (0보다 작으면 쿼리 생성 시 오류)
     if(page < 0 || pageSize < 0){
       throw new IllegalArgumentException("올바르지 않은 page or pageSize"); // 예외문 만들기?
@@ -61,7 +69,7 @@ public class SearchController {
     if (keyword == null || keyword.trim().isEmpty()) {
       model.addAttribute("message", "검색어를 입력해 주세요.");
       model.addAttribute("books", List.of()); // 빈 리스트 전달
-      return "books"; // 검색 페이지 유지
+      return "searchBooks"; // 검색 페이지 유지
     }
 
     // 카테고리 정보를 조회
@@ -96,7 +104,7 @@ public class SearchController {
     if (searchResponse.getBooks().isEmpty()) {
       model.addAttribute("message", "\"" + keyword + "\"에 대한 검색 결과가 없습니다.");
       model.addAttribute("books", List.of());
-      return "books";
+      return "searchBooks";
     }
 
 
@@ -114,7 +122,7 @@ public class SearchController {
     model.addAttribute("baseUrl", "/search/books");
     model.addAttribute("extraParams", filters);
 
-    return "books"; // 검색 결과 페이지 반환
+    return "searchBooks"; // 검색 결과 페이지 반환
   }
 
   /**
