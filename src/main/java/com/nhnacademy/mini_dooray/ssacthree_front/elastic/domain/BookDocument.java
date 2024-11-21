@@ -13,7 +13,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 @Document(indexName = "ssacthree_books")  // Elasticsearch 인덱스 설정
 public class BookDocument {
   @Id
-  private Long bookId;
+  private long bookId;
   private String bookName;
   private String bookIndex;
   private String bookInfo;
