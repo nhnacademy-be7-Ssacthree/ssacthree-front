@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.*;
 public interface BookMgmtAdapter {
 
     @GetMapping("/books")
-    ResponseEntity<Page<BookSearchResponse>> getAllBooks();
+    ResponseEntity<Page<BookSearchResponse>> getAllBooks(
+        @RequestParam("page") int page,
+        @RequestParam("size") int size,
+        @RequestParam("sort") String[] sort);
 
     @PostMapping("/books")
     ResponseEntity<MessageResponse> createBook(@RequestBody BookSaveRequest bookSaveRequest);
