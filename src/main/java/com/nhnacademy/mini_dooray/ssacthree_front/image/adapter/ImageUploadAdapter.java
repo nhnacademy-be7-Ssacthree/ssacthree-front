@@ -67,4 +67,47 @@ public class ImageUploadAdapter {
             return "File upload failed due to an error: " + e.getMessage();
         }
     }
+
+    public String uploadImage(MultipartFile imageFile, String path) {
+        try {
+            // Prepare the HTTP request headers
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", secretKey);
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+
+            // 이미지 파일의 바이너리 데이터를 ByteArrayResource로 변환
+            ByteArrayResource imageResource = new ByteArrayResource(imageFile.getBytes()) {
+                @Override
+                public String getFilename() {
+                    return imageFile.getOriginalFilename();
+                }
+            };
+
+            // URL에 경로와 옵션을 추가
+            path = path + imageResource.getFilename();
+            String encodedPath = URLEncoder.encode(path, StandardCharsets.UTF_8.toString());
+            String uploadUrl = API_URL + "?path=" + encodedPath + "&overwrite=true";
+
+            // HttpEntity 생성
+            HttpEntity<ByteArrayResource> entity = new HttpEntity<>(imageResource, headers);
+
+            // RestTemplate을 사용하여 업로드 요청 전송
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> response = restTemplate.exchange(
+                URI.create(uploadUrl), HttpMethod.PUT, entity, String.class);
+
+            // JSON 파싱하여 file.url 추출
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode rootNode = objectMapper.readTree(response.getBody());
+            JsonNode fileUrlNode = rootNode.path("file").path("url");
+
+            return fileUrlNode.asText(); // file.url 값만 반환
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "File upload failed due to IOException.";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "File upload failed due to an error: " + e.getMessage();
+        }
+    }
 }

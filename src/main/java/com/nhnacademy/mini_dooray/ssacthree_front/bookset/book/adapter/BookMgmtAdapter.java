@@ -11,20 +11,23 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(name="gateway-service", url = "${admin-client.url}", contextId = "bookMgmtClient")
+@FeignClient(name = "gateway-service", url = "${admin-client.url}", contextId = "bookMgmtClient")
 public interface BookMgmtAdapter {
 
     @GetMapping("/books")
-    ResponseEntity<Page<BookSearchResponse>> getAllBooks();
+    ResponseEntity<Page<BookSearchResponse>> getAllBooks(
+        @RequestParam("page") int page,
+        @RequestParam("size") int size,
+        @RequestParam("sort") String[] sort);
 
     @PostMapping("/books")
     ResponseEntity<MessageResponse> createBook(@RequestBody BookSaveRequest bookSaveRequest);
 
-    @PutMapping("/books/update")
+    @PutMapping("/books")
     ResponseEntity<MessageResponse> updateBook(@RequestBody BookSaveRequest bookSaveRequest);
 
-    @DeleteMapping("/books/delete/{book-id}")
-    ResponseEntity<MessageResponse> deleteBook(@PathVariable(name = "book-id")Long bookId);
+    @DeleteMapping("/books/{book-id}")
+    ResponseEntity<MessageResponse> deleteBook(@PathVariable(name = "book-id") Long bookId);
 
     @GetMapping("/books/{book-id}")
     ResponseEntity<BookInfoResponse> getBookByBookId(@PathVariable(name = "book-id") Long bookId);
