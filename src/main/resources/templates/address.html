@@ -53,7 +53,8 @@
                       </button>
                     </li>
                     <li>
-                      <form th:action="@{/address/{id}(id=${address.addressId})}" method="post"
+                      <form th:action="@{/members/my-page/address/{id}(id=${address.addressId})}"
+                            method="post"
                             style="display:inline;">
                         <button type="submit" class="dropdown-item"
                                 onclick="return confirm('정말로 삭제하시겠습니까?')">
@@ -97,7 +98,7 @@
       return false;
     } else {
       // 주소 추가 페이지로 이동
-      window.location.href = '/address';
+      window.location.href = '/members/my-page/address';
       return true;
     }
   }

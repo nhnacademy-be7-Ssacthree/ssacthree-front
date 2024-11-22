@@ -1,12 +1,10 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.elastic.service;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.elastic.adapter.SearchAdapter;
-import com.nhnacademy.mini_dooray.ssacthree_front.elastic.domain.BookDocument;
 import com.nhnacademy.mini_dooray.ssacthree_front.elastic.dto.SearchResponse;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service

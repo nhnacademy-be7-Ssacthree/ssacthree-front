@@ -30,7 +30,7 @@ public class ReviewController {
         @RequestParam("orderId") Long orderId,
         ReviewRequest reviewRequest, HttpServletRequest request) {
 
-        reviewService.postReviewBook(bookId,orderId,reviewRequest,request);
+        reviewService.postReviewBook(bookId, orderId, reviewRequest, request);
 
         return "redirect:/reviews";
     }
@@ -38,33 +38,34 @@ public class ReviewController {
     @GetMapping("/shop/members/reviews/{book-id}")
     public String authToWriteReview(@PathVariable("book-id") Long bookId, HttpServletRequest request, Model model) {
 
-        Long orderId = reviewService.authToWriteReview(bookId,request);
+        Long orderId = reviewService.authToWriteReview(bookId, request);
 
-        model.addAttribute("bookId",bookId);
-        model.addAttribute("orderId",orderId);
+        model.addAttribute("bookId", bookId);
+        model.addAttribute("orderId", orderId);
 
         return "review-write";
     }
 
-    @GetMapping("/reviews") //리뷰 리스트 조회
+    @GetMapping("/members/my-page/reviews") //리뷰 리스트 조회
     public String getReviews(HttpServletRequest request, Model model) {
 
         List<MemberReviewResponse> reviews = reviewService.getReviewsByMemberId(request);
 
-        model.addAttribute("reviews",reviews);
+        model.addAttribute("reviews", reviews);
 
         return "reviews";
     }
 
     @GetMapping("/shop/members/reviews/update/{order-id}/{book-id}")
-    public String getReview(HttpServletRequest request,@PathVariable("order-id") Long orderId, @PathVariable("book-id") Long bookId, Model model) {
+    public String getReview(HttpServletRequest request, @PathVariable("order-id") Long orderId,
+        @PathVariable("book-id") Long bookId, Model model) {
 
-        model.addAttribute("bookId",bookId);
-        model.addAttribute("orderId",orderId);
+        model.addAttribute("bookId", bookId);
+        model.addAttribute("orderId", orderId);
 
-        ReviewResponse reviewResponse = reviewService.getReview(request,orderId,bookId);
+        ReviewResponse reviewResponse = reviewService.getReview(request, orderId, bookId);
 
-        model.addAttribute("review",reviewResponse);
+        model.addAttribute("review", reviewResponse);
 
         return "review-rewrite";
     }

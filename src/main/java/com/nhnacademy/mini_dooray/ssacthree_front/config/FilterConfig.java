@@ -12,13 +12,13 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class FilterConfig {
 
-    private final AuthAdapter reissueFilter;
+    private final AuthAdapter authAdapter;
 
     @Bean
     public FilterRegistrationBean<ReissueFilter> filterRegistrationBean() {
         FilterRegistrationBean<ReissueFilter> registrationBean = new FilterRegistrationBean<>();
 
-        registrationBean.setFilter(new ReissueFilter(reissueFilter));
+        registrationBean.setFilter(new ReissueFilter(authAdapter));
         registrationBean.setOrder(2);
         registrationBean.addUrlPatterns("/*");
         return registrationBean;
@@ -27,9 +27,10 @@ public class FilterConfig {
     @Bean
     public FilterRegistrationBean<ValidationTokenFilter> validationTokenFilterRegistrationBean() {
         FilterRegistrationBean<ValidationTokenFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new ValidationTokenFilter(reissueFilter));
+        registrationBean.setFilter(new ValidationTokenFilter(authAdapter));
         registrationBean.setOrder(1);
         registrationBean.addUrlPatterns("/*");
         return registrationBean;
     }
+
 }
