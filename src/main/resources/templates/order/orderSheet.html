@@ -17,122 +17,123 @@
                     <h3>주문서 작성</h3>
                 </div>
                 <form method="post" action="/payment" class="container mb-4">
-                        <!-- 1. 주문 상품 정보 -->
-                        <section id="order-items" class="mb-4">
-                            <div>
-                                <h5 th:if="${isMember}" class="member-order-title">회원 주문</h5>
-                            </div>
-                            <div>
-                                <h5 th:if="${not isMember}" class="non-member-order-title">비회원 주문</h5>
-                            </div>
-                            <h4 class="text-primary">주문 상품 정보</h4>
-                            <table class="table table-bordered mt-3">
-                                <thead class="table-light">
-                                <tr>
-                                    <th>도서 이미지</th>
-                                    <th>도서명</th>
-                                    <th>도서 가격</th>
-                                    <th>주문 수량</th>
-                                    <th>쿠폰 적용</th>
-                                    <th>포장지 선택</th>
-                                    <th>도서별 총 금액</th>
-                                </tr>
-                                </thead>
-                                <tbody id="items-table-body">
-                                <!-- 상품 행이 JavaScript로 추가됩니다 -->
-                                <!-- 여기서,  ${cartInfo.getBookInfos()} 이런식으로 해서, book정보 받아올 수 있게 구현 -->
-                                <tr th:each="book : ${bookLists}">
-                                    <td>
-                                        <img th:src="${book.bookThumbnailImageUrl}" class="img-fluid" alt="Book Image">
-                                    </td>
-                                    <td th:text="${book.bookName}"></td>
-                                    <td>
-                                        <!-- 가격 텍스트를 포함한 div 요소로 감싸기 -->
-                                        <div class="price-wrapper">
-                                            <span class="fs-4 text-danger fw-bold" th:text="${book.salePrice} + '원'"></span>
-                                            <br><del class="fs-6 text-danger">
-                                                <span class="fs-6 text-danger" th:text="${book.regularPrice} + '원'"></span></del>
-                                            <span class="fs-6 text-danger" th:text="${book.bookDiscount} + '% 할인'"></span>
+                    <!-- 1. 주문 상품 정보 -->
+                    <section id="order-items" class="mb-4">
+                        <div>
+                            <h5 th:if="${isMember}" class="member-order-title">회원 주문</h5>
+                        </div>
+                        <div>
+                            <h5 th:if="${not isMember}" class="non-member-order-title">비회원 주문</h5>
+                        </div>
+                        <h4 class="text-primary">주문 상품 정보</h4>
+                        <table class="table table-bordered mt-3">
+                            <thead class="table-light">
+                            <tr>
+                                <th>도서 이미지</th>
+                                <th>도서명</th>
+                                <th>도서 가격</th>
+                                <th>주문 수량</th>
+                                <th>쿠폰 적용</th>
+                                <th>포장지 선택</th>
+                                <th>도서별 총 금액</th>
+                            </tr>
+                            </thead>
+                            <tbody id="items-table-body">
+                            <tr th:each="book : ${bookLists}">
+                                <td>
+                                    <img th:src="${book.bookThumbnailImageUrl}" class="img-fluid" alt="Book Image">
+                                </td>
+                                <td th:text="${book.bookName}"></td>
+                                <td>
+                                    <!-- 가격 텍스트를 포함한 div 요소로 감싸기 -->
+                                    <div class="price-wrapper">
+                                        <span class="fs-4 text-danger fw-bold" th:text="${book.salePrice} + '원'"></span>
+                                        <br><del class="fs-6 text-danger">
+                                        <span class="fs-6 text-danger" th:text="${book.regularPrice} + '원'"></span></del>
+                                        <span class="fs-6 text-danger" th:text="${book.bookDiscount} + '% 할인'"></span>
 
-                                        </div>
-                                    </td>
-                                    <td th:text="${book.quantity}"></td>
-                                    <td th:text="'쿠폰 적용하려면? 회원이 가진 쿠폰 중, 도서에 쓸 수 있는? 주문?'"></td>
-                                    <td>
-                                        <!-- book.isPacked가 true일 때만 포장지 선택 버튼 표시 -->
-                                        <div th:if="${not book.isPacked()}">
-                                            <button type="button" class="btn btn-outline-primary"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#packagingModal"
-                                                    onclick="setCurrentRow(this)">
+                                    </div>
+                                </td>
+                                <td th:text="${book.quantity}"></td>
+                                <td th:text="'쿠폰 적용하려면? 회원이 가진 쿠폰 중, 도서에 쓸 수 있는? 주문?'"></td>
+                                <td>
+                                    <!-- book.isPacked가 true일 때만 포장지 선택 버튼 표시 -->
+                                    <!-- 여기까지는 ok -->
+                                    <div th:if="${not book.isPacked()}">
+                                        <button type="button" class="btn btn-outline-primary"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#packagingModal"
+                                                onclick="setCurrentRow(this)">
+                                            포장지 선택
+                                        </button>
+                                        <br>
+                                        <span class="selected-packaging" th:text="'(선택된 포장지 없음)'"></span>
+                                    </div>
+
+                                    <!-- book.isPacked가 false일 때는 포장지를 지원하지 않는 도서 메시지 표시 -->
+                                    <div th:if="${book.isPacked()}">
+                                        포장지를 지원하지 않는 도서입니다
+                                    </div>
+                                </td>
+                                <td th:text="${book.salePrice * book.quantity + '원'}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <!-- 포장지 선택 모달 -->
+                    <div class="modal fade" id="packagingModal" tabindex="-1" aria-labelledby="packagingModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="packagingModalLabel">포장지 선택</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="list-group">
+                                        <div th:each="packaging : ${packagingList}" class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-center">
+                                                <img th:src="${packaging.packagingImageUrl}" alt="포장지 이미지" class="img-thumbnail me-3" style="width: 80px; height: 80px;">
+                                                <div>
+                                                    <h6 th:text="${packaging.packagingName}"></h6>
+                                                    <p class="mb-0 text-muted" th:text="'가격: ' + ${packaging.packagingPrice} + '원'"></p>
+                                                </div>
+                                            </div>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-primary"
+                                                    th:attr="onclick=|selectPackaging('${packaging.id}', '${packaging.packagingName}') |">
                                                 포장지 선택
                                             </button>
-                                            <br>
-                                            <span class="selected-packaging" th:text="'(선택된 포장지 없음)'"></span>
-                                        </div>
-
-                                        <!-- book.isPacked가 false일 때는 포장지를 지원하지 않는 도서 메시지 표시 -->
-                                        <div th:if="${book.isPacked()}">
-                                            포장지를 지원하지 않는 도서입니다
-                                        </div>
-                                    </td>
-                                    <td th:text="${book.salePrice * book.quantity + '원'}"></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </section>
-                        <!-- 포장지 선택 모달 -->
-                        <div class="modal fade" id="packagingModal" tabindex="-1">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="packagingModalLabel">포장지 선택</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="list-group">
-                                            <div th:each="packaging : ${packagingList}" class="list-group-item d-flex justify-content-between align-items-center">
-                                                <div class="d-flex align-items-center">
-                                                    <img th:src="${packaging.packagingImageUrl}" alt="포장지 이미지" class="img-thumbnail me-3" style="width: 80px; height: 80px;">
-                                                    <div>
-                                                        <h6 th:text="${packaging.packagingName}"></h6>
-                                                        <p class="mb-0 text-muted" th:text="'가격: ' + ${packaging.packagingPrice} + '원'"></p>
-                                                    </div>
-                                                </div>
-                                                <button type="button" class="btn btn-sm btn-primary"
-                                                        onclick="selectPackaging('[[${packaging.id}]]', '[[${packaging.packagingName}]]')">
-                                                    선택
-                                                </button>
-                                            </div>
                                         </div>
                                     </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- 2. 구매자 정보 입력 -->
-                        <!-- 비회원인 경우, 모든 칸이 비어있고, 회원인 경우 구매자 정보 입력칸을 해당 회원의 정보로 채워야함.-->
-                        <section id="buyer-info" class="mb-4">
-                            <h4 class="text-primary">구매자 정보 입력</h4>
-                            <div class="mb-3">
-                                <label for="buyer-name" class="form-label">이름</label>
-                                <input type="text" class="form-control" id="buyer-name" name="buyerName"
-                                       th:value="${isMember} ? ${memberInfo.customerName} : ''" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="buyer-email" class="form-label">이메일</label>
-                                <input type="email" class="form-control" id="buyer-email" name="buyerEmail"
-                                       th:value="${isMember} ? ${memberInfo.customerEmail} : ''" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="buyer-phone" class="form-label">휴대폰번호</label>
-                                <input type="tel" class="form-control" id="buyer-phone" name="buyerPhone"
-                                       th:value="${isMember} ? ${memberInfo.customerPhoneNumber} : ''" required>
-                            </div>
-                        </section>
+                    <!-- 2. 구매자 정보 입력 -->
+                    <!-- 비회원인 경우, 모든 칸이 비어있고, 회원인 경우 구매자 정보 입력칸을 해당 회원의 정보로 채워야함.-->
+                    <section id="buyer-info" class="mb-4">
+                        <h4 class="text-primary">구매자 정보 입력</h4>
+                        <div class="mb-3">
+                            <label for="buyer-name" class="form-label">이름</label>
+                            <input type="text" class="form-control" id="buyer-name" name="buyerName"
+                                   th:value="${isMember} ? ${memberInfo.customerName} : ''" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="buyer-email" class="form-label">이메일</label>
+                            <input type="email" class="form-control" id="buyer-email" name="buyerEmail"
+                                   th:value="${isMember} ? ${memberInfo.customerEmail} : ''" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="buyer-phone" class="form-label">휴대폰번호</label>
+                            <input type="tel" class="form-control" id="buyer-phone" name="buyerPhone"
+                                   th:value="${isMember} ? ${memberInfo.customerPhoneNumber} : ''" required>
+                        </div>
+                    </section>
 
                     <!-- 배송지 입력 -->
                     <section id="delivery-info" class="mb-4">
@@ -228,10 +229,7 @@
                                             </div>
                                             <button type="button"
                                                     class="btn btn-sm btn-primary"
-                                                    th:onclick="|selectAddress(this.getAttribute('data-postal-code'), this.getAttribute('data-road-address'), this.getAttribute('data-detail-address'))|"
-                                                    th:data-postal-code="${address.addressPostalNumber}"
-                                                    th:data-road-address="${address.addressRoadname}"
-                                                    th:data-detail-address="${address.addressDetail}">
+                                                    th:attr="onclick=|selectAddress('${address.addressPostalNumber}','${address.addressRoadname}','${address.addressDetail}') |">
                                                 배송지 선택
                                             </button>
                                         </div>
@@ -239,6 +237,8 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                                    <button type="button" class="btn btn-primary">확인</button>
+
                                 </div>
                             </div>
                         </div>
@@ -246,21 +246,21 @@
 
 
                     <!-- 4. 포인트 사용 -->
-                        <section id="point-use" class="mb-4" th:if="${isMember}">
-                            <h4 class="text-primary">포인트 사용</h4>
-                            <p>보유 포인트: <span id="user-points" th:value="${memberInfo.getMemberPoint()}"></span></p>
-                            <!-- 가진 포인트보다 많으면 안됨. -->
-                            <div class="mb-3">
-                                <label for="points-to-use" class="form-label">사용할 포인트</label>
-                                <input type="number" class="form-control" id="points-to-use" onchange="applyPoints()" name="pointToUse" value="0">
-                            </div>
-                        </section>
+                    <section id="point-use" class="mb-4" th:if="${isMember}">
+                        <h4 class="text-primary">포인트 사용</h4>
+                        <p>보유 포인트: <span id="user-points" th:value="${memberInfo.getMemberPoint()}"></span></p>
+                        <!-- 가진 포인트보다 많으면 안됨. -->
+                        <div class="mb-3">
+                            <label for="points-to-use" class="form-label">사용할 포인트</label>
+                            <input type="number" class="form-control" id="points-to-use" onchange="applyPoints()" name="pointToUse" value="0">
+                        </div>
+                    </section>
 
-                        <!-- 5. 전체 주문에 대한 포인트 적립(등급 정책 적용), 계산 필요 -->
-                        <section id="point-save" class="mb-4" th:if="${isMember}">
-                            <h4 class="text-primary">포인트 적립</h4>
-                            <p>적립 포인트: <span id="user-points-save"></span></p>
-                        </section>
+                    <!-- 5. 전체 주문에 대한 포인트 적립(등급 정책 적용), 계산 필요 -->
+                    <section id="point-save" class="mb-4" th:if="${isMember}">
+                        <h4 class="text-primary">포인트 적립</h4>
+                        <p>적립 포인트: <span id="user-points-save"></span></p>
+                    </section>
 
                     <section id="payment-summary" class="mb-4">
                         <h4 class="text-primary">결제 내역</h4>
@@ -341,12 +341,12 @@
                     </section>
 
                     <!-- 6. 결제 버튼, 총 결제 금액 계산 필요 js -->
-                        <div class="text-center">
-                            <h4>총 결제 금액: <span id="PaymentPrice">원</span></h4>
-                            <input type="hidden" name="memberId" th:value="${memberInfo.customerId}" th:if="${isMember}">
-                            <input type="hidden" id="payment-price" name="paymentPrice">
-                            <button type="submit" class="btn btn-primary">결제하기</button>
-                        </div>
+                    <div class="text-center">
+                        <h4>총 결제 금액: <span id="PaymentPrice">원</span></h4>
+                        <input type="hidden" name="memberId" th:value="${memberInfo.customerId}" th:if="${isMember}">
+                        <input type="hidden" id="payment-price" name="paymentPrice">
+                        <button type="submit" class="btn btn-primary">결제하기</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -372,10 +372,15 @@
             packagingSpan.dataset.packagingId = packagingId; // 선택한 포장지 ID 저장
         }
 
-        // 모달 닫기
-        const packagingModal = new bootstrap.Modal(document.getElementById('packagingModal'));
-        packagingModal.hide();
+        // 모달을 닫음
+        const myModalEl = document.getElementById('packagingModal');
+        const modalInstance = bootstrap.Modal.getInstance(myModalEl);
+        modalInstance.hide();
+
+        // TODO : 검은막 - modal-backdrop이 두개 생기는 문제 -> 임시로 지우게 함.
+        $(".modal-backdrop.fade.show").remove();
     }
+
 </script>
 
 <script>
@@ -386,29 +391,22 @@
         document.getElementById("road-address").value = roadAddress;
         document.getElementById("detail-address").value = detailAddress;
 
-        var myModalEl = document.getElementById('addressModal');
-        var modalInstance = bootstrap.Modal.getInstance(myModalEl);
+        // TODO : 중요 !! 모달을 누르면 backdrop이 두개 생기는 문제 ... 닫을때 지우게 함.
+        // 모달 닫기
+        const myModalEl = document.getElementById('addressModal');
+        const modalInstance = bootstrap.Modal.getInstance(myModalEl);
+        modalInstance.hide();
 
-        // 모달을 닫을 때 inert 속성을 제거하여 접근 가능하게 만듦
-        myModalEl.setAttribute('aria-hidden', 'true');
-        myModalEl.setAttribute('inert', 'true');
+        // 수동으로 추가된 스타일 복원 (모달 닫을 때)
+        document.body.classList.remove('modal-open'); // modal-open 클래스 제거
+        document.body.style.overflow = '';            // overflow 스타일 복원
+        document.body.style.paddingRight = '';        // padding-right 스타일 복원
 
-        // 모달을 닫음
-        $('#addressModal').modal('hide');
+        // modal-backdrop.fade.show 검은막 삭제..
+        $(".modal-backdrop.fade.show").remove();
     }
-
-    // 모달이 열릴 때 inert 속성을 제거하고 focus를 모달로 이동
-    $('#addressModal').on('show.bs.modal', function () {
-        var myModalEl = document.getElementById('addressModal');
-        myModalEl.removeAttribute('aria-hidden');
-        myModalEl.removeAttribute('inert');
-    });
-
-    // 모달이 닫힐 때 focus를 이전 상태로 복원
-    $('#addressModal').on('hidden.bs.modal', function () {
-        document.getElementById("recipient-phone").focus();
-    });
 </script>
+
 <script>
     // 주문서 스크립트 로직
     function openPostcodeSearch() {
@@ -479,5 +477,25 @@
     // 페이지 로드 시 결제 내역 업데이트 (예시 데이터 사용)
     updatePaymentDetails(16020, 0, 0, 0, 0);
 </script>
+
+<script>
+    // 모달 닫힐 때 호출되는 함수
+    function removeBodyStyle() {
+        document.body.style.overflow = ''; // overflow 속성 제거
+        document.body.style.paddingRight = ''; // padding-right 속성 제거
+    }
+
+    // Bootstrap 모달 이벤트 리스너 등록
+    document.addEventListener('DOMContentLoaded', () => {
+        const modalElement = document.getElementById('packagingModal');
+        if (modalElement) {
+            // Bootstrap 모달이 숨겨질 때 실행
+            modalElement.addEventListener('hidden.bs.modal', () => {
+                removeBodyStyle(); // 스타일 제거 함수 호출
+            });
+        }
+    });
+</script>
+
 </body>
 </html>
