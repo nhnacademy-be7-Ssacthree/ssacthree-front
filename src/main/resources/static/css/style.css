@@ -1791,6 +1791,37 @@ select#input-sort {
     background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"%3E%3Cpath fill="%23333" d="M2 0L0 2h4zM2 5L0 3h4z"/%3E%3C/svg%3E') no-repeat right 0.75rem center / 8px 10px;
 }
 
+/* 전체 라벨 스타일 */
+.category-label {
+    font-size: 0.9rem;
+    font-weight: 600; /* 강조된 텍스트 */
+    color: #8feaff; /* 바다색 톤 */
+    margin-bottom: 8px;
+}
+
+/* 배지 스타일 */
+.category-badge {
+    background: linear-gradient(45deg, #f86d72, #ff8d92); /* 바다색 그라데이션 */
+    color: #ffffff; /* 흰색 텍스트 */
+    font-weight: 500; /* 텍스트 강조 */
+    border-radius: 12px; /* 더 둥글게 */
+    padding: 6px 12px; /* 적당한 여백 */
+    font-size: 0.85rem; /* 적절한 텍스트 크기 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* 가벼운 그림자 */
+    text-transform: capitalize; /* 텍스트 첫 글자 대문자 */
+    margin-right: 8px; /* 배지 간 간격 */
+    display: inline-block;
+    transition: all 0.3s ease; /* 호버 시 부드러운 전환 */
+}
+
+/* 배지 호버 효과 */
+.category-badge:hover {
+    background: linear-gradient(45deg, #f86d72, #ff8d92); /* 반대 방향 그라데이션 */
+    transform: scale(1.1); /* 살짝 확대 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* 더 강한 그림자 */
+    cursor: pointer; /* 손 모양 커서 */
+}
+
 .rating-star {
     width: 50px;
     height: 50px;

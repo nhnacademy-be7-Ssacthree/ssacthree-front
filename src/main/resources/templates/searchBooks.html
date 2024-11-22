@@ -3,149 +3,159 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{common/config :: config}">
-    <meta charset="UTF-8">
-    <title>Book List</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+  <meta charset="UTF-8">
+  <title>Book List</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 </head>
 <body>
 <header th:replace="~{common/header}"></header>
 
 <div class="dropdown-container text-end mt-2 me-3">
-    <label for="categoryDropdown" class="fw-bold me-2">카테고리 선택:</label>
-    <select id="categoryDropdown" class="form-select d-inline-block w-auto" name="category"
-            onchange="redirectWithCategory(this.value)">
-        <option value="" th:selected="${category == null || category.isEmpty()}">전체</option>
-        <option th:each="cat : ${categories}" th:value="${cat.categoryName}" th:text="${cat.categoryName}"
-                th:selected="${category == cat.categoryName}"></option>
-    </select>
+  <label for="categoryDropdown" class="fw-bold me-2">카테고리 선택:</label>
+  <select id="categoryDropdown" class="form-select d-inline-block w-auto" name="category" onchange="redirectWithCategory(this.value)">
+    <option value="" th:selected="${category == null || category.isEmpty()}">전체</option>
+    <option th:each="cat : ${categories}" th:value="${cat.categoryName}" th:text="${cat.categoryName}" th:selected="${category == cat.categoryName}"></option>
+  </select>
 </div>
 
 <div class="container my-3">
 
-    <!-- 검색 결과가 없을 때 메시지 -->
-    <div id="noResultsMessage" th:if="${books == null || books.isEmpty()}" class="no-results-container">
-        <!-- 선택된 카테고리를 보여주고 변경할 수 있는 드롭다운 -->
+  <!-- 검색 결과가 없을 때 메시지 -->
+  <div id="noResultsMessage" th:if="${books == null || books.isEmpty()}" class="no-results-container">
+    <!-- 선택된 카테고리를 보여주고 변경할 수 있는 드롭다운 -->
 
 
-        <!-- 이미지와 텍스트를 겹치기 위한 컨테이너 -->
-        <div class="image-text-overlay">
-            <!-- 이미지 -->
-            <img src="/images/no-results.png" alt="No Results" class="flexible-image">
-            <!-- 이미지 위 텍스트와 도움말 -->
-            <div class="centered-content">
-                <p class="main-text" th:text="'&quot;' + ${keyword} + '&quot;에 대한 검색 결과가 없습니다.'"></p>
-                <span th:if="${category != null && !category.isEmpty()}"
-                      th:text="' (선택된 카테고리: ' + ${category} + ')'"></span>
-                <ul class="list-unstyled help-text">
-                    <li>띄어쓰기를 확인하고 다시 검색해 보세요.</li>
-                    <li>검색어의 철자가 정확한지 확인해 주세요.</li>
-                    <li>다른 검색어로 시도해 보세요.</li>
-                    <li>특수문자는 제외하는 것이 좋습니다.</li>
-                </ul>
-            </div>
-        </div>
+    <!-- 이미지와 텍스트를 겹치기 위한 컨테이너 -->
+    <div class="image-text-overlay">
+      <!-- 이미지 -->
+      <img src="/images/no-results.png" alt="No Results" class="flexible-image">
+      <!-- 이미지 위 텍스트와 도움말 -->
+      <div class="centered-content">
+        <p class="main-text" th:text="'&quot;' + ${keyword} + '&quot;에 대한 검색 결과가 없습니다.'"></p>
+        <span th:if="${category != null && !category.isEmpty()}" th:text="' (선택된 카테고리: ' + ${category} + ')'"></span>
+        <ul class="list-unstyled help-text">
+          <li>띄어쓰기를 확인하고 다시 검색해 보세요.</li>
+          <li>검색어의 철자가 정확한지 확인해 주세요.</li>
+          <li>다른 검색어로 시도해 보세요.</li>
+          <li>특수문자는 제외하는 것이 좋습니다.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- 검색 결과가 있을 때만 표시 -->
+  <div id="searchResultsContainer" th:if="${books != null && !books.isEmpty()}">
+    <!-- 정렬 및 페이지 크기 옵션 -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2>검색 결과</h2>
+<!--     입력 시 입력 검증 -->
+      <div class="sort-container">
+        <form id="sortForm" method="get" th:action="@{/search/books}">
+
+          <!-- 키워드 전달 -->
+          <input type="hidden" name="keyword" th:value="${keyword}" />
+          <!-- 페이지 번호 전달 -->
+          <input type="hidden" name="page" th:value="${paging?.number + 1}" />
+          <!-- 페이지 크기  -->
+          <input type="hidden" name="pageSize" th:value="${paging?.size}" />
+
+          <!-- 정렬 -->
+          <label for="sort" class="me-2">정렬:</label>
+          <select id="sort" name="sort" class="form-select w-auto" onchange="updateSortAndPage(this.value)">
+            <option value="score" th:selected="${paging?.sort == 'score'}">정확도순</option>
+            <option value="newest" th:selected="${paging?.sort == 'newest'}">최신순</option>
+            <option value="priceLow" th:selected="${paging?.sort == 'priceLow'}">낮은 가격순</option>
+            <option value="priceHigh" th:selected="${paging?.sort == 'priceHigh'}">높은 가격순</option>
+            <option value="popularity" th:selected="${paging?.sort == 'popularity'}">인기순</option>
+          </select>
+
+          <!-- 페이지 크기 선택 -->
+          <label for="pageSize" class="me-2">표시 책 개수:</label>
+          <select id="pageSize" name="pageSize" class="form-select w-auto" onchange="syncPageSizeAndSubmit(this.value)">
+            <option value="20" th:selected="${paging?.size == 20}">20개</option>
+            <option value="50" th:selected="${paging?.size == 50}">50개</option>
+            <option value="100" th:selected="${paging?.size == 100}">100개</option>
+          </select>
+        </form>
+      </div>
     </div>
 
 
-    <!-- 검색 결과가 있을 때만 표시 -->
-    <div id="searchResultsContainer" th:if="${books != null && !books.isEmpty()}">
-        <!-- 정렬 및 페이지 크기 옵션 -->
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2>검색 결과</h2>
-            <!--     입력 시 입력 검증 -->
-            <div class="sort-container">
-                <form id="sortForm" method="get" th:action="@{/search/books}">
-
-                    <!-- 키워드 전달 -->
-                    <input type="hidden" name="keyword" th:value="${keyword}"/>
-                    <!-- 페이지 번호 전달 -->
-                    <input type="hidden" name="page" th:value="${paging?.number + 1}"/>
-                    <!-- 페이지 크기  -->
-                    <input type="hidden" name="pageSize" th:value="${paging?.size}"/>
-
-                    <!-- 정렬 -->
-                    <label for="sort" class="me-2">정렬:</label>
-                    <select id="sort" name="sort" class="form-select w-auto" onchange="updateSortAndPage(this.value)">
-                        <option value="score" th:selected="${paging?.sort == 'score'}">정확도순</option>
-                        <option value="newest" th:selected="${paging?.sort == 'newest'}">최신순</option>
-                        <option value="priceLow" th:selected="${paging?.sort == 'priceLow'}">낮은 가격순</option>
-                        <option value="priceHigh" th:selected="${paging?.sort == 'priceHigh'}">높은 가격순</option>
-                        <option value="popularity" th:selected="${paging?.sort == 'popularity'}">인기순</option>
-                    </select>
-
-                    <!-- 페이지 크기 선택 -->
-                    <label for="pageSize" class="me-2">표시 책 개수:</label>
-                    <select id="pageSize" name="pageSize" class="form-select w-auto"
-                            onchange="syncPageSizeAndSubmit(this.value)">
-                        <option value="20" th:selected="${paging?.size == 20}">20개</option>
-                        <option value="50" th:selected="${paging?.size == 50}">50개</option>
-                        <option value="100" th:selected="${paging?.size == 100}">100개</option>
-                    </select>
-                </form>
-            </div>
-            카
+    <!-- 도서 목록 섹션 -->
+    <div id="searchResults">
+      <div th:each="book : ${books}" class="row align-items-center mb-5 pb-5 border-bottom">
+        <!-- 썸네일 및 책 링크 -->
+        <div class="col-md-2 text-center d-flex align-items-center justify-content-around">
+          <div th:onclick="|window.location.href='/books/' + '${book.bookId}'|" style="cursor:pointer">
+            <img th:src="${book.bookThumbnailImageUrl}" class="img-fluid rounded" alt="Book Cover"
+                 style="max-height: 150px;"/>
+          </div>
         </div>
 
+        <!-- 책 정보 -->
+        <div class="col-md-8">
+          <div th:onclick="|window.location.href='/books/' + '${book.bookId}'|" style="cursor:pointer">
+            <h5 class="fw-bold mb-1" th:text="${book.bookName}"></h5>
+          </div>
+          <p class="text-muted mb-0">
+            저자: <span th:text="${book.authorNames}"></span> |
+            출판사: <span th:text="${book.publisherNames}"></span> |
+            발행일: <span th:text="${book.publicationDate}"></span>
+          </p>
+          <p class="fs-4 text-danger fw-bold">
+            <span class="sale-price" th:text="${book.salePrice}"></span>원
+            <del class="text-dark fs-6">
+              <span class="regular-price" th:text="${book.regularPrice}"></span>원
+            </del>
+          </p>
+          <script>
+            document.querySelectorAll(".sale-price, .regular-price").forEach((element) => {
+              // 숫자로 변환
+              const price = parseFloat(element.textContent.replace(/,/g, '')); // 쉼표 제거 후 숫자로 변환
+              if (!isNaN(price)) {
+                // 쉼표 포맷 적용
+                element.textContent = new Intl.NumberFormat('ko-KR').format(price);
+              }
+            });
+          </script>
 
-        <!-- 도서 목록 섹션 -->
-        <div id="searchResults">
-            <div th:each="book : ${books}" class="row align-items-center mb-5 pb-5 border-bottom">
-                <!-- 썸네일 및 책 링크 -->
-                <div class="col-md-2 text-center d-flex align-items-center justify-content-around">
-                    <div th:onclick="|window.location.href='/books/' + '${book.bookId}'|" style="cursor:pointer">
-                        <img th:src="${book.bookThumbnailImageUrl}" class="img-fluid rounded" alt="Book Cover"
-                             style="max-height: 150px;"/>
-                    </div>
-                </div>
-
-                <!-- 책 정보 -->
-                <div class="col-md-8">
-                    <div th:onclick="|window.location.href='/books/' + '${book.bookId}'|" style="cursor:pointer">
-                        <h5 class="fw-bold mb-1" th:text="${book.bookName}"></h5>
-                    </div>
-                    <p class="text-muted mb-0">
-                        저자: <span th:text="${book.authorNames}"></span> |
-                        출판사: <span th:text="${book.publisherNames}"></span> |
-                        발행일: <span th:text="${book.publicationDate}"></span>
-                    </p>
-                    <p class="fs-4 text-danger fw-bold">
-                        <span class="sale-price" th:text="${book.salePrice}"></span>원
-                        <del class="text-dark fs-6">
-                            <span class="regular-price" th:text="${book.regularPrice}"></span>원
-                        </del>
-                    </p>
-                    <script>
-                        document.querySelectorAll(".sale-price, .regular-price").forEach((element) => {
-                            // 숫자로 변환
-                            const price = parseFloat(element.textContent.replace(/,/g, '')); // 쉼표 제거 후 숫자로 변환
-                            if (!isNaN(price)) {
-                                // 쉼표 포맷 적용
-                                element.textContent = new Intl.NumberFormat('ko-KR').format(price);
-                            }
-                        });
-                    </script>
-
-                    <!-- 태그 및 카테고리 -->
-                    <p class="text-muted small">
-                        태그:
-                        <span th:each="tag : ${book.tagNames}" class="badge bg-secondary me-1" th:text="${tag}"></span>
-                    </p>
-                    <p class="text-muted small">
-                        카테고리:
-                        <span th:each="cat : ${book.category}" class="badge bg-secondary me-1" th:text="${cat}"></span>
-
-                    </p>
-                </div>
-
-                <!-- 구매 버튼 -->
-                <div class="col-md-2 text-end">
-                    <button class="btn btn-outline-secondary btn-sm w-100 mb-2">장바구니</button>
-                    <button class="btn btn-primary btn-sm w-100">바로구매</button>
-                </div>
-            </div>
+          <!-- 태그 및 카테고리 -->
+          <p class="d-flex flex-wrap">
+            태그:
+            <span th:each="tag : ${book.tagNames}" class="badge bg-light text-dark me-2" th:text="${tag}"></span>
+          </p>
+          <p class="text-muted small">
+            카테고리:
+            <span th:each="cat : ${book.category}" class="badge category-badge">
+              <a th:text="${cat}"
+                 th:href="@{/search/redirect(category=${cat})}"
+                 class="category-link">
+              </a>
+            </span>
+          </p>
         </div>
+
+        <!-- 구매 버튼 -->
+        <div class="col-md-2 text-center">
+          <p class="me-2 mb-2">
+              <span>
+                  <svg class="wishlist" style="width: 30px; height: 30px;">
+                      <use xlink:href="#heart"></use>
+                  </svg>
+              </span>
+          </p>
+          <button class="btn btn-outline-secondary btn-sm w-70 mb-2 rounded-4"
+                  th:onclick="|window.location.href='/shop/carts/add?bookId=' + ${book.bookId}+'&quantity='+1|">장바구니
+          </button>
+          <button class="btn btn-primary btn-sm w-70 rounded-4"
+                  th:onclick="|window.location.href='/order-now?bookId=' + ${book.bookId}+'&quantity='+1|">바로구매
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <!-- 페이징 네비게이션 -->
@@ -153,50 +163,51 @@
 <footer th:replace="~{common/footer :: footer}"></footer>
 
 <script>
-    function redirectWithCategory(categoryName) {
-        const url = new URL(window.location.href);
+  function redirectWithCategory(categoryName) {
+    const url = new URL(window.location.href);
 
-        // 카테고리가 비어 있으면 파라미터를 제거
-        if (categoryName && categoryName.trim() !== "") {
-            url.searchParams.set("category", categoryName);
-        } else {
-            url.searchParams.delete("category");
-        }
-
-        // 페이지를 항상 1로 초기화
-        // url.searchParams.set("page", 1);
-        window.location.href = url.toString();
+    // 카테고리가 비어 있으면 파라미터를 제거
+    if (categoryName && categoryName.trim() !== "") {
+      url.searchParams.set("category", categoryName);
+    } else {
+      url.searchParams.delete("category");
     }
 
+    // 페이지를 항상 1로 초기화
+    // url.searchParams.set("page", 1);
+    window.location.href = url.toString();
+  }
 
-    function syncPageSizeAndSubmit(selectedPageSize) {
-        const url = new URL(window.location.href);
 
-        // pageSize가 비어 있으면 파라미터를 제거
-        if (selectedPageSize && selectedPageSize.trim() !== "") {
-            url.searchParams.set("pageSize", selectedPageSize);
-        } else {
-            url.searchParams.delete("pageSize");
-        }
 
-        // 페이지를 1로 초기화하지 않음 (현재 페이지 유지)
-        window.location.href = url.toString();
+  function syncPageSizeAndSubmit(selectedPageSize) {
+    const url = new URL(window.location.href);
+
+    // pageSize가 비어 있으면 파라미터를 제거
+    if (selectedPageSize && selectedPageSize.trim() !== "") {
+      url.searchParams.set("pageSize", selectedPageSize);
+    } else {
+      url.searchParams.delete("pageSize");
     }
 
-    function updateSortAndPage(sortValue) {
-        const url = new URL(window.location.href);
+    // 페이지를 1로 초기화하지 않음 (현재 페이지 유지)
+    window.location.href = url.toString();
+  }
 
-        // sort가 비어 있지 않으면 추가
-        if (sortValue && sortValue.trim() !== "") {
-            url.searchParams.set("sort", sortValue);
-        } else {
-            url.searchParams.delete("sort");
-        }
+  function updateSortAndPage(sortValue) {
+    const url = new URL(window.location.href);
 
-        // 페이지를 항상 1로 초기화
-        // url.searchParams.set("page", 1);
-        window.location.href = url.toString();
+    // sort가 비어 있지 않으면 추가
+    if (sortValue && sortValue.trim() !== "") {
+      url.searchParams.set("sort", sortValue);
+    } else {
+      url.searchParams.delete("sort");
     }
+
+    // 페이지를 항상 1로 초기화
+    // url.searchParams.set("page", 1);
+    window.location.href = url.toString();
+  }
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

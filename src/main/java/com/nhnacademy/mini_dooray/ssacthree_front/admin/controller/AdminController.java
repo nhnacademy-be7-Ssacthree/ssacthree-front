@@ -3,7 +3,6 @@ package com.nhnacademy.mini_dooray.ssacthree_front.admin.controller;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.dto.AdminLoginRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.service.AdminService;
-import com.nhnacademy.mini_dooray.ssacthree_front.commons.aop.annotation.Admin;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -18,7 +17,6 @@ public class AdminController {
     private final AdminService adminService;
 
 
-    @Admin
     @GetMapping("/admin")
     public String admin() {
 
