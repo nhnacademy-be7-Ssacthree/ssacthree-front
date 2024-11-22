@@ -7,6 +7,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberLoginRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberRegisterRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.CustomerNotFoundException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.LoginFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.LogoutIllegalAccessException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.MemberNotFoundException;
