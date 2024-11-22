@@ -1790,3 +1790,17 @@ select#input-sort {
     appearance: none; /* 기본 브라우저 스타일 제거 */
     background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"%3E%3Cpath fill="%23333" d="M2 0L0 2h4zM2 5L0 3h4z"/%3E%3C/svg%3E') no-repeat right 0.75rem center / 8px 10px;
 }
+
+.rating-star {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    fill: #B0B0B0; /* 기본 색상: 연한 회색 */
+    transition: fill 0.3s ease-in-out;
+}
+
+.rating-star.selected {
+    fill: #FFD700; /* 선택된 별 색상: 금색 */
+}
+
+
