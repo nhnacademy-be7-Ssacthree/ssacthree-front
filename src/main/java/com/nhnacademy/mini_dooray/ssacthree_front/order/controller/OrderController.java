@@ -96,6 +96,7 @@ public class OrderController {
 
         // 배달정책 true인거 가져오기 - 배송정책 서비스에 구현필요..
         DeliveryRuleGetResponse deliveryRule = deliveryRuleService.getCurrentDeliveryRule();
+        model.addAttribute("deliveryRule", deliveryRule);
 
         return "order/orderSheet";
     }

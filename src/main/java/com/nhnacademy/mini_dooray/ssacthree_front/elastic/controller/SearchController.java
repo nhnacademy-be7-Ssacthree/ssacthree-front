@@ -120,6 +120,8 @@ public class SearchController {
         calculateTotalPages(searchResponse.getTotalHits(), pageSize),
         sort
     );
+    log.info("Paging객체의 현재 페이지입니다. {} ", paging.getNumber());
+
     model.addAttribute("paging", paging);
     // 페이징 및 추가 URL 파라미터 구성
     model.addAttribute("baseUrl", "/search/books");
