@@ -8,7 +8,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class BookLikeResponse {
     private Long bookId;
-    private Long customerId;
     @Setter
     private Long likeCount;
 }

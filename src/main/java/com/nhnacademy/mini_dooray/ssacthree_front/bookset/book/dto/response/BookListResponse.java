@@ -13,25 +13,17 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class BookDetailResponse {
+public class BookListResponse {
     private Long bookId;
     private String bookName;
-    private String bookIndex; // 목차
-    private String bookInfo; // 책 설명
-    private String bookIsbn;
     private LocalDateTime publicationDate;
     private int regularPrice; // 판매가
     private int salePrice; // 할인 가격
-    private boolean isPacked;
-    private int stock;
     private String bookThumbnailImageUrl;
     private int bookViewCount;
     private int bookDiscount; // 할인율
+    private String bookStatus; // 도서 상태
 
-    private String bookStatus; // 배송 상태
-
-    // FK
-    @Setter
     private PublisherNameResponse publisher;
 
     @Setter
@@ -43,9 +35,12 @@ public class BookDetailResponse {
     @Setter
     private List<AuthorNameResponse> authors;
 
-    private Long likeCount;
+    @Setter
+    private Long likeCount; // 좋아요 수
 
-    public boolean isPacked() {
-        return this.isPacked;
-    }
+    @Setter
+    private Long reviewCount; // 리뷰 수
+
+    @Setter
+    private Double reviewRateAverage; // 리뷰 별점 평균
 }

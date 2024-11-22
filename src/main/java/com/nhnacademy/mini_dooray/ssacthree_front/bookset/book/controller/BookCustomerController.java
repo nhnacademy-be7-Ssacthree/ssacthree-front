@@ -2,6 +2,7 @@ package com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.controller;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.delivery_rule.service.DeliveryRuleService;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookInfoResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookListResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.service.BookCommonService;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryNameResponse;
@@ -63,8 +64,11 @@ public class BookCustomerController {
             allParams.put("tag-id", tagId);
         }
 
+        List<Long> likeBooks = bookCommonService.getLikedBooksIdForCurrentUser();
+        model.addAttribute("likeBooks", likeBooks);
+
         // 데이터 가져오기
-        Page<BookInfoResponse> books = getBooksByFilter(page, size, sort, authorId, categoryId, tagId);
+        Page<BookListResponse> books = getBooksByFilter(page, size, sort, authorId, categoryId, tagId);
 
         // `sort`를 제외한 추가 파라미터 문자열 생성
         String extraParams = allParams.entrySet().stream()
@@ -80,7 +84,7 @@ public class BookCustomerController {
         return "bookList";
     }
 
-    private Page<BookInfoResponse> getBooksByFilter(
+    private Page<BookListResponse> getBooksByFilter(
             int page, int size, String[] sort,
             Long authorId, Long categoryId, Long tagId) {
 
@@ -108,9 +112,9 @@ public class BookCustomerController {
 
         // 조회수 많은 하나
         String[] viewSort = {"bookViewCount"};
-        Page<BookInfoResponse> banner2 = bookCommonService.getAllAvailableBooks(page, 1, viewSort);
+        Page<BookListResponse> banner2 = bookCommonService.getAllAvailableBooks(page, 1, viewSort);
 
-        Page<BookInfoResponse> awardBooks = bookCommonService.getBooksByAuthorId(page, size, sort, authorId);
+        Page<BookListResponse> awardBooks = bookCommonService.getBooksByAuthorId(page, size, sort, authorId);
 
         model.addAttribute("banner1", banner1);
         model.addAttribute("banner2", banner2);
@@ -144,5 +148,6 @@ public class BookCustomerController {
 
         return "myLikes";
     }
+
 
 }
