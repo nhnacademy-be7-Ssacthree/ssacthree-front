@@ -15,7 +15,7 @@ public class BookSearchResponse {
     private Long bookId;
     private String bookName;
     private String bookInfo;
-    private BookStatus bookStatus;
+    private String bookStatus; // 도서 상태
 
     @Setter
     private List<AuthorNameResponse> authors;
@@ -24,7 +24,7 @@ public class BookSearchResponse {
         this.bookId = bookId;
         this.bookName = bookName;
         this.bookInfo = bookInfo;
-        this.bookStatus = BookStatus.ON_SALE;
+        this.bookStatus = String.valueOf(BookStatus.ON_SALE);
     }
 
 }

@@ -29,8 +29,8 @@ public class BookMgmtServiceImpl implements BookMgmtService {
     private final BookMgmtAdapter bookMgmtAdapter;
 
     @Override
-    public Page<BookSearchResponse> getAllBooks(){
-          ResponseEntity<Page<BookSearchResponse>> response = bookMgmtAdapter.getAllBooks();
+    public Page<BookSearchResponse> getAllBooks(int page, int size, String[] sort){
+          ResponseEntity<Page<BookSearchResponse>> response = bookMgmtAdapter.getAllBooks(page, size, sort);
 
         try{
             if(response.getStatusCode().is2xxSuccessful()) {

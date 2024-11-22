@@ -19,7 +19,7 @@ public class BookSaveRequest {
     private String bookIndex; // 목차
     private String bookInfo; // 책 설명
     private String bookIsbn;
-// LocalDate로 수정하여 날짜만 받음
+    // LocalDate로 수정하여 날짜만 받음
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate publicationDate;
     private int regularPrice; // 판매가
@@ -34,7 +34,6 @@ public class BookSaveRequest {
 
     // FK
     private Long publisherId;
-
 
     private List<Long> categoryIdList = new ArrayList<>();
 

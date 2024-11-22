@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface BookMgmtService {
 
-    Page<BookSearchResponse> getAllBooks();
+    Page<BookSearchResponse> getAllBooks(int page,int size,String[] sort);
 
     MessageResponse createBook(BookSaveRequest bookSaveRequest);
 
