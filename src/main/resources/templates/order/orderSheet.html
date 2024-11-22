@@ -69,7 +69,6 @@
                                         <br>
                                         <span class="selected-packaging" th:text="'(선택된 포장지 없음)'"></span>
                                         <span class="selected-packaging-cost" th:text="''"></span>
-                                        <span class="selected-packaging-image" th:src=""></span>
                                     </div>
 
                                     <!-- book.isPacked가 false일 때는 포장지를 지원하지 않는 도서 메시지 표시 -->
@@ -103,7 +102,7 @@
                                             </div>
                                             <button type="button"
                                                     class="btn btn-sm btn-primary"
-                                                    th:attr="onclick=|selectPackaging('${packaging.id}', '${packaging.packagingName}') |">
+                                                    th:attr="onclick=|selectPackaging('${packaging.id}', '${packaging.packagingName}', '${packaging.packagingPrice}') |">
                                                 포장지 선택
                                             </button>
                                         </div>
@@ -367,12 +366,14 @@
         currentRow = button.closest('tr'); // 현재 버튼이 속한 행을 저장
     }
 
-    function selectPackaging(packagingId, packagingName) {
+    function selectPackaging(packagingId, packagingName, packagingPrice) {
         // 선택한 포장지 이름을 행에 표시
         if (currentRow) {
             const packagingSpan = currentRow.querySelector('.selected-packaging');
             packagingSpan.innerText = packagingName; // 선택된 포장지 이름 표시
             packagingSpan.dataset.packagingId = packagingId; // 선택한 포장지 ID 저장
+            const packagingCostSpan = currentRow.querySelector('.selected-packaging-cost');
+            packagingCostSpan.innerText= packagingPrice;
         }
 
         // 모달을 닫음
