@@ -41,7 +41,7 @@ class ReviewControllerTest {
                 .flashAttr("reviewRequest", review)
                 .with(csrf()))
             .andExpect(status().is3xxRedirection())
-            .andExpect(redirectedUrl("/reviews"));
+            .andExpect(redirectedUrl("/shop/members/reviews"));
     }
 
     @Test
