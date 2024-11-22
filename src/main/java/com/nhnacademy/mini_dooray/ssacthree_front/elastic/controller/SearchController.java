@@ -62,7 +62,7 @@ public class SearchController {
 
     // 페이지 번호를 0 기반으로 변환 (0보다 작으면 쿼리 생성 시 오류)
     if(requestPageNum < 0 || pageSize < 0){
-      throw new IllegalArgumentException("올바르지 않은 page or pageSize"); // 예외문 만들기?
+      throw new IllegalArgumentException("올바르지 않은 페이지 접근");
     }
 
     log.info("검색 요청 - 키워드: {}, 페이지: {}, 정렬: {}, 페이지 크기: {}, 카테고리: {}, 태그: {}",
