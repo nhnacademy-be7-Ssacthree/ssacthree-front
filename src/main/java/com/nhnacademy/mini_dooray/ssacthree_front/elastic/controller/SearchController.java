@@ -151,7 +151,7 @@ public class SearchController {
       Long categoryId = categories.get(0).getCategoryId();
       return "redirect:/books?category-id=" + categoryId;
     }
-    return "redirect:/books";
+    return "redirect:/searchBooks";
   }
 
 
