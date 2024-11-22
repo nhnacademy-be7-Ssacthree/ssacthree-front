@@ -1786,13 +1786,13 @@ select#input-sort {
 .category-label {
     font-size: 0.9rem;
     font-weight: 600; /* 강조된 텍스트 */
-    color: #0077b6; /* 바다색 톤 */
+    color: #8feaff; /* 바다색 톤 */
     margin-bottom: 8px;
 }
 
 /* 배지 스타일 */
 .category-badge {
-    background: linear-gradient(45deg, #00aaff, #0077b6); /* 바다색 그라데이션 */
+    background: linear-gradient(45deg, #f86d72, #ff8d92); /* 바다색 그라데이션 */
     color: #ffffff; /* 흰색 텍스트 */
     font-weight: 500; /* 텍스트 강조 */
     border-radius: 12px; /* 더 둥글게 */
@@ -1807,7 +1807,7 @@ select#input-sort {
 
 /* 배지 호버 효과 */
 .category-badge:hover {
-    background: linear-gradient(45deg, #0077b6, #00aaff); /* 반대 방향 그라데이션 */
+    background: linear-gradient(45deg, #f86d72, #ff8d92); /* 반대 방향 그라데이션 */
     transform: scale(1.1); /* 살짝 확대 */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* 더 강한 그림자 */
     cursor: pointer; /* 손 모양 커서 */
