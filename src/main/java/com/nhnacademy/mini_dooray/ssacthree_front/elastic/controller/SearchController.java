@@ -142,4 +142,17 @@ public class SearchController {
   }
 
 
+  @GetMapping("/redirect")
+  public String redirectCategory(@RequestParam String category) {
+    ResponseEntity<List<CategoryInfoResponse>> categoryResponse = categoryCommonService.searchCategoriesByName(category);
+    List<CategoryInfoResponse> categories = categoryResponse.getBody();
+
+    if (categories != null && !categories.isEmpty()) {
+      Long categoryId = categories.get(0).getCategoryId();
+      return "redirect:/books?category-id=" + categoryId;
+    }
+    return "redirect:/books";
+  }
+
+
 }

@@ -128,8 +128,12 @@
           </p>
           <p class="text-muted small">
             카테고리:
-            <span th:each="cat : ${book.category}" class="badge bg-secondary me-1" th:text="${cat}"></span>
-
+            <span th:each="cat : ${book.category}" class="badge category-badge">
+              <a th:text="${cat}"
+                 th:href="@{/search/redirect(category=${cat})}"
+                 class="category-link">
+              </a>
+            </span>
           </p>
         </div>
 
