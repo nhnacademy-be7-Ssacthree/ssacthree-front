@@ -1,5 +1,6 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.controller;
 
+import com.nhnacademy.mini_dooray.ssacthree_front.admin.delivery_rule.service.DeliveryRuleService;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.service.BookCommonService;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryInfoResponse;
@@ -29,6 +30,7 @@ public class BookCustomerController {
     private final BookCommonService bookCommonService;
     private final CategoryCommonService categoryCommonService;
     private final ReviewService reviewService;
+    private final DeliveryRuleService deliveryRuleService;
 
     @GetMapping("/books")
     public String getBooksByFilters(
@@ -128,9 +130,19 @@ public class BookCustomerController {
         for (CategoryNameResponse category : categories) {
             categoryPaths.add(categoryCommonService.getCategoryPath(category.getCategoryId()));
         }
+
+//        DeliveryRuleGetResponse deliveryRule = deliveryRuleService.getCurrentDeliveryRule();
+//        model.addAttribute("deliveryRule", deliveryRule);
+
         model.addAttribute("reviews", reviewService.getReviewsByBookId(bookId));
         model.addAttribute("categoryPaths", categoryPaths);
         return "bookDetails";
+    }
+
+    @GetMapping("/members/my-page/likes")
+    public String showMyLikeBooks(int page, int size, String[] sort, Model model) {
+
+        return "myLikes";
     }
 
 }

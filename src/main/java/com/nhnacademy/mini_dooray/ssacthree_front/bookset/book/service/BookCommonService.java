@@ -1,6 +1,8 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.service;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookInfoResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.booklike.dto.request.BookLikeRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.booklike.dto.response.BookLikeResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryNameResponse;
 import org.springframework.data.domain.Page;
 
@@ -18,4 +20,10 @@ public interface BookCommonService {
     List<CategoryNameResponse> getCategoriesByBookId(Long bookId);
 
     Page<BookInfoResponse> getAllAvailableBooks(int page, int size, String[] sort);
+
+    Page<BookInfoResponse> getBooksByMemberId(int page, int size, String[] sort, Long memberId);
+
+    BookLikeResponse createBookLikeByMemberId(BookLikeRequest bookLikeRequest);
+
+    Boolean deleteBookLikeByMemberId(Long bookId, Long memberId);
 }

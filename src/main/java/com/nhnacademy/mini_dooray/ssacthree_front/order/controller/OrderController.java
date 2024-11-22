@@ -53,7 +53,7 @@ public class OrderController {
         String accessToken = cartService.getAccessToken(request);
 
         // TODO : null로 해도 되는지 물어보기 !
-        if (!accessToken.equals("")){
+        if (!accessToken.equals("")) {
             MemberInfoResponse memberInfoResponse = memberService.getMemberInfo(request);
             isMember = true;
 
@@ -103,45 +103,45 @@ public class OrderController {
     // 2. 책 상세 -> 바로 주문하기
     @GetMapping("/order-now")
     public String orderNow(HttpServletRequest request, @RequestParam Long bookId, @RequestParam int quantity, Model model) {
-            boolean isMember = false;
-            String accessToken = cartService.getAccessToken(request);
+        boolean isMember = false;
+        String accessToken = cartService.getAccessToken(request);
 
-            if(!accessToken.equals("")) {
-                MemberInfoResponse memberInfoResponse = memberService.getMemberInfo(request);
-                isMember = true;
+        if (!accessToken.equals("")) {
+            MemberInfoResponse memberInfoResponse = memberService.getMemberInfo(request);
+            isMember = true;
 
-                model.addAttribute("memberAddressList", addressService.getAddresses(request));
-                model.addAttribute("memberInfo", memberInfoResponse);
-            }
-            model.addAttribute("isMember", isMember);
+            model.addAttribute("memberAddressList", addressService.getAddresses(request));
+            model.addAttribute("memberInfo", memberInfoResponse);
+        }
+        model.addAttribute("isMember", isMember);
 
-            // 책 정보 가져오기 - 단일 책
-            BookInfoResponse book = bookCommonService.getBookById(bookId);
+        // 책 정보 가져오기 - 단일 책
+        BookInfoResponse book = bookCommonService.getBookById(bookId);
 
-            BookOrderRequest bookOrderRequest = new BookOrderRequest(
-                    book.getBookId(),
-                    book.getBookName(),
-                    book.getRegularPrice(),
-                    book.getSalePrice(),
-                    book.getBookDiscount(),
-                    book.isPacked(),
-                    book.getStock(),
-                    book.getBookThumbnailImageUrl(),
-                    quantity);
-            List<BookOrderRequest> bookLists = new ArrayList<>();
-            bookLists.add(bookOrderRequest);
-            model.addAttribute("bookLists", bookLists);
+        BookOrderRequest bookOrderRequest = new BookOrderRequest(
+                book.getBookId(),
+                book.getBookName(),
+                book.getRegularPrice(),
+                book.getSalePrice(),
+                book.getBookDiscount(),
+                book.isPacked(),
+                book.getStock(),
+                book.getBookThumbnailImageUrl(),
+                quantity);
+        List<BookOrderRequest> bookLists = new ArrayList<>();
+        bookLists.add(bookOrderRequest);
+        model.addAttribute("bookLists", bookLists);
 
-            // 포장지 가져오기
-            // TODO : 포장지가 다 false로 들어온다 ..!
-            List<PackagingGetResponse> packagingList = packagingService.getAllCustomerPackaging();
-            model.addAttribute("packagingList", packagingList);
+        // 포장지 가져오기
+        // TODO : 포장지가 다 false로 들어온다 ..!
+        List<PackagingGetResponse> packagingList = packagingService.getAllCustomerPackaging();
+        model.addAttribute("packagingList", packagingList);
 
-            // 배달정책 true인거 가져오기 - 배송정책 서비스에 구현필요..
-            DeliveryRuleGetResponse deliveryRule = deliveryRuleService.getCurrentDeliveryRule();
-            model.addAttribute("deliveryRule", deliveryRule);
+        // 배달정책 true인거 가져오기 - 배송정책 서비스에 구현필요..
+        DeliveryRuleGetResponse deliveryRule = deliveryRuleService.getCurrentDeliveryRule();
+        model.addAttribute("deliveryRule", deliveryRule);
 
-            return "order/orderSheet";
+        return "order/orderSheet";
     }
 
 
