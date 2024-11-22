@@ -22,4 +22,5 @@ public class WebControllerAdvice {
         return "redirect:/";
     }
 
+
 }

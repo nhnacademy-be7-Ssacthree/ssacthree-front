@@ -1,9 +1,11 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.review.service.impl;
 
-import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.AddressResponse;
-import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.AddAddressFailedException;
+import com.nhnacademy.mini_dooray.ssacthree_front.image.adapter.ImageUploadAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.adapter.ReviewAdapter;
+import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.MemberReviewResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.ReviewRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.ReviewRequestWithUrl;
+import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.BookReviewResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.ReviewResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.exception.PostReviewFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.exception.UnauthorizedReviewException;
@@ -23,13 +25,15 @@ import org.springframework.web.client.HttpServerErrorException;
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewAdapter adapter;
+    private static final String IMAGE_PATH = "/ssacthree/review/";
+    private final ImageUploadAdapter imageUploadAdapter;
 
     private static final String BEARER = "Bearer ";
 
     @Override
-    public List<ReviewResponse> getReviewsByBookId(Long bookId) {
+    public List<BookReviewResponse> getReviewsByBookId(Long bookId) {
         try {
-            ResponseEntity<List<ReviewResponse>> responseEntity = adapter.getReviewsByBookId(bookId);
+            ResponseEntity<List<BookReviewResponse>> responseEntity = adapter.getReviewsByBookId(bookId);
             if (responseEntity.getStatusCode().is2xxSuccessful()) {
                 return responseEntity.getBody();
             } else {
@@ -44,9 +48,13 @@ public class ReviewServiceImpl implements ReviewService {
     public void postReviewBook(Long bookId,Long orderId,ReviewRequest reviewRequest, HttpServletRequest request) {
         String accessToken = getAccessToken(request);
 
+        String imageurl = imageUploadAdapter.uploadImage(reviewRequest.getReviewImage(),IMAGE_PATH);
+
+        ReviewRequestWithUrl requestWithUrl = new ReviewRequestWithUrl(reviewRequest.getReviewRate(),reviewRequest.getReviewTitle(),reviewRequest.getReviewContent(),imageurl);
+
         try {
             ResponseEntity<Void> response = adapter.postReviewBook(
-                BEARER + accessToken,bookId,orderId,reviewRequest);
+                BEARER + accessToken,bookId,orderId,requestWithUrl);
 
         } catch (HttpClientErrorException | HttpServerErrorException e) {
             throw new PostReviewFailedException("리뷰 등록에 실패하였습니다.");
@@ -76,6 +84,48 @@ public class ReviewServiceImpl implements ReviewService {
 
         } catch (HttpClientErrorException | HttpServerErrorException e) {
             throw new PostReviewFailedException("리뷰 등록에 실패하였습니다.");
+        }
+    }
+
+    @Override
+    public List<MemberReviewResponse> getReviewsByMemberId(HttpServletRequest request) {
+        String accessToken = getAccessToken(request);
+
+        try {
+            ResponseEntity<List<MemberReviewResponse>> response = adapter.getReviewsByMemberId(
+                BEARER + accessToken);
+
+            // 상태 코드에 따른 분기 처리
+            if (response.getStatusCode() == HttpStatus.OK) {
+                return response.getBody();
+            } else {
+                // 예상하지 못한 응답 처리
+                throw new RuntimeException("예상치 못한 상태 코드: " + response.getStatusCode());
+            }
+
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            throw new PostReviewFailedException("리뷰 조회에 실패하였습니다.");
+        }
+    }
+
+    @Override
+    public ReviewResponse getReview(HttpServletRequest request, Long orderId, Long bookId) {
+        String accessToken = getAccessToken(request);
+
+        try {
+            ResponseEntity<ReviewResponse> response = adapter.getReview(
+                BEARER + accessToken,orderId,bookId);
+
+            // 상태 코드에 따른 분기 처리
+            if (response.getStatusCode() == HttpStatus.OK) {
+                return response.getBody();
+            } else {
+                // 예상하지 못한 응답 처리
+                throw new RuntimeException("예상치 못한 상태 코드: " + response.getStatusCode());
+            }
+
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            throw new PostReviewFailedException("리뷰 조회에 실패하였습니다.");
         }
     }
 
