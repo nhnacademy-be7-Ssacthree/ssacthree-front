@@ -68,6 +68,8 @@
                                         </button>
                                         <br>
                                         <span class="selected-packaging" th:text="'(선택된 포장지 없음)'"></span>
+                                        <span class="selected-packaging-cost" th:text="''"></span>
+                                        <span class="selected-packaging-image" th:src=""></span>
                                     </div>
 
                                     <!-- book.isPacked가 false일 때는 포장지를 지원하지 않는 도서 메시지 표시 -->
@@ -138,11 +140,6 @@
                     <!-- 배송지 입력 -->
                     <section id="delivery-info" class="mb-4">
                         <h4 class="text-primary">배송지 입력</h4>
-                        <div class="mb-3" th:if="${isMember}">
-                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addressModal">
-                                배송지주소록 선택
-                            </button>
-                        </div>
                         <div class="mb-3">
                             <label for="recipient-name" class="form-label">받는 사람 이름</label>
                             <input type="text" class="form-control" id="recipient-name" name="recipientName" required>
@@ -151,8 +148,10 @@
                             <label for="recipient-phone" class="form-label">받는 사람 연락처</label>
                             <input type="text" class="form-control" id="recipient-phone" name="recipientPhone" required>
                         </div>
-                        <div class="mb-3">
-                            <button type="button" class="btn btn-outline-secondary" onclick="openPostcodeSearch()">주소 조회</button>
+                        <div class="mb-3" th:if="${isMember}">
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addressModal">
+                                배송지주소록 선택
+                            </button>
                         </div>
                         <div class="mb-3">
                             <label for="postal-code" class="form-label">우편 번호</label>
@@ -165,6 +164,9 @@
                         <div class="mb-3">
                             <label for="detail-address" class="form-label">상세 주소</label>
                             <input type="text" class="form-control" id="detail-address" name="detailAddress" required>
+                        </div>
+                        <div class="mb-3">
+                            <button type="button" class="btn btn-outline-secondary" onclick="openPostcodeSearch()">주소 조회</button>
                         </div>
                         <div class="mb-3">
                             <label for="order-request" class="form-label">배송 요청 사항</label>
@@ -405,7 +407,9 @@
             oncomplete: function (data) {
                 document.getElementById('postal-code').value = data.zonecode;
                 document.getElementById('road-address').value = data.roadAddress;
+                document.getElementById('detail-address').value = "";
                 document.getElementById('detail-address').focus();
+                document.getElementById('order-request').value = "";
             }
         }).open();
     }
