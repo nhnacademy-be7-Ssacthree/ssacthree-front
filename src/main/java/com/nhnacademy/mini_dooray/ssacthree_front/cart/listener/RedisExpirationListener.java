@@ -2,7 +2,7 @@ package com.nhnacademy.mini_dooray.ssacthree_front.cart.listener;
 
 
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.domain.CartItem;
-import com.nhnacademy.mini_dooray.ssacthree_front.controller.CartController;
+import com.nhnacademy.mini_dooray.ssacthree_front.cart.controller.CartController;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;

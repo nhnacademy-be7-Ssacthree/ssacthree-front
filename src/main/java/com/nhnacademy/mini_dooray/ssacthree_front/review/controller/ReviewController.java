@@ -1,6 +1,5 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.review.controller;
 
-import com.nhnacademy.mini_dooray.ssacthree_front.image.adapter.ImageUploadAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.MemberReviewResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.ReviewRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.ReviewResponse;
