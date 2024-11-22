@@ -1,6 +1,5 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.member.controller;
 
-import com.nhnacademy.mini_dooray.ssacthree_front.commons.aop.annotation.Logined;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.AddressRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.AddressResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.AddressService;
@@ -16,26 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping
+@RequestMapping("/members/my-page")
 @RequiredArgsConstructor
 public class MemberAddressController {
 
     private final AddressService addressService;
-
-    /**
-     * 사용자 주소 추가
-     *
-     * @param request        요청
-     * @param addressRequest DTO
-     * @return 사용자 주소 페이지로 리다이렉트
-     */
-    @Logined
-    @PostMapping("/address")
-    public String addNewAddress(HttpServletRequest request,
-        @ModelAttribute AddressRequest addressRequest) {
-        addressService.addNewAddress(request, addressRequest);  // API 서버로 요청 전달
-        return "redirect:/address-page";
-    }
 
     /**
      * 사용자 주소 전체 조회
@@ -44,12 +28,25 @@ public class MemberAddressController {
      * @param request 요청
      * @return 주소 전체 전달
      */
-    @Logined
     @GetMapping("/address-page") //주소록 페이지로 이동
     public String addressPage(Model model, HttpServletRequest request) {
         List<AddressResponse> addresses = addressService.getAddresses(request);
         model.addAttribute("addresses", addresses);
         return "address";
+    }
+
+    /**
+     * 사용자 주소 추가
+     *
+     * @param request        요청
+     * @param addressRequest DTO
+     * @return 사용자 주소 페이지로 리다이렉트
+     */
+    @PostMapping("/address")
+    public String addNewAddress(HttpServletRequest request,
+        @ModelAttribute AddressRequest addressRequest) {
+        addressService.addNewAddress(request, addressRequest);  // API 서버로 요청 전달
+        return "redirect:/address-page";
     }
 
     /**

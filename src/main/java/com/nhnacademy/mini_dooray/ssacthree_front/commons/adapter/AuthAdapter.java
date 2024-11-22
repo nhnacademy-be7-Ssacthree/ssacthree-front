@@ -16,4 +16,6 @@ public interface AuthAdapter {
 
     @PostMapping("/auth/validation")
     ResponseEntity<MessageResponse> validateToken();
+
+    
 }
