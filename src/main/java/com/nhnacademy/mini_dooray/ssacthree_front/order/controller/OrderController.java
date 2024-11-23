@@ -19,12 +19,15 @@ import com.nhnacademy.mini_dooray.ssacthree_front.order.utils.OrderUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -85,7 +88,8 @@ public class OrderController {
                     book.isPacked(),
                     book.getStock(),
                     book.getBookThumbnailImageUrl(),
-                    cartItem.getQuantity());
+                    cartItem.getQuantity(),
+                    null);
             bookLists.add(bookOrderRequest);
         }
         model.addAttribute("bookLists", bookLists);
@@ -128,7 +132,8 @@ public class OrderController {
                     book.isPacked(),
                     book.getStock(),
                     book.getBookThumbnailImageUrl(),
-                    quantity);
+                    quantity,
+                    null);
             List<BookOrderRequest> bookLists = new ArrayList<>();
             bookLists.add(bookOrderRequest);
             model.addAttribute("bookLists", bookLists);

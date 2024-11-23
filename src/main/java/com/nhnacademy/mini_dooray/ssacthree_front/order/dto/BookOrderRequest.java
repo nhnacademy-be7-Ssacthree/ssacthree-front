@@ -3,6 +3,7 @@ package com.nhnacademy.mini_dooray.ssacthree_front.order.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,7 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 public class BookOrderRequest {
     // 책 정보
-
     private Long bookId;
     private String bookName;
     private int regularPrice; // 판매가
@@ -22,6 +22,7 @@ public class BookOrderRequest {
     private int stock;
     private String bookThumbnailImageUrl;
     private int quantity;
-
-    //각각의 책
+    //포장지 정보
+    @Setter
+    private Long packagingId;
 }
