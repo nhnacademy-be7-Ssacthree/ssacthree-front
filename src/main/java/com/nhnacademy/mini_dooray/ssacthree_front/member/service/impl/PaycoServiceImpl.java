@@ -1,11 +1,16 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.member.service.impl;
 
+import com.nhnacademy.mini_dooray.ssacthree_front.commons.util.CookieUtil;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.adapter.MemberAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.adapter.PaycoIdAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.adapter.PaycoTokenAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.PaycoGetTokenResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.PaycoLoginRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.PaycoMemberResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.LoginFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.PaycoService;
 import feign.FeignException;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +24,7 @@ public class PaycoServiceImpl implements PaycoService {
 
     private final PaycoTokenAdapter paycoTokenAdapter;
     private final PaycoIdAdapter paycoIdAdapter;
-
+    private final MemberAdapter memberAdapter;
     @Value("${payco.authorization_code_url}")
     private String authorizationCodeUrl;
 
@@ -91,5 +96,20 @@ public class PaycoServiceImpl implements PaycoService {
             return null;
         }
 
+    }
+
+    @Override
+    public String paycoLogin(String paycoIdNo, HttpServletResponse httpServletResponse) {
+        try {
+            ResponseEntity<String> response = memberAdapter.memberPaycoLogin(
+                new PaycoLoginRequest(paycoIdNo));
+            if (response.getStatusCode().is2xxSuccessful()) {
+                CookieUtil.addCookieFromFeignClient(httpServletResponse, response);
+                return response.getBody();
+            }
+            throw new LoginFailedException("로그인에 실패하였습니다.");
+        } catch (FeignException e) {
+            throw new LoginFailedException(e.getMessage());
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.member.controller;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.PaycoService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,11 +21,13 @@ public class PaycoLoginController {
     }
 
     @GetMapping("/payco/callback")
-    public String paycoLoginCallback(@RequestParam(name = "code") String code) {
+    public String paycoLoginCallback(@RequestParam(name = "code") String code,
+        HttpServletResponse response) {
         // TODO : access-token 발급 받는거 부터 해야뎀.. ㅠ
         String accessToken = paycoService.getAccessToken(code);
         String paycoIdNo = paycoService.getPaycoIdNo(accessToken);
-        return null;
+        paycoService.paycoLogin(paycoIdNo, response);
+        return "redirect:/shop/carts/customers";
     }
 
 }
