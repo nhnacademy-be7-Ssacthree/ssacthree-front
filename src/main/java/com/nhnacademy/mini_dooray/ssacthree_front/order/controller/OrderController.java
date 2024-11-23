@@ -76,7 +76,7 @@ public class OrderController {
 
         for (CartItem cartItem : cartItems) {
             BookInfoResponse book = bookCommonService.getBookById(cartItem.getId());
-
+            int point = (int) (book.getRegularPrice() * 5 * 0.01);
             // 요청 만들기, 필요한 정보 추가. 수량 등
             BookOrderRequest bookOrderRequest = new BookOrderRequest(
                     book.getBookId(),
@@ -89,6 +89,8 @@ public class OrderController {
                     book.getStock(),
                     book.getBookThumbnailImageUrl(),
                     cartItem.getQuantity(),
+                    null,
+                    point,
                     null);
             bookLists.add(bookOrderRequest);
         }
@@ -120,8 +122,12 @@ public class OrderController {
             }
             model.addAttribute("isMember", isMember);
 
+            // 포인트 적립 정책 가져오기 .. - 지금은 임시로 5%로 그냥 설정
+
+
             // 책 정보 가져오기 - 단일 책
             BookInfoResponse book = bookCommonService.getBookById(bookId);
+            int point = (int) (book.getRegularPrice() * 5 * 0.01);
 
             BookOrderRequest bookOrderRequest = new BookOrderRequest(
                     book.getBookId(),
@@ -133,7 +139,10 @@ public class OrderController {
                     book.getStock(),
                     book.getBookThumbnailImageUrl(),
                     quantity,
-                    null);
+                    null,
+                    point,
+                    null
+                    );
             List<BookOrderRequest> bookLists = new ArrayList<>();
             bookLists.add(bookOrderRequest);
             model.addAttribute("bookLists", bookLists);

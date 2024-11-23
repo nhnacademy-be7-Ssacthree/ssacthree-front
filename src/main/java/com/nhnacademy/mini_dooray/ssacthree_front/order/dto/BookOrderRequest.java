@@ -25,4 +25,8 @@ public class BookOrderRequest {
     //포장지 정보
     @Setter
     private Long packagingId;
+    // 적립 포인트
+    private int pointToSave;
+    // 회원의 쿠폰 아이디
+    private Long memberCouponId;
 }

@@ -32,10 +32,11 @@
                                 <th style="width: 130px;">도서 이미지</th>
                                 <th>도서명</th>
                                 <th>도서 가격</th>
-                                <th>주문 수량</th>
+                                <th th:if="${isMember}">적립 포인트</th>
+                                <th>수량</th>
                                 <th>쿠폰 적용</th>
                                 <th>포장지 선택</th>
-                                <th>도서별 총 금액</th>
+                                <th>합계</th>
                             </tr>
                             </thead>
                             <tbody id="items-table-body">
@@ -54,8 +55,9 @@
 
                                     </div>
                                 </td>
+                                <td th:if="${isMember}" th:text="${book.pointToSave} + 'P'"></td>
                                 <td th:text="${book.quantity}"></td>
-                                <td th:text="'쿠폰 적용하려면? 회원이 가진 쿠폰 중, 도서에 쓸 수 있는? 주문?'"></td>
+                                <td th:text="'회원쿠폰 가져오기'"></td>
                                 <td>
                                     <!-- book.isPacked가 true일 때만 포장지 선택 버튼 표시 -->
                                     <!-- 여기까지는 ok -->
@@ -369,10 +371,12 @@
     function calculatePaymentPrice() {
         let paymentPrice = 0;
         let deliveryFee = 0;
+        let pointSave = 0;
 
-        // 상품 가격 계산
+        // 상품 가격 계산, 적립 포인트 계산
         bookLists.forEach(book => {
             paymentPrice += book.salePrice * book.quantity;
+            pointSave += book.pointToSave * book.quantity;
         });
 
         // 배송비 계산 (상품 가격이 무료 배송 기준을 초과하는지 확인)
@@ -389,10 +393,13 @@
         paymentPrice += deliveryFee;
 
         // 결과를 페이지에 반영
-        document.getElementById("PaymentPrice").innerText = paymentPrice + "원";
+        document.getElementById("PaymentPrice").innerText = paymentPrice + "P";
 
         // hidden input 필드에 결제 가격 설정
         document.getElementById("payment-price").value = paymentPrice;
+
+        document.getElementById("user-points-save").innerText = pointSave + "P";
+        console.log("적립" + pointSave);
     }
 
 </script>
