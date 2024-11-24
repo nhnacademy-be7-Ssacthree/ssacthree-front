@@ -1,9 +1,10 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.adapter;
 
-import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.request.BookDeleteRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.request.BookSaveRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.request.BookUpdateRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.request.BookUpdateRequestMultipart;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookInfoResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookInfoResponseMultipart;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookSearchResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -24,7 +25,7 @@ public interface BookMgmtAdapter {
     ResponseEntity<MessageResponse> createBook(@RequestBody BookSaveRequest bookSaveRequest);
 
     @PutMapping("/books")
-    ResponseEntity<MessageResponse> updateBook(@RequestBody BookSaveRequest bookSaveRequest);
+    ResponseEntity<MessageResponse> updateBook(@RequestBody BookUpdateRequest bookUpdateRequest);
 
     @DeleteMapping("/books/{book-id}")
     ResponseEntity<MessageResponse> deleteBook(@PathVariable(name = "book-id") Long bookId);

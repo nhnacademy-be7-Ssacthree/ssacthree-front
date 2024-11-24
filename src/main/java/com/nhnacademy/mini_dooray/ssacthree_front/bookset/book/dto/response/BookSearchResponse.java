@@ -20,11 +20,4 @@ public class BookSearchResponse {
     @Setter
     private List<AuthorNameResponse> authors;
 
-    public BookSearchResponse(Long bookId, String bookName, String bookInfo) {
-        this.bookId = bookId;
-        this.bookName = bookName;
-        this.bookInfo = bookInfo;
-        this.bookStatus = String.valueOf(BookStatus.ON_SALE);
-    }
-
 }
