@@ -8,6 +8,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.PaycoGetTokenRespon
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.PaycoLoginRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.PaycoMemberResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.LoginFailedException;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.PaycoConnectionFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.PaycoService;
 import feign.FeignException;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,12 +26,10 @@ public class PaycoServiceImpl implements PaycoService {
     private final PaycoTokenAdapter paycoTokenAdapter;
     private final PaycoIdAdapter paycoIdAdapter;
     private final MemberAdapter memberAdapter;
+
+
     @Value("${payco.authorization_code_url}")
     private String authorizationCodeUrl;
-
-
-    @Value("${payco.idNoUrl}")
-    private String paycoIdNoUrl;
 
     @Value("${payco.client_id}")
     private String clientId;
@@ -40,6 +39,9 @@ public class PaycoServiceImpl implements PaycoService {
 
     @Value("${payco.redirect_url}")
     private String redirectUrl;
+
+    @Value("${payco.redirect_url_for_connection}")
+    private String redirectUrlForConnection;
 
     @Value("${payco.service_provider_code}")
     private String serviceProviderCode;
@@ -64,6 +66,19 @@ public class PaycoServiceImpl implements PaycoService {
 
         return "redirect:" + authorizationCodeUrl + params.toString();
     }
+
+    @Override
+    public String getAuthorizationCodeForConnection() {
+        StringBuilder params = new StringBuilder("?");
+        params.append("client_id=").append(clientId)
+            .append("&response_type=").append(responseType)
+            .append("&redirect_uri=").append(redirectUrlForConnection)
+            .append("&serviceProviderCode=").append(serviceProviderCode)
+            .append("&userLocale=").append(userLocale);
+
+        return "redirect:" + authorizationCodeUrl + params.toString();
+    }
+
 
     @Override
     public String getAccessToken(String code) {
@@ -111,5 +126,21 @@ public class PaycoServiceImpl implements PaycoService {
         } catch (FeignException e) {
             throw new LoginFailedException(e.getMessage());
         }
+    }
+
+
+    @Override
+    public String paycoConnect(String paycoIdNo) {
+        try {
+            ResponseEntity<String> response = memberAdapter.memberPaycoConnection(
+                new PaycoLoginRequest(paycoIdNo));
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return response.getBody();
+            }
+            throw new PaycoConnectionFailedException("연동에 실패하였습니다.");
+        } catch (FeignException e) {
+            throw new PaycoConnectionFailedException("연동에 실패하였습니다.");
+        }
+
     }
 }

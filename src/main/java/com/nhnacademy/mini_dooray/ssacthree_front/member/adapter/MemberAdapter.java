@@ -40,9 +40,13 @@ public interface MemberAdapter {
     ResponseEntity<String> memberPaycoLogin(
         @RequestBody PaycoLoginRequest paycoLoginRequest);
 
+    @PostMapping("/auth/payco-connection")
+    ResponseEntity<String> memberPaycoConnection(@RequestBody PaycoLoginRequest paycoLoginRequest);
+
 
     @PostMapping("/auth/logout")
     ResponseEntity<MessageResponse> memberLogout();
+
 
     @GetMapping("/shop/members/my-page")
     ResponseEntity<MemberInfoResponse> memberInfo(
