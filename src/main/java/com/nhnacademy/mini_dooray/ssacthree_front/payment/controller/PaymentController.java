@@ -1,9 +1,6 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.payment.controller;
 
-import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.BookOrderRequest;
-import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderDetailSaveRequest;
-import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderFormRequest;
-import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderSaveRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.*;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.service.OrderService;
 import com.nhnacademy.mini_dooray.ssacthree_front.payment.dto.PaymentRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.payment.service.PaymentService;
@@ -88,12 +85,7 @@ public class PaymentController {
         Reader reader = new InputStreamReader(responseStream, StandardCharsets.UTF_8);
         JSONObject jsonObject = (JSONObject) parser.parse(reader);
 
-        // TODO : me, jsonObject에서 결제테이블에 필요한거 만들어서 보내기
-        String type = (String) jsonObject.get("type"); // 일반결제 등등
-        String approvedAt = ((String) jsonObject.get("approvedAt"));
-        String method = (String) jsonObject.get("method");
-        String status = (String) jsonObject.get("status"); // 결제 처리 상태
-        PaymentRequest paymentRequest = new PaymentRequest(paymentKey, orderId, Integer.parseInt(amount), type, method,status, approvedAt);
+
 
         // TODO : 결제 성공 ! 주문 저장하기. - 재고차감 등등... shop의 orderService에서 모든 로직 처리하기.
         HttpSession session = request.getSession(false);
@@ -133,14 +125,29 @@ public class PaymentController {
                 (Long) session.getAttribute("deliveryRuleId"),
                 orderFormRequest.getOrderNumber()
                 );
-        // TODO : 주문 정보 저장하기 - 진짜 order저장을 위한.. order랑 컬럼 같아야함
-        orderService.createOrder(orderSaveRequest); // 모든 요청들을 여러개 보내거나, saveOrder에 모든 정보 주기.
-        // 주문상세+포장정보, 포인트 기록 정보, 결제 정보
 
-        // TODO : 주문 상세 저장하기
+        // TODO : 1. 주문서에서 결제하기 누르면 주문 정보 저장.(+ 결제 대기로) -> 결제 선택창으로 넘어감.
+        // TODO : 주문 정보 저장하기 - 주문시 저장되어야하는 모든 정보들(상품 리스트, 포인트, 쿠폰, 정책 등등)
+        // 모든 정보 전달 - 주문상세+포장정보, 포인트 기록 정보, 결제 정보
+        OrderResponse order = orderService.createOrder(orderSaveRequest);
+        Long dbOrderId = order.getOrderId();
 
-        // TODO : 결제정보 저장하기. - 진짜 payment저장을 위한 .. payment랑 컬럼 같게
-//        paymentService.savePayment(paymentRequest); // -> 백으로 보내깅
+        // TODO : 2. 결제승인 이후, 성공 메세지 뜨기 전에 결제 정보 저장해주기.
+        //String type = (String) jsonObject.get("type"); // 일반결제 등등
+        String approvedAt = (String) jsonObject.get("approvedAt");
+        // TODO 일단 임시로 아무 숫자 넣음
+        String method = (String) jsonObject.get("method");
+        String status = (String) jsonObject.get("status"); // 결제 처리 상태
+        // 임의로 아무숫자 넣음. 타입으로
+        PaymentRequest paymentRequest = new PaymentRequest(
+                dbOrderId,
+                1L,
+                Integer.parseInt(amount),
+                status,
+                paymentKey,
+                approvedAt);
+
+        paymentService.savePayment(paymentRequest); // -> 백으로 보내깅
 
 
         responseStream.close();
@@ -157,7 +164,7 @@ public class PaymentController {
      */
     @RequestMapping(value = "/success", method = RequestMethod.GET)
     public String paymentRequest(HttpServletRequest request, Model model) throws Exception {
-        // 여기서 저장?
+        // 결제 성공 -> 결제 정보 저장하기.
 
 
         return "payment/success";
