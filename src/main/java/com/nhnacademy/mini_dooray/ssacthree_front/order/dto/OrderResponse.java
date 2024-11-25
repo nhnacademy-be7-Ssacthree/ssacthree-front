@@ -8,5 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public class OrderResponse {
+    // 저장한 orderID 반환
     private Long orderId;
 }
