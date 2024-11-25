@@ -28,6 +28,11 @@ public class SearchController {
   private final SearchService searchService;
   private final CategoryCommonService categoryCommonService;
 
+  @GetMapping()
+  public String searchPage(){
+    return "redirect:";
+  }
+
   /**
    * 검색 요청 처리 메서드
    *

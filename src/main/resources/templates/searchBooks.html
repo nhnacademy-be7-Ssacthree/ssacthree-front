@@ -32,7 +32,7 @@
       <img src="/images/no-results.png" alt="No Results" class="flexible-image">
       <!-- 이미지 위 텍스트와 도움말 -->
       <div class="centered-content">
-        <p class="main-text" th:text="'&quot;' + ${keyword} + '&quot;에 대한 검색 결과가 없습니다.'"></p>
+        <p class="main-text" th:text="'' + ${keyword} + '에 대한 검색 결과가 없습니다.'"></p>
         <span th:if="${category != null && !category.isEmpty()}" th:text="' (선택된 카테고리: ' + ${category} + ')'"></span>
         <ul class="list-unstyled help-text">
           <li>띄어쓰기를 확인하고 다시 검색해 보세요.</li>
