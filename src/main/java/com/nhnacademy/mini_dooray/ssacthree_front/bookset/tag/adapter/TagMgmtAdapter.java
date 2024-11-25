@@ -3,12 +3,16 @@ package com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.adapter;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.dto.TagCreateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.dto.TagInfoResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.dto.TagUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -27,5 +31,11 @@ public interface TagMgmtAdapter {
 
     @GetMapping("/tags/lists")
     ResponseEntity<List<TagInfoResponse>> getAllTagList();
+
+    @PutMapping("/tags")
+    ResponseEntity<MessageResponse> updateTag(@RequestBody TagUpdateRequest tagUpdateRequest);
+
+    @DeleteMapping("/tags/{tag-id}")
+    ResponseEntity<MessageResponse> deleteTag(@PathVariable(name = "tag-id") Long tagId);
 
 }

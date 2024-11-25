@@ -4,6 +4,7 @@ package com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.service.impl;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.adapter.TagMgmtAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.dto.TagCreateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.dto.TagInfoResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.dto.TagUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.exception.TagFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.service.TagMgmtService;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
@@ -22,6 +23,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TagMgmtServiceImpl implements TagMgmtService {
     private static final String TAG_NOT_FOUND_MESSAGE = "태그 아이디 조회에 실패했습니다.";
+    private static final String TAG_UPDATE_ERROR_MESSAGE = "태그 수정에 실패했습니다.";
+    private static final String TAG_DELETE_ERROR_MESSAGE = "태그 삭제에 실패했습니다.";
 
     private final TagMgmtAdapter tagMgmtAdapter;
 
@@ -68,5 +71,33 @@ public class TagMgmtServiceImpl implements TagMgmtService {
             throw new RuntimeException("태그 생성이 불가능합니다.");
         }
         throw new RuntimeException("태그 생성이 불가능합니다.");
+    }
+
+    @Override
+    public MessageResponse updateTag(TagUpdateRequest tagUpdateRequest) {
+        ResponseEntity<MessageResponse> response = tagMgmtAdapter.updateTag(tagUpdateRequest);
+
+        try{
+            if(response.getStatusCode().is2xxSuccessful()){
+                return response.getBody();
+            }
+            throw new TagFailedException(TAG_UPDATE_ERROR_MESSAGE);
+        }catch (HttpServerErrorException | HttpClientErrorException e){
+            throw new TagFailedException(TAG_UPDATE_ERROR_MESSAGE);
+        }
+    }
+
+    @Override
+    public MessageResponse deleteTag(Long tagId) {
+        ResponseEntity<MessageResponse> response = tagMgmtAdapter.deleteTag(tagId);
+
+        try{
+            if(response.getStatusCode().is2xxSuccessful()){
+                return response.getBody();
+            }
+            throw new TagFailedException(TAG_DELETE_ERROR_MESSAGE);
+        }catch (HttpServerErrorException | HttpClientErrorException e){
+            throw new TagFailedException(TAG_DELETE_ERROR_MESSAGE);
+        }
     }
 }
