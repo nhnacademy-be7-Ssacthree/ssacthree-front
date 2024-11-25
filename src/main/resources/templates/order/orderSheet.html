@@ -263,6 +263,7 @@
                     <section id="point-save" class="mb-4" th:if="${isMember}">
                         <h4 class="text-primary">포인트 적립</h4>
                         <p>적립 포인트: <span id="user-points-save"></span></p>
+                        <input type="hidden" id="points-input" name="pointToSave" />
                     </section>
 
                     <section id="payment-summary" class="mb-4">
@@ -399,6 +400,9 @@
         document.getElementById("payment-price").value = paymentPrice;
 
         document.getElementById("user-points-save").innerText = pointSave + "P";
+
+        // 세이브되는 포인트 넘기기
+        document.getElementById("points-input").value = pointSave;
         console.log("적립" + pointSave);
     }
 
