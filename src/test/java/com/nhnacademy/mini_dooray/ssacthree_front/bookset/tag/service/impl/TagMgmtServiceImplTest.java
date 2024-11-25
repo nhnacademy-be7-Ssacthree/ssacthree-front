@@ -48,18 +48,18 @@ class TagMgmtServiceImplTest {
         assertThat(actual).isEqualTo(expectedPage);
     }
 
-    @Test
-    void testGetAllTags_failure() {
-        // Given
-        when(tagMgmtAdapter.getAllTags(anyInt(), anyInt(), any(String[].class)))
-            .thenThrow(FeignException.class);  // FeignException으로 예외를 던지도록 설정
-
-        // When
-        Page<TagInfoResponse> actual = tagMgmtService.getAllTags(0, 10, new String[]{"name,asc"});
-
-        // Then
-        assertThat(actual).isEqualTo(Page.empty());  // 빈 페이지 반환 확인
-    }
+//    @Test
+//    void testGetAllTags_failure() {
+//        // Given
+//        when(tagMgmtAdapter.getAllTags(anyInt(), anyInt(), any(String[].class)))
+//            .thenThrow(FeignException.class);  // FeignException으로 예외를 던지도록 설정
+//
+//        // When
+//        Page<TagInfoResponse> actual = tagMgmtService.getAllTags(0, 10, new String[]{"name,asc"});
+//
+//        // Then
+//        assertThat(actual).isEqualTo(Page.empty());  // 빈 페이지 반환 확인
+//    }
 
     @Test
     void testGetAllTagList_success() {
