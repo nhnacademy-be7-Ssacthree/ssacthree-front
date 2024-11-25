@@ -42,7 +42,8 @@ public class PaycoLoginController {
         RedirectAttributes redirectAttributes) {
         String accessToken = paycoService.getAccessToken(code);
         String paycoIdNo = paycoService.getPaycoIdNo(accessToken);
-        redirectAttributes.addAttribute("connectionResult", paycoService.paycoConnect(paycoIdNo));
+        redirectAttributes.addFlashAttribute("connectionResult",
+            paycoService.paycoConnect(paycoIdNo));
 
         return "redirect:/members/my-page";
     }
