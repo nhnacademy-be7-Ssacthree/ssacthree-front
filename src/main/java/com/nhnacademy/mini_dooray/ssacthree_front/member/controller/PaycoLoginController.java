@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
@@ -33,16 +34,18 @@ public class PaycoLoginController {
         String accessToken = paycoService.getAccessToken(code);
         String paycoIdNo = paycoService.getPaycoIdNo(accessToken);
         paycoService.paycoLogin(paycoIdNo, response);
-        return "redirect:/shop/carts/customers";
+        return "redirect:/shop/members/carts";
     }
 
     @GetMapping("/members/payco-connection/callback")
-    public String paycoConnectionCallback(@RequestParam(name = "code") String code, Model model) {
+    public String paycoConnectionCallback(@RequestParam(name = "code") String code, Model model,
+        RedirectAttributes redirectAttributes) {
         String accessToken = paycoService.getAccessToken(code);
         String paycoIdNo = paycoService.getPaycoIdNo(accessToken);
-        model.addAttribute("connectionResult", paycoService.paycoConnect(paycoIdNo));
+        redirectAttributes.addFlashAttribute("connectionResult",
+            paycoService.paycoConnect(paycoIdNo));
 
-        return "myPage";
+        return "redirect:/members/my-page";
     }
 
 
