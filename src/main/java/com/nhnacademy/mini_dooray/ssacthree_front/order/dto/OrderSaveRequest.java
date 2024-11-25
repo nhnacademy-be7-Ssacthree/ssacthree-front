@@ -11,9 +11,12 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class OrderSaveRequest {
+    // 주문 완료시 보내야하는 모든 정보들
+    // 입력받은 정보, 책 정보들 orderDetail에 필요한, 포인트와 쿠폰 정보,
+
 
     // 주문 상품 정보 -
-    private List<OrderDetailSaveReqeust> orderDetailList;
+    private List<OrderDetailSaveRequest> orderDetailList;
 
     private Long customerId;
 
@@ -37,6 +40,9 @@ public class OrderSaveRequest {
     // 적립 포인트
 
     // 순수 금액
+
+    // 쿠폰아이디? -> 일단 막아두고 도서에서 쓰게 함.
+    // private Long couponId;
 
 
 

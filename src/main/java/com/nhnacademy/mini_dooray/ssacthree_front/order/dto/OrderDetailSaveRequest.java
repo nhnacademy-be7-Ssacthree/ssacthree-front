@@ -1,6 +1,5 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.order.dto;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class OrderDetailSaveReqeust {
+public class OrderDetailSaveRequest {
 
     private Long bookId;
     private Long orderId;

@@ -184,6 +184,7 @@ public class OrderController {
         orderFormRequest.setCustomerId(customerId);
 
         //TODO : 입력폼에서 넘어온 정보 저장하기 - 세션으로 유지
+        // 가주문 만들기.
         httpSession.setAttribute("orderFormRequest", orderFormRequest);
 
         // 결제에 필요한 정보 넘기기
