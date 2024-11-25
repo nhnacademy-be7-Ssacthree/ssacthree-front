@@ -4,6 +4,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.service.CategoryCommonService;
 import com.nhnacademy.mini_dooray.ssacthree_front.elastic.dto.Paging;
 import com.nhnacademy.mini_dooray.ssacthree_front.elastic.dto.SearchResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.elastic.exception.InvalidPageNumberException;
 import com.nhnacademy.mini_dooray.ssacthree_front.elastic.service.SearchService;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +27,11 @@ public class SearchController {
 
   private final SearchService searchService;
   private final CategoryCommonService categoryCommonService;
+
+  @GetMapping()
+  public String searchPage(){
+    return "redirect:";
+  }
 
   /**
    * 검색 요청 처리 메서드
@@ -62,7 +68,7 @@ public class SearchController {
 
     // 페이지 번호를 0 기반으로 변환 (0보다 작으면 쿼리 생성 시 오류)
     if(requestPageNum < 0 || pageSize < 0){
-      throw new IllegalArgumentException("올바르지 않은 page or pageSize"); // 예외문 만들기?
+      throw new InvalidPageNumberException("올바르지 않은 페이지 접근"); // 예외문 만들기?
     }
 
     log.info("검색 요청 - 키워드: {}, 페이지: {}, 정렬: {}, 페이지 크기: {}, 카테고리: {}, 태그: {}",
@@ -120,6 +126,8 @@ public class SearchController {
         calculateTotalPages(searchResponse.getTotalHits(), pageSize),
         sort
     );
+    log.info("Paging객체의 현재 페이지입니다. {} ", paging.getNumber());
+
     model.addAttribute("paging", paging);
     // 페이징 및 추가 URL 파라미터 구성
     model.addAttribute("baseUrl", "/search/books");
@@ -137,6 +145,19 @@ public class SearchController {
    */
   private int calculateTotalPages(int totalItems, int pageSize) {
     return (int) Math.ceil((double) totalItems / pageSize);
+  }
+
+
+  @GetMapping("/redirect")
+  public String redirectCategory(@RequestParam String category) {
+    ResponseEntity<List<CategoryInfoResponse>> categoryResponse = categoryCommonService.searchCategoriesByName(category);
+    List<CategoryInfoResponse> categories = categoryResponse.getBody();
+
+    if (categories != null && !categories.isEmpty()) {
+      Long categoryId = categories.get(0).getCategoryId();
+      return "redirect:/books?category-id=" + categoryId;
+    }
+    return "redirect:/searchBooks";
   }
 
 

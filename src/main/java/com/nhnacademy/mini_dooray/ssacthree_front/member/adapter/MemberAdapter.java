@@ -7,6 +7,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberLoginRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberRegisterRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.PaycoLoginRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.PointHistoryGetResponse;
 import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -35,8 +36,17 @@ public interface MemberAdapter {
     @PostMapping("/auth/login")
     ResponseEntity<MessageResponse> memberLogin(@RequestBody MemberLoginRequest memberLoginRequest);
 
+    @PostMapping("/auth/payco-login")
+    ResponseEntity<String> memberPaycoLogin(
+        @RequestBody PaycoLoginRequest paycoLoginRequest);
+
+    @PostMapping("/auth/payco-connection")
+    ResponseEntity<String> memberPaycoConnection(@RequestBody PaycoLoginRequest paycoLoginRequest);
+
+
     @PostMapping("/auth/logout")
     ResponseEntity<MessageResponse> memberLogout();
+
 
     @GetMapping("/shop/members/my-page")
     ResponseEntity<MemberInfoResponse> memberInfo(
@@ -67,4 +77,6 @@ public interface MemberAdapter {
         @RequestParam("size") int size,
         @RequestParam("sort") String sort,
         @RequestParam("direction") String direction);
+
+
 }

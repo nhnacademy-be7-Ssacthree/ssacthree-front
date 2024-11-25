@@ -122,21 +122,36 @@
           </script>
 
           <!-- 태그 및 카테고리 -->
-          <p class="text-muted small">
+          <p class="d-flex flex-wrap">
             태그:
-            <span th:each="tag : ${book.tagNames}" class="badge bg-secondary me-1" th:text="${tag}"></span>
+            <span th:each="tag : ${book.tagNames}" class="badge bg-light text-dark me-2" th:text="${tag}"></span>
           </p>
           <p class="text-muted small">
             카테고리:
-            <span th:each="cat : ${book.category}" class="badge bg-secondary me-1" th:text="${cat}"></span>
-
+            <span th:each="cat : ${book.category}" class="badge category-badge">
+              <a th:text="${cat}"
+                 th:href="@{/search/redirect(category=${cat})}"
+                 class="category-link">
+              </a>
+            </span>
           </p>
         </div>
 
         <!-- 구매 버튼 -->
-        <div class="col-md-2 text-end">
-          <button class="btn btn-outline-secondary btn-sm w-100 mb-2">장바구니</button>
-          <button class="btn btn-primary btn-sm w-100">바로구매</button>
+        <div class="col-md-2 text-center">
+          <p class="me-2 mb-2">
+              <span>
+                  <svg class="wishlist" style="width: 30px; height: 30px;">
+                      <use xlink:href="#heart"></use>
+                  </svg>
+              </span>
+          </p>
+          <button class="btn btn-outline-secondary btn-sm w-70 mb-2 rounded-4"
+                  th:onclick="|window.location.href='/shop/carts/add?bookId=' + ${book.bookId}+'&quantity='+1|">장바구니
+          </button>
+          <button class="btn btn-primary btn-sm w-70 rounded-4"
+                  th:onclick="|window.location.href='/order-now?bookId=' + ${book.bookId}+'&quantity='+1|">바로구매
+          </button>
         </div>
       </div>
     </div>

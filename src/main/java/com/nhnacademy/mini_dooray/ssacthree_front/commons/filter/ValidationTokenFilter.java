@@ -14,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+/**
+ * 토큰이 유효한지 검사하는 필터 (블랙리스트 토큰 체크..)
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class ValidationTokenFilter extends OncePerRequestFilter {

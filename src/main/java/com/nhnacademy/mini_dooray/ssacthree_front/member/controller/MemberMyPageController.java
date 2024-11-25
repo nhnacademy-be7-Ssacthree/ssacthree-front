@@ -1,6 +1,5 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.member.controller;
 
-import com.nhnacademy.mini_dooray.ssacthree_front.commons.aop.annotation.Logined;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,7 +19,7 @@ public class MemberMyPageController {
 
     private final MemberService memberService;
 
-    @Logined
+
     @GetMapping("/my-page")
     public String myPage(Model model, HttpServletRequest request) {
 
@@ -28,7 +27,7 @@ public class MemberMyPageController {
         return "myPage";
     }
 
-    @Logined
+
     @PostMapping("/my-page/update")
     public String updateUser(@ModelAttribute MemberInfoUpdateRequest memberInfoUpdateRequest,
         HttpServletRequest request) {
@@ -36,7 +35,7 @@ public class MemberMyPageController {
         return "redirect:/members/my-page";
     }
 
-    @Logined
+
     @PostMapping("/withdraw")
     public String deleteUser(HttpServletRequest request, HttpServletResponse response) {
         memberService.memberWithdraw(request, response);

@@ -1,4 +1,4 @@
-package com.nhnacademy.mini_dooray.ssacthree_front.controller;
+package com.nhnacademy.mini_dooray.ssacthree_front.cart.controller;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.domain.CartItem;
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.service.CartService;
@@ -54,7 +54,7 @@ public class CartController {
         return CART_REDIRECT;
     }
 
-    @GetMapping("/shop/carts/customers")
+    @GetMapping("/shop/members/carts")
     public String makeLoginSession(HttpServletRequest request){
         cartService.getMemberCart(request);
         return "redirect:/";

@@ -2,7 +2,6 @@ package com.nhnacademy.mini_dooray.ssacthree_front.cart.controller;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.domain.CartItem;
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.service.CartService;
-import com.nhnacademy.mini_dooray.ssacthree_front.controller.CartController;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.ui.Model;
 
@@ -20,6 +20,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -48,6 +49,7 @@ class CartControllerTest {
     }
 
     @Test
+    @WithMockUser // Spring Security 인증을 무시하고 테스트를 실행
     void testViewCart() throws Exception {
         when(cartService.initializeCart(any(HttpServletRequest.class))).thenReturn(cartItems);
 
@@ -60,6 +62,7 @@ class CartControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "testUser", roles = {"MEMBER"}) // 인증된 사용자 추가
     void testAddNewBook() throws Exception {
         mockMvc.perform(post("/shop/carts")
                 .param("itemId", "1")
@@ -67,7 +70,8 @@ class CartControllerTest {
                 .param("quantity", "1")
                 .param("price", "15000")
                 .param("image", "image_url")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .with(csrf())) // CSRF 토큰 추가
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/shop/carts"));
 
@@ -75,9 +79,11 @@ class CartControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "testUser", roles = {"MEMBER"}) // 인증된 사용자 추가
     void testChangeQuantity() throws Exception {
         mockMvc.perform(put("/shop/carts/1")
-                .param("quantityChange", "1"))
+                .param("quantityChange", "1")
+                .with(csrf())) // CSRF 토큰 추가
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/shop/carts"));
 
@@ -85,8 +91,10 @@ class CartControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "testUser", roles = {"MEMBER"})
     void testDeleteCartItem() throws Exception {
-        mockMvc.perform(delete("/shop/carts/1"))
+        mockMvc.perform(delete("/shop/carts/1")
+                .with(csrf()))
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/shop/carts"));
 

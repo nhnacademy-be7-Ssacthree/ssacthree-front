@@ -1,6 +1,8 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.payment.controller;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderFormRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderSaveRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.order.service.OrderService;
 import com.nhnacademy.mini_dooray.ssacthree_front.payment.dto.PaymentRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.payment.service.PaymentService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,6 +27,7 @@ import java.util.Base64;
 @Controller
 public class PaymentController {
 
+    private final OrderService orderService;
     private final PaymentService paymentService;
     @RequestMapping(value = "/confirm")
     public ResponseEntity<JSONObject> confirmPayment(HttpServletRequest request, @RequestBody String jsonBody) throws Exception {
@@ -92,9 +95,32 @@ public class PaymentController {
         HttpSession session = request.getSession(false);
         OrderFormRequest orderFormRequest = (OrderFormRequest) session.getAttribute("orderFormRequest");
 
-        // TODO : 주문 정보 저장하기
+//        OrderSaveRequest orderSaveRequest = new OrderSaveRequest(
+//                List< OrderDetailSaveReque> orderDetailList,
+//                orderFormRequest.getCustomerId(),
+//                orderFormRequest.getBuyerName(),
+//                orderFormRequest.getBuyerEmail(),
+//                orderFormRequest.getBuyerPhone(),
+//                orderFormRequest.getRecipientName(),
+//                orderFormRequest.getRecipientPhone(),
+//                orderFormRequest.getPostalCode(),
+//                orderFormRequest.getRoadAddress(),
+//                orderFormRequest.getDetailAddress(),
+//                orderFormRequest.getOrderRequest(),
+//                orderFormRequest.getDeliveryDate(),
+//                orderFormRequest.getPointToUse()
+//        );
+//        // TODO : 주문 정보 저장하기 - 진짜 order저장을 위한.. order랑 컬럼 같아야함
+//        orderService.saveOrder(orderSaveRequest); // 모든 요청들을 여러개 보내거나, saveOrder에 모든 정보 주기.
+//        // 주문상세+포장정보, 포인트 기록 정보, 결제 정보
 
-        // TODO : 결제정보 저장하기.
+        // TODO : 주문 상세 저장하기
+
+        // TODO : 결제정보 저장하기. - 진짜 payment저장을 위한 .. payment랑 컬럼 같게
+        paymentService.savePayment(paymentRequest); // -> 백으로 보내깅
+
+
+
 
 
         responseStream.close();
@@ -111,6 +137,9 @@ public class PaymentController {
      */
     @RequestMapping(value = "/success", method = RequestMethod.GET)
     public String paymentRequest(HttpServletRequest request, Model model) throws Exception {
+        // 여기서 저장?
+
+
         return "payment/success";
     }
 

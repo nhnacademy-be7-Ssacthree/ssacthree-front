@@ -1,5 +1,6 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,13 +12,13 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class BookUpdateRequest {
     private Long bookId;
     private String bookName;
     private String bookIndex; // 목차
     private String bookInfo; // 책 설명
     private String bookIsbn;
-// LocalDate로 수정하여 날짜만 받음
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate publicationDate;
     private int regularPrice; // 판매가
