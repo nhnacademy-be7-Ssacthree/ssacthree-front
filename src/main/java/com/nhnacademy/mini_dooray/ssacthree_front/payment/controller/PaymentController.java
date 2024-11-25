@@ -126,19 +126,18 @@ public class PaymentController {
                 orderFormRequest.getOrderNumber()
                 );
 
-        // TODO : 1. 주문서에서 결제하기 누르면 주문 정보 저장.(+ 결제 대기로) -> 결제 선택창으로 넘어감.
+        // TODO 1. 주문서에서 결제하기 누르면 주문 정보 저장.(+ 결제 대기로) -> 결제 선택창으로 넘어감.
         // TODO : 주문 정보 저장하기 - 주문시 저장되어야하는 모든 정보들(상품 리스트, 포인트, 쿠폰, 정책 등등)
         // 모든 정보 전달 - 주문상세+포장정보, 포인트 기록 정보, 결제 정보
         OrderResponse order = orderService.createOrder(orderSaveRequest);
         Long dbOrderId = order.getOrderId();
 
-        // TODO : 2. 결제승인 이후, 성공 메세지 뜨기 전에 결제 정보 저장해주기.
+        // TODO 2. 결제승인 이후, 성공 메세지 뜨기 전에 결제 정보 저장해주기.
         //String type = (String) jsonObject.get("type"); // 일반결제 등등
         String approvedAt = (String) jsonObject.get("approvedAt");
-        // TODO 일단 임시로 아무 숫자 넣음
+        // TODO : 타입에 일단 임시로 아무 숫자 넣음, 제대로 변경 필요
         String method = (String) jsonObject.get("method");
         String status = (String) jsonObject.get("status"); // 결제 처리 상태
-        // 임의로 아무숫자 넣음. 타입으로
         PaymentRequest paymentRequest = new PaymentRequest(
                 dbOrderId,
                 1L,
@@ -147,7 +146,9 @@ public class PaymentController {
                 paymentKey,
                 approvedAt);
 
-        paymentService.savePayment(paymentRequest); // -> 백으로 보내깅
+        paymentService.savePayment(paymentRequest);
+
+        //TODO 여기에 주문완료하고서 보여줄 정보 주기.
 
 
         responseStream.close();
@@ -165,7 +166,7 @@ public class PaymentController {
     @RequestMapping(value = "/success", method = RequestMethod.GET)
     public String paymentRequest(HttpServletRequest request, Model model) throws Exception {
         // 결제 성공 -> 결제 정보 저장하기.
-
+        // TODO : 여기에 결제 저장?
 
         return "payment/success";
     }
