@@ -30,7 +30,7 @@ public class MemberLoginController {
     @PostMapping("/login")
     public String login(@ModelAttribute MemberLoginRequest requestBody, Model model, HttpServletResponse httpServletResponse, HttpServletRequest request) {
         memberService.memberLogin(requestBody,httpServletResponse);;
-        return "redirect:/shop/carts/customers";
+        return "redirect:/shop/members/carts";
     }
 
 

@@ -1,5 +1,6 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class BookSaveRequest {
     private Long bookId;
     private String bookName;

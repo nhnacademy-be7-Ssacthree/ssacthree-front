@@ -73,7 +73,7 @@ public class OrderController {
 
         for (CartItem cartItem : cartItems) {
             BookInfoResponse book = bookCommonService.getBookById(cartItem.getId());
-
+            int point = (int) (book.getRegularPrice() * 5 * 0.01);
             // 요청 만들기, 필요한 정보 추가. 수량 등
             BookOrderRequest bookOrderRequest = new BookOrderRequest(
                     book.getBookId(),
@@ -85,7 +85,10 @@ public class OrderController {
                     book.isPacked(),
                     book.getStock(),
                     book.getBookThumbnailImageUrl(),
-                    cartItem.getQuantity());
+                    cartItem.getQuantity(),
+                    null,
+                    point,
+                    null);
             bookLists.add(bookOrderRequest);
         }
         model.addAttribute("bookLists", bookLists);
@@ -116,8 +119,13 @@ public class OrderController {
         }
         model.addAttribute("isMember", isMember);
 
+
+        // 포인트 적립 정책 가져오기 .. - 지금은 임시로 5%로 그냥 설정
+
+
         // 책 정보 가져오기 - 단일 책
         BookInfoResponse book = bookCommonService.getBookById(bookId);
+        int point = (int) (book.getRegularPrice() * 5 * 0.01);
 
         BookOrderRequest bookOrderRequest = new BookOrderRequest(
                 book.getBookId(),
@@ -128,10 +136,15 @@ public class OrderController {
                 book.isPacked(),
                 book.getStock(),
                 book.getBookThumbnailImageUrl(),
-                quantity);
+                quantity,
+                null,
+                point,
+                null
+        );
         List<BookOrderRequest> bookLists = new ArrayList<>();
         bookLists.add(bookOrderRequest);
         model.addAttribute("bookLists", bookLists);
+
 
         // 포장지 가져오기
         // TODO : 포장지가 다 false로 들어온다 ..!
@@ -170,6 +183,7 @@ public class OrderController {
         orderFormRequest.setCustomerId(customerId);
 
         //TODO : 입력폼에서 넘어온 정보 저장하기 - 세션으로 유지
+        // 가주문 만들기.
         httpSession.setAttribute("orderFormRequest", orderFormRequest);
 
         // 결제에 필요한 정보 넘기기

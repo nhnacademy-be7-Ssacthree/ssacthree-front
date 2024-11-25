@@ -1795,13 +1795,13 @@ select#input-sort {
 .category-label {
     font-size: 0.9rem;
     font-weight: 600; /* 강조된 텍스트 */
-    color: #8feaff; /* 바다색 톤 */
+    color: #8feaff;
     margin-bottom: 8px;
 }
 
 /* 배지 스타일 */
 .category-badge {
-    background: linear-gradient(45deg, #f86d72, #ff8d92); /* 바다색 그라데이션 */
+    background: linear-gradient(45deg, #f86d72, #ff8d92);
     color: #ffffff; /* 흰색 텍스트 */
     font-weight: 500; /* 텍스트 강조 */
     border-radius: 12px; /* 더 둥글게 */
@@ -1831,7 +1831,7 @@ select#input-sort {
 }
 
 .rating-star.selected {
-    fill: #FFD700; /* 선택된 별 색상: 금색 */
+    fill: #FFD700;
 }
 
 
