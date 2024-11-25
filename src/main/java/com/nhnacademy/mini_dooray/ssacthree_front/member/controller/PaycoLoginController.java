@@ -34,7 +34,7 @@ public class PaycoLoginController {
         String accessToken = paycoService.getAccessToken(code);
         String paycoIdNo = paycoService.getPaycoIdNo(accessToken);
         paycoService.paycoLogin(paycoIdNo, response);
-        return "redirect:/shop/carts/customers";
+        return "redirect:/shop/members/carts";
     }
 
     @GetMapping("/members/payco-connection/callback")
