@@ -111,205 +111,209 @@
         </div>
     </div>
 
-    <!-- 책 설명 섹션 -->
-    <div class="container my-5">
-        <div class="card mb-3 shadow-sm">
-            <div class="card-header bg-light text-primary fw-bold" style="font-size: 2.2rem; padding: 20px;">
-                책 소개
-            </div>
-            <div class="list-group list-group-flush">
-
-                <!-- 스타일을 통일하기 위해 row와 col 스타일을 별도로 설정 -->
-                <style>
-                    .info-row {
-                        margin: 0;
-                        padding: 20px 30px;
-                        border-bottom: 1px solid #ddd;
-                    }
-
-                    .info-title {
-                        font-size: 1.8rem;
-                        font-weight: bold;
-                        color: #333;
-                    }
-
-                    .info-content {
-                        font-size: 1.5rem;
-                        color: #333;
-                        line-height: 1.6;
-                    }
-
-                    .last-row {
-                        border-bottom: none;
-                    }
-
-
-                </style>
-
-                <!-- 주제 분류 -->
-                <div class="row info-row">
-                    <div class="col-md-3">
-                        <h6 class="info-title">주제 분류</h6>
+    <hr style="margin-top:50px; border-width:2px;">
+    <!-- 주제 분류 -->
+    <div style="border: 1px">
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="fw-bold">주제 분류</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td style="padding-top: 50px; padding-bottom: 50px; border-bottom-width:2px;">
+                    <div th:each="path : ${categoryPaths}">
+                        <ol class="breadcrumb mb-0" style="padding: 0; margin: 0;">
+                            <li th:each="category, iterStat : ${path}"
+                                th:classappend="${iterStat.last} ? 'breadcrumb-item active' : 'breadcrumb-item'">
+                                <a th:href="@{/categories/{id}(id=${category.categoryId})}"
+                                   th:text="${category.categoryName}"></a>
+                            </li>
+                        </ol>
                     </div>
-                    <div class="col-md-9">
-                        <div th:each="path : ${categoryPaths}">
-                            <ol class="breadcrumb mb-0" style="font-size: 1.3rem; padding: 0; margin: 0;">
-                                <li th:each="category, iterStat : ${path}"
-                                    th:classappend="${iterStat.last} ? 'breadcrumb-item active' : 'breadcrumb-item'">
-                                    <a th:href="@{/categories/{id}(id=${category.categoryId})}"
-                                       th:text="${category.categoryName}"></a>
-                                </li>
-                            </ol>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- 책 설명 -->
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="fw-bold">책 설명</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td style="padding-top: 50px; padding-bottom: 50px; border-bottom-width:2px;">
+                    <p th:text="${book.bookInfo}" class="info-content"></p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- 목차 -->
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="fw-bold">목차</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td style="border-bottom-width:2px;">
+                    <p th:text="${book.bookIndex}" class="info-content"
+                       style="padding-top: 50px; padding-bottom: 50px;"></p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- 작가 소개 -->
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="fw-bold">작가 소개</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td style="border-bottom-width:2px;">
+                    <p class="info-content" style="padding-top: 50px; padding-bottom: 50px;">저자:
+                        <span th:each="item, iterStat : ${book.authors}">
+                    <span th:text="${item.authorName}"></span>
+                    <span th:if="${!iterStat.last}">, </span>
+                </span>
+                    </p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- 출판사 소개 -->
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="fw-bold">출판사 소개</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td style="border-bottom-width:2px;">
+                    <p th:text="${book.publisher.publisherName}" class="info-content"
+                       style="padding-top: 50px; padding-bottom: 50px;"></p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- 기본 정보 -->
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="fw-bold">기본 정보</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td style="padding-top: 50px; padding-bottom: 50px; border-bottom-width:2px;">
+                    <ul class="info-content" style="list-style-type: none; padding-left: 0;">
+                        <li><strong>ISBN:</strong> <span th:text="${book.bookIsbn}"></span></li>
+                        <li><strong>발행일:</strong> <span
+                            th:text="${#temporals.format(book.publicationDate, 'yyyy-MM-dd')}"></span></li>
+                    </ul>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="container my-5">
+            <div class="card mb-3 shadow-sm">
+                <!-- 리뷰 헤더 -->
+                <div class="card-header bg-light text-dark fw-bold d-flex justify-content-between align-items-center"
+                     style="font-size: 1.8rem; padding: 15px; border-bottom: 2px solid #dee2e6;">
+                    <span>리뷰 (리뷰 수: <span th:text="${reviews.size()}"></span>)</span>
+                    <div>
+                        <!-- 리뷰 작성 버튼 -->
+                        <a class="btn btn-primary me-2"
+                           th:href="@{/shop/members/reviews/{book-id}(book-id=${book.getBookId})}">
+                            리뷰 작성
+                        </a>
+                    </div>
+                </div>
+
+                <div class="list-group list-group-flush">
+                    <!-- 리뷰가 없는 경우 -->
+                    <div th:if="${reviews.isEmpty()}" class="p-3 text-center text-muted">
+                        작성된 리뷰가 없습니다. 첫 번째 리뷰를 작성해 보세요!
+                    </div>
+                    <!-- 리뷰 리스트 (최대 10개 제한) -->
+                    <div th:each="review, iterStat : ${reviews}" th:if="${iterStat.index < 10}" class="p-3 border-bottom">
+                        <!-- 작성자 정보 및 날짜 -->
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <span class="fw-bold" th:text="${review.memberId}"></span>
+                                <span class="text-muted small"
+                                      th:text="${#temporals.format(review.reviewCreatedAt, 'yyyy-MM-dd')}"></span>
+                            </div>
+                            <!-- 별점 표시 -->
+                            <div class="rating text-warning d-flex align-items-center pb-1" style="margin-left:10px;">
+                                <!-- 1점 -->
+                                <svg class="rating-star" style="width: 30px; height: 30px;" th:if="${1 <= review.reviewRate}">
+                                    <use href="#star-fill"></use>
+                                </svg>
+                                <svg class="rating-star" style="width: 30px; height: 30px;" th:if="${1 > review.reviewRate}">
+                                    <use href="#star-outline"></use>
+                                </svg>
+                                <!-- 2점 -->
+                                <svg class="rating-star" style="width: 30px; height: 30px;" th:if="${2 <= review.reviewRate}">
+                                    <use href="#star-fill"></use>
+                                </svg>
+                                <svg class="rating-star" style="width: 30px; height: 30px;" th:if="${2 > review.reviewRate}">
+                                    <use href="#star-outline"></use>
+                                </svg>
+                                <!-- 3점 -->
+                                <svg class="rating-star" style="width: 30px; height: 30px;" th:if="${3 <= review.reviewRate}">
+                                    <use href="#star-fill"></use>
+                                </svg>
+                                <svg class="rating-star" style="width: 30px; height: 30px;" th:if="${3 > review.reviewRate}">
+                                    <use href="#star-outline"></use>
+                                </svg>
+                                <!-- 4점 -->
+                                <svg class="rating-star" style="width: 30px; height: 30px;" th:if="${4 <= review.reviewRate}">
+                                    <use href="#star-fill"></use>
+                                </svg>
+                                <svg class="rating-star" style="width: 30px; height: 30px;" th:if="${4 > review.reviewRate}">
+                                    <use href="#star-outline"></use>
+                                </svg>
+                                <!-- 5점 -->
+                                <svg class="rating-star" style="width: 30px; height: 30px;" th:if="${5 <= review.reviewRate}">
+                                    <use href="#star-fill"></use>
+                                </svg>
+                                <svg class="rating-star" style="width: 30px; height: 30px;" th:if="${5 > review.reviewRate}">
+                                    <use href="#star-outline"></use>
+                                </svg>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-                <!-- 책 설명 -->
-                <div class="row info-row">
-                    <div class="col-md-3">
-                        <h6 class="info-title">책 설명</h6>
-                    </div>
-                    <div class="col-md-9">
-                        <p th:text="${book.bookInfo}" class="info-content"></p>
-                    </div>
-                </div>
+                        <!-- 리뷰 제목 -->
+                        <h5 class="mt-2 fw-bold" th:text="${review.reviewTitle}" style="font-size: 1.4rem;"></h5>
 
-                <!-- 목차 -->
-                <div class="row info-row">
-                    <div class="col-md-3">
-                        <h6 class="info-title">목차</h6>
-                    </div>
-                    <div class="col-md-9">
-                        <p th:text="${book.bookIndex}" class="info-content"></p>
-                    </div>
-                </div>
+                        <!-- 리뷰 이미지 -->
+                        <div class="mt-2 mb-2" th:if="${!#strings.isEmpty(review.reviewImage)}">
+                            <img th:src="${review.reviewImage}" alt="Review Image" class="img-fluid rounded"
+                                 style="max-width: 300px;">
+                        </div>
 
-                <!-- 작가 소개 -->
-                <div class="row info-row">
-                    <div class="col-md-3">
-                        <h6 class="info-title">작가 소개</h6>
-                    </div>
-                    <div class="col-md-9">
-                        <p class="info-content">저자:
-                            <span th:each="item, iterStat : ${book.authors}">
-                            <span th:text="${item.authorName}"></span><span th:if="${!iterStat.last}">, </span>
-                        </span>
-                        </p>
-                    </div>
-                </div>
-
-                <!-- 출판사 소개 -->
-                <div class="row info-row">
-                    <div class="col-md-3">
-                        <h6 class="info-title">출판사 소개</h6>
-                    </div>
-                    <div class="col-md-9">
-                        <p th:text="${book.publisher.publisherName}" class="info-content"></p>
-                    </div>
-                </div>
-
-                <!-- 기본 정보 -->
-                <div class="row info-row last-row">
-                    <div class="col-md-3">
-                        <h6 class="info-title">기본 정보</h6>
-                    </div>
-                    <div class="col-md-9">
-                        <ul class="info-content" style="list-style-type: none; padding-left: 0;">
-                            <li><strong>ISBN:</strong> <span th:text="${book.bookIsbn}"></span></li>
-                            <li><strong>발행일:</strong> <span
-                                    th:text="${#temporals.format(book.publicationDate, 'yyyy-MM-dd')}"></span></li>
-                        </ul>
+                        <!-- 리뷰 내용 -->
+                        <p class="mt-2" th:text="${review.reviewContent}"
+                           style="font-size: 1.2rem; line-height: 1.6;"></p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="container my-5">
-        <div class="card mb-3 shadow-sm">
-            <div class="card-header bg-light text-primary fw-bold" style="font-size: 2.2rem; padding: 20px;">
-                리뷰 (리뷰 수: <span th:text="${reviews.size()}"></span>)
-            </div>
-            <div class="list-group list-group-flush">
-                <!-- 리뷰가 없는 경우 -->
-                <div th:if="${reviews.isEmpty()}" class="p-3 text-center text-muted">
-                    작성된 리뷰가 없습니다. 첫 번째 리뷰를 작성해 보세요!
-                </div>
-                <!-- 리뷰 리스트 -->
-                <div th:each="review : ${reviews}" class="p-3 border-bottom">
-                    <!-- 작성자 정보 및 날짜 -->
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <div>
-                            <span class="fw-bold" th:text="${review.memberId}"></span>
-                            <span class="text-muted small" th:text="${#temporals.format(review.reviewCreatedAt, 'yyyy-MM-dd')}"></span>
-                        </div>
-                        <!-- 별점 표시 -->
-                        <div class="rating text-warning d-flex align-items-center pb-1" style="margin-left:10px;">
-                            <!-- 1점 -->
-                            <svg class="rating-star" style="width: 30px; height: 30px;" th:if="${1 <= review.reviewRate}">
-                                <use href="#star-fill"></use>
-                            </svg>
-                            <svg class="rating-star" style="width: 30px; height: 30px;" th:if="${1 > review.reviewRate}">
-                                <use href="#star-outline"></use>
-                            </svg>
-                            <!-- 2점 -->
-                            <svg class="rating-star" style="width: 30px; height: 30px;" th:if="${2 <= review.reviewRate}">
-                                <use href="#star-fill"></use>
-                            </svg>
-                            <svg class="rating-star" style="width: 30px; height: 30px;" th:if="${2 > review.reviewRate}">
-                                <use href="#star-outline"></use>
-                            </svg>
-                            <!-- 3점 -->
-                            <svg class="rating-star" style="width: 30px; height: 30px;" th:if="${3 <= review.reviewRate}">
-                                <use href="#star-fill"></use>
-                            </svg>
-                            <svg class="rating-star" style="width: 30px; height: 30px;" th:if="${3 > review.reviewRate}">
-                                <use href="#star-outline"></use>
-                            </svg>
-                            <!-- 4점 -->
-                            <svg class="rating-star" style="width: 30px; height: 30px;" th:if="${4 <= review.reviewRate}">
-                                <use href="#star-fill"></use>
-                            </svg>
-                            <svg class="rating-star" style="width: 30px; height: 30px;" th:if="${4 > review.reviewRate}">
-                                <use href="#star-outline"></use>
-                            </svg>
-                            <!-- 5점 -->
-                            <svg class="rating-star" style="width: 30px; height: 30px;" th:if="${5 <= review.reviewRate}">
-                                <use href="#star-fill"></use>
-                            </svg>
-                            <svg class="rating-star" style="width: 30px; height: 30px;" th:if="${5 > review.reviewRate}">
-                                <use href="#star-outline"></use>
-                            </svg>
-                        </div>
-                    </div>
-
-                    <!-- 리뷰 제목 -->
-                    <h5 class="mt-2 fw-bold" th:text="${review.reviewTitle}" style="font-size: 1.4rem;"></h5>
-
-                    <!-- 리뷰 이미지 -->
-                    <div class="mt-2 mb-2" th:if="${!#strings.isEmpty(review.reviewImage)}">
-                        <img th:src="${review.reviewImage}" alt="Review Image" class="img-fluid rounded"
-                             style="max-width: 300px;">
-                    </div>
-
-                    <!-- 리뷰 내용 -->
-                    <p class="mt-2" th:text="${review.reviewContent}" style="font-size: 1.2rem; line-height: 1.6;"></p>
-                </div>
-            </div>
-        </div>
-
-        <!-- 리뷰 작성 버튼(나중에 삭제할지도??) -->
-        <div class="card-footer text-end">
-            <a class="btn btn-primary"
-               th:href="@{/shop/members/reviews/{book-id}(book-id=${book.getBookId})}">
-                리뷰 작성
-            </a>
-        </div>
-    </div>
-
-
-
-
 </main>
 
 
@@ -317,6 +321,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/js/book.js"></script>
+
 <svg style="display: none;">
     <!-- 둥근 안 채워진 별 -->
     <symbol id="star-outline" viewBox="0 0 24 24">
