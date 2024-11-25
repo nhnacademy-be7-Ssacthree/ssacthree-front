@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @RequiredArgsConstructor
 public class UrlConfig {
-    @Value("${member.url}")
+    @Value("${member-like.url}")
     private String memberUrl;
 
     @Bean
