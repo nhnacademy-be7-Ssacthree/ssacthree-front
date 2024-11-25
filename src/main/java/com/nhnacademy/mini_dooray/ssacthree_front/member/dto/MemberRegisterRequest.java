@@ -41,7 +41,8 @@ public class MemberRegisterRequest {
     private String customerEmail;
 
     @NotBlank(message = "공백일 수 없습니다.")
-    @Size(max = 8)
+    @Size(min = 8, max = 8, message = "생년월일은 숫자 8자리여야 합니다.")
+    @Pattern(regexp = "^[0-9]{8}$", message = "8자리 숫자로만 입력 가능합니다.")
     private String birth;
 
     public void setBirth(String birth) {

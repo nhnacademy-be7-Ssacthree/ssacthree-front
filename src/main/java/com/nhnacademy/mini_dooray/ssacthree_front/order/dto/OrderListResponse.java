@@ -1,6 +1,6 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.order.dto;
 
-import java.util.List;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +10,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderResponseWithCount {
-  private List<OrderListResponse> orders; // 주문 데이터 리스트
-  private long totalOrders;           // 전체 주문 수
+public class OrderListResponse {
+  private Long orderId;
+  private LocalDate orderDate;
+  private int totalPrice;
+  private String orderStatus;
 }

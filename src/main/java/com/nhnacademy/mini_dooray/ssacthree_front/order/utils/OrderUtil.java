@@ -9,10 +9,10 @@ public class OrderUtil {
         String today = LocalDate.now().toString().replace("-", "");
 
         // UUID 생성 (하이픈을 제외한 값)
-        String uuid = UUID.randomUUID().toString().replace("-", "");
+        String uuid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
 
         // 주문 번호 (년월일 + UUID 앞 12자리)
-        String orderNumber = today + uuid.substring(0, 12); // UUID에서 앞 12자리 사용
+        String orderNumber = today + '-' + uuid.substring(0, 8); // UUID에서 앞 12자리 사용
 
         // 20글자 제한 (자르기)
         if (orderNumber.length() > 20) {

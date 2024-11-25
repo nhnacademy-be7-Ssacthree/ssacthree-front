@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/config :: config}">
+
+</head>
+
+<body>
+<!-- Header -->
+<header th:replace="~{common/header}"/>
+
+<!-- Main Container -->
+<div class="container mypage-container py-5">
+    <div class="row">
+        <!-- Sidebar 메뉴 -->
+        <div th:replace="~{common/sidebar}"></div>
+
+        <!-- 메인 컨텐츠 -->
+        <main class="col-lg-9">
+            <!-- 회원 등급 섹션 -->
+            <h3>찜 목록 <img class="mb-3" src="/images/my-page-heart-icon.png" style="width: 40px; height: 40px;"/></h3>
+            <hr>
+            <div class="row justify-content-center">
+                <!-- 책 리스트를 반복적으로 렌더링 -->
+                <div class="custom-col2 mb-3" th:each="book : ${books}">
+                    <div class="card position-relative p-4 border rounded-3"
+                         th:onclick="|window.location.href='/books/' + ${book.bookId}|"
+                         style="cursor: pointer; height: 525px;">
+                        <!-- 할인 정보 -->
+                        <div class="position-absolute">
+                            <p class="bg-primary py-1 px-3 fs-6 text-white rounded-2"
+                               th:text="${book.bookDiscount} + '% off'">10% off</p>
+                        </div>
+
+                        <!-- 책 이미지 -->
+                        <img th:src="${book.bookThumbnailImageUrl}" class="img-fluid shadow-sm"
+                             alt="book cover"
+                             style="width: 100%; height: auto; object-fit: cover;">
+
+                        <!-- 책 제목 -->
+                        <h6 class="mt-4 mb-0 fw-bold"
+                            th:text="${#strings.length(book.bookName) > 50 ? #strings.substring(book.bookName, 0, 47) + '...' : book.bookName}">
+                            Book Title
+                        </h6>
+
+                        <!-- 리뷰 별점 -->
+                        <div class="review-content d-flex mt-2">
+                            <div class="rating text-warning d-flex align-items-center">
+                                <svg class="star star-fill">
+                                    <use xlink:href="#star-fill"></use>
+                                </svg>
+                                <svg class="star star-fill">
+                                    <use xlink:href="#star-fill"></use>
+                                </svg>
+                                <svg class="star star-fill">
+                                    <use xlink:href="#star-fill"></use>
+                                </svg>
+                                <svg class="star star-fill">
+                                    <use xlink:href="#star-fill"></use>
+                                </svg>
+                                <svg class="star star-fill">
+                                    <use xlink:href="#star-fill"></use>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- 가격 정보 -->
+                        <p><span class="price text-primary fw-bold mb-2 fs-5 unitPrice"
+                                 th:text="${book.salePrice}">$0.00</span>원</p>
+
+                        <!-- 액션 버튼 (장바구니, 위시리스트) -->
+                        <div class="card-concern position-absolute start-0 end-0 d-flex gap-2">
+                            <button type="button" class="btn btn-dark cart-button"
+                                    th:onclick="|window.location.href='/shop/carts/add?bookId=' + ${book.bookId}+'&quantity='+1|"
+                                    data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="장바구니에 추가">
+                                <svg class="cart">
+                                    <use xlink:href="#cart"></use>
+                                </svg>
+                            </button>
+                            <div class="btn btn-dark wishlist-button">
+                                    <span><svg class="wishlist"
+                                               style="width: 25px; height: 25px; cursor: pointer;"
+                                               th:classappend="${likeBooks != null and likeBooks.contains(book.bookId)} ? 'liked' : ''"
+                                               th:data-book-id="${book.bookId}"
+                                               onclick="toggleLike(this)">
+                                                <use th:if="${likeBooks != null and likeBooks.contains(book.bookId)}" xlink:href="#heart-filled"></use>
+                                                <use th:unless="${likeBooks != null and likeBooks.contains(book.bookId)}" xlink:href="#heart"></use>
+
+                                            </svg></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div th:replace="~{common/pagination :: pagination(${baseUrl}, ${books}, ${extraParams})}"></div>
+
+        </main>
+    </div>
+</div>
+
+<!-- JavaScript에 memberUrl 값 전달 -->
+<script th:inline="javascript">
+    var memberUrl = [[${memberUrl}]];
+</script>
+
+<script src="/js/bookLike.js"></script>
+<script src="/js/unitPrice.js"></script>
+
+<!-- Footer -->
+<footer th:replace="~{common/footer :: footer}"/>
+
+
+</body>
+</html>
