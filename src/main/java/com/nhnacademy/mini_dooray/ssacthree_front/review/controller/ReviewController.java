@@ -23,7 +23,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
 
-    @PostMapping("shop/members/reviews")//리뷰 작성
+    @PostMapping("/shop/members/reviews")//리뷰 작성
     public String postReview(
         @RequestParam("bookId") Long bookId,
         @RequestParam("orderId") Long orderId,
@@ -31,12 +31,11 @@ public class ReviewController {
 
         reviewService.postReviewBook(bookId, orderId, reviewRequest, request);
 
-        return "redirect:/reviews";
+        return "redirect:/shop/members/reviews";
     }
 
-    @GetMapping("shop/members/reviews/{book-id}")
-    public String authToWriteReview(@PathVariable("book-id") Long bookId,
-        HttpServletRequest request, Model model) {
+    @GetMapping("/shop/members/reviews/{book-id}")
+    public String authToWriteReview(@PathVariable("book-id") Long bookId, HttpServletRequest request, Model model) {
 
         Long orderId = reviewService.authToWriteReview(bookId, request);
 

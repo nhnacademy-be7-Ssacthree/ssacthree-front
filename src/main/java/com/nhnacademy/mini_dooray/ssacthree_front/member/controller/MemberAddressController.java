@@ -46,7 +46,7 @@ public class MemberAddressController {
     public String addNewAddress(HttpServletRequest request,
         @ModelAttribute AddressRequest addressRequest) {
         addressService.addNewAddress(request, addressRequest);  // API 서버로 요청 전달
-        return "redirect:/address-page";
+        return "redirect:/members/my-page/address-page";
     }
 
     /**
@@ -65,6 +65,6 @@ public class MemberAddressController {
     @PostMapping("/address/{id}") // 주소 삭제
     public String deleteAddress(@PathVariable("id") Long addressId, HttpServletRequest request) {
         addressService.deleteAddress(addressId, request);
-        return "redirect:/address-page";
+        return "redirect:/members/my-page/address-page";
     }
 }
