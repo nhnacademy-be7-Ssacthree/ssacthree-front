@@ -3,6 +3,7 @@ package com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.service;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.dto.TagCreateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.dto.TagInfoResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.dto.TagUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
 import org.springframework.data.domain.Page;
 
@@ -15,5 +16,9 @@ public interface TagMgmtService {
     List<TagInfoResponse> getAllTagList();
 
     MessageResponse createTag(TagCreateRequest tagCreateRequest);
+
+    MessageResponse updateTag(TagUpdateRequest tagUpdateRequest);
+
+    MessageResponse deleteTag(Long tagId);
 
 }

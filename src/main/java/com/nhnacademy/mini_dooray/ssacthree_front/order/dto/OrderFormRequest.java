@@ -47,5 +47,8 @@ public class OrderFormRequest {
 
     // 주문 도서 정보 list
 
+    private String orderNumber;
+
+
 
 }

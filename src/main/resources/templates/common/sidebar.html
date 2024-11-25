@@ -19,6 +19,9 @@
                 onclick="if(confirm('정말로 회원 탈퇴를 하시겠습니까?')) { document.getElementById('withdrawForm').submit(); } else { event.preventDefault(); }">
                 <a href="#">회원 탈퇴</a>
             </li>
+                <li class="list-group-item">
+        <a href="#" id="paycoConnect" style="color: #FF2233">PAYCO 연동</a>
+      </li>
         </ul>
 
 
@@ -28,11 +31,21 @@
 </aside>
 
 <script>
-    document.querySelector('form[action="/members/withdraw"]').addEventListener('submit',
-        function (event) {
-            const confirmWithdraw = confirm("정말로 회원 탈퇴를 하시겠습니까?");
-            if (!confirmWithdraw) {
-                event.preventDefault(); // 사용자가 취소를 누르면 form 제출을 막음
-            }
-        });
+  document.querySelector('form[action="/members/withdraw"]').addEventListener('submit',
+      function (event) {
+        const confirmWithdraw = confirm("정말로 회원 탈퇴를 하시겠습니까?");
+        if (!confirmWithdraw) {
+          event.preventDefault(); // 사용자가 취소를 누르면 form 제출을 막음
+        }
+      });
+
+  document.getElementById('paycoConnect').addEventListener('click', function (event) {
+    const confirmPayco = confirm("PAYCO 로그인 연동을 수행하시겠습니까?");
+    if (confirmPayco) {
+      // 이동 경로를 지정
+      window.location.href = "/members/payco-connection";
+    } else {
+      event.preventDefault(); // 사용자가 취소를 누르면 이동을 막음
+    }
+  });
 </script>

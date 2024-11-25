@@ -2,9 +2,8 @@ package com.nhnacademy.mini_dooray.ssacthree_front.commons.controller;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.elastic.exception.InvalidPageNumberException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.LoginFailedException;
-import com.sun.jdi.InvalidLineNumberException;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.PaycoConnectionFailedException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -35,5 +34,11 @@ public class WebControllerAdvice {
         return modelAndView;
     }
 
+    @ExceptionHandler(PaycoConnectionFailedException.class)
+    public String handlePaycoConnectionFailedException(PaycoConnectionFailedException e,
+        RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("connectionResult", e.getMessage());
+        return "redirect:/members/my-page";
+    }
 
 }

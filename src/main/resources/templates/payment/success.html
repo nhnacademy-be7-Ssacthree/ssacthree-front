@@ -32,10 +32,11 @@
       </div>
     </div>
 
-    <div class="box_section" style="width: 600px; text-align: left">
-      <b>Response Data :</b>
-      <div id="response" style="white-space: initial"></div>
-    </div>
+    <!-- 응답 정보 안뜨게 하기 -->
+<!--    <div class="box_section" style="width: 600px; text-align: left">-->
+<!--      <b>Response Data :</b>-->
+<!--      <div id="response" style="white-space: initial"></div>-->
+<!--    </div>-->
 
     <script>
       // 쿼리 파라미터 값이 결제 요청할 때 보낸 데이터와 동일한지 반드시 확인하세요.
@@ -75,6 +76,7 @@
       }
       confirm().then(function (data) {
         document.getElementById("response").innerHTML = `<pre>${JSON.stringify(data, null, 4)}</pre>`;
+        console.log(data);
       });
 
       const paymentKeyElement = document.getElementById("paymentKey");
