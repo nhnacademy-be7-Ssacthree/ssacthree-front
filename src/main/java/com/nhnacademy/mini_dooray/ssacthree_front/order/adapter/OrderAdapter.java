@@ -13,7 +13,7 @@ public interface OrderAdapter {
 
     // 주문 저장
     @PostMapping("/shop/orders")
-    ResponseEntity<OrderResponse> saveOrder(@RequestBody OrderSaveRequest orderSaveRequest);
+    ResponseEntity<OrderResponse> createOrder(@RequestBody OrderSaveRequest orderSaveRequest);
 
     // 비회원 주문 내역 - 상세 조회
 

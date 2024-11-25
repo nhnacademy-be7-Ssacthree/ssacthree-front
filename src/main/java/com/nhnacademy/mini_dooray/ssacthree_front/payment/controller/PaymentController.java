@@ -1,5 +1,7 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.payment.controller;
 
+import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.BookOrderRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderDetailSaveRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderFormRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderSaveRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.service.OrderService;
@@ -21,7 +23,9 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
@@ -94,33 +98,49 @@ public class PaymentController {
         // TODO : 결제 성공 ! 주문 저장하기. - 재고차감 등등... shop의 orderService에서 모든 로직 처리하기.
         HttpSession session = request.getSession(false);
         OrderFormRequest orderFormRequest = (OrderFormRequest) session.getAttribute("orderFormRequest");
+        List<BookOrderRequest> bookLists = (List<BookOrderRequest>) session.getAttribute("bookLists");
 
-//        OrderSaveRequest orderSaveRequest = new OrderSaveRequest(
-//                List< OrderDetailSaveReque> orderDetailList,
-//                orderFormRequest.getCustomerId(),
-//                orderFormRequest.getBuyerName(),
-//                orderFormRequest.getBuyerEmail(),
-//                orderFormRequest.getBuyerPhone(),
-//                orderFormRequest.getRecipientName(),
-//                orderFormRequest.getRecipientPhone(),
-//                orderFormRequest.getPostalCode(),
-//                orderFormRequest.getRoadAddress(),
-//                orderFormRequest.getDetailAddress(),
-//                orderFormRequest.getOrderRequest(),
-//                orderFormRequest.getDeliveryDate(),
-//                orderFormRequest.getPointToUse()
-//        );
-//        // TODO : 주문 정보 저장하기 - 진짜 order저장을 위한.. order랑 컬럼 같아야함
-//        orderService.saveOrder(orderSaveRequest); // 모든 요청들을 여러개 보내거나, saveOrder에 모든 정보 주기.
-//        // 주문상세+포장정보, 포인트 기록 정보, 결제 정보
+        List<OrderDetailSaveRequest> orderDetailList = new ArrayList<>();
+
+        for (BookOrderRequest bookOrder : bookLists) {
+            OrderDetailSaveRequest orderDetail = new OrderDetailSaveRequest(
+                    bookOrder.getBookId(),
+                    1L, //임시
+                    bookOrder.getMemberCouponId(),
+                    bookOrder.getQuantity(),
+                    bookOrder.getRegularPrice(),
+                    bookOrder.getPackagingId()
+            );
+
+            orderDetailList.add(orderDetail);
+            }
+
+        OrderSaveRequest orderSaveRequest = new OrderSaveRequest(
+                orderDetailList,
+                orderFormRequest.getCustomerId(),
+                orderFormRequest.getBuyerName(),
+                orderFormRequest.getBuyerEmail(),
+                orderFormRequest.getBuyerPhone(),
+                orderFormRequest.getRecipientName(),
+                orderFormRequest.getRecipientPhone(),
+                orderFormRequest.getPostalCode(),
+                orderFormRequest.getRoadAddress(),
+                orderFormRequest.getDetailAddress(),
+                orderFormRequest.getOrderRequest(),
+                orderFormRequest.getDeliveryDate(),
+                orderFormRequest.getPointToUse(),
+                Integer.parseInt(amount),
+                (Long) session.getAttribute("deliveryRuleId"),
+                orderFormRequest.getOrderNumber()
+                );
+        // TODO : 주문 정보 저장하기 - 진짜 order저장을 위한.. order랑 컬럼 같아야함
+        orderService.createOrder(orderSaveRequest); // 모든 요청들을 여러개 보내거나, saveOrder에 모든 정보 주기.
+        // 주문상세+포장정보, 포인트 기록 정보, 결제 정보
 
         // TODO : 주문 상세 저장하기
 
         // TODO : 결제정보 저장하기. - 진짜 payment저장을 위한 .. payment랑 컬럼 같게
-        paymentService.savePayment(paymentRequest); // -> 백으로 보내깅
-
-
-
+//        paymentService.savePayment(paymentRequest); // -> 백으로 보내깅
 
 
         responseStream.close();

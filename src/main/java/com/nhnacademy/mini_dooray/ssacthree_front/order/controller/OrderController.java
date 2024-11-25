@@ -19,15 +19,12 @@ import com.nhnacademy.mini_dooray.ssacthree_front.order.utils.OrderUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -42,7 +39,7 @@ public class OrderController {
     private final CustomerService customerService;
     private final DeliveryRuleService deliveryRuleService;
 
-    // TODO : 각각의 중복되는거 service로 빼기
+    // TODO : 중복코드 리팩토링 필수.
     // 비회원, 회원 주문 페이지 이동 -> isMember로 구분해서 뷰 띄우기
 
     // 1. 장바구니 -> 주문하기
@@ -95,6 +92,8 @@ public class OrderController {
             bookLists.add(bookOrderRequest);
         }
         model.addAttribute("bookLists", bookLists);
+        HttpSession session = request.getSession(false);
+        session.setAttribute("bookLists", bookLists);
 
         // 포장지 가져오기
         List<PackagingGetResponse> packagingList = packagingService.getAllCustomerPackaging();
@@ -103,6 +102,7 @@ public class OrderController {
         // 배달정책 true인거 가져오기 - 배송정책 서비스에 구현필요..
         DeliveryRuleGetResponse deliveryRule = deliveryRuleService.getCurrentDeliveryRule();
         model.addAttribute("deliveryRule", deliveryRule);
+        session.setAttribute("deliveryRuleId", deliveryRule.getDeliveryRuleId());
 
         return "order/orderSheet";
     }
@@ -146,6 +146,8 @@ public class OrderController {
             List<BookOrderRequest> bookLists = new ArrayList<>();
             bookLists.add(bookOrderRequest);
             model.addAttribute("bookLists", bookLists);
+            HttpSession session = request.getSession(true);
+            session.setAttribute("bookLists", bookLists);
 
             // 포장지 가져오기
             // TODO : 포장지가 다 false로 들어온다 ..!
@@ -154,9 +156,13 @@ public class OrderController {
 
             // 배달정책 true인거 가져오기 - 배송정책 서비스에 구현필요..
             DeliveryRuleGetResponse deliveryRule = deliveryRuleService.getCurrentDeliveryRule();
-            model.addAttribute("deliveryRule", deliveryRule);
 
-            return "order/orderSheet";
+            // 모델에만 넣든 세션에만 넣든 고르기..
+            model.addAttribute("deliveryRule", deliveryRule);
+            session.setAttribute("deliveryRuleId", deliveryRule.getDeliveryRuleId());
+
+
+        return "order/orderSheet";
     }
 
 
@@ -191,6 +197,9 @@ public class OrderController {
         String orderNumber = OrderUtil.generateOrderNumber();
         model.addAttribute("orderId", orderNumber);
         model.addAttribute("paymentPrice", paymentPrice);
+
+        orderFormRequest.setOrderNumber(orderNumber);
+        // 이때 주문을 만들어서, 상태를 결제대기로 해도 ok일듯. 그게 더 효율적일듯.
 
         // 결제창 넘어가기
         return "payment/checkout";
