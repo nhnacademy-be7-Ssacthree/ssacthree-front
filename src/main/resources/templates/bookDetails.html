@@ -286,8 +286,8 @@
                     <!-- 리뷰 제목 -->
                     <h5 class="mt-2 fw-bold" th:text="${review.reviewTitle}" style="font-size: 1.4rem;"></h5>
 
-                    <!-- 리뷰 이미지 -->
-                    <div class="mt-2 mb-2" th:if="${review.reviewImage != null}">
+                    <!-- 리뷰 이미지 (아예 렌더링되지 않도록 수정) -->
+                    <div class="mt-2 mb-2" th:if="${false}">
                         <img th:src="${review.reviewImage}" alt="Review Image" class="img-fluid rounded"
                              style="max-width: 300px;">
                     </div>

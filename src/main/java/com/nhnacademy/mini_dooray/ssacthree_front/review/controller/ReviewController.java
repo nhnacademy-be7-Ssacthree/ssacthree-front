@@ -31,7 +31,7 @@ public class ReviewController {
 
         reviewService.postReviewBook(bookId, orderId, reviewRequest, request);
 
-        return "redirect:/shop/members/reviews";
+        return "redirect:/members/my-page/reviews";
     }
 
     @GetMapping("/shop/members/reviews/{book-id}")

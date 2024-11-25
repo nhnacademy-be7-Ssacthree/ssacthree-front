@@ -64,10 +64,15 @@
               <td th:text="${review.reviewRate} + '점'"></td>
               <!-- 리뷰 이미지 -->
               <td>
-                <img th:src="${review.reviewImageUrl != null ? review.reviewImageUrl : '/images/default-review.png'}"
-                     alt="리뷰 이미지"
-                     class="img-thumbnail"
-                     style="width: 80px; height: 80px;">
+                <div th:if="${!#strings.isEmpty(review.reviewImageUrl)}">
+                  <img th:src="${review.reviewImageUrl}"
+                       alt="리뷰 이미지"
+                       class="img-thumbnail"
+                       style="width: 80px; height: 80px;">
+                </div>
+                <div th:if="${#strings.isEmpty(review.reviewImageUrl)}">
+                  리뷰 이미지가 없습니다.
+                </div>
               </td>
               <!-- 리뷰 제목 -->
               <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;"
