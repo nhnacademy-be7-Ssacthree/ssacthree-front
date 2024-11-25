@@ -28,5 +28,5 @@ public interface BookCommonService {
 
     BookLikeResponse createBookLikeByMemberId(BookLikeRequest bookLikeRequest);
 
-    Boolean deleteBookLikeByMemberId(Long bookId);
+    BookLikeResponse deleteBookLikeByMemberId(Long bookId);
 }

@@ -43,18 +43,18 @@ public interface BookCustomerAdapter {
     @GetMapping("/shop/books/{book-id}/categories")
     ResponseEntity<List<CategoryNameResponse>> getCategoriesByBookId(@PathVariable("book-id") Long bookId);
 
-    @GetMapping("/shop/books/likes")
+    @GetMapping("/shop/members/likes")
     ResponseEntity<Page<BookListResponse>> getBooksByMemberId(@RequestParam(defaultValue = "0") int page,
                                                               @RequestParam(defaultValue = "10") int size,
                                                               @RequestParam(defaultValue = "bookName:asc") String[] sort);
 
-    @GetMapping("/shop/books/likeList")
+    @GetMapping("/shop/members/likeList")
     ResponseEntity<List<Long>> getLikedBooksIdForCurrentUser();
 
-    @PostMapping("/shop/books/likes")
+    @PostMapping("/shop/members/likes")
     ResponseEntity<BookLikeResponse> createBookLikeByMemberId(@RequestBody BookLikeRequest request);
 
-    @DeleteMapping("/shop/books/likes/{book-id}")
-    ResponseEntity<Boolean> deleteBookLikeByMemberId(@PathVariable(name = "book-id") Long bookId);
+    @DeleteMapping("/shop/members/likes/{book-id}")
+    ResponseEntity<BookLikeResponse> deleteBookLikeByMemberId(@PathVariable(name = "book-id") Long bookId);
 }
 

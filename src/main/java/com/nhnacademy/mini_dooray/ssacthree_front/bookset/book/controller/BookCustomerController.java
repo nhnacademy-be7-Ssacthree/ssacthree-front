@@ -7,7 +7,9 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.service.BookCommo
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryNameResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.service.CategoryCommonService;
+import com.nhnacademy.mini_dooray.ssacthree_front.commons.util.CookieUtil;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.service.ReviewService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -32,6 +34,7 @@ public class BookCustomerController {
     private final CategoryCommonService categoryCommonService;
     private final ReviewService reviewService;
     private final DeliveryRuleService deliveryRuleService;
+    private final String memberUrl;
 
     @GetMapping("/books")
     public String getBooksByFilters(
@@ -41,7 +44,8 @@ public class BookCustomerController {
             @RequestParam(name = "author-id", required = false) Long authorId,
             @RequestParam(name = "category-id", required = false) Long categoryId,
             @RequestParam(name = "tag-id", required = false) Long tagId,
-            Model model) {
+            Model model,
+            HttpServletRequest request) {
 
         // 카테고리 정보 가져오기
         List<CategoryInfoResponse> rootCategories = categoryCommonService.getRootCategories();
@@ -64,8 +68,11 @@ public class BookCustomerController {
             allParams.put("tag-id", tagId);
         }
 
-        List<Long> likeBooks = bookCommonService.getLikedBooksIdForCurrentUser();
-        model.addAttribute("likeBooks", likeBooks);
+        if (CookieUtil.checkAccessTokenCookie(request)) {
+            List<Long> likeBooks = bookCommonService.getLikedBooksIdForCurrentUser();
+            model.addAttribute("likeBooks", likeBooks);
+            model.addAttribute("memberUrl", memberUrl);
+        }
 
         // 데이터 가져오기
         Page<BookListResponse> books = getBooksByFilter(page, size, sort, authorId, categoryId, tagId);
@@ -104,9 +111,16 @@ public class BookCustomerController {
     public String showHomeBook(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            Model model) {
+            Model model,
+            HttpServletRequest request) {
         String[] sort = {"bookName"};
         Long authorId = 336L;
+
+        if (CookieUtil.checkAccessTokenCookie(request)) {
+            List<Long> likeBooks = bookCommonService.getLikedBooksIdForCurrentUser();
+            model.addAttribute("likeBooks", likeBooks);
+            model.addAttribute("memberUrl", memberUrl);
+        }
 
         BookInfoResponse banner1 = bookCommonService.getBookById(483L); // <소년이 온다> 아이디
 
@@ -126,7 +140,8 @@ public class BookCustomerController {
     }
 
     @GetMapping("/books/{book-id}")
-    public String showBook(@PathVariable("book-id") Long bookId, Model model) {
+    public String showBook(@PathVariable("book-id") Long bookId, Model model,
+                           HttpServletRequest request) {
         model.addAttribute("book", bookCommonService.getBookById(bookId));
 
         List<CategoryNameResponse> categories = bookCommonService.getCategoriesByBookId(bookId);
@@ -137,6 +152,12 @@ public class BookCustomerController {
 
 //        DeliveryRuleGetResponse deliveryRule = deliveryRuleService.getCurrentDeliveryRule();
 //        model.addAttribute("deliveryRule", deliveryRule);
+
+        if (CookieUtil.checkAccessTokenCookie(request)) {
+            List<Long> likeBooks = bookCommonService.getLikedBooksIdForCurrentUser();
+            model.addAttribute("likeBooks", likeBooks);
+            model.addAttribute("memberUrl", memberUrl);
+        }
 
         model.addAttribute("reviews", reviewService.getReviewsByBookId(bookId));
         model.addAttribute("categoryPaths", categoryPaths);

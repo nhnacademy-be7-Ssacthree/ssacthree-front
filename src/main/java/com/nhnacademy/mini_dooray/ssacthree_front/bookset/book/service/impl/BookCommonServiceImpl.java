@@ -165,9 +165,9 @@ public class BookCommonServiceImpl implements BookCommonService {
     }
 
     @Override
-    public Boolean deleteBookLikeByMemberId(Long bookId) {
+    public BookLikeResponse deleteBookLikeByMemberId(Long bookId) {
         try {
-            ResponseEntity<Boolean> responseEntity = adapter.deleteBookLikeByMemberId(bookId);
+            ResponseEntity<BookLikeResponse> responseEntity = adapter.deleteBookLikeByMemberId(bookId);
             if (responseEntity.getStatusCode().is2xxSuccessful()) {
                 return responseEntity.getBody();
             } else {
