@@ -43,9 +43,9 @@
           <div class="mb-3">
             <label for="customerPhoneNumber" class="form-label">전화번호</label>
             <input type="text" id="customerPhoneNumber" name="customerPhoneNumber"
-                   class="form-control" placeholder="예) 010-3622-0514"
-                   th:value="${memberInfo.customerPhoneNumber}" pattern="010-[0-9]{4}-[0-9]{4}"
-                   title="010-1234-5678 형식으로 입력해 주세요" required>
+                   class="form-control" placeholder="예) 01036220514"
+                   th:attr="value=${memberInfo.customerPhoneNumber.replace('-', '')}"
+                   pattern="010[0-9]{4}[0-9]{4}" title="01012345678 형식으로 입력해 주세요" required>
           </div>
 
           <!-- Email -->
@@ -58,9 +58,9 @@
           <!-- Birth Date -->
           <div class="mb-3">
             <label for="birth" class="form-label">생년월일</label>
-            <input type="text" id="birth" name="birth" class="form-control"
-                   placeholder="예) 19990101" th:value="${memberInfo.memberBirthdate}"
-                   pattern="\d{8}" title="YYYYMMDD 형식으로 입력해주세요." required>
+            <input type="date" id="birth" name="birth" class="form-control"
+                   th:value="${memberInfo.memberBirthdate.substring(0,4)} + '-' + ${memberInfo.memberBirthdate.substring(4,6)} + '-' + ${memberInfo.memberBirthdate.substring(6,8)}"
+                   min="1900-01-01" max="2100-12-31" readonly required>
           </div>
 
 
@@ -83,8 +83,9 @@
         crossorigin="anonymous"></script>
 
 <div id="connectionResult" th:text="${connectionResult}" style="display: none;"></div>
+<div id="error" th:text="${error}" style="display: none;"></div>
 <script>
-  // loginFailedMessage가 있는 경우 alert 창을 띄웁니다.
+  // connectionResult 있는 경우 alert 창을 띄웁니다.
   window.addEventListener('DOMContentLoaded', () => {
     const connectionResultElement = document.getElementById('connectionResult');
     const connectionResult = connectionResultElement ? connectionResultElement.textContent
@@ -92,6 +93,14 @@
 
     if (connectionResult) {
       alert(connectionResult);
+    }
+  });
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const errorElement = document.getElementById('error');
+    const error = errorElement ? errorElement.textContent : null;
+    if (error) {
+      alert(error);
     }
   });
 
