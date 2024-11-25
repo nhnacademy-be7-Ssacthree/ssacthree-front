@@ -133,8 +133,15 @@ public class OrderServiceImpl implements OrderService {
         List<CartItem> cartItems = cartService.initializeCart(request);
         List<BookOrderRequest> bookLists = new ArrayList<>();
 
+        for (CartItem cartItem : cartItems) {
+            BookInfoResponse book = bookCommonService.getBookById(cartItem.getId());
+            bookLists.add(buildBookOrderRequest(book, cartItem.getQuantity()));
+        }
+        return bookLists;
     }
 
+
+    // 멤버 주문내역 조회
     @Override
     public OrderResponseWithCount getOrdersByMemberAndDate(Long customerId, int page, int size, LocalDate startDate, LocalDate endDate) {
         return orderAdapter.getMemberOrders(customerId, page, size, startDate, endDate);
