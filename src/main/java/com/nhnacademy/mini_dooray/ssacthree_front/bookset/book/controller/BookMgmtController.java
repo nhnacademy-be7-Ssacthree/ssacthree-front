@@ -1,27 +1,23 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.controller;
 
 
-import com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.dto.AuthorCreateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.dto.AuthorGetResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.dto.AuthorNameResponse;
-import com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.dto.AuthorUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.service.AuthorService;
-import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.request.BookDeleteRequest;
-import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.request.BookSaveRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.request.BookSaveRequestMultipart;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.request.BookUpdateRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.request.BookUpdateRequestMultipart;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookInfoResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookInfoResponseMultipart;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.exception.BookFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.service.BookMgmtService;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryNameResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.service.CategoryAdminService;
-import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.service.CategoryCommonService;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.publisher.dto.PublisherGetResponse;
-import com.nhnacademy.mini_dooray.ssacthree_front.bookset.publisher.dto.PublisherNameResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.publisher.service.PublisherMgmtService;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.dto.TagInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.service.TagMgmtService;
-import com.nhnacademy.mini_dooray.ssacthree_front.commons.exception.exception.ValidationFailedException;
 import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,11 +28,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.HtmlUtils;
 
-import java.awt.print.Book;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @Slf4j
@@ -96,7 +91,7 @@ public class BookMgmtController {
         List<TagInfoResponse> tags = tagMgmtService.getAllTagList();
 
         // 모델에 데이터 추가
-        model.addAttribute("bookSaveRequest", new BookSaveRequest());
+        model.addAttribute("bookSaveRequestMultipart", new BookSaveRequestMultipart());
         model.addAttribute("authors", authors);
         model.addAttribute("categories", categories);
         model.addAttribute("publishers", publishers);
@@ -110,62 +105,68 @@ public class BookMgmtController {
         BookInfoResponse bookInfoResponse = bookMgmtService.getBookById(bookId);
 
         // BookSaveRequest 초기화
-        BookSaveRequest bookSaveRequest = new BookSaveRequest();
-        bookSaveRequest.setBookName(bookInfoResponse.getBookName());
-        bookSaveRequest.setBookIndex(bookInfoResponse.getBookIndex());
-        bookSaveRequest.setBookInfo(bookInfoResponse.getBookInfo());
-        bookSaveRequest.setBookIsbn(bookInfoResponse.getBookIsbn());
-        bookSaveRequest.setPublicationDate(bookInfoResponse.getPublicationDate().toLocalDate());
-        bookSaveRequest.setRegularPrice(bookInfoResponse.getRegularPrice());
-        bookSaveRequest.setSalePrice(bookInfoResponse.getSalePrice());
-        bookSaveRequest.setIsPacked(bookInfoResponse.isPacked());
-        bookSaveRequest.setStock(bookInfoResponse.getStock());
-        bookSaveRequest.setBookThumbnailImageUrl(bookInfoResponse.getBookThumbnailImageUrl());
-        bookSaveRequest.setBookDiscount(bookInfoResponse.getBookDiscount());
+        BookUpdateRequestMultipart bookUpdateRequestMultipart = new BookUpdateRequestMultipart();
+        bookUpdateRequestMultipart.setBookName(bookInfoResponse.getBookName());
+        bookUpdateRequestMultipart.setBookIndex(bookInfoResponse.getBookIndex());
+        bookUpdateRequestMultipart.setBookInfo(bookInfoResponse.getBookInfo());
+        bookUpdateRequestMultipart.setBookIsbn(bookInfoResponse.getBookIsbn());
+        bookUpdateRequestMultipart.setPublicationDate(bookInfoResponse.getPublicationDate().toLocalDate());
+        bookUpdateRequestMultipart.setRegularPrice(bookInfoResponse.getRegularPrice());
+        bookUpdateRequestMultipart.setSalePrice(bookInfoResponse.getSalePrice());
+        bookUpdateRequestMultipart.setIsPacked(bookInfoResponse.isPacked());
+        bookUpdateRequestMultipart.setStock(bookInfoResponse.getStock());
+        bookUpdateRequestMultipart.setBookThumbnailImageUrl(bookInfoResponse.getBookThumbnailImageUrl());
+        log.info("썸네일 이미지 url 확인용: {}" , bookInfoResponse.getBookThumbnailImageUrl());
+        bookUpdateRequestMultipart.setBookDiscount(bookInfoResponse.getBookDiscount());
+        bookUpdateRequestMultipart.setBookStatus(bookInfoResponse.getBookStatus());
 
-        bookSaveRequest.setPublisherId(
+        bookUpdateRequestMultipart.setPublisherId(
                 bookInfoResponse.getPublisher() != null ? bookInfoResponse.getPublisher().getPublisherId() : null
         );
 
-        bookSaveRequest.setCategoryIdList(bookInfoResponse.getCategories().stream()
+        bookUpdateRequestMultipart.setCategoryIdList(bookInfoResponse.getCategories().stream()
                 .map(CategoryNameResponse::getCategoryId)
                 .collect(Collectors.toList()));
-        bookSaveRequest.setTagIdList(bookInfoResponse.getTags().stream()
+        bookUpdateRequestMultipart.setTagIdList(bookInfoResponse.getTags().stream()
                 .map(TagInfoResponse::getTagId)
                 .collect(Collectors.toList()));
-        bookSaveRequest.setAuthorIdList(bookInfoResponse.getAuthors().stream()
+        bookUpdateRequestMultipart.setAuthorIdList(bookInfoResponse.getAuthors().stream()
                 .map(AuthorNameResponse::getAuthorId)
                 .collect(Collectors.toList()));
 
         model.addAttribute("bookInfoResponse", bookInfoResponse);
-        model.addAttribute("bookSaveRequest", bookSaveRequest);
+        model.addAttribute("bookUpdateRequestMultipart", bookUpdateRequestMultipart);
         model.addAttribute("publishers", publisherMgmtService.getAllPublisherList());
+        model.addAttribute("existingCategories",bookInfoResponse.getCategories());
         model.addAttribute("categories", categoryAdminService.getAllCategoriesForAdmin().getBody());
         model.addAttribute("tags", tagMgmtService.getAllTagList());
+        model.addAttribute("existingTags",bookInfoResponse.getTags());
         model.addAttribute("authors", authorService.getAllAuthorList());
+        model.addAttribute("existingAuthors",bookInfoResponse.getAuthors());
         return "admin/book/updateBook";
     }
 
     @PostMapping("/create")
-    public String createBook(@Valid @ModelAttribute BookSaveRequest bookSaveRequest,
+    public String createBook(@Valid @ModelAttribute BookSaveRequestMultipart bookSaveRequestMultipart,
                                BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             throw new BookFailedException(BOOK_CREATE_ERROR_MESSAGE);
         }
+        MultipartFile bookThumbnailUrlMultipartFile = bookSaveRequestMultipart.getBookThumbnailImageUrl();
 
-        log.info("책 정보 확인용 :{}", bookSaveRequest.getBookInfo());
-        bookMgmtService.createBook(bookSaveRequest);
+        bookMgmtService.createBook(bookSaveRequestMultipart, bookThumbnailUrlMultipartFile);
         return REDIRECT_ADDRESS;
     }
 
     @PostMapping("/update")
-    public String updateBook(@Valid @ModelAttribute BookSaveRequest bookSaveRequest,
+    public String updateBook(@Valid @ModelAttribute BookUpdateRequestMultipart bookUpdateRequestMultipart,
                              BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             throw new BookFailedException(BOOK_UPDATE_ERROR_MESSAGE);
         }
+        MultipartFile bookThumbnailUrlMultipartFile = bookUpdateRequestMultipart.getBookThumbnailImageUrlMultipartFile();
 
-        bookMgmtService.updateBook(bookSaveRequest);
+        bookMgmtService.updateBook(bookUpdateRequestMultipart, bookThumbnailUrlMultipartFile);
 
         return REDIRECT_ADDRESS;
     }

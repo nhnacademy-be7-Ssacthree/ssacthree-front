@@ -1,19 +1,17 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.request;
 
-import lombok.AllArgsConstructor;
+import java.time.LocalDate;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDate;
-import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-public class BookUpdateRequest {
+public class BookUpdateRequestMultipart {
     private Long bookId;
     private String bookName;
     private String bookIndex; // 목차
@@ -25,7 +23,8 @@ public class BookUpdateRequest {
     private int salePrice; // 할인 가격
     private boolean isPacked;
     private int stock;
-    private String bookThumbnailImageUrl;
+    private String bookThumbnailImageUrl;  // 기존 URL을 저장할 String 필드
+    private MultipartFile bookThumbnailImageUrlMultipartFile; // MultipartFile 필드 추가
     private int bookViewCount;
     private int bookDiscount; // 할인율
 

@@ -103,7 +103,7 @@
           <h3>도서 등록</h3>
         </div>
         <div class="card-body">
-          <form th:action="@{/admin/books/create}" th:method="post" th:object="${bookSaveRequest}">
+          <form id="registerForm" th:action="@{/admin/books/create}" th:method="post" th:object="${bookSaveRequestMultipart}" enctype="multipart/form-data">
             <!-- 도서 제목 -->
             <div class="mb-3">
               <label for="bookName" class="form-label">도서 제목</label>
@@ -123,7 +123,7 @@
               <div class="toast-editor-wrapper">
                 <div id="bookInfoEditor"></div>
               </div>
-              <textarea class="d-none" th:field="*{bookInfo}" id="bookInfo"></textarea>
+              <textarea id="bookInfo" name="bookInfo" style="display:none;"></textarea>
             </div>
 
 
@@ -267,7 +267,6 @@
               <a href="/admin/books" class="btn btn-secondary">취소</a>
             </div>
 
-
           </form>
         </div>
       </div>
@@ -276,162 +275,12 @@
 </div>
 
 <footer th:replace="~{common/footer :: footer}"/>
+<script src="/js/bookRegister.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script
     src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js"></script>
-
 <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
-
-<script>
-
-  // Toast UI Editor 초기화
-  document.addEventListener("DOMContentLoaded", function () {
-    const editor = new toastui.Editor({
-      el: document.querySelector("#bookInfoEditor"),
-      height: "400px",
-      initialEditType: "wysiwyg", // 'markdown' or 'wysiwyg'
-      previewStyle: "vertical",  // 'tab' or 'vertical'
-      initialValue: "",          // 초기 내용 설정 (기존 bookInfo 내용)
-      hideModeSwitch: true       // 에디터 모드 전환 버튼 숨김
-    });
-
-    // 폼 제출 시 에디터 내용을 textarea에 복사
-    const form = document.querySelector("form");
-    form.addEventListener("submit", function () {
-      const bookInfoField = document.querySelector("#bookInfo");
-      bookInfoField.value = editor.getHTML(); // 마크다운 값 설정
-    });
-  });
-
-
-  const tagDropdown = document.getElementById('tag-dropdown');
-  const tagsContainer = document.getElementById('selected-tags-container');
-  const tagsInput = document.getElementById('tags');
-
-  // 저장된 태그 ID를 유지하기 위한 배열
-  let selectedTagIds = [];
-
-  // 태그 드롭다운 선택 시 처리
-  tagDropdown.addEventListener('change', () => {
-    const selectedOption = tagDropdown.options[tagDropdown.selectedIndex];
-    const tagId = selectedOption.value;
-    const tagName = selectedOption.text;
-
-    // 이미 선택된 태그는 추가하지 않음
-    if (selectedTagIds.includes(tagId)) {
-      alert('이미 선택된 태그입니다.');
-      return;
-    }
-
-    // 선택된 태그 표시
-    const tagBadge = document.createElement('span');
-    tagBadge.className = 'tag-badge';
-    tagBadge.dataset.tagId = tagId;
-    tagBadge.innerHTML = `${tagName} <button class="remove-tag-btn" onclick="removeTag('${tagId}')">x</button>`;
-
-    tagsContainer.appendChild(tagBadge);
-
-    // 선택된 태그 ID 추가
-    selectedTagIds.push(tagId);
-
-    // 숨겨진 input에 값 업데이트
-    tagsInput.value = selectedTagIds.join(',');
-  });
-
-  // 태그 제거 함수
-  function removeTag(tagId) {
-    // 배열에서 태그 ID 제거
-    selectedTagIds = selectedTagIds.filter(id => id !== tagId);
-
-    // 숨겨진 input 값 업데이트
-    tagsInput.value = selectedTagIds.join(',');
-
-    // UI에서 태그 제거
-    const tagBadge = document.querySelector(`.tag-badge[data-tag-id="${tagId}"]`);
-    if (tagBadge) {
-      tagsContainer.removeChild(tagBadge);
-    }
-  }
-
-
-  // 카테고리 선택
-  const categoryDropdown = document.getElementById('category-dropdown');
-  const categoriesContainer = document.getElementById('selected-categories-container');
-  const categoriesInput = document.getElementById('categories');
-
-  let selectedCategoryIds = [];
-
-  categoryDropdown.addEventListener('change', () => {
-    const selectedOption = categoryDropdown.options[categoryDropdown.selectedIndex];
-    const categoryId = selectedOption.value;
-    const categoryName = selectedOption.text;
-
-    if (selectedCategoryIds.includes(categoryId)) {
-      alert('이미 선택된 카테고리입니다.');
-      return;
-    }
-
-    const categoryBadge = document.createElement('span');
-    categoryBadge.className = 'category-badge';
-    categoryBadge.dataset.categoryId = categoryId;
-    categoryBadge.innerHTML = `${categoryName} <button class="remove-category-btn" onclick="removeCategory('${categoryId}')">x</button>`;
-
-    categoriesContainer.appendChild(categoryBadge);
-    selectedCategoryIds.push(categoryId);
-    categoriesInput.value = selectedCategoryIds.join(',');
-  });
-
-  function removeCategory(categoryId) {
-    selectedCategoryIds = selectedCategoryIds.filter(id => id !== categoryId);
-    categoriesInput.value = selectedCategoryIds.join(',');
-
-    const categoryBadge = document.querySelector(`.category-badge[data-category-id="${categoryId}"]`);
-    if (categoryBadge) {
-      categoriesContainer.removeChild(categoryBadge);
-    }
-  }
-
-  // 작가 선택
-  const authorDropdown = document.getElementById('author-dropdown');
-  const authorsContainer = document.getElementById('selected-authors-container');
-  const authorsInput = document.getElementById('authors');
-
-  let selectedAuthorIds = [];
-
-  authorDropdown.addEventListener('change', () => {
-    const selectedOption = authorDropdown.options[authorDropdown.selectedIndex];
-    const authorId = selectedOption.value;
-    const authorName = selectedOption.text;
-
-    if (selectedAuthorIds.includes(authorId)) {
-      alert('이미 선택된 작가입니다.');
-      return;
-    }
-
-    const authorBadge = document.createElement('span');
-    authorBadge.className = 'author-badge';
-    authorBadge.dataset.authorId = authorId;
-    authorBadge.innerHTML = `${authorName} <button class="remove-author-btn" onclick="removeAuthor('${authorId}')">x</button>`;
-
-    authorsContainer.appendChild(authorBadge);
-    selectedAuthorIds.push(authorId);
-    authorsInput.value = selectedAuthorIds.join(',');
-  });
-
-  function removeAuthor(authorId) {
-    selectedAuthorIds = selectedAuthorIds.filter(id => id !== authorId);
-    authorsInput.value = selectedAuthorIds.join(',');
-
-    const authorBadge = document.querySelector(`.author-badge[data-author-id="${authorId}"]`);
-    if (authorBadge) {
-      authorsContainer.removeChild(authorBadge);
-    }
-  }
-
-
-</script>
-
 </body>
 </html>
