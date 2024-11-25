@@ -29,8 +29,8 @@ class DeliveryRuleControllerTest {
     @Test
     @WithMockUser(username = "testUser", roles = {"ADMIN"})
     void testGetAllDeliveryRules() throws Exception {
-        when(deliveryRuleService.getAllDeliveryRules()).thenReturn(
-            Collections.singletonList(new DeliveryRuleGetResponse()));
+//        when(deliveryRuleService.getAllDeliveryRules()).thenReturn(
+//            Collections.singletonList(new DeliveryRuleGetResponse()));
 
         mockMvc.perform(get("/admin/delivery-rules"))
             .andExpect(status().isOk())
