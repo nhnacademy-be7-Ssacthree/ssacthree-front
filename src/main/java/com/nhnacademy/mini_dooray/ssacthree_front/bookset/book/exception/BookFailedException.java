@@ -4,4 +4,7 @@ public class BookFailedException extends RuntimeException {
     public BookFailedException(String message) {
         super(message);
     }
+    public BookFailedException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
