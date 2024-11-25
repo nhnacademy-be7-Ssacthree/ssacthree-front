@@ -106,13 +106,11 @@
             </div>
 
             <div class="border p-3 mb-3">
-                <!--                <h4 class="text-primary">배송비</h4>-->
-                <!--                <p><span id="delivery-fee" th:text="'기본 배송비:'+ ${deliveryRule.deliveryFee} + '원'"></span></p>-->
-                <!--                <p class="text-success"><span id="delivery-discount-cost"-->
-                <!--                                              th:text="${deliveryRule.deliveryDiscountCost} + '원 이상  구매시 무료배송'"></span>-->
-                <!--                </p>-->
-                <p>배송비: 무료 (배송비는 경우 지역에 따라 상이)</p>
-                <p class="text-success">오늘 도착 가능</p>
+                <p><span id="delivery-fee" th:text="'기본 배송비:'+ ${deliveryRule.deliveryFee} + '원'"></span></p>
+                <p class="text-success">
+                    <span id="delivery-discount-cost" th:text="${deliveryRule.deliveryDiscountCost} + '원 이상  구매시 무료배송'"></span>
+                </p>
+
             </div>
 
             <!-- 수량 선택과 총 금액 -->

@@ -45,7 +45,7 @@
                             <div class="banner-content">
                                 <h3>2024 노벨문학상 수상</h3>
                                 <h2>한강 작가가 쓴 5.18</h2>
-                                <a href="index.html" class="btn mt-3">자세히 보러가기</a>
+                                <a th:onclick="|window.location.href='/books/' + ${banner1.bookId}|" class="btn mt-3">자세히 보기</a>
                             </div>
                         </div>
                         <div class="col-md-6 text-center">
@@ -62,14 +62,14 @@
                     <div class="row d-flex flex-column-reverse flex-md-row align-items-center">
                         <div class="col-md-5 offset-md-1 mt-5 mt-md-0 text-center text-md-start">
                             <div class="banner-content">
-                                <h2>How Innovation works</h2>
-                                <p>Discount available. Grab it now!</p>
-                                <a href="index.html" class="btn mt-3">Shop Product</a>
+                                <h3>조회수 1위</h3>
+                                <h2>현재 인기 도서</h2>
+                                <a th:onclick="|window.location.href='/books/' + ${banner2.bookId}|" class="btn mt-3">자세히 보기</a>
                             </div>
                         </div>
                         <div class="col-md-6 text-center">
                             <div class="image-holder">
-                                <img src="/images/banner-image1.png" class="img-fluid" alt="banner">
+                                <img th:src="${banner2.bookThumbnailImageUrl}" class="img-fluid" alt="banner" style="height:500px">
                             </div>
                         </div>
                     </div>
@@ -106,7 +106,7 @@
             <h3 class="d-flex align-items-center">한강 2024 노벨문학상 수상 <img src="/images/award-icon.png"
                                                                         style="padding-bottom:5px; margin-left:10px;"/>
             </h3>
-            <a href="#" th:href="@{/books(author-id=336)}" class="btn">View All</a>
+            <a href="#" th:href="@{/books(author-id=336)}" class="btn">더보기</a>
         </div>
         <!-- Swiper navigation buttons -->
         <div class="position-absolute top-50 end-0 pe-0 pe-xxl-5 me-0 me-xxl-5 swiper-button-next">
@@ -143,7 +143,10 @@
                              alt="book cover">
 
                         <!-- 책 제목 및 상세 정보 -->
-                        <h6 class="mt-4 mb-0 fw-bold" th:text="${book.bookName}">Book Title</h6>
+                        <h6 class="mt-4 mb-0 fw-bold"
+                            th:text="${#strings.length(book.bookName) > 50 ? #strings.substring(book.bookName, 0, 47) + '...' : book.bookName}">
+                            Book Title
+                        </h6>
 
                         <!-- 작가 이름 -->
                         <!--              <p class="my-2 me-2 fs-6 text-black-50"><span th:each="item, iterStat : ${book.authors}"><span th:text="${item.authorName}"></span><span th:if="${!iterStat.last}">, </span></span></p>-->
@@ -248,7 +251,10 @@
                                  style="width: 100%; height: auto; object-fit: cover;">
 
                             <!-- 책 제목 -->
-                            <h6 class="mt-4 mb-0 fw-bold" th:text="${book.bookName}">Book Title</h6>
+                            <h6 class="mt-4 mb-0 fw-bold"
+                                th:text="${#strings.length(book.bookName) > 50 ? #strings.substring(book.bookName, 0, 47) + '...' : book.bookName}">
+                                Book Title
+                            </h6>
 
                             <!-- 리뷰 별점 -->
                             <div class="review-content d-flex mt-2">

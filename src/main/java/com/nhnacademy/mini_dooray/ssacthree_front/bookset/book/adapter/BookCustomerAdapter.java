@@ -43,7 +43,7 @@ public interface BookCustomerAdapter {
     @GetMapping("/shop/books/{book-id}/categories")
     ResponseEntity<List<CategoryNameResponse>> getCategoriesByBookId(@PathVariable("book-id") Long bookId);
 
-    @GetMapping("/shop/members/likes")
+    @GetMapping("/shop/members/my-page/likes")
     ResponseEntity<Page<BookListResponse>> getBooksByMemberId(@RequestParam(defaultValue = "0") int page,
                                                               @RequestParam(defaultValue = "10") int size,
                                                               @RequestParam(defaultValue = "bookName:asc") String[] sort);

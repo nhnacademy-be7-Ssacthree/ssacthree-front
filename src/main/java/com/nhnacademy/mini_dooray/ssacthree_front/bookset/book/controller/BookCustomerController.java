@@ -1,5 +1,6 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.controller;
 
+import com.nhnacademy.mini_dooray.ssacthree_front.admin.delivery_rule.dto.DeliveryRuleGetResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.delivery_rule.service.DeliveryRuleService;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookListResponse;
@@ -125,8 +126,9 @@ public class BookCustomerController {
         BookInfoResponse banner1 = bookCommonService.getBookById(483L); // <소년이 온다> 아이디
 
         // 조회수 많은 하나
-        String[] viewSort = {"bookViewCount"};
-        Page<BookListResponse> banner2 = bookCommonService.getAllAvailableBooks(page, 1, viewSort);
+        String[] viewSort = {"bookViewCount:desc"};
+        Page<BookListResponse> banner2Page = bookCommonService.getAllAvailableBooks(page, 1, viewSort);
+        BookListResponse banner2 = banner2Page.getContent().isEmpty() ? null : banner2Page.getContent().get(0);
 
         Page<BookListResponse> awardBooks = bookCommonService.getBooksByAuthorId(page, size, sort, authorId);
 
@@ -150,8 +152,8 @@ public class BookCustomerController {
             categoryPaths.add(categoryCommonService.getCategoryPath(category.getCategoryId()));
         }
 
-//        DeliveryRuleGetResponse deliveryRule = deliveryRuleService.getCurrentDeliveryRule();
-//        model.addAttribute("deliveryRule", deliveryRule);
+        DeliveryRuleGetResponse deliveryRule = deliveryRuleService.getCurrentDeliveryRule();
+        model.addAttribute("deliveryRule", deliveryRule);
 
         if (CookieUtil.checkAccessTokenCookie(request)) {
             List<Long> likeBooks = bookCommonService.getLikedBooksIdForCurrentUser();
@@ -162,12 +164,6 @@ public class BookCustomerController {
         model.addAttribute("reviews", reviewService.getReviewsByBookId(bookId));
         model.addAttribute("categoryPaths", categoryPaths);
         return "bookDetails";
-    }
-
-    @GetMapping("/members/my-page/likes")
-    public String showMyLikeBooks(int page, int size, String[] sort, Model model) {
-
-        return "myLikes";
     }
 
 
