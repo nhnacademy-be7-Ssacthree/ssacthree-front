@@ -105,9 +105,9 @@
             </div>
 
             <div class="border p-3 mb-3">
-                <p><span id="delivery-fee" th:text="'기본 배송비:'+ ${deliveryRule.deliveryFee} + '원'"></span></p>
+                <p><span>기본 배송비: <span class="unitPrice" id="delivery-fee" th:text=" ${deliveryRule.deliveryFee}"></span>원</span></p>
                 <p class="text-success">
-                    <span id="delivery-discount-cost" th:text="${deliveryRule.deliveryDiscountCost} + '원 이상  구매시 무료배송'"></span>
+                    <span><span class="unitPrice" id="delivery-discount-cost" th:text="${deliveryRule.deliveryDiscountCost}"></span>원 이상  구매시 무료배송</span>
                 </p>
 
             </div>
