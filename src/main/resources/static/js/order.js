@@ -51,6 +51,34 @@ function openPostcodeSearch() {
     }).open();
 }
 
+// TODO : 배송 날짜 5일 제한
+const deliveryDateInput = document.getElementById("delivery-date");
+const dateMessage = document.getElementById("date-message");
+const today = new Date();
+
+// 설정할 날짜 포맷 (YYYY-MM-DD)
+const formatDate = date => date.toISOString().split("T")[0];
+
+// 오늘 날짜 설정
+deliveryDateInput.min = formatDate(today);
+
+// 기본값을 오늘 날짜로 설정
+deliveryDateInput.value = formatDate(today);
+
+// 오늘로부터 5일 이후 날짜 설정
+const maxDate = new Date(today);
+maxDate.setDate(today.getDate() + 5);
+deliveryDateInput.max = formatDate(maxDate);
+
+// 날짜 선택 시 범위 체크
+deliveryDateInput.addEventListener("input", () => {
+    const selectedDate = new Date(deliveryDateInput.value);
+    if (selectedDate < today || selectedDate > maxDate) {
+        alert("선택 가능한 날짜는 오늘부터 5일 후까지입니다.");
+        deliveryDateInput.value = ""; // 잘못된 입력 제거
+    }
+});
+
 
 // TODO : 결제 내역 업데이트 함수 (여기에 각 값들을 업데이트)
 function updatePaymentDetails(orderAmount, couponDiscount, giftWrap, pointPayment, deliveryFee) {
@@ -70,3 +98,10 @@ function updatePaymentDetails(orderAmount, couponDiscount, giftWrap, pointPaymen
 
 // 페이지 로드 시 결제 내역 업데이트 (예시 데이터 사용)
 updatePaymentDetails(16020, 0, 0, 0, 0);
+
+
+// TODO : 오른쪽 결제 버튼 누르면 보내짐.
+function submitOrderForm() {
+    // 왼쪽의 폼 ID를 타겟팅하여 서브밋
+    document.getElementById('order-form').submit();
+}

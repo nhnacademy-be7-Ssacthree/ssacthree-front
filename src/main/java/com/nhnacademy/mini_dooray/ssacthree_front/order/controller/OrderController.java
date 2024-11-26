@@ -50,6 +50,7 @@ public class OrderController {
     @GetMapping("/order-cart")
     public String orderCart(HttpServletRequest request, Model model) {
         orderService.prepareOrderCart(request, model);
+        // TODO : 카트 비우기
         return "order/orderSheet"; // 주문서 페이지
     }
 
