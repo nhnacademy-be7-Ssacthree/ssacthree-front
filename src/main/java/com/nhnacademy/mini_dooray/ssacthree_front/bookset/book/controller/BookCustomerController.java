@@ -9,7 +9,6 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryNameResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.service.CategoryCommonService;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.util.CookieUtil;
-import com.nhnacademy.mini_dooray.ssacthree_front.config.UrlConfig;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.service.ReviewService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +35,6 @@ public class BookCustomerController {
     private final CategoryCommonService categoryCommonService;
     private final ReviewService reviewService;
     private final DeliveryRuleService deliveryRuleService;
-    private final UrlConfig urlConfig;
 
     @GetMapping("/books")
     public String getBooksByFilters(
@@ -73,7 +71,6 @@ public class BookCustomerController {
         if (CookieUtil.checkAccessTokenCookie(request)) {
             List<Long> likeBooks = bookCommonService.getLikedBooksIdForCurrentUser();
             model.addAttribute("likeBooks", likeBooks);
-            model.addAttribute("memberUrl", urlConfig.getUrl());
         }
 
         // 데이터 가져오기
@@ -121,7 +118,6 @@ public class BookCustomerController {
         if (CookieUtil.checkAccessTokenCookie(request)) {
             List<Long> likeBooks = bookCommonService.getLikedBooksIdForCurrentUser();
             model.addAttribute("likeBooks", likeBooks);
-            model.addAttribute("memberUrl", urlConfig.getUrl());
         }
 
         // 카테고리 정보 가져오기
@@ -167,7 +163,6 @@ public class BookCustomerController {
         if (CookieUtil.checkAccessTokenCookie(request)) {
             List<Long> likeBooks = bookCommonService.getLikedBooksIdForCurrentUser();
             model.addAttribute("likeBooks", likeBooks);
-            model.addAttribute("memberUrl", urlConfig.getUrl());
         }
 
         model.addAttribute("reviews", reviewService.getReviewsByBookId(bookId));

@@ -6,7 +6,6 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.service.BookCommo
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.exception.exception.InvalidTokenException;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.exception.exception.ValidationFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.util.CookieUtil;
-import com.nhnacademy.mini_dooray.ssacthree_front.config.UrlConfig;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,7 +32,6 @@ public class MemberMyPageController {
 
     private final MemberService memberService;
     private final BookCommonService bookCommonService;
-    private final UrlConfig urlConfig;
 
     @GetMapping("/my-page")
     public String myPage(Model model, HttpServletRequest request) {
@@ -82,7 +80,6 @@ public class MemberMyPageController {
         }
         List<Long> likeBooks = bookCommonService.getLikedBooksIdForCurrentUser();
         model.addAttribute("likeBooks", likeBooks);
-        model.addAttribute("memberUrl", urlConfig.getUrl());
 
         // 공통 필터 파라미터를 Map으로 정리
         Map<String, Object> allParams = new HashMap<>();
