@@ -217,17 +217,19 @@
         </div>
 
         <div class="filter-buttons d-flex flex-wrap gap-2 mb-4">
-            <button class="btn btn-filter active">종합</button>
-            <button class="btn btn-filter">소설/에세이/시</button>
-            <button class="btn btn-filter">자녀교육/건강/여행/요리</button>
-            <button class="btn btn-filter">유아/어린이/초등학습</button>
-            <button class="btn btn-filter">중/고학습</button>
-            <button class="btn btn-filter">인문/역사</button>
-            <button class="btn btn-filter">외국어</button>
-            <button class="btn btn-filter">예술</button>
-            <button class="btn btn-filter">컴퓨터/IT</button>
-            <button class="btn btn-filter">종교</button>
-            <button class="btn btn-filter">기술/공학</button>
+            <!-- 종합 버튼 -->
+            <button class="btn btn-filter active"
+                    th:onclick="|window.location.href='/books'|">
+                종합
+            </button>
+
+            <!-- 카테고리 버튼 -->
+            <div th:each="rootCategory : ${rootCategories}">
+                <button class="btn btn-filter"
+                        th:text="${rootCategory.categoryName}"
+                        th:onclick="|window.location.href='/books?category-id=' + ${rootCategory.categoryId}|">
+                </button>
+            </div>
         </div>
 
         <div class="swiper new-items-swiper">
@@ -290,7 +292,7 @@
                                         <use xlink:href="#cart"></use>
                                     </svg>
                                 </button>
-                                <div class="btn btn-dark wishlist-button">
+                                `<div class="btn btn-dark wishlist-button">
                                     <span><svg class="wishlist"
                                                style="width: 25px; height: 25px; cursor: pointer;"
                                                th:classappend="${likeBooks != null and likeBooks.contains(book.bookId)} ? 'liked' : ''"
@@ -300,7 +302,7 @@
                                                 <use th:unless="${likeBooks != null and likeBooks.contains(book.bookId)}" xlink:href="#heart"></use>
 
                                             </svg></span>
-                                </div>
+                                </div>`
                             </div>
 
 
@@ -312,15 +314,10 @@
 
             <div class="swiper-wrapper">
 
-
             </div>
         </div>
 
-
     </div>
-
-
-    <!--        <div class="swiper-pagination new-items-pagination" style="margin-bottom: 2em"></div>-->
 
 </section>
 
@@ -907,6 +904,10 @@
 <!-- JavaScript에 memberUrl 값 전달 -->
 <script th:inline="javascript">
     var memberUrl = [[${memberUrl}]];
+</script>
+
+<script>
+    var likeBooks = [[${likeBooks}]]; // Thymeleaf를 통해 서버에서 제공된 변수 전달
 </script>
 
 <script src="/js/bookLike.js"></script>

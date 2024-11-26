@@ -9,6 +9,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryNameResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.service.CategoryCommonService;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.util.CookieUtil;
+import com.nhnacademy.mini_dooray.ssacthree_front.config.UrlConfig;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.service.ReviewService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class BookCustomerController {
     private final CategoryCommonService categoryCommonService;
     private final ReviewService reviewService;
     private final DeliveryRuleService deliveryRuleService;
-    private final String memberUrl;
+    private final UrlConfig urlConfig;
 
     @GetMapping("/books")
     public String getBooksByFilters(
@@ -72,7 +73,7 @@ public class BookCustomerController {
         if (CookieUtil.checkAccessTokenCookie(request)) {
             List<Long> likeBooks = bookCommonService.getLikedBooksIdForCurrentUser();
             model.addAttribute("likeBooks", likeBooks);
-            model.addAttribute("memberUrl", memberUrl);
+            model.addAttribute("memberUrl", urlConfig.getUrl());
         }
 
         // 데이터 가져오기
@@ -120,8 +121,12 @@ public class BookCustomerController {
         if (CookieUtil.checkAccessTokenCookie(request)) {
             List<Long> likeBooks = bookCommonService.getLikedBooksIdForCurrentUser();
             model.addAttribute("likeBooks", likeBooks);
-            model.addAttribute("memberUrl", memberUrl);
+            model.addAttribute("memberUrl", urlConfig.getUrl());
         }
+
+        // 카테고리 정보 가져오기
+        List<CategoryInfoResponse> rootCategories = categoryCommonService.getRootCategories();
+        model.addAttribute("rootCategories", rootCategories);
 
         BookInfoResponse banner1 = bookCommonService.getBookById(483L); // <소년이 온다> 아이디
 
@@ -130,7 +135,11 @@ public class BookCustomerController {
         Page<BookListResponse> banner2Page = bookCommonService.getAllAvailableBooks(page, 1, viewSort);
         BookListResponse banner2 = banner2Page.getContent().isEmpty() ? null : banner2Page.getContent().get(0);
 
-        Page<BookListResponse> awardBooks = bookCommonService.getBooksByAuthorId(page, size, sort, authorId);
+        Page<BookListResponse> awardBooks = bookCommonService.getBooksByAuthorId(page, size, sort, authorId); // 한강 작가
+
+        String[] categorySort = {"publicationDate:desc"};
+        Page<BookListResponse> categoryBooks = bookCommonService.getAllAvailableBooks(page, size, categorySort);
+
 
         model.addAttribute("banner1", banner1);
         model.addAttribute("banner2", banner2);
@@ -158,7 +167,7 @@ public class BookCustomerController {
         if (CookieUtil.checkAccessTokenCookie(request)) {
             List<Long> likeBooks = bookCommonService.getLikedBooksIdForCurrentUser();
             model.addAttribute("likeBooks", likeBooks);
-            model.addAttribute("memberUrl", memberUrl);
+            model.addAttribute("memberUrl", urlConfig.getUrl());
         }
 
         model.addAttribute("reviews", reviewService.getReviewsByBookId(bookId));

@@ -186,6 +186,10 @@
                 var memberUrl = [[${memberUrl}]];
             </script>
 
+            <script>
+                var likeBooks = [[${likeBooks}]]; // Thymeleaf를 통해 서버에서 제공된 변수 전달
+            </script>
+
             <button class="btn btn-outline-secondary btn-sm w-70 mb-2 rounded-4"
                     th:onclick="|window.location.href='/shop/carts/add?bookId=' + ${book.bookId}+'&quantity='+1|">장바구니
             </button>
