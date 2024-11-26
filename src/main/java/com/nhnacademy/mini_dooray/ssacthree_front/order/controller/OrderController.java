@@ -15,10 +15,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.elastic.dto.Paging;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.AddressService;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.MemberService;
-import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.BookOrderRequest;
-import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderFormRequest;
-import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderResponse;
-import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderResponseWithCount;
+import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.*;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.service.OrderService;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.utils.OrderUtil;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.service.OrderService;
@@ -127,6 +124,46 @@ public class OrderController {
 
   }
 
-    // TODO 5. 주문 상태 변경 -> 관리자
+  // 관리자 주문 내역 보기
+    @GetMapping("/admin/orders")
+    public String orderListView(HttpServletRequest request,
+                                @RequestParam(defaultValue = "0") int page,
+                                @RequestParam(defaultValue = "10") int size,
+                                @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+                                Model model) {
+        // 날짜 기본 값 설정
+        LocalDate now = LocalDate.now();
+        if (startDate == null) {
+            startDate = now.minusMonths(3); // 3개월 전
+        }
+        if (endDate == null) {
+            endDate = now; // 오늘
+        }
 
+        // 주문 데이터 조회 (DTO 사용)
+        AdminOrderResponseWithCount response = orderService.adminGetAllOrders(
+                page, size, startDate, endDate);
+
+        // 페이지네이션 정보 생성
+        int totalPages = (int) Math.ceil((double) response.getTotalOrders() / size);
+        Paging paging = new Paging(page, size, totalPages, null);
+
+
+        // 모델에 데이터 전달
+        model.addAttribute("orders", response.getOrders());
+        model.addAttribute("paging", paging);
+        model.addAttribute("startDate", startDate);
+        model.addAttribute("endDate", endDate);
+        model.addAttribute("extraParams", "startDate=" + startDate + "&endDate=" + endDate);
+        model.addAttribute("today", LocalDate.now());
+        model.addAttribute("baseUrl", "/admin/orders");
+
+
+        return "admin/orders";
+    }
+
+
+
+    // TODO 5. 주문 상태 변경 -> 관리자
 }
