@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @Component
-@ConfigurationProperties(prefix = "member-like")
+@ConfigurationProperties(prefix = "member")
 public class UrlConfig {
     private String url;
 }
