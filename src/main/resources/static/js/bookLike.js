@@ -36,7 +36,7 @@ window.toggleLike = function (element) {
 
 
 function addLike(bookId) {
-    return fetch(`${memberUrl}/shop/members/likes`, {
+    return fetch(`/shop/members/likes`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -60,7 +60,7 @@ function addLike(bookId) {
 }
 
 function deleteLike(bookId) {
-    return fetch(`${memberUrl}/shop/members/likes/${bookId}`, {
+    return fetch(`/shop/members/likes/${bookId}`, {
         method: 'DELETE',
         credentials: 'include', // 쿠키 포함
         headers: {
