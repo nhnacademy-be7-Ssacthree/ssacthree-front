@@ -125,17 +125,21 @@
                         <div class="mb-3">
                             <label for="buyer-name" class="form-label">이름</label>
                             <input type="text" class="form-control" id="buyer-name" name="buyerName"
-                                   th:value="${isMember} ? ${memberInfo.customerName} : ''" required>
+                                   th:value="${isMember} ? ${memberInfo.customerName} : ''"
+                                   required maxlength="50" minlength="2"
+                                   pattern="^[가-힣a-zA-Z\s]+$" title="이름은 한글 또는 영어로 입력해야 합니다.">
                         </div>
                         <div class="mb-3">
                             <label for="buyer-email" class="form-label">이메일</label>
                             <input type="email" class="form-control" id="buyer-email" name="buyerEmail"
-                                   th:value="${isMember} ? ${memberInfo.customerEmail} : ''" required>
+                                   th:value="${isMember} ? ${memberInfo.customerEmail} : ''" required maxlength="100"
+                                   title="유효한 이메일 주소를 입력하세요.">
                         </div>
                         <div class="mb-3">
                             <label for="buyer-phone" class="form-label">휴대폰번호</label>
                             <input type="tel" class="form-control" id="buyer-phone" name="buyerPhone"
-                                   th:value="${isMember} ? ${memberInfo.customerPhoneNumber} : ''" required>
+                                   th:value="${isMember} ? ${memberInfo.customerPhoneNumber} : ''" required maxlength="13"
+                                   pattern="^01[016789]-\d{3,4}-\d{4}$" title="유효한 휴대폰 번호를 입력하세요. (예: 010-1234-5678)">
                         </div>
                     </section>
 
@@ -165,7 +169,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="detail-address" class="form-label">상세 주소</label>
-                            <input type="text" class="form-control" id="detail-address" name="detailAddress" required>
+                            <input type="text" class="form-control" id="detail-address" name="detailAddress" required maxlength="100"
+                                   title="상세 주소를 입력하세요.">
                         </div>
                         <div class="mb-3">
                             <button type="button" class="btn btn-outline-secondary" onclick="openPostcodeSearch()">주소 조회</button>
@@ -271,7 +276,7 @@
                                 <span>포장 가격</span>
                                 <strong id="packaging-price">+0원</strong>
                             </li>
-                            <li class="list-group-item d-flex justify-content-between">
+                            <li class="list-group-item d-flex justify-content-between" th:if="${isMember}">
                                 <span>할인</span>
                                 <strong id="discount-amount">-0원</strong>
                             </li>
@@ -344,7 +349,7 @@
     function applyPoints() {
         const pointsToUse = parseInt(document.getElementById("points-to-use").value) || 0;
         let paymentPrice = parseInt(document.getElementById("payment-price").value);
-        const points = /*[[${memberInfo.memberPoint}]]*/0;
+        const points = parseInt(document.getElementById("user-points").value);
 
         // 포인트는 100원 단위로만 사용할 수 있다고 가정 (옵션)
         if (pointsToUse < 0 || pointsToUse % 100 !== 0) {
@@ -369,7 +374,9 @@
         paymentPrice -= discount;
 
         // 업데이트 UI
-        document.getElementById("PaymentPrice").innerText = `${paymentPrice.toLocaleString()}원`;
+        document.getElementById("PaymentPrice").value = paymentPrice;
+
+        document.getElementById("PaymentPrice").innerText = `총 결제 금액: ${paymentPrice.toLocaleString()}원`;
         document.querySelector("#discount-amount").innerText = `-${discount.toLocaleString()}원`;
     }
 
