@@ -36,6 +36,9 @@ public class OrderSaveRequest {
     // 포인트 사용
     private Integer pointToUse;
 
+    // 포인트 적립
+    private Integer pointToSave;
+
     // 총금액
     private Integer totalPrice;
 
