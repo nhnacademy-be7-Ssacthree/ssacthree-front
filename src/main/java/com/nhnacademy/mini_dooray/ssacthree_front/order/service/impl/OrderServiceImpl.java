@@ -17,11 +17,14 @@ import com.nhnacademy.mini_dooray.ssacthree_front.order.adapter.OrderAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.BookOrderRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderFormRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderResponseWithCount;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderSaveRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.service.OrderService;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.utils.OrderUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -120,6 +123,11 @@ public class OrderServiceImpl implements OrderService {
         orderFormRequest.setOrderNumber(orderNumber);
     }
 
+    @Override
+    public void saveOrder(OrderSaveRequest orderSaveRequest) {
+
+    }
+
     // 카트 상품 주문서로 가져오기
     private List<BookOrderRequest> buildBookOrderRequestsFromCart(HttpServletRequest request) {
         List<CartItem> cartItems = cartService.initializeCart(request);
@@ -130,6 +138,13 @@ public class OrderServiceImpl implements OrderService {
             bookLists.add(buildBookOrderRequest(book, cartItem.getQuantity()));
         }
         return bookLists;
+    }
+
+
+    // 멤버 주문내역 조회
+    @Override
+    public OrderResponseWithCount getOrdersByMemberAndDate(Long customerId, int page, int size, LocalDate startDate, LocalDate endDate) {
+        return orderAdapter.getMemberOrders(customerId, page, size, startDate, endDate);
     }
 
 
