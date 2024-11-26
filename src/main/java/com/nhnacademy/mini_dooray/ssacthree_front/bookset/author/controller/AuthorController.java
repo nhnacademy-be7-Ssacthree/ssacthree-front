@@ -44,12 +44,12 @@ public class AuthorController {
         model.addAttribute("extraParams", extraParams);
 
         model.addAttribute("authors", authorService.getAllAuthors(page, size, sort));
-        return "authors";
+        return "admin/author/authors";
     }
 
     @GetMapping("/create")
-    public String createAuthor(){
-        return "createAuthor";
+    public String createAuthor() {
+        return "admin/author/createAuthor";
     }
 
     //기본 값 나오게...
@@ -57,13 +57,13 @@ public class AuthorController {
     public String updateAuthorForm(@PathVariable long authorId, Model model) {
         AuthorUpdateRequest authorUpdateRequest = authorService.getAuthorById(authorId);
         model.addAttribute("authorUpdateRequest", authorUpdateRequest);
-        return "updateAuthor";
-     }
+        return "admin/author/updateAuthor";
+    }
 
     @PostMapping("/create")
     public String createAuthor(@Valid @ModelAttribute AuthorCreateRequest authorCreateRequest,
-                               BindingResult bindingResult, Model model){
-        if(bindingResult.hasErrors()){
+                               BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
             throw new ValidationFailedException(bindingResult);
         }
 
@@ -74,8 +74,8 @@ public class AuthorController {
 
     @PostMapping
     public String updateAuthor(@Valid @ModelAttribute AuthorUpdateRequest authorUpdateRequest,
-                               BindingResult bindingResult, Model model){
-        if(bindingResult.hasErrors()){
+                               BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
             throw new ValidationFailedException(bindingResult);
         }
 

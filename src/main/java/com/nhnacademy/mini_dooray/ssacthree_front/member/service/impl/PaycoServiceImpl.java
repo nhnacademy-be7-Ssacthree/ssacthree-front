@@ -1,6 +1,7 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.member.service.impl;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.util.CookieUtil;
+import com.nhnacademy.mini_dooray.ssacthree_front.commons.util.ExceptionParser;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.adapter.MemberAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.adapter.PaycoIdAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.adapter.PaycoTokenAdapter;
@@ -139,7 +140,8 @@ public class PaycoServiceImpl implements PaycoService {
             }
             throw new PaycoConnectionFailedException("연동에 실패하였습니다.");
         } catch (FeignException e) {
-            throw new PaycoConnectionFailedException("연동에 실패하였습니다.");
+            throw new PaycoConnectionFailedException(
+                ExceptionParser.getErrorMessageFromFeignException(e.contentUTF8()));
         }
 
     }

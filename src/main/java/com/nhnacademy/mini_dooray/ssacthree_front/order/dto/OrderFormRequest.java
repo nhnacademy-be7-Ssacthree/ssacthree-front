@@ -33,6 +33,8 @@ public class OrderFormRequest {
     // TODO : null가능하게 !
     private Integer pointToUse;
 
+    private Integer pointToSave;
+
     // 적립 포인트
 
     // 순수 금액
@@ -46,6 +48,9 @@ public class OrderFormRequest {
     // 쿠폰 정보
 
     // 주문 도서 정보 list
+
+    private String orderNumber;
+
 
 
 }

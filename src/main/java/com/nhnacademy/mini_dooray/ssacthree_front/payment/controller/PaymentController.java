@@ -1,7 +1,7 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.payment.controller;
 
-import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderFormRequest;
-import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderSaveRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.service.PointHistoryService;
+import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.*;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.service.OrderService;
 import com.nhnacademy.mini_dooray.ssacthree_front.payment.dto.PaymentRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.payment.service.PaymentService;
@@ -21,7 +21,9 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
@@ -29,6 +31,7 @@ public class PaymentController {
 
     private final OrderService orderService;
     private final PaymentService paymentService;
+    private final PointHistoryService pointHistoryService;
     @RequestMapping(value = "/confirm")
     public ResponseEntity<JSONObject> confirmPayment(HttpServletRequest request, @RequestBody String jsonBody) throws Exception {
 
@@ -84,43 +87,71 @@ public class PaymentController {
         Reader reader = new InputStreamReader(responseStream, StandardCharsets.UTF_8);
         JSONObject jsonObject = (JSONObject) parser.parse(reader);
 
-        // TODO : me, jsonObject에서 결제테이블에 필요한거 만들어서 보내기
-        String type = (String) jsonObject.get("type"); // 일반결제 등등
-        String approvedAt = ((String) jsonObject.get("approvedAt"));
-        String method = (String) jsonObject.get("method");
-        String status = (String) jsonObject.get("status"); // 결제 처리 상태
-        PaymentRequest paymentRequest = new PaymentRequest(paymentKey, orderId, Integer.parseInt(amount), type, method,status, approvedAt);
+
 
         // TODO : 결제 성공 ! 주문 저장하기. - 재고차감 등등... shop의 orderService에서 모든 로직 처리하기.
         HttpSession session = request.getSession(false);
         OrderFormRequest orderFormRequest = (OrderFormRequest) session.getAttribute("orderFormRequest");
+        List<BookOrderRequest> bookLists = (List<BookOrderRequest>) session.getAttribute("bookLists");
 
-//        OrderSaveRequest orderSaveRequest = new OrderSaveRequest(
-//                List< OrderDetailSaveReque> orderDetailList,
-//                orderFormRequest.getCustomerId(),
-//                orderFormRequest.getBuyerName(),
-//                orderFormRequest.getBuyerEmail(),
-//                orderFormRequest.getBuyerPhone(),
-//                orderFormRequest.getRecipientName(),
-//                orderFormRequest.getRecipientPhone(),
-//                orderFormRequest.getPostalCode(),
-//                orderFormRequest.getRoadAddress(),
-//                orderFormRequest.getDetailAddress(),
-//                orderFormRequest.getOrderRequest(),
-//                orderFormRequest.getDeliveryDate(),
-//                orderFormRequest.getPointToUse()
-//        );
-//        // TODO : 주문 정보 저장하기 - 진짜 order저장을 위한.. order랑 컬럼 같아야함
-//        orderService.saveOrder(orderSaveRequest); // 모든 요청들을 여러개 보내거나, saveOrder에 모든 정보 주기.
-//        // 주문상세+포장정보, 포인트 기록 정보, 결제 정보
+        List<OrderDetailSaveRequest> orderDetailList = new ArrayList<>();
 
-        // TODO : 주문 상세 저장하기
+        for (BookOrderRequest bookOrder : bookLists) {
+            OrderDetailSaveRequest orderDetail = new OrderDetailSaveRequest(
+                    bookOrder.getBookId(),
+                    1L, //임시
+                    bookOrder.getMemberCouponId(),
+                    bookOrder.getQuantity(),
+                    bookOrder.getRegularPrice(),
+                    bookOrder.getPackagingId()
+            );
 
-        // TODO : 결제정보 저장하기. - 진짜 payment저장을 위한 .. payment랑 컬럼 같게
-        paymentService.savePayment(paymentRequest); // -> 백으로 보내깅
+            orderDetailList.add(orderDetail);
+            }
 
+        OrderSaveRequest orderSaveRequest = new OrderSaveRequest(
+                orderDetailList,
+                orderFormRequest.getCustomerId(),
+                orderFormRequest.getBuyerName(),
+                orderFormRequest.getBuyerEmail(),
+                orderFormRequest.getBuyerPhone(),
+                orderFormRequest.getRecipientName(),
+                orderFormRequest.getRecipientPhone(),
+                orderFormRequest.getPostalCode(),
+                orderFormRequest.getRoadAddress(),
+                orderFormRequest.getDetailAddress(),
+                orderFormRequest.getOrderRequest(),
+                orderFormRequest.getDeliveryDate(),
+                orderFormRequest.getPointToUse(),
+                orderFormRequest.getPointToSave(),
+                Integer.parseInt(amount),
+                (Long) session.getAttribute("deliveryRuleId"),
+                orderFormRequest.getOrderNumber()
+                );
 
+        // TODO 1. 주문서에서 결제하기 누르면 주문 정보 저장.(+ 결제 대기로) -> 결제 선택창으로 넘어감.
+        // TODO : 주문 정보 저장하기 - 주문시 저장되어야하는 모든 정보들(상품 리스트, 포인트, 쿠폰, 정책 등등)
+        // 모든 정보 전달 - 주문상세+포장정보, 포인트 기록 정보, 결제 정보
+        OrderResponse order = orderService.createOrder(orderSaveRequest);
+        Long dbOrderId = order.getOrderId();
 
+        // TODO 2. 결제승인 이후, 성공 메세지 뜨기 전에 결제 정보 저장해주기.
+        //String type = (String) jsonObject.get("type"); // 일반결제 등등
+        String approvedAt = (String) jsonObject.get("approvedAt");
+        // TODO : 타입에 일단 임시로 아무 숫자 넣음, 제대로 변경 필요
+        String method = (String) jsonObject.get("method");
+        String status = (String) jsonObject.get("status"); // 결제 처리 상태
+        PaymentRequest paymentRequest = new PaymentRequest(
+                dbOrderId,
+                1L,
+                Integer.parseInt(amount),
+                status,
+                paymentKey,
+                approvedAt);
+
+        paymentService.savePayment(paymentRequest);
+
+        //TODO 여기에 주문완료하고서 보여줄 정보 주기.
 
 
         responseStream.close();
@@ -137,8 +168,8 @@ public class PaymentController {
      */
     @RequestMapping(value = "/success", method = RequestMethod.GET)
     public String paymentRequest(HttpServletRequest request, Model model) throws Exception {
-        // 여기서 저장?
-
+        // 결제 성공 -> 결제 정보 저장하기.
+        // TODO : 여기에 결제 저장?
 
         return "payment/success";
     }
