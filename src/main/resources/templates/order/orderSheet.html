@@ -261,15 +261,15 @@
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item d-flex justify-content-between">
                                 <span>도서 금액</span>
-                                <strong>30,000원</strong>
+                                <strong id="book-price"></strong>
                             </li>
                             <li class="list-group-item d-flex justify-content-between">
                                 <span>배송비</span>
-                                <strong>+5,000원</strong>
+                                <strong id="delivery-price">+0원</strong>
                             </li>
                             <li class="list-group-item d-flex justify-content-between">
                                 <span>포장 가격</span>
-                                <strong>+2,200원</strong>
+                                <strong id="packaging-price">+0원</strong>
                             </li>
                             <li class="list-group-item d-flex justify-content-between">
                                 <span>할인</span>
@@ -277,7 +277,7 @@
                             </li>
                         </ul>
                         <div class="mt-3 text-center">
-                            <h4 class="text-dark">총 결제 금액; <span id="PaymentPrice">원</span></h4>
+                            <h4 class="text-dark"><span id="PaymentPrice"></span></h4>
                         </div>
                     </div>
                     <div class="card-footer text-center">
@@ -305,31 +305,32 @@
         let paymentPrice = 0;
         let deliveryFee = 0;
         let pointSave = 0;
+        let bookPrice = 0;
 
         // 상품 가격 계산, 적립 포인트 계산
         bookLists.forEach(book => {
-            paymentPrice += book.salePrice * book.quantity;
+            bookPrice += book.salePrice * book.quantity;
             pointSave += book.pointToSave * book.quantity;
         });
+
+        const bookPriceElement = document.getElementById("book-price");
+        bookPriceElement.innerText =  '+' + bookPrice + '원';
 
         // 배송비 계산 (상품 가격이 무료 배송 기준을 초과하는지 확인)
         const deliveryDiscountCost = /*[[${deliveryRule.deliveryDiscountCost}]]*/ 0;
         const deliveryFeeValue = /*[[${deliveryRule.deliveryFee}]]*/ 0;
-        console.log(deliveryDiscountCost);
-        console.log(deliveryFeeValue);
 
         if (paymentPrice < deliveryDiscountCost) {
             deliveryFee = deliveryFeeValue;  // 무료 배송 기준 미만이면 배송비 추가
         }
 
-        // 총 결제 금액 계산
-        paymentPrice += deliveryFee;
-
-        // 결과를 페이지에 반영
+        document.getElementById("delivery-price").innerText = '+' + deliveryFee +'원';
         document.getElementById("PaymentPrice").innerText = paymentPrice + "원";
 
         // hidden input 필드에 결제 가격 설정
+        paymentPrice = bookPrice + deliveryFee;
         document.getElementById("payment-price").value = paymentPrice;
+        document.getElementById("PaymentPrice").innerText = '총 결제 금액: ' + paymentPrice + '원';
 
         document.getElementById("user-points-save").innerText = pointSave + "P";
 
