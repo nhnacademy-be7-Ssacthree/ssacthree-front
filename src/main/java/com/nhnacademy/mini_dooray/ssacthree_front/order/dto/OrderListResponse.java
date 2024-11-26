@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 // 주문내역 조회를 위한 OrderResponse 입니다. (OrderResponseWithCount DTO에서 사용)
+//
 @Getter
 @Setter
 @AllArgsConstructor
@@ -17,3 +18,4 @@ public class OrderListResponse {
   private int totalPrice;
   private String orderStatus;
 }
+// 더 보여줄 정보가 있나?
