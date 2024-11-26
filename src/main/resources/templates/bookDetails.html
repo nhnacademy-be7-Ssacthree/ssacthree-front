@@ -37,7 +37,7 @@
                                                          style="padding-bottom:5px"></a></li>
             <li th:each="category, iterStat : ${categoryPaths[0]}"
                 th:classappend="${iterStat.last} ? 'breadcrumb-item active' : 'breadcrumb-item'">
-                <a th:href="@{/categories/{id}(id=${category.categoryId})}"
+                <a th:href="@{/books(category-id=${category.categoryId})}"
                    th:text="${category.categoryName}"></a>
             </li>
         </ol>
@@ -55,9 +55,9 @@
             <!-- 태그 목록 -->
             <div class="container mb-3" style="margin-top:30px">
                 <div class="d-flex flex-wrap">
-                    <span th:each="tag : ${book.tags}" class="badge bg-light text-dark me-2"
-                          style="font-size:1em">#<span
-                            th:text="${tag.tagName}"></span></span>
+                 <span th:each="tag : ${book.tags}" class="badge bg-light text-dark me-2"
+                       style="font-size:0.8em; margin-top:2px"><a th:href="@{/books(tag-id=${tag.tagId})}">#<span
+                         th:text="${tag.tagName}"></span></a></span>
                 </div>
                 <!--                <div class="text-muted">-->
                 <!--                    <span class="badge bg-light text-dark">#학생</span>-->
@@ -163,7 +163,7 @@
                     <ol class="breadcrumb mb-0" style="padding: 0; margin: 0;">
                         <li th:each="category, iterStat : ${path}"
                             th:classappend="${iterStat.last} ? 'breadcrumb-item active' : 'breadcrumb-item'">
-                            <a th:href="@{/categories/{id}(id=${category.categoryId})}"
+                            <a th:href="@{/books(category-id=${category.categoryId})}"
                                th:text="${category.categoryName}"></a>
                         </li>
                     </ol>
