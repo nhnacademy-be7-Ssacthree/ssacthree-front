@@ -11,6 +11,11 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.exception.BookFai
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.service.BookMgmtService;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.image.adapter.ImageUploadAdapter;
+import io.micrometer.observation.annotation.Observed;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -165,4 +170,13 @@ public class BookMgmtServiceImpl implements BookMgmtService {
         return bookUpdateRequest;
     }
 
+    @Override
+    public List<Long> cleanList(List<Long> list){
+        if (list == null) {
+            return new ArrayList<>();
+        }
+        return list.stream()
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
+    }
 }

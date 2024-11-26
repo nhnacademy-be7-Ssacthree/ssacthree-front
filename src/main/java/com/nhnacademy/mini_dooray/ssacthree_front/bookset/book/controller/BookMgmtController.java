@@ -106,6 +106,7 @@ public class BookMgmtController {
 
         // BookSaveRequest 초기화
         BookUpdateRequestMultipart bookUpdateRequestMultipart = new BookUpdateRequestMultipart();
+        bookUpdateRequestMultipart.setBookId(bookInfoResponse.getBookId());
         bookUpdateRequestMultipart.setBookName(bookInfoResponse.getBookName());
         bookUpdateRequestMultipart.setBookIndex(bookInfoResponse.getBookIndex());
         bookUpdateRequestMultipart.setBookInfo(bookInfoResponse.getBookInfo());
@@ -121,18 +122,18 @@ public class BookMgmtController {
         bookUpdateRequestMultipart.setBookStatus(bookInfoResponse.getBookStatus());
 
         bookUpdateRequestMultipart.setPublisherId(
-                bookInfoResponse.getPublisher() != null ? bookInfoResponse.getPublisher().getPublisherId() : null
+            bookInfoResponse.getPublisher() != null ? bookInfoResponse.getPublisher().getPublisherId() : null
         );
 
         bookUpdateRequestMultipart.setCategoryIdList(bookInfoResponse.getCategories().stream()
-                .map(CategoryNameResponse::getCategoryId)
-                .collect(Collectors.toList()));
+            .map(CategoryNameResponse::getCategoryId)
+            .collect(Collectors.toList()));
         bookUpdateRequestMultipart.setTagIdList(bookInfoResponse.getTags().stream()
-                .map(TagInfoResponse::getTagId)
-                .collect(Collectors.toList()));
+            .map(TagInfoResponse::getTagId)
+            .collect(Collectors.toList()));
         bookUpdateRequestMultipart.setAuthorIdList(bookInfoResponse.getAuthors().stream()
-                .map(AuthorNameResponse::getAuthorId)
-                .collect(Collectors.toList()));
+            .map(AuthorNameResponse::getAuthorId)
+            .collect(Collectors.toList()));
 
         model.addAttribute("bookInfoResponse", bookInfoResponse);
         model.addAttribute("bookUpdateRequestMultipart", bookUpdateRequestMultipart);
@@ -148,7 +149,7 @@ public class BookMgmtController {
 
     @PostMapping("/create")
     public String createBook(@Valid @ModelAttribute BookSaveRequestMultipart bookSaveRequestMultipart,
-                               BindingResult bindingResult){
+        BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             throw new BookFailedException(BOOK_CREATE_ERROR_MESSAGE);
         }
@@ -160,17 +161,29 @@ public class BookMgmtController {
 
     @PostMapping("/update")
     public String updateBook(@Valid @ModelAttribute BookUpdateRequestMultipart bookUpdateRequestMultipart,
-                             BindingResult bindingResult){
+        BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             throw new BookFailedException(BOOK_UPDATE_ERROR_MESSAGE);
         }
+
+
+        bookUpdateRequestMultipart.setAuthorIdList(bookMgmtService.cleanList(bookUpdateRequestMultipart.getAuthorIdList()));
+        bookUpdateRequestMultipart.setCategoryIdList(bookMgmtService.cleanList(bookUpdateRequestMultipart.getCategoryIdList()));
+        bookUpdateRequestMultipart.setTagIdList(bookMgmtService.cleanList(bookUpdateRequestMultipart.getTagIdList()));
+
         MultipartFile bookThumbnailUrlMultipartFile = bookUpdateRequestMultipart.getBookThumbnailImageUrlMultipartFile();
+
+        if (bookThumbnailUrlMultipartFile == null || bookThumbnailUrlMultipartFile.isEmpty()) {
+            // 기존 URL 유지
+            bookUpdateRequestMultipart.setBookThumbnailImageUrl(
+                bookMgmtService.getBookById(bookUpdateRequestMultipart.getBookId()).getBookThumbnailImageUrl()
+            );
+        }
 
         bookMgmtService.updateBook(bookUpdateRequestMultipart, bookThumbnailUrlMultipartFile);
 
         return REDIRECT_ADDRESS;
     }
-
 
     @PostMapping("/delete/{book-id}")
     public String deleteBook(@PathVariable(name = "book-id") Long bookId){

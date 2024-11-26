@@ -92,6 +92,8 @@
         </div>
         <div class="card-body">
           <form id="updateForm" th:action="@{/admin/books/update}" th:method="post" th:object="${bookUpdateRequestMultipart}" enctype="multipart/form-data">
+            <input type="hidden" th:field="*{bookId}" th:value="${bookInfoResponse.bookId}" />
+
             <!-- 도서 제목 -->
             <div class="mb-3">
               <label for="bookName" class="form-label">도서 제목</label>
@@ -110,8 +112,10 @@
             <div class="form-section">
               <label for="bookInfo" class="form-label">도서 설명</label>
               <div class="toast-editor-wrapper">
+                <!-- Toast UI Editor가 렌더링될 공간 -->
                 <div id="bookInfoEditor"></div>
               </div>
+              <!-- 숨겨진 필드: 폼 데이터 전송용 -->
               <textarea
                   class="d-none"
                   th:field="*{bookInfo}"
@@ -134,16 +138,29 @@
 
             <!-- 판매가 -->
             <div class="mb-3">
-              <label for="regularPrice" class="form-label">판매가</label>
-              <input type="number" class="form-control" th:field="*{regularPrice}" id="regularPrice"
-                     th:value="${bookInfoResponse.regularPrice}" required>
+              <label for="regularPrice" class="form-label">정가</label>
+              <input type="number" class="form-control"
+                     id="regularPrice"
+                     th:field="*{regularPrice}"
+                     min="0" required>
             </div>
 
             <!-- 할인 가격 -->
             <div class="mb-3">
-              <label for="salePrice" class="form-label">할인 가격</label>
-              <input type="number" class="form-control" th:field="*{salePrice}" id="salePrice"
-                     th:value="${bookInfoResponse.salePrice}">
+              <label for="salePrice" class="form-label">할인가</label>
+              <input type="number" class="form-control"
+                     id="salePrice"
+                     th:field="*{salePrice}"
+                     min="0" required>
+            </div>
+
+            <!-- 할인율 -->
+            <div class="mb-3">
+              <label for="discountRate" class="form-label">할인율 (%)</label>
+              <input type="text" class="form-control"
+                     id="discountRate"
+                     th:field="*{bookDiscount}"
+                     readonly>
             </div>
 
             <!-- 포장 여부 -->
@@ -162,12 +179,15 @@
               </div>
             </div>
 
-
             <!-- 재고 -->
             <div class="mb-3">
               <label for="stock" class="form-label">재고</label>
-              <input type="number" class="form-control" th:field="*{stock}" id="stock"
-                     th:value="${bookInfoResponse.stock}" required>
+              <input type="number" class="form-control"
+                     th:field="*{stock}"
+                       id="stock"
+                     min="0"
+                     title="재고는 음수가 될 수 없습니다."
+                     required>
             </div>
 
             <!-- 썸네일 이미지 업로드 -->
@@ -186,13 +206,6 @@
               </div>
             </div>
 
-            <!-- 할인율 -->
-            <div class="mb-3">
-              <label for="bookDiscount" class="form-label">할인율 (%)</label>
-              <input type="number" class="form-control" th:field="*{bookDiscount}" id="bookDiscount" min="0" max="100"
-                     th:value="${bookInfoResponse.bookDiscount}">
-            </div>
-
             <!-- 도서 상태 선택 -->
             <div class="mb-3">
               <label for="bookStatus" class="form-label">도서 상태</label>
@@ -209,30 +222,25 @@
               <div class="mb-3">
                 <div class="form-label-with-button">
                   <label for="categories" class="form-label">카테고리</label>
-                  <button type="button" class="book-save-button" onclick="location.href='/admin/categories'">카테고리 추가</button>
+                  <button type="button" class="book-save-button" onclick="location.href='/admin/categories/create'">카테고리 추가</button>
                 </div>
                 <div class="input-group">
                   <select id="category-select" class="form-select">
                     <option value="" disabled selected>카테고리를 선택하세요</option>
-                    <option th:each="category : ${categories}"
-                            th:value="${category.categoryId}"
-                            th:text="${category.categoryName}">
-                    </option>
+                    <option th:each="category : ${categories}" th:value="${category.categoryId}" th:text="${category.categoryName}"></option>
                   </select>
                 </div>
-                <!-- 선택된 카테고리 표시 영역 -->
-                <div id="selected-categories-container" class="mt-3">
-                  <label>현재 선택된 카테고리:</label>
-                  <!-- 선택된 카테고리들이 동적으로 표시됩니다 -->
-                  <span th:each="existingCategory : ${existingCategories}"
-                        class="badge bg-secondary me-2 selected-category-badge"
-                        th:data-id="${existingCategory.categoryId}">
-                    <span th:text="${existingCategory.categoryName}"></span>
-                    <button type="button" class="btn-close ms-1 remove-category" aria-label="Remove"></button>
-                  </span>
+                <div id="selected-categories-container" class="mt-2">
+                  <!-- 선택된 카테고리가 표시됩니다 -->
+                  <span th:each="category : ${existingCategories}" data-id="${category.categoryId}" class="tag-badge">
+        <span th:text="${category.categoryName}"></span>
+        <button type="button" class="remove-tag-btn" data-id="${category.categoryId}">x</button>
+      </span>
                 </div>
               </div>
             </div>
+
+
 
 
             <!-- 태그 선택 -->
@@ -240,29 +248,26 @@
               <input type="hidden" id="tags" name="tags" th:field="*{tagIdList}" />
               <div class="mb-3">
                 <div class="form-label-with-button">
-                  <label for="tag-select" class="form-label">태그 선택</label>
+                  <label for="tags" class="form-label">태그</label>
                   <button type="button" class="book-save-button" onclick="location.href='/admin/tags/create'">태그 추가</button>
                 </div>
                 <div class="input-group">
                   <select id="tag-select" class="form-select">
                     <option value="" disabled selected>태그를 선택하세요</option>
-                    <option th:each="tag : ${tags}"
-                            th:value="${tag.tagId}"
-                            th:text="${tag.tagName}">
-                    </option>
+                    <option th:each="tag : ${tags}" th:value="${tag.tagId}" th:text="${tag.tagName}"></option>
                   </select>
                 </div>
-                <div id="selected-tags-container" class="mt-3">
-                  <label>현재 선택된 태그:</label>
-                  <span th:each="existingTag : ${existingTags}"
-                        class="badge bg-secondary me-2 selected-tag-badge"
-                        th:data-id="${existingTag.tagId}">
-                    <span th:text="${existingTag.tagName}"></span>
-                    <button type="button" class="btn-close ms-1 remove-tag" aria-label="Remove"></button>
-                  </span>
+                <div id="selected-tags-container" class="mt-2">
+                  <!-- 선택된 태그가 표시됩니다 -->
+                  <span th:each="tag : ${existingTags}" data-id="${tag.tagId}" class="tag-badge">
+        <span th:text="${tag.tagName}"></span>
+        <button type="button" class="remove-tag-btn" data-id="${tag.tagId}">x</button>
+      </span>
                 </div>
               </div>
             </div>
+
+
             <!-- 출판사 선택 -->
             <div class="mb-3">
               <div class="form-label-with-button">
@@ -284,26 +289,21 @@
               <input type="hidden" id="authors" name="authors" th:field="*{authorIdList}" />
               <div class="mb-3">
                 <div class="form-label-with-button">
-                  <label for="author-select" class="form-label">작가 선택</label>
+                  <label for="authors" class="form-label">작가</label>
                   <button type="button" class="book-save-button" onclick="location.href='/admin/authors/create'">작가 추가</button>
                 </div>
                 <div class="input-group">
                   <select id="author-select" class="form-select">
                     <option value="" disabled selected>작가를 선택하세요</option>
-                    <option th:each="author : ${authors}"
-                            th:value="${author.authorId}"
-                            th:text="${author.authorName}">
-                    </option>
+                    <option th:each="author : ${authors}" th:value="${author.authorId}" th:text="${author.authorName}"></option>
                   </select>
                 </div>
-                <div id="selected-authors-container" class="mt-3">
-                  <label>현재 선택된 작가:</label>
-                  <span th:each="existingAuthor : ${existingAuthors}"
-                        class="badge bg-secondary me-2 selected-author-badge"
-                        th:data-id="${existingAuthor.authorId}">
-                    <span th:text="${existingAuthor.authorName}"></span>
-                    <button type="button" class="btn-close ms-1 remove-author" aria-label="Remove"></button>
-                  </span>
+                <div id="selected-authors-container" class="mt-2">
+                  <!-- 선택된 작가가 표시됩니다 -->
+                  <span th:each="author : ${existingAuthors}" data-id="${author.authorId}" class="tag-badge">
+        <span th:text="${author.authorName}"></span>
+        <button type="button" class="remove-tag-btn" data-id="${author.authorId}">x</button>
+      </span>
                 </div>
               </div>
             </div>
@@ -321,110 +321,12 @@
 </div>
 
 <footer th:replace="~{common/footer :: footer}" />
-<script src="/js/bookRegister.js"></script>
+<script src="/js/bookUpdate.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js"></script>
 <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
 <script>
-  $(document).ready(function() {
-    $('.select-hidden').select2({
-      theme: 'bootstrap-5'
-    });
-  });
-
-  const form = document.getElementById('updateForm');
-  let editor;
-
-  document.addEventListener("DOMContentLoaded", function () {
-    // textarea의 초기값을 읽어 Toast UI Editor 초기화
-    const initialBookInfo = document.querySelector("#bookInfo").value;
-    editor = new toastui.Editor({
-      el: document.querySelector("#bookInfoEditor"),
-      height: "400px",
-      initialEditType: "wysiwyg",
-      previewStyle: "vertical",
-      initialValue: initialBookInfo || "", // 초기값 설정
-      hideModeSwitch: true
-    });
-
-
-  });
-
- form.onsubmit = function () {
-   const bookInfoField = document.querySelector("#bookInfo");
-   bookInfoField.value = editor.getMarkdown();
- }
-
-
-  // 기존에 선택된 카테고리 목록을 가져옵니다
-  const selectedCategories = [];
-
-  // 기존 선택된 카테고리들을 selectedCategories 배열에 넣습니다
-  const existingCategories = /*[[${existingCategories}]]*/ [];
-  existingCategories.forEach(category => {
-    selectedCategories.push(
-        {id: category.categoryId, name: category.categoryName});
-  });
-
-  // 드롭다운에서 선택된 항목을 처리할 변수
-  const categoryDropdown = document.getElementById('category-dropdown');
-  const selectedCategoriesContainer =
-      document.getElementById('selected-categories-container');
-  const hiddenInput = document.getElementById('categories'); // 숨겨진 필드
-
-  // 드롭다운에서 선택 시 이벤트 처리
-  categoryDropdown.addEventListener('change', () => {
-    const selectedOption = categoryDropdown.options[categoryDropdown.selectedIndex];
-    const categoryId = selectedOption.value;
-    const categoryName = selectedOption.text;
-
-    // 이미 선택된 카테고리가 있는지 확인
-    if (selectedCategories.some(cat => cat.id === categoryId)) return;
-
-    // 선택된 카테고리 추가
-    selectedCategories.push({id: categoryId, name: categoryName});
-
-    // UI 업데이트
-    updateSelectedCategoriesUI();
-
-    // 드롭다운 초기화
-    categoryDropdown.value = '';
-  });
-
-  // 선택된 카테고리 UI 업데이트
-  function updateSelectedCategoriesUI() {
-    selectedCategoriesContainer.innerHTML = '';
-
-    selectedCategories.forEach(category => {
-      const badge = document.createElement('span');
-      badge.className = 'badge bg-secondary me-2 selected-category-badge';
-      badge.setAttribute('data-id', category.id);
-
-      badge.innerHTML = `
-        ${category.name}
-        <button type="button" class="btn-close ms-1 remove-category" aria-label="Remove"></button>
-      `;
-
-      // 삭제 버튼 이벤트 추가
-      badge.querySelector('.btn-close').addEventListener('click', () => {
-        // 배열에서 해당 카테고리 삭제
-        const index = selectedCategories.findIndex(cat => cat.id === category.id);
-        if (index !== -1) selectedCategories.splice(index, 1);
-
-        // UI 업데이트
-        updateSelectedCategoriesUI();
-      });
-
-      selectedCategoriesContainer.appendChild(badge);
-    });
-
-    // 숨겨진 필드 값 업데이트 (카테고리 ID만)
-    hiddenInput.value = selectedCategories.map(cat => cat.id).join(',');
-  }
-
-  // 페이지 로딩 시 기존 선택된 카테고리 UI 업데이트
-  updateSelectedCategoriesUI();
 
 
 </script>

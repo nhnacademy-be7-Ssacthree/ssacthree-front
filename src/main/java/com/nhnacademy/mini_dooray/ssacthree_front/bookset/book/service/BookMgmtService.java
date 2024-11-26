@@ -8,6 +8,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.Book
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookInfoResponseMultipart;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookSearchResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,5 +26,5 @@ public interface BookMgmtService {
 
     String getImageUrl(MultipartFile bookThumbnailUrl);
 
-
+    List<Long> cleanList(List<Long> list);
 }
