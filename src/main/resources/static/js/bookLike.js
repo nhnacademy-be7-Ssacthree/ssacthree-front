@@ -3,6 +3,12 @@ window.toggleLike = function (element) {
     const isLiked = element.classList.contains('liked');
     const useElement = element.querySelector('use'); // <use> 태그 선택
 
+    // likeBooks가 null인 경우 알림창만 띄우기
+    if (typeof likeBooks === 'undefined' || likeBooks === null) {
+        alert('로그인이 필요합니다. 회원만 좋아요를 사용할 수 있습니다.');
+        return;
+    }
+
     if (isLiked) {
         // 좋아요 삭제
         deleteLike(bookId)

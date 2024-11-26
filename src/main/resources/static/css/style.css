@@ -1842,3 +1842,44 @@ select#input-sort {
 }
 
 
+
+     /*orderList CSS */
+     /* 테이블 스타일 */
+.table-striped td, .table-striped th {
+    border: 1px solid #ddd; /* 셀마다 구분선 */
+}
+
+.table-striped th {
+    background-color: #f9f9f9; /* 헤더 배경색 */
+    text-align: center; /* 헤더 텍스트 중앙 정렬 */
+}
+
+.table-striped td {
+    vertical-align: middle; /* 텍스트 수직 중앙 정렬 */
+    text-align: center; /* 텍스트 가로 중앙 정렬 */
+}
+
+/* 상세조회 버튼 스타일 */
+.btn-detail {
+    display: inline-block;
+    padding: 3px 6px; /* 크기 조정 */
+    color: white;
+    background-color: #F86D72;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-detail:hover {
+    background-color: #f45a63;
+    text-decoration: none;
+}
+
+.btn-detail:active {
+    background-color: #e94b54;
+}
+
