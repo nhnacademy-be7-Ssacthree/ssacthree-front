@@ -100,6 +100,7 @@ function updatePaymentDetails(orderAmount, couponDiscount, giftWrap, pointPaymen
 updatePaymentDetails(16020, 0, 0, 0, 0);
 
 
+
 // TODO : 오른쪽 결제 버튼 누르면 보내짐.
 function submitOrderForm() {
     // 왼쪽의 폼 ID를 타겟팅하여 서브밋

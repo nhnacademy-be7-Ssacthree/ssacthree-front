@@ -26,7 +26,7 @@
                         <div>
                             <h5 th:if="${not isMember}" class="non-member-order-title">비회원 주문</h5>
                         </div>
-                        <h4 class="text-primary">주문 상품 정보</h4>
+                        <h4 class="text-dark">주문 상품 정보</h4>
                         <table class="table table-bordered mt-3">
                             <thead class="table-light">
                             <tr>
@@ -121,7 +121,7 @@
                     <!-- 2. 구매자 정보 입력 -->
                     <!-- 비회원인 경우, 모든 칸이 비어있고, 회원인 경우 구매자 정보 입력칸을 해당 회원의 정보로 채워야함.-->
                     <section id="buyer-info" class="mb-4">
-                        <h4 class="text-primary">구매자 정보 입력</h4>
+                        <h4 class="text-dark">구매자 정보 입력</h4>
                         <div class="mb-3">
                             <label for="buyer-name" class="form-label">이름</label>
                             <input type="text" class="form-control" id="buyer-name" name="buyerName"
@@ -141,7 +141,7 @@
 
                     <!-- 배송지 입력 -->
                     <section id="delivery-info" class="mb-4">
-                        <h4 class="text-primary">배송지 입력</h4>
+                        <h4 class="text-dark">배송지 입력</h4>
                         <div class="mb-3">
                             <label for="recipient-name" class="form-label">받는 사람 이름</label>
                             <input type="text" class="form-control" id="recipient-name" name="recipientName" required>
@@ -223,18 +223,19 @@
 
                     <!-- 4. 포인트 사용 -->
                     <section id="point-use" class="mb-4" th:if="${isMember}">
-                        <h4 class="text-primary">포인트 사용</h4>
-                        <p>보유 포인트: <span id="user-points" th:text="${memberInfo.memberPoint} + 원"></span></p>
+                        <h4 class="text-dark">포인트 사용</h4>
+                        <p>보유 포인트: <span id="user-points" th:text="${memberInfo.memberPoint} + 원" th:value="${memberInfo.memberPoint}"></span></p>
                         <!-- 가진 포인트보다 많으면 안됨. -->
                         <div class="mb-3">
                             <label for="points-to-use" class="form-label">사용할 포인트</label>
-                            <input type="number" class="form-control" id="points-to-use" onchange="applyPoints()" name="pointToUse" value="0">
+                            <input type="number" id="points-to-use" name="pointToUse" value="0" min="0">
+                            <button class="btn btn-primary" type="button" onclick="applyPoints()">적용</button>
                         </div>
                     </section>
 
                     <!-- 5. 전체 주문에 대한 포인트 적립(등급 정책 적용), 계산 필요 -->
                     <section id="point-save" class="mb-4" th:if="${isMember}">
-                        <h4 class="text-primary">포인트 적립</h4>
+                        <h4 class="text-dark">포인트 적립</h4>
                         <p>적립 포인트: <span id="user-points-save"></span></p>
                         <input type="hidden" id="points-input" name="pointToSave" />
                     </section>
@@ -272,7 +273,7 @@
                             </li>
                             <li class="list-group-item d-flex justify-content-between">
                                 <span>할인</span>
-                                <strong>-0원</strong>
+                                <strong id="discount-amount">-0원</strong>
                             </li>
                         </ul>
                         <div class="mt-3 text-center">
@@ -335,6 +336,40 @@
         // 세이브되는 포인트 넘기기
         document.getElementById("points-input").value = pointSave;
         console.log("적립" + pointSave);
+    }
+
+
+    // 포인트 사용
+    function applyPoints() {
+        const pointsToUse = parseInt(document.getElementById("points-to-use").value) || 0;
+        let paymentPrice = parseInt(document.getElementById("payment-price").value);
+        const points = /*[[${memberInfo.memberPoint}]]*/0;
+
+        // 포인트는 100원 단위로만 사용할 수 있다고 가정 (옵션)
+        if (pointsToUse < 0 || pointsToUse % 100 !== 0) {
+            alert("포인트는 100원 단위로만 사용할 수 있습니다.");
+            return;
+        }
+
+        if (pointsToUse > points) {
+            alert("사용할 포인트가 보유한 포인트보다 클 수 없습니다.");
+            return;
+        }
+
+        if (paymentPrice - pointsToUse<= 0) {
+            alert("총 결제 금액은 0원보다 커야합니다.");
+            return;
+        }
+
+        // 총 할인 금액 업데이트
+        discount = pointsToUse;
+
+        // 총 결제 금액 계산
+        paymentPrice -= discount;
+
+        // 업데이트 UI
+        document.getElementById("PaymentPrice").innerText = `${paymentPrice.toLocaleString()}원`;
+        document.querySelector("#discount-amount").innerText = `-${discount.toLocaleString()}원`;
     }
 
 </script>
