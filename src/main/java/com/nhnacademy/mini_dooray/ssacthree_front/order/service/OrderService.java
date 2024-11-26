@@ -1,10 +1,16 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.order.service;
 
+import com.nhnacademy.mini_dooray.ssacthree_front.cart.domain.CartItem;
+import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderResponseWithCount;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderFormRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderSaveRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import java.time.LocalDate;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 public interface OrderService {
@@ -15,4 +21,10 @@ public interface OrderService {
     void prepareOrderNow(HttpServletRequest request, Long bookId, int quantity, Model model);
 
     void processOrder(String memberId, Integer paymentPrice, OrderFormRequest orderFormRequest, HttpSession session, Model model);
+
+    void saveOrder(OrderSaveRequest orderSaveRequest);
+
+
+    // 회원 주문 조회
+    OrderResponseWithCount getOrdersByMemberAndDate(Long customerId, int page, int size, LocalDate startDate, LocalDate endDate);
 }

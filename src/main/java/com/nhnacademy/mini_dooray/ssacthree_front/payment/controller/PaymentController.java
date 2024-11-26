@@ -1,5 +1,6 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.payment.controller;
 
+import com.nhnacademy.mini_dooray.ssacthree_front.member.service.PointHistoryService;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.*;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.service.OrderService;
 import com.nhnacademy.mini_dooray.ssacthree_front.payment.dto.PaymentRequest;
@@ -30,6 +31,7 @@ public class PaymentController {
 
     private final OrderService orderService;
     private final PaymentService paymentService;
+    private final PointHistoryService pointHistoryService;
     @RequestMapping(value = "/confirm")
     public ResponseEntity<JSONObject> confirmPayment(HttpServletRequest request, @RequestBody String jsonBody) throws Exception {
 
@@ -121,6 +123,7 @@ public class PaymentController {
                 orderFormRequest.getOrderRequest(),
                 orderFormRequest.getDeliveryDate(),
                 orderFormRequest.getPointToUse(),
+                orderFormRequest.getPointToSave(),
                 Integer.parseInt(amount),
                 (Long) session.getAttribute("deliveryRuleId"),
                 orderFormRequest.getOrderNumber()
