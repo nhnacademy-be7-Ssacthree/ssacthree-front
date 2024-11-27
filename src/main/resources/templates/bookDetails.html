@@ -37,7 +37,7 @@
                                                          style="padding-bottom:5px"></a></li>
             <li th:each="category, iterStat : ${categoryPaths[0]}"
                 th:classappend="${iterStat.last} ? 'breadcrumb-item active' : 'breadcrumb-item'">
-                <a th:href="@{/categories/{id}(id=${category.categoryId})}"
+                <a th:href="@{/books(category-id=${category.categoryId})}"
                    th:text="${category.categoryName}"></a>
             </li>
         </ol>
@@ -55,9 +55,9 @@
             <!-- 태그 목록 -->
             <div class="container mb-3" style="margin-top:30px">
                 <div class="d-flex flex-wrap">
-                    <span th:each="tag : ${book.tags}" class="badge bg-light text-dark me-2"
-                          style="font-size:1em">#<span
-                            th:text="${tag.tagName}"></span></span>
+                 <span th:each="tag : ${book.tags}" class="badge bg-light text-dark me-2"
+                       style="font-size:0.8em; margin-top:2px"><a th:href="@{/books(tag-id=${tag.tagId})}">#<span
+                         th:text="${tag.tagName}"></span></a></span>
                 </div>
                 <!--                <div class="text-muted">-->
                 <!--                    <span class="badge bg-light text-dark">#학생</span>-->
@@ -95,11 +95,6 @@
 
                 </div>
 
-                <!-- JavaScript에 memberUrl 값 전달 -->
-                <script th:inline="javascript">
-                    var memberUrl = [[${memberUrl}]];
-                </script>
-
                 <script>
                     var likeBooks = [[${likeBooks}]]; // Thymeleaf를 통해 서버에서 제공된 변수 전달
                 </script>
@@ -110,9 +105,9 @@
             </div>
 
             <div class="border p-3 mb-3">
-                <p><span id="delivery-fee" th:text="'기본 배송비:'+ ${deliveryRule.deliveryFee} + '원'"></span></p>
+                <p><span>기본 배송비: <span class="unitPrice" id="delivery-fee" th:text=" ${deliveryRule.deliveryFee}"></span>원</span></p>
                 <p class="text-success">
-                    <span id="delivery-discount-cost" th:text="${deliveryRule.deliveryDiscountCost} + '원 이상  구매시 무료배송'"></span>
+                    <span><span class="unitPrice" id="delivery-discount-cost" th:text="${deliveryRule.deliveryDiscountCost}"></span>원 이상  구매시 무료배송</span>
                 </p>
 
             </div>
@@ -168,7 +163,7 @@
                     <ol class="breadcrumb mb-0" style="padding: 0; margin: 0;">
                         <li th:each="category, iterStat : ${path}"
                             th:classappend="${iterStat.last} ? 'breadcrumb-item active' : 'breadcrumb-item'">
-                            <a th:href="@{/categories/{id}(id=${category.categoryId})}"
+                            <a th:href="@{/books(category-id=${category.categoryId})}"
                                th:text="${category.categoryName}"></a>
                         </li>
                     </ol>
