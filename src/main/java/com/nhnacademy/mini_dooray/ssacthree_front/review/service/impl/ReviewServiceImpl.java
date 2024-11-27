@@ -7,6 +7,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.ReviewRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.ReviewRequestWithUrl;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.BookReviewResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.ReviewResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.review.exception.NoOrderException;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.exception.PostReviewFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.exception.UnauthorizedReviewException;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.service.ReviewService;
@@ -14,6 +15,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -31,9 +33,9 @@ public class ReviewServiceImpl implements ReviewService {
     private static final String BEARER = "Bearer ";
 
     @Override
-    public List<BookReviewResponse> getReviewsByBookId(Long bookId) {
+    public Page<BookReviewResponse> getReviewsByBookId(int page, int size, String[] sort, Long bookId) {
         try {
-            ResponseEntity<List<BookReviewResponse>> responseEntity = adapter.getReviewsByBookId(bookId);
+            ResponseEntity<Page<BookReviewResponse>> responseEntity = adapter.getReviewsByBookId(page,size,sort,bookId);
             if (responseEntity.getStatusCode().is2xxSuccessful()) {
                 return responseEntity.getBody();
             } else {
@@ -74,12 +76,8 @@ public class ReviewServiceImpl implements ReviewService {
                 // 리뷰 작성 권한 있음
                 response.getBody();
                 return response.getBody();
-            } else if (response.getStatusCode() == HttpStatus.FORBIDDEN) {
-                // 리뷰 작성 권한 없음
-                throw new UnauthorizedReviewException("리뷰 작성 권한이 없습니다.");
             } else {
-                // 예상하지 못한 응답 처리
-                throw new RuntimeException("예상치 못한 상태 코드: " + response.getStatusCode());
+                throw new RuntimeException("이 오류는 뭐지");
             }
 
         } catch (HttpClientErrorException | HttpServerErrorException e) {

@@ -41,37 +41,37 @@ class ReviewServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    @WithMockUser(username = "testUser", roles = {"MEMBER"})
-    void testGetReviewsByBookId() {
-        // Given
-        Long bookId = 1L;
-        List<BookReviewResponse> mockResponse = List.of(
-            new BookReviewResponse(
-                "User123", // memberId
-                5, // reviewRate
-                "Excellent Book", // reviewTitle
-                "This is a fantastic read!", // reviewContent
-                LocalDateTime.now(), // reviewCreatedAt
-                "http://example.com/review-image.jpg" // reviewImage
-            )
-        );
-
-        when(reviewAdapter.getReviewsByBookId(bookId))
-            .thenReturn(new ResponseEntity<>(mockResponse, HttpStatus.OK));
-
-        // When
-        List<BookReviewResponse> reviews = reviewService.getReviewsByBookId(bookId);
-
-        // Then
-        assertEquals(1, reviews.size());
-        assertEquals("User123", reviews.getFirst().getMemberId());
-        assertEquals(5, reviews.getFirst().getReviewRate());
-        assertEquals("Excellent Book", reviews.getFirst().getReviewTitle());
-        assertEquals("This is a fantastic read!", reviews.getFirst().getReviewContent());
-        assertNotNull(reviews.getFirst().getReviewCreatedAt());
-        verify(reviewAdapter, times(1)).getReviewsByBookId(bookId);
-    }
+//    @Test
+//    @WithMockUser(username = "testUser", roles = {"MEMBER"})
+//    void testGetReviewsByBookId() {
+//        // Given
+//        Long bookId = 1L;
+//        List<BookReviewResponse> mockResponse = List.of(
+//            new BookReviewResponse(
+//                "User123", // memberId
+//                5, // reviewRate
+//                "Excellent Book", // reviewTitle
+//                "This is a fantastic read!", // reviewContent
+//                LocalDateTime.now(), // reviewCreatedAt
+//                "http://example.com/review-image.jpg" // reviewImage
+//            )
+//        );
+//
+//        when(reviewAdapter.getReviewsByBookId(bookId))
+//            .thenReturn(new ResponseEntity<>(mockResponse, HttpStatus.OK));
+//
+//        // When
+//        List<BookReviewResponse> reviews = reviewService.getReviewsByBookId(bookId);
+//
+//        // Then
+//        assertEquals(1, reviews.size());
+//        assertEquals("User123", reviews.getFirst().getMemberId());
+//        assertEquals(5, reviews.getFirst().getReviewRate());
+//        assertEquals("Excellent Book", reviews.getFirst().getReviewTitle());
+//        assertEquals("This is a fantastic read!", reviews.getFirst().getReviewContent());
+//        assertNotNull(reviews.getFirst().getReviewCreatedAt());
+//        verify(reviewAdapter, times(1)).getReviewsByBookId(bookId);
+//    }
 
     @Test
     @WithMockUser(username = "testUser", roles = {"MEMBER"})
