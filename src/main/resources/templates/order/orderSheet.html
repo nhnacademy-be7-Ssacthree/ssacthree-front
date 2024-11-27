@@ -66,6 +66,8 @@
                                         <button type="button" class="btn btn-outline-primary"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#packagingModal"
+                                                th:data-book-id="${book.bookId}"
+                                                th:data-packaging-id="${book.packagingId}"
                                                 onclick="setCurrentRow(this)">
                                             포장지 선택
                                         </button>
