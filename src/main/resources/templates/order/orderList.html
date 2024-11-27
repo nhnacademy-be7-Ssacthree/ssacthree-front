@@ -62,6 +62,7 @@
             <td th:text="${order.orderStatus}"></td>
             <!-- 상세조회 버튼 -->
             <td>
+              <!-- 주문 상세 조회 링크 -->
               <a th:href="@{/orders/detail/{id}(id=${order.orderId})}" class="btn btn-detail">상세조회</a>
             </td>
           </tr>

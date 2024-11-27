@@ -55,6 +55,6 @@ public interface BookCustomerAdapter {
     ResponseEntity<BookLikeResponse> createBookLikeByMemberId(@RequestBody BookLikeRequest request);
 
     @DeleteMapping("/shop/members/likes/{book-id}")
-    ResponseEntity<BookLikeResponse> deleteBookLikeByMemberId(@PathVariable(name = "book-id") Long bookId);
+    ResponseEntity<Boolean> deleteBookLikeByMemberId(@PathVariable(name = "book-id") Long bookId);
 }
 
