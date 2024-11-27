@@ -13,7 +13,10 @@
 
 </head>
 <body>
-
+<div class="container mt-3">
+    <!-- 경고 메시지 표시 -->
+    <div class="alert alert-warning" th:if="${reviewWarning}" th:text="${reviewWarning}"></div>
+</div>
 <svg xmlns="http://www.w3.org/2000/svg"
      xmlns:xlink="http://www.w3.org/1999/xlink" style="display: none;">
     <symbol id="heart" viewBox="0 0 16 16">
