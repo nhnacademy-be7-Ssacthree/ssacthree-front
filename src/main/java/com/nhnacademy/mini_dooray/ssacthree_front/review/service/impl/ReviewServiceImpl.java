@@ -14,6 +14,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -31,9 +32,9 @@ public class ReviewServiceImpl implements ReviewService {
     private static final String BEARER = "Bearer ";
 
     @Override
-    public List<BookReviewResponse> getReviewsByBookId(Long bookId) {
+    public Page<BookReviewResponse> getReviewsByBookId(int page, int size, String[] sort, Long bookId) {
         try {
-            ResponseEntity<List<BookReviewResponse>> responseEntity = adapter.getReviewsByBookId(bookId);
+            ResponseEntity<Page<BookReviewResponse>> responseEntity = adapter.getReviewsByBookId(page,size,sort,bookId);
             if (responseEntity.getStatusCode().is2xxSuccessful()) {
                 return responseEntity.getBody();
             } else {
