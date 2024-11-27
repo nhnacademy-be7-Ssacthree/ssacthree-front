@@ -80,7 +80,8 @@
                         th:text="${book.bookViewCount}"></span>
             </p>
             <div class="d-flex align-items-center justify-content-between">
-                <p class="fs-4 text-danger fw-bold"><span class="unitPrice" id="unitPrice" th:text="${book.salePrice}"></span>원
+                <span id="unitPrice" th:text="${book.salePrice}" style="display:none"></span>
+                <p class="fs-4 text-danger fw-bold"><span class="unitPrice" th:text="${book.salePrice}"></span>원
                     <del class="text-muted fs-6"><span class="unitPrice" th:text="${book.regularPrice}"></span>원</del>
                     <span class="fs-6 text-danger">(</span><span class="fs-6 text-danger"
                                                                  th:text="${book.bookDiscount}"></span><span
