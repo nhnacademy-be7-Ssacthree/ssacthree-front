@@ -300,12 +300,14 @@ h6 {
     border-radius: 200px;
     cursor: pointer;
 }
+
 :root {
-    --primary-color: #f86d72;      /* 기본 색상 */
+    --primary-color: #f86d72; /* 기본 색상 */
     --primary-dark-color: #f86d72; /* 다크 버전 색상 */
-    --white-color: #ffffff;        /* 흰색 */
+    --white-color: #ffffff; /* 흰색 */
 }
-.book-save-button{
+
+.book-save-button {
     font-weight: 500;
     text-transform: capitalize;
     letter-spacing: 0.09em;
@@ -317,10 +319,12 @@ h6 {
     border-radius: 20px;
     cursor: pointer;
 }
+
 .book-save-button:hover {
     background-color: var(--primary-dark-color); /* 호버 시 다크 색상 */
-    border-color: var(--primary-dark-color);     /* 테두리도 변경 */
+    border-color: var(--primary-dark-color); /* 테두리도 변경 */
 }
+
 .btn:hover,
 .btn:focus-visible,
 .btn-check:checked + .btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check) + .btn:active {
@@ -1540,7 +1544,6 @@ select#input-sort {
 }
 
 
-
 /* Styling for Member Order section */
 .member-order-title {
     font-size: 1.5rem;
@@ -1575,6 +1578,11 @@ select#input-sort {
 .custom-col {
     flex: 0 0 20%; /* 한 줄에 5개가 들어가도록 너비를 20%로 설정 */
     max-width: 20%;
+}
+
+.custom-col2 {
+    flex: 0 0 25%; /* 한 줄에 5개가 들어가도록 너비를 20%로 설정 */
+    max-width: 25%;
 }
 
 
@@ -1753,7 +1761,6 @@ select#input-sort {
 }
 
 
-
 /* 드롭다운 컨테이너 */
 .dropdown-container .form-select {
     display: inline-block;
@@ -1834,4 +1841,45 @@ select#input-sort {
     fill: #FFD700;
 }
 
+
+
+     /*orderList CSS */
+     /* 테이블 스타일 */
+.table-striped td, .table-striped th {
+    border: 1px solid #ddd; /* 셀마다 구분선 */
+}
+
+.table-striped th {
+    background-color: #f9f9f9; /* 헤더 배경색 */
+    text-align: center; /* 헤더 텍스트 중앙 정렬 */
+}
+
+.table-striped td {
+    vertical-align: middle; /* 텍스트 수직 중앙 정렬 */
+    text-align: center; /* 텍스트 가로 중앙 정렬 */
+}
+
+/* 상세조회 버튼 스타일 */
+.btn-detail {
+    display: inline-block;
+    padding: 3px 6px; /* 크기 조정 */
+    color: white;
+    background-color: #F86D72;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-detail:hover {
+    background-color: #f45a63;
+    text-decoration: none;
+}
+
+.btn-detail:active {
+    background-color: #e94b54;
+}
 

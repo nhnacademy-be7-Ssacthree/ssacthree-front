@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
@@ -298,27 +299,31 @@ public class CartService {
 
         // Redis에서 cartItem 리스트 가져오기
         Map<String, Object> cartData = (Map<String, Object>) redisTemplate.opsForValue().get(sessionId);
-        Object cartItemsObj = cartData.get("cartItems");
 
-        List<CartItem> cartItems = (List<CartItem>) cartItemsObj;
+        if(cartData != null) {
+            Object cartItemsObj = Optional.ofNullable(cartData.get("cartItems")).orElse(null);
+            List<CartItem> cartItems = (List<CartItem>) cartItemsObj;
 
-        // cartRequests 생성
-        List<CartRequest> cartRequests = new ArrayList<>();
-        for (CartItem cartItem : cartItems) {
-            Long id = cartItem.getId();
-            int quantity = cartItem.getQuantity();
-            cartRequests.add(new CartRequest(id, quantity));
-        }
-
-        try {
-            // 데이터베이스에 저장 요청
-            ResponseEntity<Void> response = cartAdapter.saveCartInDBUseHeader(BEARER + accessToken, cartRequests); // customerId 대신 sessionId 사용
-
-            if (!response.getStatusCode().is2xxSuccessful()) {
-                throw new AddressFailedException("장바구니 저장에 실패하였습니다.");
+            // cartRequests 생성
+            List<CartRequest> cartRequests = new ArrayList<>();
+            for (CartItem cartItem : cartItems) {
+                Long id = cartItem.getId();
+                int quantity = cartItem.getQuantity();
+                cartRequests.add(new CartRequest(id, quantity));
             }
-        } catch (FeignException e) {
-            throw new RuntimeException("요청 오류: " + e.getMessage(), e);
+
+            try {
+                // 데이터베이스에 저장 요청
+                ResponseEntity<Void> response = cartAdapter.saveCartInDBUseHeader(BEARER + accessToken, cartRequests); // customerId 대신 sessionId 사용
+
+                if (!response.getStatusCode().is2xxSuccessful()) {
+                    throw new AddressFailedException("장바구니 저장에 실패하였습니다.");
+                }
+            } catch (FeignException e) {
+                throw new RuntimeException("요청 오류: " + e.getMessage(), e);
+            }
         }
+
+
     }
 }

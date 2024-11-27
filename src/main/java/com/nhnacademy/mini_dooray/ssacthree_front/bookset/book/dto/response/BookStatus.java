@@ -21,6 +21,7 @@ public enum BookStatus {
         return Arrays.stream(BookStatus.values())
             .filter(bookStatus -> bookStatus.getStatus().equals(status))
             .findFirst()
+            //TODO 에러 페이지로 에러 처리 해줘야함.
             .orElseThrow(IllegalArgumentException::new);
     }
 

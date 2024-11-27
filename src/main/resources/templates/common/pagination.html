@@ -10,7 +10,7 @@
             <!-- 이전 페이지 -->
             <li class="page-item" th:classappend="${paging.number == 0} ? 'disabled'">
                 <a class="page-link"
-                   th:href="@{|${baseUrl}?page=${paging.number - 1}&size=${paging.size}&sort=${paging.sort}&${extraParams}|}"
+                   th:href="@{|${baseUrl}?page=${paging.number - 1}&size=${paging.size}${paging.sort != null and paging.sort != '' ? '&sort=' + paging.sort : ''}&${extraParams}|}"
                    aria-label="Previous">
                     &laquo;
                 </a>
@@ -24,14 +24,14 @@
                 )}"
                 th:classappend="${i == paging.number} ? 'active'">
                 <a class="page-link"
-                   th:href="@{|${baseUrl}?page=${i}&size=${paging.size}&sort=${paging.sort}&${extraParams}|}"
+                   th:href="@{|${baseUrl}?page=${i}&size=${paging.size}${paging.sort != null and paging.sort != '' ? '&sort=' + paging.sort : ''}&${extraParams}|}"
                    th:text="${i + 1}">1</a>
             </li>
 
             <!-- 다음 페이지 -->
             <li class="page-item" th:classappend="${paging.number == paging.totalPages - 1} ? 'disabled'">
                 <a class="page-link"
-                   th:href="@{|${baseUrl}?page=${paging.number + 1}&size=${paging.size}&sort=${paging.sort}&${extraParams}|}"
+                   th:href="@{|${baseUrl}?page=${paging.number + 1}&size=${paging.size}${paging.sort != null and paging.sort != '' ? '&sort=' + paging.sort : ''}&${extraParams}|}"
                    aria-label="Next">
                     &raquo;
                 </a>

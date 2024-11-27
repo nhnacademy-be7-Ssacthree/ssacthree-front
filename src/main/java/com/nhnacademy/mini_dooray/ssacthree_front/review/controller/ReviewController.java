@@ -3,6 +3,9 @@ package com.nhnacademy.mini_dooray.ssacthree_front.review.controller;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.MemberReviewResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.ReviewRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.ReviewResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.review.exception.NoOrderException;
+import com.nhnacademy.mini_dooray.ssacthree_front.review.exception.PostReviewFailedException;
+import com.nhnacademy.mini_dooray.ssacthree_front.review.exception.UnauthorizedReviewException;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.service.ReviewService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,18 +35,23 @@ public class ReviewController {
 
         reviewService.postReviewBook(bookId, orderId, reviewRequest, request);
 
-        return "redirect:/shop/members/reviews";
+        return "redirect:/members/my-page/reviews";
     }
 
     @GetMapping("/shop/members/reviews/{book-id}")
-    public String authToWriteReview(@PathVariable("book-id") Long bookId, HttpServletRequest request, Model model) {
+    public String authToWriteReview(@PathVariable("book-id") Long bookId, HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) {
 
-        Long orderId = reviewService.authToWriteReview(bookId, request);
+        try{
+            // 리뷰 작성 권한 확인 로직
+            Long orderId = reviewService.authToWriteReview(bookId, request);
+            model.addAttribute("bookId", bookId);
+            model.addAttribute("orderId", orderId);
+            return "review-write"; // 리뷰 작성 페이지로 이동
+        }catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("reviewWarning", "리뷰를 쓸 권한이 없습니다. 주문과 로그인 여부를 확인해주세요");
+            return "redirect:/books/" + bookId;
+        }
 
-        model.addAttribute("bookId", bookId);
-        model.addAttribute("orderId", orderId);
-
-        return "review-write";
     }
 
     @GetMapping("/members/my-page/reviews") //리뷰 리스트 조회

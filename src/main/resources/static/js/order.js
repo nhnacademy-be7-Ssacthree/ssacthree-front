@@ -15,6 +15,12 @@ function selectPackaging(packagingId, packagingName, packagingPrice) {
         packagingCostSpan.innerText = packagingPrice;
     }
 
+    let paymentPrice = parseInt(document.getElementById("payment-price").value);
+    paymentPrice -= packagingPrice;
+    document.getElementById("PaymentPrice").value = paymentPrice;
+    document.getElementById("PaymentPrice").innerText = `총 결제 금액: ${paymentPrice.toLocaleString()}원`;
+    document.querySelector("#packaging-price").innerText = `-${packagingPrice.toLocaleString()}원`;
+
     // 모달을 닫음
     const myModalEl = document.getElementById('packagingModal');
     const modalInstance = bootstrap.Modal.getInstance(myModalEl);
@@ -51,22 +57,77 @@ function openPostcodeSearch() {
     }).open();
 }
 
+// TODO : 배송 날짜 5일 제한
+const deliveryDateInput = document.getElementById("delivery-date");
+const dateMessage = document.getElementById("date-message");
+const today = new Date();
 
-// TODO : 결제 내역 업데이트 함수 (여기에 각 값들을 업데이트)
-function updatePaymentDetails(orderAmount, couponDiscount, giftWrap, pointPayment, deliveryFee) {
-    // 결제 총액 계산
-    let totalAmount = orderAmount - couponDiscount - pointPayment + giftWrap + deliveryFee;
+// 설정할 날짜 포맷 (YYYY-MM-DD)
+const formatDate = date => date.toISOString().split("T")[0];
 
-    // HTML 요소에 값 업데이트
-    document.getElementById('order-product-amount').innerText = `총 1권 ~${orderAmount}원`; // 예시로 1권
-    document.getElementById('total-product-amount').innerText = `${orderAmount}원`;
-    document.getElementById('coupon-discount').innerText = `${couponDiscount}원`;
-    document.getElementById('gift-wrap').innerText = `${giftWrap}원`;
-    document.getElementById('point-payment').innerText = `${pointPayment}원`;
-    document.getElementById('delivery-fee').innerText = `${deliveryFee}원`;
-    document.getElementById('total-payment-amount').innerText = `${orderAmount + giftWrap + deliveryFee - couponDiscount - pointPayment}원`;
-    document.getElementById('remaining-payment').innerText = `${totalAmount}원`;
+// 오늘 날짜 설정
+deliveryDateInput.min = formatDate(today);
+
+// 기본값을 오늘 날짜로 설정
+deliveryDateInput.value = formatDate(today);
+
+// 오늘로부터 5일 이후 날짜 설정
+const maxDate = new Date(today);
+maxDate.setDate(today.getDate() + 5);
+deliveryDateInput.max = formatDate(maxDate);
+
+// 날짜 선택 시 범위 체크
+deliveryDateInput.addEventListener("input", () => {
+    const selectedDate = new Date(deliveryDateInput.value);
+    if (selectedDate < today || selectedDate > maxDate) {
+        alert("선택 가능한 날짜는 오늘부터 5일 후까지입니다.");
+        deliveryDateInput.value = ""; // 잘못된 입력 제거
+    }
+});
+
+
+// TODO : 오른쪽 결제 버튼 누르면 보내짐.
+function submitOrderForm() {
+    // 왼쪽의 폼 ID를 타겟팅하여 서브밋
+    document.getElementById('order-form').submit();
 }
 
-// 페이지 로드 시 결제 내역 업데이트 (예시 데이터 사용)
-updatePaymentDetails(16020, 0, 0, 0, 0);
+
+//밸리데이션
+document.getElementById("order-form").addEventListener("submit", function(event) {
+    let isValid = true;
+    const buyerName = document.getElementById("buyer-name").value.trim();
+    const buyerPhone = document.getElementById("buyer-phone").value.trim();
+
+    // 이름 추가 검증
+    if (!/^[가-힣a-zA-Z\s]+$/.test(buyerName)) {
+        alert("이름은 한글 또는 영어로 입력해야 합니다.");
+        isValid = false;
+    }
+
+    // 휴대폰 번호 추가 검증
+    if (!/^01[016789]-\d{3,4}-\d{4}$/.test(buyerPhone)) {
+        alert("휴대폰 번호는 올바른 형식으로 입력해야 합니다. (예: 010-1234-5678)");
+        isValid = false;
+    }
+
+    if (!isValid) {
+        event.preventDefault(); // 폼 제출 중단
+    }
+});
+
+function validateForm() {
+    const form = document.getElementById("order-form");
+    if (!form.checkValidity()) {
+        form.reportValidity(); // 기본 HTML5 에러 메시지 표시
+        return false;
+    }
+    return true;
+}
+
+document.getElementById("order-form").addEventListener("submit", function(event) {
+    if (!validateForm()) {
+        event.preventDefault();
+    }
+});
+

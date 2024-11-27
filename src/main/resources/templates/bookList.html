@@ -11,6 +11,20 @@
 </head>
 <body>
 
+
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink" style="display: none;">
+    <symbol id="heart" viewBox="0 0 16 16">
+        <!-- 빈 하트 아이콘 -->
+        <path fill="#272727" fill-rule="evenodd"
+              d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"></path>
+    </symbol>
+    <symbol id="heart-filled" viewBox="0 0 16 16">
+        <!-- 채워진 하트 아이콘 -->
+        <path fill="red" fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"></path>
+    </symbol>
+</svg>
+
 <header th:replace="~{common/header}"></header>
 
 <div class="container my-3 mt-5">
@@ -111,9 +125,9 @@
                     th:text="${#temporals.format(book.publicationDate, 'yyyy-MM-dd')}"></span>
             </p>
             <p class="fs-4 text-danger fw-bold mb-2">
-                <span th:text="${book.salePrice}"></span>원
+                <span class="unitPrice" th:text="${book.salePrice}"></span>원
                 <del class="text-dark fs-6">
-                    <span th:text="${book.regularPrice}"></span>원
+                    <span class="unitPrice" th:text="${book.regularPrice}"></span>원
                 </del>
             </p>
             <div class="d-flex justify-content-start">
@@ -147,22 +161,30 @@
             </div>
 
             <div class="d-flex flex-wrap">
-                <a th:href="@{'/books?sort=bookName:asc' + ${extraParams}}">
-                    <span th:each="tag : ${book.tags}" class="badge bg-light text-dark me-2"
-                          style="font-size:0.8em; margin-top:2px">#<span
-                            th:text="${tag.tagName}"></span></span>
-                </a>
+                 <span th:each="tag : ${book.tags}" class="badge bg-light text-dark me-2"
+                       style="font-size:0.8em; margin-top:2px"><a th:href="@{/books(tag-id=${tag.tagId})}">#<span
+                         th:text="${tag.tagName}"></span></a></span>
             </div>
 
         </div>
         <div class="col-md-2 text-center">
-            <p class="me-2 mb-2">
-              <span>
-                  <svg class="wishlist" style="width: 30px; height: 30px;">
-                      <use xlink:href="#heart"></use>
-                  </svg>
-              </span>
-            </p>
+            <div class="mb-1">
+                <svg class="wishlist"
+                     style="width: 30px; height: 30px; cursor: pointer;"
+                     th:classappend="${likeBooks != null and likeBooks.contains(book.bookId)} ? 'liked' : ''"
+                     th:data-book-id="${book.bookId}"
+                     onclick="toggleLike(this)">
+                    <use th:if="${likeBooks != null and likeBooks.contains(book.bookId)}" xlink:href="#heart-filled"></use>
+                    <use th:unless="${likeBooks != null and likeBooks.contains(book.bookId)}" xlink:href="#heart"></use>
+
+                </svg>
+
+            </div>
+
+            <script>
+                var likeBooks = [[${likeBooks}]]; // Thymeleaf를 통해 서버에서 제공된 변수 전달
+            </script>
+
             <button class="btn btn-outline-secondary btn-sm w-70 mb-2 rounded-4"
                     th:onclick="|window.location.href='/shop/carts/add?bookId=' + ${book.bookId}+'&quantity='+1|">장바구니
             </button>
@@ -174,10 +196,10 @@
 
 </div>
 
+<script src="/js/unitPrice.js"></script>
 <!-- 페이징 네비게이션 -->
 <div th:replace="~{common/pagination :: pagination(${baseUrl}, ${books}, ${extraParams})}"></div>
-
+<script src="/js/bookLike.js"></script>
 <footer th:replace="~{common/footer :: footer}"></footer>
-
 </body>
 </html>

@@ -42,6 +42,7 @@ public class WebControllerAdvice {
         return "redirect:/members/my-page";
     }
 
+
     @ExceptionHandler(SleepMemberLoginFailedException.class)
     public String handleSleepMemberLoginFailedException(SleepMemberLoginFailedException e,
         Model model) {

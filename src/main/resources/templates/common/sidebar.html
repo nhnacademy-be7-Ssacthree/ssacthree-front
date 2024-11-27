@@ -1,30 +1,33 @@
 <aside class="col-lg-3 mb-4">
-  <div class="sticky-top" style="top: 80px;">
-    <h5 class="mb-3">
-      <a href="/members/my-page" class="text-decoration-none text-dark">마이페이지</a>
-    </h5>
-    <ul class="list-group">
-      <li class="list-group-item"><a href="/orders">최근 주문 내역</a></li>
-      <li class="list-group-item"><a href="#wishlist">찜 목록</a></li>
-      <li class="list-group-item"><a href="#account">나의 계좌</a></li>
-      <li class="list-group-item"><a href="/members/my-page/point-histories">포인트 내역</a></li>
-      <li class="list-group-item"><a href="#coupon">쿠폰 목록</a></li>
-      <li class="list-group-item"><a href="/members/my-page/address-page">주소록</a></li>
-      <li class="list-group-item"><a href="/members/my-page/reviews">리뷰 목록</a></li>
-      <li class="list-group-item">
-        <a href="#"
-           onclick="if(confirm('정말로 회원 탈퇴를 하시겠습니까?')) { document.getElementById('withdrawForm').submit(); } else { event.preventDefault(); }">
-          회원 탈퇴
-        </a>
-      </li>
-      <li class="list-group-item">
+    <div class="sticky-top" style="top: 80px;">
+        <h5 class="mb-3">
+            <a href="/members/my-page" class="text-decoration-none text-dark">마이페이지</a>
+        </h5>
+        <ul class="list-group">
+            <li class="list-group-item" onclick="location.href='/orders';"><a href="/orders">최근 주문 내역</a></li>
+            <li class="list-group-item" onclick="location.href='/members/my-page/likes';"><a
+                    href="/members/my-page/likes">찜 목록</a></li>
+            <li class="list-group-item" onclick="location.href='#account';"><a href="#account">나의 계좌</a></li>
+            <li class="list-group-item" onclick="location.href='/members/my-page/point-histories';"><a
+                    href="/members/my-page/point-histories">포인트 내역</a></li>
+            <li class="list-group-item" onclick="location.href='#coupon';"><a href="#coupon">쿠폰 목록</a></li>
+            <li class="list-group-item" onclick="location.href='/members/my-page/address-page';"><a
+                    href="/members/my-page/address-page">주소록</a></li>
+            <li class="list-group-item" onclick="location.href='/members/my-page/reviews';"><a
+                    href="/members/my-page/reviews">리뷰 목록</a></li>
+            <li class="list-group-item"
+                onclick="if(confirm('정말로 회원 탈퇴를 하시겠습니까?')) { document.getElementById('withdrawForm').submit(); } else { event.preventDefault(); }">
+                <a href="#">회원 탈퇴</a>
+            </li>
+                <li class="list-group-item">
         <a href="#" id="paycoConnect" style="color: #FF2233">PAYCO 연동</a>
       </li>
-    </ul>
+        </ul>
 
-    <form id="withdrawForm" th:action="@{/members/withdraw}" method="post"
-          style="display: none;"></form>
-  </div>
+
+        <form id="withdrawForm" th:action="@{/members/withdraw}" method="post"
+              style="display: none;"></form>
+    </div>
 </aside>
 
 <script>
