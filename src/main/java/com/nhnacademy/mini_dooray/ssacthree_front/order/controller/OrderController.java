@@ -1,16 +1,6 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.order.controller;
 
-import co.elastic.clients.util.DateTime;
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.delivery_rule.dto.DeliveryRuleGetResponse;
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.delivery_rule.service.DeliveryRuleService;
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.dto.PackagingGetResponse;
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.service.PackagingService;
-import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookInfoResponse;
-import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.service.BookCommonService;
-import com.nhnacademy.mini_dooray.ssacthree_front.cart.domain.CartItem;
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.service.CartService;
-import com.nhnacademy.mini_dooray.ssacthree_front.customer.dto.CustomerCreateRequest;
-import com.nhnacademy.mini_dooray.ssacthree_front.customer.service.CustomerService;
 import com.nhnacademy.mini_dooray.ssacthree_front.elastic.dto.Paging;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.AddressService;
@@ -125,6 +115,14 @@ public class OrderController {
     return "order/orderList"; // 주문 내역 뷰
 
   }
+  
+  // 주문 상세 조회 (한 주문의 전체 내용)
+  @GetMapping("/orderViewAll")
+  public String getOrder(@RequestParam Long orderId){
+      orderService.getOrderDetail(orderId);
+      return "order/orderViewAll";
+  }
+  
 
     // TODO 5. 주문 상태 변경 -> 관리자
 

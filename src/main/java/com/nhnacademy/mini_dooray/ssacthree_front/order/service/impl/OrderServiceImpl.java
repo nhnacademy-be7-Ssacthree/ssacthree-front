@@ -15,11 +15,12 @@ import com.nhnacademy.mini_dooray.ssacthree_front.member.service.AddressService;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.MemberService;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.adapter.OrderAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.BookOrderRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderDetailResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderFormRequest;
-import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderResponseWithCount;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderSaveRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.order.exception.FailedGetOrderDetail;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.service.OrderService;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.utils.OrderUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -145,6 +146,18 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderResponseWithCount getOrdersByMemberAndDate(Long customerId, int page, int size, LocalDate startDate, LocalDate endDate) {
         return orderAdapter.getMemberOrders(customerId, page, size, startDate, endDate);
+    }
+
+    @Override
+    public OrderDetailResponse getOrderDetail(Long orderId) {
+            ResponseEntity<OrderDetailResponse> orderAllAttrResponseResponseEntity = orderAdapter.getOrderDetail(orderId);
+
+            if(orderAllAttrResponseResponseEntity.getStatusCode().is2xxSuccessful()){
+                OrderDetailResponse orderAllAttrResponse = orderAllAttrResponseResponseEntity.getBody();
+                return orderAllAttrResponse;
+            }
+
+            throw new FailedGetOrderDetail("조회 실패");
     }
 
 
