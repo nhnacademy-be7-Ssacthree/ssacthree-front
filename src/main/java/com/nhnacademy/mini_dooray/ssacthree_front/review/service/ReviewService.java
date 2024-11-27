@@ -6,10 +6,11 @@ import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.BookReviewResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.ReviewResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
+import org.springframework.data.domain.Page;
 
 public interface ReviewService {
 
-    List<BookReviewResponse> getReviewsByBookId(Long bookId);
+    Page<BookReviewResponse> getReviewsByBookId(int page, int size, String[] sort, Long bookId);
 
     void postReviewBook(Long bookId,Long orderId,ReviewRequest reviewRequest, HttpServletRequest request);
 

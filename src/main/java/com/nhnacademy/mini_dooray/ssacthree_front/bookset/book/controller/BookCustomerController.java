@@ -9,6 +9,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryNameResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.service.CategoryCommonService;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.util.CookieUtil;
+import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.BookReviewResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.service.ReviewService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -148,8 +149,12 @@ public class BookCustomerController {
     }
 
     @GetMapping("/books/{book-id}")
-    public String showBook(@PathVariable("book-id") Long bookId, Model model,
-                           HttpServletRequest request) {
+    public String showBook(@PathVariable("book-id") Long bookId,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        Model model,
+        HttpServletRequest request) {
+        String[] sort = {"reviewCreatedAt:desc"};
         model.addAttribute("book", bookCommonService.getBookById(bookId));
 
         List<CategoryNameResponse> categories = bookCommonService.getCategoriesByBookId(bookId);
@@ -166,7 +171,11 @@ public class BookCustomerController {
             model.addAttribute("likeBooks", likeBooks);
         }
 
-        model.addAttribute("reviews", reviewService.getReviewsByBookId(bookId));
+        Page<BookReviewResponse> reviews = reviewService.getReviewsByBookId(page, size, sort, bookId);
+        model.addAttribute("reviews", reviews.getContent());
+        model.addAttribute("paging", reviews); // Page 객체를 템플릿에 전달
+        model.addAttribute("baseUrl", "/books/" + bookId); // 기본 URL
+        model.addAttribute("categoryPaths", categoryPaths);
         model.addAttribute("categoryPaths", categoryPaths);
         return "bookDetails";
     }
