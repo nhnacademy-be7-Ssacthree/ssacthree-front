@@ -164,6 +164,13 @@ public class OrderServiceImpl implements OrderService {
             throw new FailedGetOrderDetail("조회 실패");
     }
 
+    // 주문내역의 배송 상태를 변경합니다.
+    @Override
+    public void changeOrderStatue(String orderId) {
+        // 대기 -> 배송중, 이때 바꿔야하는 상태를 넣어줘서 작업할 수도 있을듯.
+        orderAdapter.changeOrderStatus(orderId);
+    }
+
 
     // 책 정보 만들기
     private BookOrderRequest buildBookOrderRequest(BookInfoResponse book, int quantity) {

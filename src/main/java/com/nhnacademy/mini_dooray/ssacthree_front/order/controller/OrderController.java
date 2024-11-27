@@ -3,22 +3,16 @@ package com.nhnacademy.mini_dooray.ssacthree_front.order.controller;
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.service.CartService;
 import com.nhnacademy.mini_dooray.ssacthree_front.elastic.dto.Paging;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoResponse;
-import com.nhnacademy.mini_dooray.ssacthree_front.member.service.AddressService;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.MemberService;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.*;
-import com.nhnacademy.mini_dooray.ssacthree_front.order.service.OrderService;
-import com.nhnacademy.mini_dooray.ssacthree_front.order.utils.OrderUtil;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -206,7 +200,19 @@ public class OrderController {
         return "admin/orders";
     }
 
+    // TODO : 관리자가 주문내역 대기 -> 배송중으로 변경
+    // 이때 id는 orderId
+    @PostMapping("/admin/orders/{order-id}/delivery-start")
+    public String startDelivery(@PathVariable("order-id") String orderId) {
+        orderService.changeOrderStatue(orderId);
+        return "redirect:/admin/orders";
+    }
 
+    // TODO : 관리자가 주문내역 배송중 -> 배송완료로 변경
+    @PostMapping("/admin/orders/{order-id}/delivery-complete")
+    public String completeDelivery(@PathVariable("order-id") String orderId) {
 
-    // TODO 5. 주문 상태 변경 -> 관리자
+        return "redirect:/admin/orders";
+    }
+
 }

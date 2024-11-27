@@ -1,5 +1,6 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.order.adapter;
 
+import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderDetailResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderResponseWithCount;
@@ -48,7 +49,8 @@ public interface OrderAdapter {
     @GetMapping("/shop/orderDetail")
     ResponseEntity<OrderDetailResponse> getOrderDetail(@RequestParam Long orderId);
 
-    // 회원 주문 내역 - 상세 조회
+    @PostMapping("/shop/admin/orders/change")
+    ResponseEntity<MessageResponse> changeOrderStatus(@RequestBody String orderId);
 
 
 }
