@@ -1,9 +1,10 @@
 // bookUpdate.js
 const form = document.getElementById('updateForm');
+let editor;
 
 document.addEventListener("DOMContentLoaded", function () {
   // Toast UI Editor 초기화
-  const editor = new toastui.Editor({
+  editor = new toastui.Editor({
     el: document.querySelector("#bookInfoEditor"), // 에디터가 렌더링될 DOM 요소
     height: "400px",
     initialEditType: "wysiwyg", // 기본 편집 타입: WYSIWYG
@@ -25,40 +26,29 @@ document.addEventListener("DOMContentLoaded", function () {
       document.querySelector("#bookInfo").value = editor.getHTML();
     });
   }
-
-  // 공통 함수: Hidden Input 값 업데이트
   function updateHiddenInput(input, value) {
     let values = input.value ? input.value.split(",") : [];
     if (!values.includes(value)) {
-      values = [value]; // 기존 값을 제거하고 새 값만 설정
+      values.push(value); // 새로운 값 추가
     }
     input.value = values.join(",");
   }
 
   function removeHiddenInputValue(input, value) {
     let values = input.value ? input.value.split(",") : [];
-    input.value = values.filter((v) => v !== value).join(",");
+    input.value = values.filter((v) => v !== value).join(","); // 삭제된 값 제외
   }
 
-
-  // 공통 로직: 선택 이벤트와 삭제 이벤트 처리
   function setupSelectHandler(selectId, containerId, hiddenInputId) {
     const select = document.getElementById(selectId);
     const container = document.getElementById(containerId);
     const hiddenInput = document.getElementById(hiddenInputId);
 
-    // 선택 이벤트 처리
     select.addEventListener("change", function () {
       const selectedId = this.value;
       const selectedName = this.options[this.selectedIndex].text;
 
-      if (selectedId) {
-        // 중복 선택 방지
-        if (Array.from(container.children).some((child) => child.dataset.id === selectedId)) {
-          return;
-        }
-
-        // 태그 생성 및 추가
+      if (selectedId && !Array.from(container.children).some((child) => child.dataset.id === selectedId)) {
         const badge = document.createElement("span");
         badge.className = "tag-badge";
         badge.dataset.id = selectedId;
@@ -67,25 +57,46 @@ document.addEventListener("DOMContentLoaded", function () {
           <button type="button" class="remove-tag-btn" data-id="${selectedId}">x</button>
         `;
         container.appendChild(badge);
-
-        // Hidden Input 업데이트
         updateHiddenInput(hiddenInput, selectedId);
       }
     });
 
-    // 삭제 이벤트 처리
     container.addEventListener("click", function (e) {
       if (e.target.classList.contains("remove-tag-btn")) {
         const id = e.target.dataset.id;
         const badge = e.target.closest(".tag-badge");
-        badge.remove(); // 태그 제거
-        removeHiddenInputValue(hiddenInput, id); // Hidden Input 값 제거
+        badge.remove();
+        removeHiddenInputValue(hiddenInput, id); // Hidden Input 값에서 제거
       }
     });
   }
 
-  // 카테고리, 태그, 작가 선택 핸들러 설정
+  // 적용
   setupSelectHandler("category-select", "selected-categories-container", "categories");
   setupSelectHandler("tag-select", "selected-tags-container", "tags");
   setupSelectHandler("author-select", "selected-authors-container", "authors");
+
+
 });
+
+// const regularPriceInputUpdate = document.getElementById('regularPrice');
+// const salePriceInputUpdate = document.getElementById('salePrice');
+// const discountRateInputUpdate = document.getElementById('discountRate');
+// const bookDiscountInputUpdate = document.getElementById('bookDiscount'); // Hidden input
+//
+// function calculateDiscountUpdate() {
+//   const regularPriceUpdate = parseFloat(regularPriceInputUpdate.value);
+//   const salePriceUpdate = parseFloat(salePriceInputUpdate.value);
+//
+//   if (!isNaN(regularPriceUpdate) && !isNaN(salePriceUpdate) && regularPriceUpdate > 0) {
+//     const discountRate = ((regularPriceUpdate - salePriceUpdate) / regularPriceUpdate) * 100;
+//     discountRateInputUpdate.value = discountRate.toFixed(2); // 소수점 2자리까지 표시
+//     bookDiscountInputUpdate.value = discountRate.toFixed(2);
+//   } else {
+//     discountRateInputUpdate.value = '';
+//     bookDiscountInputUpdate.value = '';
+//   }
+// }
+//
+// regularPriceInputUpdate.addEventListener('input', calculateDiscountUpdate);
+// salePriceInputUpdate.addEventListener('input', calculateDiscountUpdate);

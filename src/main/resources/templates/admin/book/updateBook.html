@@ -156,12 +156,13 @@
 
             <!-- 할인율 -->
             <div class="mb-3">
-              <label for="discountRate" class="form-label">할인율 (%)</label>
-              <input type="text" class="form-control"
-                     id="discountRate"
+              <label for="bookDiscount" class="form-label">할인율 (%)</label>
+              <input type="number" class="form-control"
+                     id="bookDiscount"
                      th:field="*{bookDiscount}"
-                     readonly>
+                     min="0" max="100" required>
             </div>
+
 
             <!-- 포장 여부 -->
             <div class="mb-3">
@@ -233,9 +234,9 @@
                 <div id="selected-categories-container" class="mt-2">
                   <!-- 선택된 카테고리가 표시됩니다 -->
                   <span th:each="category : ${existingCategories}" data-id="${category.categoryId}" class="tag-badge">
-        <span th:text="${category.categoryName}"></span>
-        <button type="button" class="remove-tag-btn" data-id="${category.categoryId}">x</button>
-      </span>
+                    <span th:text="${category.categoryName}"></span>
+                    <button type="button" class="remove-tag-btn" data-id="${category.categoryId}">x</button>
+                  </span>
                 </div>
               </div>
             </div>
@@ -260,9 +261,9 @@
                 <div id="selected-tags-container" class="mt-2">
                   <!-- 선택된 태그가 표시됩니다 -->
                   <span th:each="tag : ${existingTags}" data-id="${tag.tagId}" class="tag-badge">
-        <span th:text="${tag.tagName}"></span>
-        <button type="button" class="remove-tag-btn" data-id="${tag.tagId}">x</button>
-      </span>
+                    <span th:text="${tag.tagName}"></span>
+                    <button type="button" class="remove-tag-btn" data-id="${tag.tagId}">x</button>
+                  </span>
                 </div>
               </div>
             </div>
@@ -301,9 +302,9 @@
                 <div id="selected-authors-container" class="mt-2">
                   <!-- 선택된 작가가 표시됩니다 -->
                   <span th:each="author : ${existingAuthors}" data-id="${author.authorId}" class="tag-badge">
-        <span th:text="${author.authorName}"></span>
-        <button type="button" class="remove-tag-btn" data-id="${author.authorId}">x</button>
-      </span>
+                    <span th:text="${author.authorName}"></span>
+                  <button type="button" class="remove-tag-btn" data-id="${author.authorId}">x</button>
+                  </span>
                 </div>
               </div>
             </div>

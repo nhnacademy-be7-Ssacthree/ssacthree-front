@@ -3,7 +3,7 @@ let editor;
 
 document.addEventListener("DOMContentLoaded", function () {
   // Toast UI Editor 초기화
-  const editor = new toastui.Editor({
+  editor = new toastui.Editor({
     el: document.querySelector("#bookInfoEditor"),
     height: "400px",
     initialEditType: "wysiwyg",  // 기본 값: WYSIWYG, 'markdown'으로도 설정 가능
@@ -13,15 +13,15 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // 폼 제출 시 에디터 내용을 숨겨진 textarea에 반영
-  const form = document.querySelector("#bookSaveForm");
-  form.onsubmit = function () {
+  const form = document.querySelector("#registerForm");
+  form.addEventListener("submit", function () {
     const bookInfoField = document.querySelector("#bookInfo");
-    // 에디터 내용을 Markdown 형식으로 textarea에 설정
+    // 에디터 내용을 textarea에 설정
     bookInfoField.value = editor.getMarkdown();
 
     // 디버깅용 로그
     console.log("bookInfoField 값:", bookInfoField.value);
-  };
+  });
 });
 
 
@@ -106,35 +106,38 @@ $(document).ready(function () {
   $(document).on('click', '.remove-tag-btn', function () {
     const id = $(this).data('id');
     $(this).parent().remove();
+
     removeHiddenInputValue('#categories', id);
     removeHiddenInputValue('#tags', id);
     removeHiddenInputValue('#authors', id);
   });
 
   function removeHiddenInputValue(inputId, value) {
-    const hiddenInput = $(inputId);
-    const currentValues = hiddenInput.val() ? hiddenInput.val().split(',') : [];
+    const hiddenInput = document.querySelector(inputId);
+    const currentValues = hiddenInput.value ? hiddenInput.value.split(',') : [];
     const newValues = currentValues.filter((item) => item !== value);
-    hiddenInput.val(newValues.join(','));
+    hiddenInput.value = newValues.join(',');
   }
 });
 
-const regularPriceInput = document.getElementById('regularPrice');
-const salePriceInput = document.getElementById('salePrice');
-const discountRateInput = document.getElementById('discountRate');
-
-function calculateDiscount() {
-  const regularPrice = parseFloat(regularPriceInput.value);
-  const salePrice = parseFloat(salePriceInput.value);
-
-  if (!isNaN(regularPrice) && !isNaN(salePrice) && regularPrice > 0) {
-    const discountRate = ((regularPrice - salePrice) / regularPrice) * 100;
-    discountRateInput.value = discountRate.toFixed(2); // 소수점 2자리까지 표시
-  } else {
-    discountRateInput.value = '';
-  }
-}
-
-regularPriceInput.addEventListener('input', calculateDiscount);
-salePriceInput.addEventListener('input', calculateDiscount);
-
+// const regularPriceInput = document.getElementById('regularPrice');
+// const salePriceInput = document.getElementById('salePrice');
+// const discountRateInput = document.getElementById('discountRate');
+// const bookDiscountInput = document.getElementById('bookDiscount');
+//
+// function calculateDiscount() {
+//   const regularPrice = parseFloat(regularPriceInput.value);
+//   const salePrice = parseFloat(salePriceInput.value);
+//
+//   if (!isNaN(regularPrice) && !isNaN(salePrice) && regularPrice > 0) {
+//     const discountRate = ((regularPrice - salePrice) / regularPrice) * 100;
+//     discountRateInput.value = discountRate.toFixed(2); // 소수점 2자리까지 표시
+//     bookDiscountInput.value = discountRate.toFixed(2);
+//   } else {
+//     discountRateInput.value = '';
+//   }
+// }
+//
+// regularPriceInput.addEventListener('input', calculateDiscount);
+// salePriceInput.addEventListener('input', calculateDiscount);
+//
