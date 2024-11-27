@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{common/config :: config}">
+<head th:replace="~{common/config}">
     <title>주관리</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
 </head>
 <body>
-<header th:replace="~{common/adminHeader :: header}" />
+<header th:replace="~{common/adminHeader}"/>
 
 <div class="container py-5">
     <div class="row justify-content-center">
@@ -94,7 +94,9 @@
 <!--페이지네이션 추가-->
 <div th:replace="~{common/pagination :: pagination(${baseUrl}, ${paging}, ${extraParams})}"></div>
 
+<footer th:replace="~{common/footer :: footer}"/>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>-->
 </body>
 </html>
