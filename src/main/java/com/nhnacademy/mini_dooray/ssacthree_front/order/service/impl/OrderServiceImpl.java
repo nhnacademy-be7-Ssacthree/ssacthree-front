@@ -17,6 +17,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.order.adapter.OrderAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.BookOrderRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderDetailResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderFormRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.*;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderResponseWithCount;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderSaveRequest;
@@ -146,6 +147,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderResponseWithCount getOrdersByMemberAndDate(Long customerId, int page, int size, LocalDate startDate, LocalDate endDate) {
         return orderAdapter.getMemberOrders(customerId, page, size, startDate, endDate);
+    }
+
+    @Override
+    public AdminOrderResponseWithCount adminGetAllOrders(int page, int size, LocalDate startDate, LocalDate endDate) {
+        return orderAdapter.adminGetAllOrders(page, size, startDate, endDate);
     }
 
     @Override

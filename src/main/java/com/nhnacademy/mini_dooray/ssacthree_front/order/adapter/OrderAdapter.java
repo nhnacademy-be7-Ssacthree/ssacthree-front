@@ -4,6 +4,8 @@ import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderDetailResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderResponseWithCount;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderSaveRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.*;
+
 import java.time.LocalDate;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -31,6 +33,15 @@ public interface OrderAdapter {
         @RequestParam("size") int size,
         @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
         @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate);
+
+    // 관리자의 주문 내역 조회
+    @GetMapping("/shop/admin/orders")
+    AdminOrderResponseWithCount adminGetAllOrders(
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate);
+
 
     // 회원, 비회원의 주문 상세 조회
     @GetMapping("/shop/orders")
