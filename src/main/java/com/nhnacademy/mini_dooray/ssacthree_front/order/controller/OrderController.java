@@ -1,5 +1,6 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.order.controller;
 
+import co.elastic.clients.util.DateTime;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.delivery_rule.dto.DeliveryRuleGetResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.delivery_rule.service.DeliveryRuleService;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.dto.PackagingGetResponse;
@@ -24,6 +25,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.order.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
+import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -118,7 +120,7 @@ public class OrderController {
     model.addAttribute("startDate", startDate);
     model.addAttribute("endDate", endDate);
     model.addAttribute("extraParams", "startDate=" + startDate + "&endDate=" + endDate);
-
+    model.addAttribute("today", LocalDate.now());
 
     return "order/orderList"; // 주문 내역 뷰
 
