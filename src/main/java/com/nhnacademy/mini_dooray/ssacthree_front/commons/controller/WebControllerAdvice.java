@@ -3,6 +3,7 @@ package com.nhnacademy.mini_dooray.ssacthree_front.commons.controller;
 import com.nhnacademy.mini_dooray.ssacthree_front.elastic.exception.InvalidPageNumberException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.LoginFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.PaycoConnectionFailedException;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.SleepMemberLoginFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -39,6 +40,14 @@ public class WebControllerAdvice {
         RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("connectionResult", e.getMessage());
         return "redirect:/members/my-page";
+    }
+
+    @ExceptionHandler(SleepMemberLoginFailedException.class)
+    public String handleSleepMemberLoginFailedException(SleepMemberLoginFailedException e,
+        Model model) {
+        String memberLoginId = e.getMemberLoginId();
+        model.addAttribute("memberLoginId", memberLoginId);
+        return "sleepMember";
     }
 
 }

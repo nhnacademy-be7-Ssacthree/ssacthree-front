@@ -7,11 +7,11 @@ import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberLoginRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberRegisterRequest;
-import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.CustomerNotFoundException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.LoginFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.LogoutIllegalAccessException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.MemberNotFoundException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.MemberRegisterFailedException;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.SleepMemberLoginFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.MemberService;
 import feign.FeignException;
 import jakarta.servlet.http.Cookie;
@@ -62,8 +62,11 @@ public class MemberServiceImpl implements MemberService {
             }
 
             throw new LoginFailedException("로그인에 실패하였습니다.");
-        } catch (HttpClientErrorException | HttpServerErrorException | FeignException e) {
-            log.debug(e.getMessage());
+        } catch (FeignException e) {
+            log.debug(ExceptionParser.getErrorMessageFromFeignException(e.contentUTF8()));
+            if (ExceptionParser.getErrorCodeFromFeignException(e.contentUTF8()).equals("423")) {
+                throw new SleepMemberLoginFailedException("휴면 계정입니다.", requestBody.getLoginId());
+            }
             throw new LoginFailedException("로그인에 실패하였습니다.");
         }
     }
