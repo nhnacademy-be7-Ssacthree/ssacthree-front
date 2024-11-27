@@ -237,7 +237,7 @@
             <div class="swiper-slide">
                 <div class="row justify-content-center">
                     <!-- 책 리스트를 반복적으로 렌더링 -->
-                    <div class="custom-col mb-3" th:each="book : ${books}">
+                    <div class="custom-col mb-3" th:each="book : ${allRecentBooks}">
                         <div class="card position-relative p-4 border rounded-3"
                              th:onclick="|window.location.href='/books/' + ${book.bookId}|"
                              style="cursor: pointer; height: 525px;">
