@@ -383,24 +383,26 @@
 <section id="best-selling-items" class="position-relative padding-large">
   <div class="container">
 
-        <div class="section-title d-md-flex justify-content-between align-items-center mb-4">
-            <h3 class="d-flex align-items-center">한강 2024 노벨문학상 수상 <img src="/images/award-icon.png"
-                                                                        style="padding-bottom:5px; margin-left:10px;"/>
-            </h3>
-            <a href="#" th:href="@{/books(author-id=336)}" class="btn">View All</a>
-        </div>
-        <!-- Swiper navigation buttons -->
-        <div class="position-absolute top-50 end-0 pe-0 pe-xxl-5 me-0 me-xxl-5 swiper-button-next">
-            <svg class="chevron-forward-circle d-flex justify-content-center align-items-center p-2" width="80"
-                 height="80">
-                <use xlink:href="#alt-arrow-right-outline"></use>
-            </svg>
-        </div>
-        <div class="position-absolute top-50 start-0 ps-0 ps-xxl-5 ms-0 ms-xxl-5 swiper-button-prev">
-            <svg class="chevron-back-circle d-flex justify-content-center align-items-center p-2" width="80"
-                 height="80">
-                <use xlink:href="#alt-arrow-left-outline"></use>
-            </svg>
+    <div class="section-title d-md-flex justify-content-between align-items-center mb-4">
+      <h3 class="d-flex align-items-center">한강 2024 노벨문학상 수상 <img src="/images/award-icon.png"
+                                                                  style="padding-bottom:5px; margin-left:10px;"/>
+      </h3>
+      <a href="#" th:href="@{/books(author-id=336)}" class="btn">View All</a>
+    </div>
+    <!-- Swiper navigation buttons -->
+    <div class="position-absolute top-50 end-0 pe-0 pe-xxl-5 me-0 me-xxl-5 swiper-button-next">
+      <svg class="chevron-forward-circle d-flex justify-content-center align-items-center p-2"
+           width="80"
+           height="80">
+        <use xlink:href="#alt-arrow-right-outline"></use>
+      </svg>
+    </div>
+    <div class="position-absolute top-50 start-0 ps-0 ps-xxl-5 ms-0 ms-xxl-5 swiper-button-prev">
+      <svg class="chevron-back-circle d-flex justify-content-center align-items-center p-2"
+           width="80"
+           height="80">
+        <use xlink:href="#alt-arrow-left-outline"></use>
+      </svg>
 
     </div>
 
@@ -1137,6 +1139,7 @@
 <!-- 로그인 실패 시 Alert창 띄우는 용도 -->
 <div id="loginFailedMessage" th:text="${loginFailedMessage}" style="display: none;"></div>
 <div id="registerSuccessMessage" th:text="${registered}" style="display: none;"></div>
+<div id="memberActiveMessage" th:text="${memberActiveMessage}" style="display: none;"></div>
 <script>
   // loginFailedMessage가 있는 경우 alert 창을 띄웁니다.
   window.addEventListener('DOMContentLoaded', () => {
@@ -1156,6 +1159,16 @@
 
     if (registered) {
       alert(registered);
+    }
+  });
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const memberActiveMessageElement = document.getElementById('memberActiveMessage')
+    const memberActiveMessage = memberActiveMessageElement ? memberActiveMessageElement.textContent
+        : null;
+
+    if (memberActiveMessage) {
+      alert(memberActiveMessage)
     }
   });
 </script>
