@@ -28,6 +28,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -35,6 +36,7 @@ import org.springframework.ui.Model;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
@@ -156,10 +158,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDetailResponse getOrderDetail(Long orderId) {
+        log.info("주문상세정보를요청합니다.");
             ResponseEntity<OrderDetailResponse> orderAllAttrResponseResponseEntity = orderAdapter.getOrderDetail(orderId);
-
             if(orderAllAttrResponseResponseEntity.getStatusCode().is2xxSuccessful()){
                 OrderDetailResponse orderAllAttrResponse = orderAllAttrResponseResponseEntity.getBody();
+                log.info("주문상세정보를받아옴");
                 return orderAllAttrResponse;
             }
 

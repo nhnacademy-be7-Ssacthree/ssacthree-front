@@ -44,7 +44,8 @@ public interface OrderAdapter {
 
 
     // 회원, 비회원의 주문 상세 조회
-    @GetMapping("/shop/orders")
+    // 주문, 주문상세, 결제, 결제타입 조회 예정
+    @GetMapping("/shop/orderDetail")
     ResponseEntity<OrderDetailResponse> getOrderDetail(@RequestParam Long orderId);
 
     // 회원 주문 내역 - 상세 조회

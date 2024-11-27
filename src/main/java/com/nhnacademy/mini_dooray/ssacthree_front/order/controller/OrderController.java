@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping
@@ -115,10 +117,14 @@ public class OrderController {
   }
   
   // 주문 상세 조회 (한 주문의 전체 내용)
-  @GetMapping("/orderViewAll")
-  public String getOrder(@RequestParam Long orderId){
-      orderService.getOrderDetail(orderId);
-      return "order/orderViewAll";
+  @GetMapping("/orderDetail/{orderId}")
+  public String getOrder(@PathVariable("orderId") Long orderId, Model model){
+      OrderDetailResponse orderDetail = orderService.getOrderDetail(orderId);
+      model.addAttribute("orderDetail", orderDetail);
+
+      // 정상 처리 시 상세 페이지 반환
+      return "order/orderDetail2";
+
   }
   
 
