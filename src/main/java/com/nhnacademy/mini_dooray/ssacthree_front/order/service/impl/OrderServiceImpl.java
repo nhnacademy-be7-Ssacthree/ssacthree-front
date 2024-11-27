@@ -14,14 +14,21 @@ import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.AddressService;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.MemberService;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.adapter.OrderAdapter;
+import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.BookOrderRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderDetailResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderFormRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.*;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderResponseWithCount;
+import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderSaveRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.order.exception.FailedGetOrderDetail;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.service.OrderService;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.utils.OrderUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -29,6 +36,7 @@ import org.springframework.ui.Model;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
@@ -146,6 +154,19 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public AdminOrderResponseWithCount adminGetAllOrders(int page, int size, LocalDate startDate, LocalDate endDate) {
         return orderAdapter.adminGetAllOrders(page, size, startDate, endDate);
+    }
+
+    @Override
+    public OrderDetailResponse getOrderDetail(Long orderId) {
+        log.info("주문상세정보를요청합니다.");
+            ResponseEntity<OrderDetailResponse> orderAllAttrResponseResponseEntity = orderAdapter.getOrderDetail(orderId);
+            if(orderAllAttrResponseResponseEntity.getStatusCode().is2xxSuccessful()){
+                OrderDetailResponse orderAllAttrResponse = orderAllAttrResponseResponseEntity.getBody();
+                log.info("주문상세정보를받아옴");
+                return orderAllAttrResponse;
+            }
+
+            throw new FailedGetOrderDetail("조회 실패");
     }
 
 

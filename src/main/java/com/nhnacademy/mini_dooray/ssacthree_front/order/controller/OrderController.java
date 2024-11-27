@@ -1,16 +1,6 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.order.controller;
 
-import co.elastic.clients.util.DateTime;
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.delivery_rule.dto.DeliveryRuleGetResponse;
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.delivery_rule.service.DeliveryRuleService;
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.dto.PackagingGetResponse;
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.service.PackagingService;
-import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookInfoResponse;
-import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.service.BookCommonService;
-import com.nhnacademy.mini_dooray.ssacthree_front.cart.domain.CartItem;
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.service.CartService;
-import com.nhnacademy.mini_dooray.ssacthree_front.customer.dto.CustomerCreateRequest;
-import com.nhnacademy.mini_dooray.ssacthree_front.customer.service.CustomerService;
 import com.nhnacademy.mini_dooray.ssacthree_front.elastic.dto.Paging;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.AddressService;
@@ -24,6 +14,7 @@ import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping
@@ -123,6 +115,22 @@ public class OrderController {
     return "order/orderList"; // 주문 내역 뷰
 
   }
+  
+  // 주문 상세 조회 (한 주문의 전체 내용)
+  @GetMapping("/orderDetail/{orderId}")
+  public String getOrder(@PathVariable("orderId") Long orderId, Model model){
+      // 입력받은 주문번호를 orderId로 변환하여 service 요청
+      // 1. 조회 시에 order 내역의 customerId 가 멤버인지 확인하고 customerView 또는 memberView 로 나눠서 return 되게(응답 dto 내용은 같음) <- service에서 플래그
+      // 2. orderNumber, 이메일가 order 안의 내용과 동일 할 때 조회가 가능하게
+      OrderDetailResponse orderDetail = orderService.getOrderDetail(orderId);
+      model.addAttribute("orderDetail", orderDetail);
+
+      // order/customerOrderDetail;
+
+      // 정상 처리 시 상세 페이지 반환
+      return "order/orderDetail2";
+  }
+  
 
   // 관리자 주문 내역 보기
     @GetMapping("/admin/orders")
