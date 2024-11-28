@@ -48,7 +48,7 @@ public class MemberServiceImpl implements MemberService {
     /**
      * 회원가입 기능을 수행하는 메소드
      *
-     * @param request
+     * @param request 회원가입 DTO 전달
      * @return : 응답 상태가 200번대 인 경우 MessageResponse 리턴, 아닐경우 Exception 발생
      */
     @Override
@@ -71,8 +71,8 @@ public class MemberServiceImpl implements MemberService {
     /**
      * 회원 로그인 기능을 수행하는 메소드
      *
-     * @param requestBody
-     * @param httpServletResponse
+     * @param requestBody         로그인 DTO 전달
+     * @param httpServletResponse ServletResponse를 받아서 쿠키 전달
      * @return : 응답 상태가 200번대 인 경우 MessageResponse 리턴, 아닐경우 Exception 발생
      */
     @Override
@@ -97,7 +97,7 @@ public class MemberServiceImpl implements MemberService {
     /**
      * 회원 로그아웃을 기능을 수행하는 메소드
      *
-     * @param httpServletResponse
+     * @param httpServletResponse ServletResponse를 전달하여 쿠키 제거
      * @return : 응답 상태가 200번대 인 경우 MessageResponse 리턴, 아닐경우 Exception 발생
      */
     @Override
@@ -119,8 +119,8 @@ public class MemberServiceImpl implements MemberService {
     /**
      * Response에 쿠키가 들어오는지 확인하는 메소드
      *
-     * @param httpServletResponse
-     * @param response
+     * @param httpServletResponse ServletResponse를 전달하여 FeignClient가 가져온 쿠키 생성
+     * @param response            FeignClient의 응답 결과
      * @return : 응답 상태가 200번대 인 경우 MessageResponse 리턴, 아닐경우 Exception 발생
      */
     private boolean isHaveCookie(HttpServletResponse httpServletResponse,
@@ -138,7 +138,7 @@ public class MemberServiceImpl implements MemberService {
     /**
      * 회원 정보를 얻어오는 메소드
      *
-     * @param request
+     * @param request servletRequest를 전달받아 쿠키 추출에 이용
      * @return : 응답 상태가 200번대 인 경우 MessageResponse 리턴, 아닐경우 Exception 발생
      */
     @Override
@@ -167,8 +167,8 @@ public class MemberServiceImpl implements MemberService {
     /**
      * 회원 정보 수정 기능을 수행하는 메소드
      *
-     * @param requestBody
-     * @param request
+     * @param requestBody 회원정보 update DTO
+     * @param request     request로 쿠키 체크
      * @return : 응답 상태가 200번대 인 경우 MessageResponse 리턴, 아닐경우 Exception 발생
      */
     @Override
@@ -197,8 +197,8 @@ public class MemberServiceImpl implements MemberService {
     /**
      * 회원 탈퇴를 처리하는 메소드
      *
-     * @param request
-     * @param response
+     * @param request  ServletRequest를 전달 받아 쿠키 체크
+     * @param response SerlvetResponse를 전달 받아 쿠키 제거
      * @return : 응답 상태가 200번대 인 경우 MessageResponse 리턴, 아닐경우 Exception 발생
      */
     @Override
@@ -228,7 +228,7 @@ public class MemberServiceImpl implements MemberService {
     /**
      * 휴면 회원인 멤버의 상태를 다시 Active로 변경하는 메소드
      *
-     * @param memberSleepToActiveRequest
+     * @param memberSleepToActiveRequest 휴면 해제 DTO
      * @return MessageResponse
      */
     @Override
