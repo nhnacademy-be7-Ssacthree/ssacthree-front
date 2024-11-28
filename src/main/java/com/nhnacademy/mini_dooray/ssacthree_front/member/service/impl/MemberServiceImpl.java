@@ -26,8 +26,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
 
 /**
  * @author 김희망
@@ -102,16 +100,15 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public MessageResponse memberLogout(HttpServletResponse httpServletResponse) {
-        ResponseEntity<MessageResponse> response = memberAdapter.memberLogout();
 
         try {
-
+            ResponseEntity<MessageResponse> response = memberAdapter.memberLogout();
             if (isHaveCookie(httpServletResponse, response)) {
                 return response.getBody();
             }
 
             throw new LogoutIllegalAccessException("잘못된 접근입니다.");
-        } catch (HttpClientErrorException | HttpServerErrorException e) {
+        } catch (FeignException e) {
             throw new LogoutIllegalAccessException("잘못된 접근입니다.");
         }
     }
@@ -174,7 +171,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MessageResponse memberInfoUpdate(MemberInfoUpdateRequest requestBody,
         HttpServletRequest request) {
-
+        
         String accessToken = null;
         for (Cookie cookie : request.getCookies()) {
             if (cookie.getName().equals(ACCESS_TOKEN)) {
