@@ -127,11 +127,6 @@ public class OrderServiceImpl implements OrderService {
         orderFormRequest.setOrderNumber(orderNumber);
     }
 
-    @Override
-    public void saveOrder(OrderSaveRequest orderSaveRequest) {
-
-    }
-
     // 카트 상품 주문서로 가져오기
     private List<BookOrderRequest> buildBookOrderRequestsFromCart(HttpServletRequest request) {
         List<CartItem> cartItems = cartService.initializeCart(request);
@@ -159,14 +154,21 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDetailResponse getOrderDetail(Long orderId) {
         log.info("주문상세정보를요청합니다.");
-            ResponseEntity<OrderDetailResponse> orderAllAttrResponseResponseEntity = orderAdapter.getOrderDetail(orderId);
-            if(orderAllAttrResponseResponseEntity.getStatusCode().is2xxSuccessful()){
-                OrderDetailResponse orderAllAttrResponse = orderAllAttrResponseResponseEntity.getBody();
-                log.info("주문상세정보를받아옴");
-                return orderAllAttrResponse;
-            }
+        ResponseEntity<OrderDetailResponse> orderAllAttrResponseResponseEntity = orderAdapter.getOrderDetail(orderId);
+        if(orderAllAttrResponseResponseEntity.getStatusCode().is2xxSuccessful()){
+            OrderDetailResponse orderAllAttrResponse = orderAllAttrResponseResponseEntity.getBody();
+            log.info("주문상세정보를받아옴");
+            return orderAllAttrResponse;
+        }
 
-            throw new FailedGetOrderDetail("조회 실패");
+        throw new FailedGetOrderDetail("조회 실패");
+    }
+
+    // 주문내역의 배송 상태를 변경합니다.
+    @Override
+    public void changeOrderStatue(String orderId) {
+        // 대기 -> 배송중, 이때 바꿔야하는 상태를 넣어줘서 작업할 수도 있을듯.
+        orderAdapter.changeOrderStatus(orderId);
     }
 
 

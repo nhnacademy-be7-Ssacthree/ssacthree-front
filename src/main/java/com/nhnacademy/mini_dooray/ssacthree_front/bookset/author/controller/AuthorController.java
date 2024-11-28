@@ -5,15 +5,14 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.dto.AuthorUpdat
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.service.AuthorService;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.exception.exception.ValidationFailedException;
 import jakarta.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -26,18 +25,18 @@ public class AuthorController {
 
     @GetMapping
     public String getAuthors(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "bookName:asc") String[] sort,
-            Model model) {
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(defaultValue = "bookName:asc") String[] sort,
+        Model model) {
         Map<String, Object> allParams = new HashMap<>();
         allParams.put("page", String.valueOf(page));
         allParams.put("size", String.valueOf(size));
 
         String extraParams = allParams.entrySet().stream()
-                .filter(entry -> !"page".equals(entry.getKey()) && !"size".equals(entry.getKey()))
-                .map(entry -> entry.getKey() + "=" + entry.getValue())
-                .collect(Collectors.joining("&"));
+            .filter(entry -> !"page".equals(entry.getKey()) && !"size".equals(entry.getKey()))
+            .map(entry -> entry.getKey() + "=" + entry.getValue())
+            .collect(Collectors.joining("&"));
 
         model.addAttribute("baseUrl", "/admin/authors");
         model.addAttribute("allParams", allParams);
@@ -48,7 +47,7 @@ public class AuthorController {
     }
 
     @GetMapping("/create")
-    public String createAuthor() {
+    public String createAuthor(){
         return "admin/author/createAuthor";
     }
 
@@ -58,12 +57,12 @@ public class AuthorController {
         AuthorUpdateRequest authorUpdateRequest = authorService.getAuthorById(authorId);
         model.addAttribute("authorUpdateRequest", authorUpdateRequest);
         return "admin/author/updateAuthor";
-    }
+     }
 
     @PostMapping("/create")
     public String createAuthor(@Valid @ModelAttribute AuthorCreateRequest authorCreateRequest,
-                               BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
+                               BindingResult bindingResult, Model model){
+        if(bindingResult.hasErrors()){
             throw new ValidationFailedException(bindingResult);
         }
 
@@ -74,8 +73,8 @@ public class AuthorController {
 
     @PostMapping
     public String updateAuthor(@Valid @ModelAttribute AuthorUpdateRequest authorUpdateRequest,
-                               BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
+                               BindingResult bindingResult, Model model){
+        if(bindingResult.hasErrors()){
             throw new ValidationFailedException(bindingResult);
         }
 

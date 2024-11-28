@@ -25,9 +25,6 @@ public interface OrderService {
 
     void processOrder(String memberId, Integer paymentPrice, OrderFormRequest orderFormRequest, HttpSession session, Model model);
 
-    void saveOrder(OrderSaveRequest orderSaveRequest);
-
-
     // 회원 주문 조회
     OrderResponseWithCount getOrdersByMemberAndDate(Long customerId, int page, int size, LocalDate startDate, LocalDate endDate);
 
@@ -36,4 +33,6 @@ public interface OrderService {
 
     // 주문 상세 조회 (회원, 멤버)
     OrderDetailResponse getOrderDetail(Long orderId);
+
+    void changeOrderStatue(String orderId);
 }

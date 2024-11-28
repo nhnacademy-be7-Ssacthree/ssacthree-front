@@ -6,6 +6,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.BookReviewResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.ReviewResponse;
 import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface ReviewAdapter {
 
     @GetMapping("shop/books/reviews/{book-id}")
-    ResponseEntity<List<BookReviewResponse>> getReviewsByBookId(@PathVariable("book-id") Long bookId);
+    ResponseEntity<Page<BookReviewResponse>> getReviewsByBookId(@RequestParam("page") int page,
+        @RequestParam("size") int size,
+        @RequestParam("sort") String[] sort,
+        @PathVariable("book-id") Long bookId);
 
     @GetMapping("shop/members/reviews/{book-id}") //권한 조회
     ResponseEntity<Long> authToWriteReview(@RequestHeader("Authorization") String authorizationHeader,@PathVariable("book-id") Long bookId);

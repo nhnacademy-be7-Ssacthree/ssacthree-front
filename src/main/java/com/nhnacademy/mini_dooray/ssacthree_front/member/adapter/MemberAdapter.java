@@ -79,4 +79,7 @@ public interface MemberAdapter {
         @RequestParam("direction") String direction);
 
 
+    @PutMapping("/shop/member-sleep")
+    ResponseEntity<MessageResponse> memberActive(
+        @RequestHeader("memberLoginId") String memberLoginId);
 }

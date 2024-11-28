@@ -27,4 +27,13 @@ public class ExceptionParser {
         }
 
     }
+
+    public static String getErrorCodeFromFeignException(String errorMessageBody) {
+        try {
+            return Integer.toString(
+                objectMapper.readValue(errorMessageBody, ErrorResponse.class).getStatusCode());
+        } catch (JsonProcessingException e) {
+            return errorMessageBody;
+        }
+    }
 }

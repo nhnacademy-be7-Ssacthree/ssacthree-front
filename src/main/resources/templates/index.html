@@ -878,27 +878,38 @@
 <!-- 로그인 실패 시 Alert창 띄우는 용도 -->
 <div id="loginFailedMessage" th:text="${loginFailedMessage}" style="display: none;"></div>
 <div id="registerSuccessMessage" th:text="${registered}" style="display: none;"></div>
+<div id="memberActiveMessage" th:text="${memberActiveMessage}" style="display: none;"></div>
 <script>
-    // loginFailedMessage가 있는 경우 alert 창을 띄웁니다.
-    window.addEventListener('DOMContentLoaded', () => {
-        const loginFailedMessageElement = document.getElementById('loginFailedMessage');
-        const loginFailedMessage = loginFailedMessageElement ? loginFailedMessageElement.textContent
-            : null;
+  // loginFailedMessage가 있는 경우 alert 창을 띄웁니다.
+  window.addEventListener('DOMContentLoaded', () => {
+    const loginFailedMessageElement = document.getElementById('loginFailedMessage');
+    const loginFailedMessage = loginFailedMessageElement ? loginFailedMessageElement.textContent
+        : null;
 
-        if (loginFailedMessage) {
-            alert(loginFailedMessage);
-        }
-    });
+    if (loginFailedMessage) {
+      alert(loginFailedMessage);
+    }
+  });
 
-    window.addEventListener('DOMContentLoaded', () => {
-        const registeredElement = document.getElementById('registerSuccessMessage');
-        const registered = registeredElement ? registeredElement.textContent
-            : null;
+  window.addEventListener('DOMContentLoaded', () => {
+    const registeredElement = document.getElementById('registerSuccessMessage');
+    const registered = registeredElement ? registeredElement.textContent
+        : null;
 
-        if (registered) {
-            alert(registered);
-        }
-    });
+    if (registered) {
+      alert(registered);
+    }
+  });
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const memberActiveMessageElement = document.getElementById('memberActiveMessage')
+    const memberActiveMessage = memberActiveMessageElement ? memberActiveMessageElement.textContent
+        : null;
+
+    if (memberActiveMessage) {
+      alert(memberActiveMessage)
+    }
+  });
 </script>
 
 <script>
