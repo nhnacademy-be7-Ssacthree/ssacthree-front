@@ -174,9 +174,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDetailResponse getOrderDetailByOrderNumber(String orderNumber,String phoneNumber) {
         log.info("주문번호로 주문 상세 정보를 요청합니다.");
-        ResponseEntity<OrderDetailResponse> orderAllAttrResponseResponseEntity = orderAdapter.getOrderDetailByOrderNumber(orderNumber, phoneNumber);
-        if(orderAllAttrResponseResponseEntity.getStatusCode().is2xxSuccessful()){
-            OrderDetailResponse orderAllAttrResponse = orderAllAttrResponseResponseEntity.getBody();
+        ResponseEntity<OrderDetailResponse> orderAllAttrResponseEntity = orderAdapter.getOrderDetailByOrderNumber(orderNumber, phoneNumber);
+        if(orderAllAttrResponseEntity.getStatusCode().is2xxSuccessful()){
+            OrderDetailResponse orderAllAttrResponse = orderAllAttrResponseEntity.getBody();
             log.info("주문 상세 정보를 받아옴");
             return orderAllAttrResponse;
         }
