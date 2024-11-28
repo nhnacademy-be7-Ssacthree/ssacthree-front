@@ -104,9 +104,21 @@
                 </script>
             </div>
 
+            <!-- 적립금 정보 -->
             <div class="border p-3 mb-3">
-                <p>적립금: 1,000원 (5% 적립)</p>
+                <!-- 적립금 및 적립 퍼센트를 표시하는 동적 영역 -->
+                <div id="pointDisplay">
+                    적립금: <span id="savedAmount"></span>원 (<span id="savedPercent"></span>%)
+                </div>
+                <!-- bookPointSaveRule 데이터를 JavaScript로 전달 -->
+                <script>
+                    const bookPointSaveRule = {
+                        pointSaveType: "[[${bookPointSaveRule.pointSaveType}]]", // Thymeleaf에서 문자열로 렌더링
+                        pointSaveAmount: [[${bookPointSaveRule.pointSaveAmount}]] // Thymeleaf에서 숫자로 렌더링
+                    };
+                </script>
             </div>
+
 
             <div class="border p-3 mb-3">
                 <p><span>기본 배송비: <span class="unitPrice" id="delivery-fee" th:text=" ${deliveryRule.deliveryFee}"></span>원</span></p>
