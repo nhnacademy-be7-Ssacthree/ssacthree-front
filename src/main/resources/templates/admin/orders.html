@@ -47,6 +47,7 @@
                             <th scope="col" class="fw-bold">상태</th>
                             <th scope="col" class="fw-bold">고객 성함</th>
                             <th scope="col" class="fw-bold">주문번호</th>
+                            <th scope="col" class="fw-bold">운송장번호</th>
                             <th scope="col" class="fw-bold">배송시작</th>
                             <th scope="col" class="fw-bold">배송완료</th>
                         </tr>
@@ -64,6 +65,7 @@
                             </td>
                             <td th:text="${order.customerName}"></td>
                             <td th:text="${order.orderNumber}"></td>
+                            <td th:text="${order.invoiceNumber}"></td>
                             <td>
                                 <form th:action="@{/admin/orders/{orderId}/delivery-status(orderId=${order.orderId}, status='start')}" method="POST">
                                     <button class="btn btn-detail">배송 시작</button>
