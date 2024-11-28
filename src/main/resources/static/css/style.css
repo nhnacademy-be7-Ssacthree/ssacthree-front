@@ -1895,3 +1895,38 @@ select#input-sort {
     font-size: 14px; /* 글자 크기 조정 */
     padding: 0.3rem 0.5rem; /* 버튼 내부 여백 줄이기 */
 }
+
+
+/* 기본 카드 스타일 */
+/* 책 이미지와 이름에 hover 효과 */
+.book-hover img {
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.book-hover img:hover {
+    transform: scale(1.1); /* 약간 확대 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
+}
+
+.book-hover span {
+    transition: color 0.3s; /* 글자 색 전환 효과 */
+}
+
+.book-hover span:hover {
+    color: #007bff; /* 파란색으로 변경 */
+    text-decoration: underline; /* 밑줄 추가 */
+}
+
+/* 기본 상태에서 밑줄 제거 */
+.book-name-link {
+    text-decoration: none; /* 기본적으로 밑줄 제거 */
+    color: inherit; /* 상속된 색상 유지 */
+}
+
+/* 마우스 오버 시 밑줄 추가 */
+.book-name-link:hover {
+    text-decoration: underline; /* 마우스 오버 시 밑줄 추가 */
+    color: #007bff; /* 선택 사항: 링크 색상을 파란색으로 변경 */
+}
+
+

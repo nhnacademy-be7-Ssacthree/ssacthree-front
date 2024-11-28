@@ -3,22 +3,17 @@ package com.nhnacademy.mini_dooray.ssacthree_front.order.controller;
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.service.CartService;
 import com.nhnacademy.mini_dooray.ssacthree_front.elastic.dto.Paging;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoResponse;
-import com.nhnacademy.mini_dooray.ssacthree_front.member.service.AddressService;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.MemberService;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.*;
-import com.nhnacademy.mini_dooray.ssacthree_front.order.service.OrderService;
-import com.nhnacademy.mini_dooray.ssacthree_front.order.utils.OrderUtil;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,7 +32,7 @@ public class OrderController {
     // 주문 조회 view로 이동
     @GetMapping("/input")
     public String orderNumberInput(){
-      return "order/orderInput";
+      return "order/orderDetailInput";
     }
 
     // TODO : 각각의 중복되는거 service로 빼기
@@ -158,7 +153,7 @@ public class OrderController {
   }
   
   // 주문 상세 조회 (한 주문의 전체 내용)
-  @GetMapping("/orderDetail-byId/{orderId}")
+  @GetMapping("/orderDetailbyId/{orderId}")
   public String getOrderDetail(@PathVariable("orderId") Long orderId, Model model){
       // 입력받은 주문번호를 orderId로 변환하여 service 요청
       // 1. 조회 시에 order 내역의 customerId 가 멤버인지 확인하고 customerView 또는 memberView 로 나눠서 return 되게(응답 dto 내용은 같음) <- service에서 플래그
@@ -173,7 +168,7 @@ public class OrderController {
   }
 
   // orderNumber로 주문 상세 조회 (비회원, 회원 둘 다 가능)
-  @GetMapping("/orderDetail-byNum/{orderNumber}")
+  @GetMapping("/orderDetailbyNum")
   public String getOrderDetailByOrderNumber(@RequestParam String orderNumber, @RequestParam String phoneNumber, Model model){
     log.info("주문번호: {}, 전화번호: {}", orderNumber, phoneNumber);
       

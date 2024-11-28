@@ -58,6 +58,7 @@
           <table class="table table-bordered">
             <thead>
             <tr>
+              <th>책 이미지</th>
               <th>책 이름</th>
               <th>수량</th>
               <th>가격</th>
@@ -66,7 +67,20 @@
             </thead>
             <tbody>
             <tr th:each="detail : ${orderDetail.orderDetailList}">
-              <td th:text="${detail.bookName}"></td>
+              <!-- 책 이미지 -->
+              <td>
+                <a th:href="'/books/' + ${detail.bookId}" style="text-decoration: none;" class="book-hover">
+                  <img th:src="${detail.bookThumbnailImageUrl}" class="img-fluid rounded d-block mx-auto"
+                       alt="Book Cover"
+                       style="max-height: 150px; cursor: pointer; border: 1px solid #ccc; padding: 5px;">
+                </a>
+              </td>
+              <!-- 책 이름 -->
+              <td>
+                <a th:href="'/books/' + ${detail.bookId}" class="book-name-link">
+                  <span th:text="${detail.bookName}"></span>
+                </a>
+              </td>
               <td th:text="${detail.quantity}"></td>
               <td th:text="${detail.bookPriceAtOrder}"></td>
               <td th:text="${detail.quantity * detail.bookPriceAtOrder}"></td>
@@ -93,6 +107,19 @@
 
       <a href="/orders" class="btn btn-secondary mt-3">목록으로 돌아가기</a>
     </main>
+
+<!--    &lt;!&ndash;  오른쪽 추가 콘텐츠&ndash;&gt;-->
+<!--    <aside class="col-lg-3">-->
+<!--      <h5 class="mb-3">추천 도서</h5>-->
+<!--      <div class="card mb-3">-->
+<!--        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR461L5RGksu05oMqpR4Uiga_1M6L22Dttd5IVm_BaFJrCJ79DG3jOEtvVoSk90QRokExjQilxSLe94BLb_ozkM0w" class="card-img-top" alt="추천 도서">-->
+<!--        <div class="card-body">-->
+<!--          <h6 class="card-title">베스트셀러</h6>-->
+<!--          <p class="card-text">이 책을 읽어보세요!</p>-->
+<!--          <a href="#" class="btn btn-primary btn-sm">자세히 보기</a>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </aside>-->
   </div>
 </div>
 
