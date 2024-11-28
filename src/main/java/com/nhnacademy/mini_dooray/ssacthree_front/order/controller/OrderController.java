@@ -28,10 +28,13 @@ public class OrderController {
     private final MemberService memberService;
     private final OrderService orderService;
 
-    // TODO : 각각의 중복되는거 service로 빼기
-    // 비회원, 회원 주문 페이지 이동 -> isMember로 구분해서 뷰 띄우기
-
-    // 1. 장바구니 -> 주문하기
+    /**
+     * 장바구니에서 주문하기
+     *
+     * @param request
+     * @param model
+     * @return
+     */
     @GetMapping("/order-cart")
     public String orderCart(HttpServletRequest request, Model model) {
         orderService.prepareOrderCart(request, model);
@@ -39,14 +42,31 @@ public class OrderController {
         return "order/orderSheet"; // 주문서 페이지
     }
 
-    // 2. 책 상세 -> 바로 주문하기
+    /**
+     * 도서 상세에서 바로 주문하기
+     *
+     * @param request
+     * @param bookId
+     * @param quantity
+     * @param model
+     * @return
+     */
     @GetMapping("/order-now")
     public String orderNow(HttpServletRequest request, @RequestParam Long bookId, @RequestParam int quantity, Model model) {
         orderService.prepareOrderNow(request, bookId, quantity, model);
-        return "order/orderSheet"; // 주문서 페이지
+        return "order/orderSheet";
     }
 
-    // 3. 주문서 -> 결제하기
+    /**
+     * 주문서에서 결제하기
+     *
+     * @param memberId
+     * @param paymentPrice
+     * @param orderFormRequest
+     * @param httpSession
+     * @param model
+     * @return
+     */
     @PostMapping("/payment")
     public String order(@ModelAttribute("memberId") String memberId,
                         @RequestParam(name = "paymentPrice") Integer paymentPrice,
@@ -57,7 +77,13 @@ public class OrderController {
         return "payment/checkout"; // 결제 수단 선택 페이지
     }
 
-    // TODO : 주문하는 도서에 패키징 아이디 연결하기
+    /**
+     * 주문도서에 포장지 연결
+     *
+     * @param httpSession
+     * @param request
+     * @return
+     */
     @PostMapping("/orders/connect-packaging")
     @ResponseBody
     public ResponseEntity<String> connectPackaging(HttpSession httpSession, @RequestBody BookPackagingRequest request) {
@@ -69,7 +95,7 @@ public class OrderController {
                 (List<BookOrderRequest>) httpSession.getAttribute("bookLists");
 
         if (orderDetails == null || orderDetails.isEmpty()) {
-            return ResponseEntity.badRequest().body("No books found in session.");
+            return ResponseEntity.badRequest().body("세션에서 도서를 찾을 수 없습니다.");
         }
 
         // bookId와 매칭되는 DTO를 찾아 packagingId 추가
@@ -83,18 +109,27 @@ public class OrderController {
         }
 
         if (!updated) {
-            return ResponseEntity.badRequest().body("Book with the given ID not found.");
+            return ResponseEntity.badRequest().body("id에 매칭되는 도서가 없습니다.");
         }
 
-        // 세션 업데이트 (선택적으로 필요)
         httpSession.setAttribute("bookLists", orderDetails);
-
-        return ResponseEntity.ok("Packaging ID added successfully.");
+        return ResponseEntity.ok("포장지 id가 매핑되었습니다.");
     }
 
     // TODO 4. 비회원 주문 내역 페이지 구현
 
-    // TODO 5. 회원 주문 내역 페이지 구현
+
+    /**
+     * 회원 주문 내역 페이지 구현
+     *
+     * @param request
+     * @param page
+     * @param size
+     * @param startDate
+     * @param endDate
+     * @param model
+     * @return
+     */
     @GetMapping("/orders")
     public String getOrders(HttpServletRequest request,
                             @RequestParam(defaultValue = "0") int page,
@@ -145,7 +180,13 @@ public class OrderController {
 
     }
 
-    // 주문 상세 조회 (한 주문의 전체 내용)
+    /**
+     * 주문 상세 조회 (한 주문의 전체 내용)
+     *
+     * @param orderId
+     * @param model
+     * @return
+     */
     @GetMapping("/orderDetail/{orderId}")
     public String getOrder(@PathVariable("orderId") Long orderId, Model model){
         // 입력받은 주문번호를 orderId로 변환하여 service 요청
@@ -160,8 +201,17 @@ public class OrderController {
         return "order/orderDetail2";
     }
 
-
-    // 관리자 주문 내역 보기
+    /**
+     * 관리자의 고객 주문내역 보기
+     *
+     * @param request
+     * @param page
+     * @param size
+     * @param startDate
+     * @param endDate
+     * @param model
+     * @return
+     */
     @GetMapping("/admin/orders")
     public String orderListView(HttpServletRequest request,
                                 @RequestParam(defaultValue = "0") int page,
@@ -196,23 +246,30 @@ public class OrderController {
         model.addAttribute("today", LocalDate.now());
         model.addAttribute("baseUrl", "/admin/orders");
 
-
         return "admin/orders";
     }
 
-    // TODO : 관리자가 주문내역 대기 -> 배송중으로 변경
-    // 이때 id는 orderId
-    @PostMapping("/admin/orders/{order-id}/delivery-start")
-    public String startDelivery(@PathVariable("order-id") String orderId) {
-        orderService.changeOrderStatue(orderId);
-        return "redirect:/admin/orders";
+    /**
+     * 관리자가 주문 상태 변경 (배송중, 배송완료)
+     *
+     * @param orderId
+     * @param status
+     * @param request
+     * @return
+     */
+    @PostMapping("/admin/orders/{order-id}/delivery-status")
+    public String startDelivery(@PathVariable("order-id") Long orderId,
+                                @RequestParam String status,
+                                HttpServletRequest request) {
+        orderService.changeOrderStatue(orderId, status);
+        // 현재 페이지로 다시 리다이렉트, 디렉티브
+        String referer = request.getHeader("Referer");
+        return "redirect:" + (referer != null ? referer : "/admin/orders");
     }
 
-    // TODO : 관리자가 주문내역 배송중 -> 배송완료로 변경
-    @PostMapping("/admin/orders/{order-id}/delivery-complete")
-    public String completeDelivery(@PathVariable("order-id") String orderId) {
-
-        return "redirect:/admin/orders";
-    }
+    /**
+     * 배송시작 후 2일 후 자동으로 배송완료되도록 스케줄러 구현
+     *
+     */
 
 }

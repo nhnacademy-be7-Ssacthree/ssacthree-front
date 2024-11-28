@@ -45,12 +45,10 @@ public interface OrderAdapter {
 
 
     // 회원, 비회원의 주문 상세 조회
-    // 주문, 주문상세, 결제, 결제타입 조회 예정
     @GetMapping("/shop/orderDetail")
     ResponseEntity<OrderDetailResponse> getOrderDetail(@RequestParam Long orderId);
 
+    // 주문내역의 배송 상태 변경
     @PostMapping("/shop/admin/orders/change")
-    ResponseEntity<MessageResponse> changeOrderStatus(@RequestBody String orderId);
-
-
+    ResponseEntity<MessageResponse> changeOrderStatus(@RequestBody ChangeOrderStatusRequest request);
 }
