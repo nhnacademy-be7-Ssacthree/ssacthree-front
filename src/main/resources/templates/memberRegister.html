@@ -74,7 +74,7 @@
   </div>
 </div>
 
-<div id="errorMessage" th:text="${error}" style="display: none;"></div>
+<!--<div id="errorMessage" th:text="${error}" style="display: none;"></div>-->
 
 <!-- Bootstrap JS -->
 <script
@@ -82,16 +82,16 @@
 <footer th:replace="common/footer :: footer"/>
 
 
-<script>
-  window.addEventListener('DOMContentLoaded', () => {
-    const errorMessageElement = document.getElementById('errorMessage');
-    const errorMessage = errorMessageElement ? errorMessageElement.textContent
-        : null;
+<!--<script>-->
+<!--  window.addEventListener('DOMContentLoaded', () => {-->
+<!--    const errorMessageElement = document.getElementById('errorMessage');-->
+<!--    const errorMessage = errorMessageElement ? errorMessageElement.textContent-->
+<!--        : null;-->
 
-    if (errorMessage) {
-      alert(errorMessage);
-    }
-  });
-</script>
+<!--    if (errorMessage) {-->
+<!--      alert(errorMessage);-->
+<!--    }-->
+<!--  });-->
+<!--</script>-->
 </body>
 </html>
