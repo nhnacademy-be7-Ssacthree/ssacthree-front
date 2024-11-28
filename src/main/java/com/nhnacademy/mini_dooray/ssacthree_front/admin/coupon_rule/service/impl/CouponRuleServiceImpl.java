@@ -21,6 +21,7 @@ import java.util.List;
 public class CouponRuleServiceImpl implements CouponRuleService {
 
     private final CouponRuleAdapter couponRuleAdapter;
+    private static final String COUPON_RULE_FIND_FAILED = "쿠폰 정책 조회에 실패하였습니다.";
 
     @Override
     public List<CouponRuleGetResponse> getAllCouponRules() {
@@ -30,9 +31,9 @@ public class CouponRuleServiceImpl implements CouponRuleService {
             if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             }
-            throw new CouponRuleGetFailedException("쿠폰 정책 조회에 실패하였습니다.");
+            throw new CouponRuleGetFailedException(COUPON_RULE_FIND_FAILED);
         } catch (HttpClientErrorException | HttpServerErrorException e) {
-            throw new CouponRuleGetFailedException("쿠폰 정책 조회에 실패하였습니다.");
+            throw new CouponRuleGetFailedException(COUPON_RULE_FIND_FAILED);
         }
     }
 
@@ -44,9 +45,9 @@ public class CouponRuleServiceImpl implements CouponRuleService {
             if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             }
-            throw new CouponRuleGetFailedException("쿠폰 정책 조회에 실패하였습니다.");
+            throw new CouponRuleGetFailedException(COUPON_RULE_FIND_FAILED);
         } catch (HttpClientErrorException | HttpServerErrorException e) {
-            throw new CouponRuleGetFailedException("쿠폰 정책 조회에 실패하였습니다.");
+            throw new CouponRuleGetFailedException(COUPON_RULE_FIND_FAILED);
         }
     }
 

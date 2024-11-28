@@ -17,5 +17,10 @@ document.getElementById("increaseQuantity").addEventListener("click", () => {
 
 // 총 금액 업데이트 함수
 function updateTotalPrice() {
-    totalPriceElement.textContent = (parseInt(unitPrice) * parseInt(quantityInput.value)).toString(); // 금액에 콤마 추가
+
+    const price = parseInt(unitPrice) * parseInt(quantityInput.value); // 쉼표 제거 후 숫자로 변환
+    if (!isNaN(price)) {
+        // 쉼표 포맷 적용
+        totalPriceElement.textContent = new Intl.NumberFormat('ko-KR').format(price);
+    }
 }

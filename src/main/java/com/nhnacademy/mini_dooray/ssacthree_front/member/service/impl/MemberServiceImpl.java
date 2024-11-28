@@ -7,10 +7,14 @@ import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberLoginRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberRegisterRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberSleepToActiveRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.LoginFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.LogoutIllegalAccessException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.MemberNotFoundException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.MemberRegisterFailedException;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.SleepMemberLoginFailedException;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.SleepMemberReleaseFailedException;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.service.CertNumberService;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.MemberService;
 import feign.FeignException;
 import jakarta.servlet.http.Cookie;
@@ -31,7 +35,7 @@ public class MemberServiceImpl implements MemberService {
 
 
     private final MemberAdapter memberAdapter;
-
+    private final CertNumberService certNumberService;
     private static final String SET_COOKIE = "Set-Cookie";
 
     @Override
@@ -61,8 +65,11 @@ public class MemberServiceImpl implements MemberService {
             }
 
             throw new LoginFailedException("로그인에 실패하였습니다.");
-        } catch (HttpClientErrorException | HttpServerErrorException | FeignException e) {
-            log.debug(e.getMessage());
+        } catch (FeignException e) {
+            log.debug(ExceptionParser.getErrorMessageFromFeignException(e.contentUTF8()));
+            if (ExceptionParser.getErrorCodeFromFeignException(e.contentUTF8()).equals("423")) {
+                throw new SleepMemberLoginFailedException("휴면 계정입니다.", requestBody.getLoginId());
+            }
             throw new LoginFailedException("로그인에 실패하였습니다.");
         }
     }
@@ -180,4 +187,37 @@ public class MemberServiceImpl implements MemberService {
         }
         throw new MemberNotFoundException("회원을 찾을 수 없습니다.");
     }
+
+    @Override
+    public MessageResponse memberSleepToActive(
+        MemberSleepToActiveRequest memberSleepToActiveRequest) {
+
+        String certNumber = certNumberService.getCertNumber(
+            memberSleepToActiveRequest.getMemberLoginId());
+
+        // redis에 memberloginid의 certnumber가 없으면 잘못된 요청임을 보여줌.
+        if (certNumber == null) {
+            throw new SleepMemberReleaseFailedException("잘못된 요청입니다.");
+
+        }
+
+        if (!certNumber.equals(memberSleepToActiveRequest.getCertNumber())) {
+            certNumberService.delete(certNumber);
+            throw new SleepMemberReleaseFailedException("인증번호가 다릅니다.");
+        }
+        try {
+            ResponseEntity<MessageResponse> response = memberAdapter.memberActive(
+                memberSleepToActiveRequest.getMemberLoginId());
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return response.getBody();
+            }
+            throw new SleepMemberReleaseFailedException("휴면 해제를 실패하였습니다.");
+        } catch (FeignException e) {
+            throw new SleepMemberReleaseFailedException("휴면 해제를 실패하였습니다.");
+        } finally {
+            certNumberService.delete(certNumber);
+        }
+
+    }
+
 }
