@@ -117,8 +117,8 @@ public class OrderController {
   }
   
   // 주문 상세 조회 (한 주문의 전체 내용)
-  @GetMapping("/orderDetail/{orderId}")
-  public String getOrder(@PathVariable("orderId") Long orderId, Model model){
+  @GetMapping("/orderDetail/{orderId:[0-9]+}")
+  public String getOrderDetail(@PathVariable("orderId") Long orderId, Model model){
       // 입력받은 주문번호를 orderId로 변환하여 service 요청
       // 1. 조회 시에 order 내역의 customerId 가 멤버인지 확인하고 customerView 또는 memberView 로 나눠서 return 되게(응답 dto 내용은 같음) <- service에서 플래그
       // 2. orderNumber, 이메일가 order 안의 내용과 동일 할 때 조회가 가능하게
@@ -130,7 +130,19 @@ public class OrderController {
       // 정상 처리 시 상세 페이지 반환
       return "order/orderDetail2";
   }
-  
+
+  // orderNumber로 주문 상세 조회 (비회원, 회원 둘 다 가능)
+  @GetMapping("/orderDetail/{orderNumber:[a-zA-Z0-9-]+}")
+  public String getOrderDetailByOrderNumber(@PathVariable("orderNumber") String orderNumber,String phoneNumber , Model model){
+      log.info("주문번호로 주문상세를 조회합니다");
+      
+      // orderNumber + phone 조합
+      OrderDetailResponse orderDetail = orderService.getOrderDetailByOrderNumber(orderNumber, phoneNumber);
+      model.addAttribute("orderDetail", orderDetail);
+      log.info("주문번호로 조회완료");
+      return "order/orderDetailAllUser";
+  }
+
 
   // 관리자 주문 내역 보기
     @GetMapping("/admin/orders")

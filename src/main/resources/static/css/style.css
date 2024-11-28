@@ -1883,3 +1883,15 @@ select#input-sort {
     background-color: #e94b54;
 }
 
+
+.small-input {
+    width: 200px; /* 너비를 줄임 */
+    font-size: 14px; /* 글자 크기 조정 */
+    padding: 0.3rem; /* 여백 줄이기 */
+}
+
+/* 버튼 크기 줄이기 */
+.small-button {
+    font-size: 14px; /* 글자 크기 조정 */
+    padding: 0.3rem 0.5rem; /* 버튼 내부 여백 줄이기 */
+}

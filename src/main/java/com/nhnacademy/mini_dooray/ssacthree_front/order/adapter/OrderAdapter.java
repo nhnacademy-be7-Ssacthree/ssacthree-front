@@ -43,10 +43,14 @@ public interface OrderAdapter {
             @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate);
 
 
-    // 회원, 비회원의 주문 상세 조회
+    // 회원 주문 상세 조회
     // 주문, 주문상세, 결제, 결제타입 조회 예정
     @GetMapping("/shop/orderDetail")
     ResponseEntity<OrderDetailResponse> getOrderDetail(@RequestParam Long orderId);
+
+    // 회원, 비회원이 접근 가능한 주문 상세 조회
+    @GetMapping("/shop/orderDetail/orderNumber")
+    ResponseEntity<OrderDetailResponse> getOrderDetailByOrderNumber(@RequestParam String orderNumber, @RequestParam String phoneNumber);
 
     // 회원 주문 내역 - 상세 조회
 
