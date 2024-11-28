@@ -2,6 +2,8 @@ package com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.controller;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.delivery_rule.dto.DeliveryRuleGetResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.delivery_rule.service.DeliveryRuleService;
+import com.nhnacademy.mini_dooray.ssacthree_front.admin.point_save_rule.dto.PointSaveRuleInfoResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.admin.point_save_rule.service.PointSaveRuleCustomerService;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookListResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.service.BookCommonService;
@@ -35,6 +37,7 @@ public class BookCustomerController {
     private final CategoryCommonService categoryCommonService;
     private final ReviewService reviewService;
     private final DeliveryRuleService deliveryRuleService;
+    private final PointSaveRuleCustomerService pointSaveRuleCustomerService;
 
     @GetMapping("/books")
     public String getBooksByFilters(
@@ -165,6 +168,9 @@ public class BookCustomerController {
             List<Long> likeBooks = bookCommonService.getLikedBooksIdForCurrentUser();
             model.addAttribute("likeBooks", likeBooks);
         }
+
+        PointSaveRuleInfoResponse bookPointSaveRule = pointSaveRuleCustomerService.getBookPointSaveRule();
+        model.addAttribute("bookPointSaveRule", bookPointSaveRule);
 
         model.addAttribute("reviews", reviewService.getReviewsByBookId(bookId));
         model.addAttribute("categoryPaths", categoryPaths);
