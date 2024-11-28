@@ -1,6 +1,9 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.review.controller;
 
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -119,5 +122,29 @@ class ReviewControllerTest {
             .andExpect(model().attributeExists("review"))
             .andExpect(model().attribute("review", reviewResponse))
             .andExpect(view().name("review-rewrite"));
+    }
+
+    @Test
+    @WithMockUser(username = "testUser", roles = {"MEMBER"})
+    void testAuthToWriteReview_CatchException() throws Exception {
+        // Given
+        Long bookId = 1L;
+        String expectedRedirectUrl = "/books/" + bookId;
+        String expectedFlashMessage = "리뷰를 쓸 권한이 없습니다. 주문과 로그인 여부를 확인해주세요";
+
+        // Mock: reviewService.authToWriteReview 호출 시 RuntimeException 발생
+        doThrow(new RuntimeException("Unauthorized"))
+            .when(reviewService).authToWriteReview(eq(bookId), any(HttpServletRequest.class));
+
+        // When & Then
+        mockMvc.perform(get("/shop/members/reviews/{book-id}", bookId)
+                .sessionAttr("someSessionAttribute", "someValue") // 세션이 필요하다면 추가
+                .with(csrf()))
+            .andExpect(status().is3xxRedirection()) // Redirect 상태 확인
+            .andExpect(redirectedUrl(expectedRedirectUrl)) // Redirect URL 확인
+            .andExpect(flash().attribute("reviewWarning", expectedFlashMessage)); // Flash 메시지 확인
+
+        // Verify
+        verify(reviewService, times(1)).authToWriteReview(eq(bookId), any(HttpServletRequest.class));
     }
 }

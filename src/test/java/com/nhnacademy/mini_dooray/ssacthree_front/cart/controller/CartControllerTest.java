@@ -100,4 +100,57 @@ class CartControllerTest {
 
         verify(cartService, times(1)).deleteItem(any(HttpServletRequest.class), eq(1L));
     }
+
+    @Test
+    @WithMockUser(username = "testUser", roles = {"MEMBER"})
+    void testGetBookInDB() throws Exception {
+        // Given
+        Long bookId = 1L;
+        CartItem cartItem = new CartItem(bookId, "Book Title", 1, 20000, "image_url");
+
+        when(cartService.getRandomBook(eq(bookId), any(HttpServletRequest.class))).thenReturn(cartItem);
+
+        // When & Then
+        mockMvc.perform(get("/shop/carts/{bookId}", bookId))
+            .andExpect(status().is3xxRedirection()) // Redirect 상태 확인
+            .andExpect(redirectedUrl("/shop/carts")); // Redirect URL 확인
+
+        verify(cartService, times(1)).getRandomBook(eq(bookId), any(HttpServletRequest.class));
+        verify(cartService, times(1)).addNewBook(any(HttpServletRequest.class), eq(cartItem.getId()), eq(cartItem.getTitle()),
+            eq(1), eq(cartItem.getPrice()), eq(cartItem.getBookThumbnailImageUrl()));
+    }
+
+    @Test
+    @WithMockUser(username = "testUser", roles = {"MEMBER"})
+    void testMakeLoginSession() throws Exception {
+        // When & Then
+        mockMvc.perform(get("/shop/members/carts"))
+            .andExpect(status().is3xxRedirection()) // Redirect 상태 확인
+            .andExpect(redirectedUrl("/")); // Redirect URL 확인
+
+        verify(cartService, times(1)).getMemberCart(any(HttpServletRequest.class));
+    }
+
+
+    @Test
+    @WithMockUser(username = "testUser", roles = {"MEMBER"})
+    void testGetBookAndSaveInRedis() throws Exception {
+        // Given
+        String bookId = "1";
+        String quantity = "2";
+        CartItem cartItem = new CartItem(1L, "Book Title", 2, 20000, "image_url");
+
+        when(cartService.getBook(eq(Long.parseLong(bookId)))).thenReturn(cartItem);
+
+        // When & Then
+        mockMvc.perform(get("/shop/carts/add")
+                .param("bookId", bookId)
+                .param("quantity", quantity))
+            .andExpect(status().is3xxRedirection()) // Redirect 상태 확인
+            .andExpect(redirectedUrl("/shop/carts")); // Redirect URL 확인
+
+        verify(cartService, times(1)).getBook(eq(Long.parseLong(bookId)));
+        verify(cartService, times(1)).addNewBook(any(HttpServletRequest.class), eq(cartItem.getId()), eq(cartItem.getTitle()),
+            eq(Integer.parseInt(quantity)), eq(cartItem.getPrice()), eq(cartItem.getBookThumbnailImageUrl()));
+    }
 }
