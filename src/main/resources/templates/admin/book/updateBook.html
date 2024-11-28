@@ -154,15 +154,14 @@
                      min="0" required>
             </div>
 
-            <!-- 할인율 -->
+            <!-- 할인율 (표시용) -->
             <div class="mb-3">
-              <label for="bookDiscount" class="form-label">할인율 (%)</label>
-              <input type="number" class="form-control"
-                     id="bookDiscount"
-                     th:field="*{bookDiscount}"
-                     min="0" max="100" required>
+              <label for="bookDiscountDisplay" class="form-label">책 할인율 (정수값)</label>
+              <input type="number" class="form-control" id="bookDiscountDisplay" readonly th:value="${bookInfoResponse.bookDiscount}">
             </div>
 
+            <!-- 숨겨진 할인율 (폼 전송용) -->
+            <input type="hidden" id="bookDiscount" name="bookDiscount" th:field="*{bookDiscount}">
 
             <!-- 포장 여부 -->
             <div class="mb-3">
@@ -194,7 +193,7 @@
             <!-- 썸네일 이미지 업로드 -->
             <div class="mb-3">
               <label for="file" class="form-label">썸네일 이미지 업로드</label>
-              <input type="file" class="form-control"
+              <input type="file" class="form-control"z
                      th:field="*{bookThumbnailImageUrlMultipartFile}"
                      id="file" name="bookThumbnailImageUrlMultipartFile">
 

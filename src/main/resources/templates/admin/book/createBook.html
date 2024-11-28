@@ -161,12 +161,11 @@
 
             <!-- 할인율 -->
             <div class="mb-3">
-              <label for="bookDiscount" class="form-label">할인율 (%)</label>
-              <input type="number" class="form-control"
-                     id="bookDiscount"
-                     th:field="*{bookDiscount}"
-                     min="0" max="100" required>
+              <label for="bookDiscountDisplay" class="form-label">책 할인율 (정수값)</label>
+              <input type="number" class="form-control" id="bookDiscountDisplay" readonly>
             </div>
+            <!-- 숨겨진 할인율 (서버로 전송용) -->
+            <input type="hidden" id="bookDiscount" name="bookDiscount" th:field="*{bookDiscount}">
 
 
             <!-- 포장 여부 -->

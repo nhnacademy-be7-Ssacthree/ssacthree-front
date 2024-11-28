@@ -1,28 +1,117 @@
 const form = document.getElementById('registerForm');
-let editor;
+let editorSave;
+
+const regularPriceInputSave = document.getElementById('regularPrice');
+const salePriceInputSave = document.getElementById('salePrice');
+const bookDiscountDisplaySave = document.getElementById('bookDiscountDisplay');
+const bookDiscountInputSave = document.getElementById('bookDiscount'); // hidden 필드
 
 document.addEventListener("DOMContentLoaded", function () {
   // Toast UI Editor 초기화
-  editor = new toastui.Editor({
+  editorSave = new toastui.Editor({
     el: document.querySelector("#bookInfoEditor"),
     height: "400px",
-    initialEditType: "wysiwyg",  // 기본 값: WYSIWYG, 'markdown'으로도 설정 가능
-    previewStyle: "vertical",    // 미리보기 스타일: 'tab' 또는 'vertical'
-    initialValue: "",            // 초기값
-    hideModeSwitch: false,       // 마크다운과 WYSIWYG 모드 전환 버튼을 표시
+    initialEditType: "wysiwyg",
+    previewStyle: "vertical",
+    initialValue: "",
+    hideModeSwitch: false,
   });
 
   // 폼 제출 시 에디터 내용을 숨겨진 textarea에 반영
-  const form = document.querySelector("#registerForm");
   form.addEventListener("submit", function () {
-    const bookInfoField = document.querySelector("#bookInfo");
-    // 에디터 내용을 textarea에 설정
-    bookInfoField.value = editor.getMarkdown();
+    const bookInfoFieldSave = document.querySelector("#bookInfo");
+    bookInfoFieldSave.value = editorSave.getMarkdown();
+    updateHiddenInputSave("#categories", categoryClickCountsSave);
+    updateHiddenInputSave("#tags", tagClickCountsSave);
+    updateHiddenInputSave("#authors", authorClickCountsSave);
 
-    // 디버깅용 로그
-    console.log("bookInfoField 값:", bookInfoField.value);
   });
+
+  function calculateDiscountSave() {
+    const regularPriceSave = parseFloat(regularPriceInputSave.value);
+    const salePriceSave = parseFloat(salePriceInputSave.value);
+
+    if (!isNaN(regularPriceSave) && !isNaN(salePriceSave) && regularPriceSave > 0) {
+      const discountRateSave = ((regularPriceSave - salePriceSave) / regularPriceSave) * 100;
+      const discountRateIntSave = Math.floor(discountRateSave);
+
+      bookDiscountDisplaySave.value = discountRateIntSave;
+      bookDiscountInputSave.value = discountRateIntSave;
+    } else {
+      bookDiscountDisplaySave.value = '';
+      bookDiscountInputSave.value = '';
+    }
+  }
+
+  regularPriceInputSave.addEventListener('input', calculateDiscountSave);
+  salePriceInputSave.addEventListener('input', calculateDiscountSave);
+
+  const categoryClickCountsSave = new Map();
+  const tagClickCountsSave = new Map();
+  const authorClickCountsSave = new Map();
+// 선택 핸들러 설정
+  setupSelectHandlerSave("category-dropdown", "selected-categories-container", categoryClickCountsSave);
+  setupSelectHandlerSave("tag-dropdown", "selected-tags-container", tagClickCountsSave);
+  setupSelectHandlerSave("author-dropdown", "selected-authors-container", authorClickCountsSave);
+
+  // 폼 제출 시 Hidden Input 업데이트
+  const formSave = document.querySelector("form");
+  formSave.addEventListener("submit", function () {
+    updateHiddenInputSave("#categories", categoryClickCountsSave);
+    updateHiddenInputSave("#tags", tagClickCountsSave);
+    updateHiddenInputSave("#authors", authorClickCountsSave);
+  });
+
+  function setupSelectHandlerSave(selectIdSave, containerIdSave, clickCountsSave) {
+    const selectSave = document.getElementById(selectIdSave);
+    const containerSave = document.getElementById(containerIdSave);
+
+    // 선택 이벤트 처리
+    selectSave.addEventListener("change", function () {
+      const selectedIdSave = selectSave.value;
+      const selectedNameSave = selectSave.options[selectSave.selectedIndex]?.text;
+
+      if (selectedIdSave) {
+        incrementClickCountSave(clickCountsSave, selectedIdSave);
+        // 이미 추가된 항목이라도 다시 렌더링
+        containerSave.insertAdjacentHTML("beforeend", `
+          <span class="tag-badge" data-id="${selectedIdSave}">
+            ${selectedNameSave}
+            <button type="button" class="remove-tag-btn" data-id="${selectedIdSave}">x</button>
+          </span>
+        `);
+      }
+    });
+
+    // 삭제 버튼 이벤트 처리
+    containerSave.addEventListener("click", function (eSave) {
+      if (eSave.target.classList.contains("remove-tag-btn")) {
+        const idSave = eSave.target.dataset.id;
+        if (idSave) {
+          incrementClickCountSave(clickCountsSave, idSave);
+          eSave.target.closest(".tag-badge").remove();
+        }
+      }
+    });
+  }
+
+  function incrementClickCountSave(clickCountsSave, idSave) {
+    if (!clickCountsSave.has(idSave)) {
+      clickCountsSave.set(idSave, 0); // 초기화
+    }
+    clickCountsSave.set(idSave, clickCountsSave.get(idSave) + 1);
+  }
+
+  function updateHiddenInputSave(inputIdSave, clickCountsSave) {
+    const hiddenInputSave = document.querySelector(inputIdSave);
+    const resultSave = Array.from(clickCountsSave.entries())
+    .filter(([_, countSave]) => countSave % 2 === 1) // 홀수만 필터링
+    .map(([idSave]) => idSave);
+    hiddenInputSave.value = resultSave.join(",");
+    console.log(`Updated ${inputIdSave}:`, hiddenInputSave.value); // 디버깅용 로그
+  }
 });
+
 
 
 document.getElementById('bookIsbn').addEventListener('input', function (event) {
@@ -37,107 +126,3 @@ document.getElementById('bookIsbn').addEventListener('input', function (event) {
   }
 });
 
-
-$(document).ready(function () {
-  // 카테고리 선택 이벤트 처리
-  $('#category-dropdown').change(function () {
-    const selectedCategoryId = $(this).val();
-    const selectedCategoryName = $(this).find('option:selected').text();
-
-    if (selectedCategoryId) {
-      $('#selected-categories-container').append(`
-        <div class="tag-badge" data-id="${selectedCategoryId}">
-          ${selectedCategoryName}
-          <button type="button" class="remove-tag-btn" data-id="${selectedCategoryId}">x</button>
-        </div>
-      `);
-
-
-      updateHiddenInput('#categories', selectedCategoryId);
-    }
-  });
-
-  // 태그 선택 이벤트 처리
-  $('#tag-dropdown').change(function () {
-    const selectedTagId = $(this).val();
-    const selectedTagName = $(this).find('option:selected').text();
-
-    if (selectedTagId) {
-      $('#selected-tags-container').append(`
-        <div class="tag-badge" data-id="${selectedTagId}">
-          ${selectedTagName}
-          <button type="button" class="remove-tag-btn" data-id="${selectedTagId}">x</button>
-        </div>
-      `);
-
-
-      updateHiddenInput('#tags', selectedTagId);
-    }
-  });
-
-  // 작가 선택 이벤트 처리
-  $('#author-dropdown').change(function () {
-    const selectedAuthorId = $(this).val();
-    const selectedAuthorName = $(this).find('option:selected').text();
-
-    if (selectedAuthorId) {
-      $('#selected-authors-container').append(`
-        <div class="tag-badge" data-id="${selectedAuthorId}">
-          ${selectedAuthorName}
-          <button type="button" class="remove-tag-btn" data-id="${selectedAuthorId}">x</button>
-        </div>
-      `);
-
-      updateHiddenInput('#authors', selectedAuthorId);
-    }
-  });
-
-  // Hidden input 업데이트
-  function updateHiddenInput(inputId, value) {
-    const hiddenInput = $(inputId);
-    const currentValues = hiddenInput.val() ? hiddenInput.val().split(',') : [];
-    if (!currentValues.includes(value)) {
-      currentValues.push(value);
-    }
-    hiddenInput.val(currentValues.join(','));
-  }
-
-  // 삭제 버튼 이벤트 처리
-  $(document).on('click', '.remove-tag-btn', function () {
-    const id = $(this).data('id');
-    $(this).parent().remove();
-
-    removeHiddenInputValue('#categories', id);
-    removeHiddenInputValue('#tags', id);
-    removeHiddenInputValue('#authors', id);
-  });
-
-  function removeHiddenInputValue(inputId, value) {
-    const hiddenInput = document.querySelector(inputId);
-    const currentValues = hiddenInput.value ? hiddenInput.value.split(',') : [];
-    const newValues = currentValues.filter((item) => item !== value);
-    hiddenInput.value = newValues.join(',');
-  }
-});
-
-// const regularPriceInput = document.getElementById('regularPrice');
-// const salePriceInput = document.getElementById('salePrice');
-// const discountRateInput = document.getElementById('discountRate');
-// const bookDiscountInput = document.getElementById('bookDiscount');
-//
-// function calculateDiscount() {
-//   const regularPrice = parseFloat(regularPriceInput.value);
-//   const salePrice = parseFloat(salePriceInput.value);
-//
-//   if (!isNaN(regularPrice) && !isNaN(salePrice) && regularPrice > 0) {
-//     const discountRate = ((regularPrice - salePrice) / regularPrice) * 100;
-//     discountRateInput.value = discountRate.toFixed(2); // 소수점 2자리까지 표시
-//     bookDiscountInput.value = discountRate.toFixed(2);
-//   } else {
-//     discountRateInput.value = '';
-//   }
-// }
-//
-// regularPriceInput.addEventListener('input', calculateDiscount);
-// salePriceInput.addEventListener('input', calculateDiscount);
-//
