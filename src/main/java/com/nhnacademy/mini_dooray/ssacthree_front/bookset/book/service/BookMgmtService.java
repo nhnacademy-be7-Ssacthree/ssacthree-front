@@ -24,7 +24,8 @@ public interface BookMgmtService {
 
     BookInfoResponse getBookById(Long bookId);
 
+    BookUpdateRequestMultipart setBookUpdateRequestMultipart(BookInfoResponse bookInfoResponse);
+
     String getImageUrl(MultipartFile bookThumbnailUrl);
 
-    List<Long> cleanList(List<Long> list);
 }
