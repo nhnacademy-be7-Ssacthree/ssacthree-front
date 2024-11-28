@@ -14,10 +14,6 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.dto.TagInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.image.adapter.ImageUploadAdapter;
-import io.micrometer.observation.annotation.Observed;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -165,7 +161,7 @@ public class BookMgmtServiceImpl implements BookMgmtService {
     }
 
 
-    private BookSaveRequest convertToBookSaveRequest(BookSaveRequestMultipart bookSaveRequestMultipart, String imageUrl) {
+    public BookSaveRequest convertToBookSaveRequest(BookSaveRequestMultipart bookSaveRequestMultipart, String imageUrl) {
         return new BookSaveRequest(
             bookSaveRequestMultipart.getBookId(),
             bookSaveRequestMultipart.getBookName(),

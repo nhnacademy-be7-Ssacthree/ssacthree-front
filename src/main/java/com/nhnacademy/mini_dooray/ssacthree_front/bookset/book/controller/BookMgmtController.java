@@ -2,17 +2,13 @@ package com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.controller;
 
 
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.dto.AuthorGetResponse;
-import com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.dto.AuthorNameResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.service.AuthorService;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.request.BookSaveRequestMultipart;
-import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.request.BookUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.request.BookUpdateRequestMultipart;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookInfoResponse;
-import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookInfoResponseMultipart;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.exception.BookFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.service.BookMgmtService;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryInfoResponse;
-import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryNameResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.service.CategoryAdminService;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.publisher.dto.PublisherGetResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.publisher.service.PublisherMgmtService;
@@ -27,7 +23,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -76,7 +71,7 @@ public class BookMgmtController {
     }
 
     @GetMapping("/create")
-    public String createBook(Model model){
+    public String createBookForm(Model model){
 
         // 작가 목록 가져오기
         List<AuthorGetResponse> authors = authorService.getAllAuthorList();

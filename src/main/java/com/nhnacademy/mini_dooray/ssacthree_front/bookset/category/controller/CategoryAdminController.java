@@ -5,6 +5,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.request.C
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.service.CategoryAdminService;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.service.CategoryCommonService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/admin/categories")
 public class CategoryAdminController {
     private final CategoryCommonService categoryCommonService;
@@ -20,10 +22,6 @@ public class CategoryAdminController {
 
     private static final String REDIRECT_ADMIN_CATEGORIES = "redirect:/admin/categories";
 
-    public CategoryAdminController(CategoryCommonService categoryCommonService, CategoryAdminService categoryAdminService) {
-        this.categoryCommonService = categoryCommonService;
-        this.categoryAdminService = categoryAdminService;
-    }
 
     /**
      * 카테고리 관리 페이지 - 모든 카테고리 조회
