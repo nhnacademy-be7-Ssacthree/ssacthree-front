@@ -314,11 +314,7 @@
 
               <!-- 주문 번호 입력 및 주문 조회 -->
               <li>
-                <form id="orderForm" method="get" class="d-flex align-items-center">
-                  <input type="text" id="orderNumber" class="form-control me-2 small-input"
-                         placeholder="주문 번호 입력" required>
-                  <button type="button" class="btn btn-primary btn-sm small-button" onclick="submitOrder()">주문 조회</button>
-                </form>
+                <button type="button" class="btn btn-primary btn-sm small-button" onclick="navigateToOrderForm()">주문 조회</button>
               </li>
 
             </ul>
@@ -328,16 +324,8 @@
     </div>
 
     <script>
-      function submitOrder() {
-        const orderNumber = document.getElementById("orderNumber").value.trim();
-
-        if (!orderNumber) {
-          alert("주문 번호를 입력하세요.");
-          return;
-        }
-
-        // 문자열을 포함한 주문 번호 전송
-        window.location.href = `/orderDetail/${orderNumber}`;
+      function navigateToOrderForm() {
+        window.location.href = "/input"; // 서버 경로로 이동
       }
     </script>
 

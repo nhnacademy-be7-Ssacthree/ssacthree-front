@@ -3,21 +3,15 @@ package com.nhnacademy.mini_dooray.ssacthree_front.order.controller;
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.service.CartService;
 import com.nhnacademy.mini_dooray.ssacthree_front.elastic.dto.Paging;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoResponse;
-import com.nhnacademy.mini_dooray.ssacthree_front.member.service.AddressService;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.MemberService;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.*;
-import com.nhnacademy.mini_dooray.ssacthree_front.order.service.OrderService;
-import com.nhnacademy.mini_dooray.ssacthree_front.order.utils.OrderUtil;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
-import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +25,12 @@ public class OrderController {
     private final CartService cartService;
     private final MemberService memberService;
     private final OrderService orderService;
+
+    // 주문 조회 view로 이동
+    @GetMapping("/input")
+    public String orderNumberInput(){
+      return "order/orderInput";
+    }
 
     // TODO : 각각의 중복되는거 service로 빼기
     // 비회원, 회원 주문 페이지 이동 -> isMember로 구분해서 뷰 띄우기
@@ -117,7 +117,7 @@ public class OrderController {
   }
   
   // 주문 상세 조회 (한 주문의 전체 내용)
-  @GetMapping("/orderDetail/{orderId:[0-9]+}")
+  @GetMapping("/orderDetail-byId/{orderId}")
   public String getOrderDetail(@PathVariable("orderId") Long orderId, Model model){
       // 입력받은 주문번호를 orderId로 변환하여 service 요청
       // 1. 조회 시에 order 내역의 customerId 가 멤버인지 확인하고 customerView 또는 memberView 로 나눠서 return 되게(응답 dto 내용은 같음) <- service에서 플래그
@@ -125,16 +125,14 @@ public class OrderController {
       OrderDetailResponse orderDetail = orderService.getOrderDetail(orderId);
       model.addAttribute("orderDetail", orderDetail);
 
-      // order/customerOrderDetail;
-
       // 정상 처리 시 상세 페이지 반환
       return "order/orderDetail2";
   }
 
   // orderNumber로 주문 상세 조회 (비회원, 회원 둘 다 가능)
-  @GetMapping("/orderDetail/{orderNumber:[a-zA-Z0-9-]+}")
-  public String getOrderDetailByOrderNumber(@PathVariable("orderNumber") String orderNumber,String phoneNumber , Model model){
-      log.info("주문번호로 주문상세를 조회합니다");
+  @GetMapping("/orderDetail-byNum/{orderNumber}")
+  public String getOrderDetailByOrderNumber(@RequestParam String orderNumber, @RequestParam String phoneNumber, Model model){
+    log.info("주문번호: {}, 전화번호: {}", orderNumber, phoneNumber);
       
       // orderNumber + phone 조합
       OrderDetailResponse orderDetail = orderService.getOrderDetailByOrderNumber(orderNumber, phoneNumber);
