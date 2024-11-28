@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 
+import com.nhnacademy.mini_dooray.ssacthree_front.cart.service.CartService;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberLoginRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.MemberService;
@@ -29,6 +30,8 @@ class MemberLoginControllerTest {
     @Mock
     private MemberService memberService;
 
+    @Mock
+    private CartService cartService;
 
     @InjectMocks
     private MemberLoginController memberLoginController;
