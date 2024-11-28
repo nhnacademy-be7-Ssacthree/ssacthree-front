@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="~{common/config}">
+</head>
+<body>
+
+<header th:replace="~{common/header}"></header>
+
+<div class="card-body p-4" style="max-width: 600px; margin: 0 auto;">
+  <form action="/sleep-member" method="post" id="verificationForm">
+    <!-- Login ID (Readonly) -->
+    <div class="mb-3">
+      <label for="memberLoginId" class="form-label">아이디</label>
+      <input type="text" id="memberLoginId" name="memberLoginId" class="form-control"
+             th:value="${memberLoginId}" readonly>
+    </div>
+
+    <!-- 버튼: 인증번호 받기 -->
+    <div class="mb-3">
+      <button type="button" class="btn btn-primary" id="getCertNumber">인증번호 받기</button>
+    </div>
+
+    <!-- 인증번호 필드 (초기에 숨김 처리) -->
+    <div class="mb-3" id="certNumberField" style="display: none;">
+      <label for="certNumber" class="form-label">인증번호</label>
+      <input type="text" id="certNumber" name="certNumber" class="form-control" required>
+    </div>
+
+    <!-- 확인 버튼 -->
+    <div class="mb-3" id="verifyButtonField" style="display: none;">
+      <button type="submit" class="btn btn-primary">인증번호 확인</button>
+    </div>
+  </form>
+</div>
+
+<footer th:replace="~{common/footer}"></footer>
+
+
+<script>
+  document.getElementById("getCertNumber").addEventListener("click", function () {
+    const memberLoginId = document.getElementById("memberLoginId").value;
+
+    // 인증번호 요청
+    fetch('/send-cert-number', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({memberLoginId})
+    })
+    .then(response => {
+      if (response.ok) {
+        // 성공 시, 인증번호 입력 필드와 확인 버튼 표시
+        document.getElementById("certNumberField").style.display = "block";
+        document.getElementById("verifyButtonField").style.display = "block";
+        alert('인증번호가 발송되었습니다.');
+      } else {
+        alert('인증번호 발송에 실패했습니다.');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('서버와 통신 중 오류가 발생했습니다.');
+    });
+  });
+</script>
+
+</body>
+</html>
