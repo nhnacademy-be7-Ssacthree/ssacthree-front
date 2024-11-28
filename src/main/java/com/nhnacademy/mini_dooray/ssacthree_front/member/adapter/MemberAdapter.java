@@ -10,6 +10,8 @@ import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberRegisterReque
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.PaycoLoginRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.PointHistoryGetResponse;
 import java.util.List;
+
+import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberCouponGetResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -77,6 +79,12 @@ public interface MemberAdapter {
         @RequestParam("size") int size,
         @RequestParam("sort") String sort,
         @RequestParam("direction") String direction);
+
+    @GetMapping("/shop/members/coupons")
+    ResponseEntity<Page<MemberCouponGetResponse>> getMemberCoupons(@RequestParam("page") int page,
+       @RequestParam("size") int size,
+       @RequestParam("sort") String sort,
+       @RequestParam("direction") String direction);
 
 
     @PutMapping("/shop/member-sleep")
