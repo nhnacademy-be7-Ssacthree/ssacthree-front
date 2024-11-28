@@ -34,4 +34,6 @@ public interface OrderService {
     // 주문 상세 조회 (회원, 멤버)
     OrderDetailResponse getOrderDetail(Long orderId);
     OrderDetailResponse getOrderDetailByOrderNumber(String orderNumber, String phoneNumber);
+
+    void changeOrderStatue(String orderId);
 }

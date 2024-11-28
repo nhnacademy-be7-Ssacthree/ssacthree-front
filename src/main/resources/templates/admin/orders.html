@@ -47,7 +47,8 @@
                             <th scope="col" class="fw-bold">상태</th>
                             <th scope="col" class="fw-bold">고객 성함</th>
                             <th scope="col" class="fw-bold">주문번호</th>
-                            <th scope="col" class="fw-bold">상태변경</th>
+                            <th scope="col" class="fw-bold">배송시작</th>
+                            <th scope="col" class="fw-bold">배송완료</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -59,8 +60,13 @@
                             <td th:text="${order.customerName}"></td>
                             <td th:text="${order.orderNumber}"></td>
                             <td>
-                                <!-- 주문 상세 조회 링크 -->
-                                <a class="btn btn-detail">상태변경</a>
+                                <form th:action="@{/admin/orders/{orderId}/delivery-start(orderId=${order.orderId})}" method="POST">
+                                    <button class="btn btn-detail">배송 시작</button>
+                                </form>
+                            </td>
+                            <td>
+                                <!-- 배송중, 배솢완료를 파라미터로 받을지 고민, -->
+                                <a th:href="@{/admin/orders/{orderId}(orderId=${order.orderId})/delivery-complete}" class="btn btn-detail">배송완료</a>
                             </td>
                         </tr>
                         </tbody>
