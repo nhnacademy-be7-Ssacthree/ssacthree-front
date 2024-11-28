@@ -8,6 +8,25 @@ function setCurrentRow(button) {
 function selectPackaging(packagingId, packagingName, packagingPrice) {
     // 선택한 포장지 이름을 행에 표시
     if (currentRow) {
+        const bookId = currentRow.getAttribute('data-book-id');
+
+        const requestBody = {
+            bookId: bookId,
+            packagingId: packagingId
+        };
+
+        fetch('/orders/connect-packaging', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
+        })
+            .then(response => response.json())
+            .then(data => console.log('Success:', data))
+            .catch(error => console.error('Error:', error));
+
+
         const packagingSpan = currentRow.querySelector('.selected-packaging');
         packagingSpan.innerText = packagingName; // 선택된 포장지 이름 표시
         packagingSpan.dataset.packagingId = packagingId; // 선택한 포장지 ID 저장
