@@ -79,7 +79,7 @@ class MemberPointHistoryControllerTest {
             .andExpect(model().attributeExists("pointHistories"))
             .andExpect(model().attribute("pointHistories", mockPage))
             .andExpect(model().attributeExists("baseUrl"))
-            .andExpect(model().attribute("baseUrl", "/point-histories"))
+            .andExpect(model().attribute("baseUrl", "/members/point-histories"))
             .andExpect(model().attributeExists("allParams"))
             .andExpect(view().name("memberPointHistory")); // Check view name
     }
