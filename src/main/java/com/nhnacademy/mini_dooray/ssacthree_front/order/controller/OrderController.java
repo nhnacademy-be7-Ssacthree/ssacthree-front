@@ -30,11 +30,11 @@ public class OrderController {
 
     // 주문 조회 view로 이동
     @GetMapping("/input")
-    public String orderNumberInput(){
-      return "order/orderDetailInput";
+    public String orderNumberInput() {
+        return "order/orderDetailInput";
     }
 
-   /**
+    /**
      * 장바구니에서 주문하기
      *
      * @param request
@@ -182,41 +182,42 @@ public class OrderController {
         model.addAttribute("extraParams", "startDate=" + startDate + "&endDate=" + endDate);
         model.addAttribute("today", LocalDate.now());
 
-    return "order/orderList"; // 주문 내역 뷰
+        return "order/orderList"; // 주문 내역 뷰
 
-  }
-  
-     /**
+    }
+
+    /**
      * 주문 상세 조회 (한 주문의 전체 내용)
      *
      * @param orderId
      * @param model
      * @return
-     */  @GetMapping("/orderDetailbyId/{orderId}")
-  public String getOrderDetail(@PathVariable("orderId") Long orderId, Model model){
-      // 입력받은 주문번호를 orderId로 변환하여 service 요청
-      // 1. 조회 시에 order 내역의 customerId 가 멤버인지 확인하고 customerView 또는 memberView 로 나눠서 return 되게(응답 dto 내용은 같음) <- service에서 플래그
-      // 2. orderNumber, 이메일가 order 안의 내용과 동일 할 때 조회가 가능하게
-      OrderDetailResponse orderDetail = orderService.getOrderDetail(orderId);
-      model.addAttribute("orderDetail", orderDetail);
+     */
+    @GetMapping("/orderDetailbyId/{orderId}")
+    public String getOrderDetail(@PathVariable("orderId") Long orderId, Model model) {
+        // 입력받은 주문번호를 orderId로 변환하여 service 요청
+        // 1. 조회 시에 order 내역의 customerId 가 멤버인지 확인하고 customerView 또는 memberView 로 나눠서 return 되게(응답 dto 내용은 같음) <- service에서 플래그
+        // 2. orderNumber, 이메일가 order 안의 내용과 동일 할 때 조회가 가능하게
+        OrderDetailResponse orderDetail = orderService.getOrderDetail(orderId);
+        model.addAttribute("orderDetail", orderDetail);
 
-      // order/customerOrderDetail;
+        // order/customerOrderDetail;
 
-      // 정상 처리 시 상세 페이지 반환
-      return "order/orderDetail2";
-  }
+        // 정상 처리 시 상세 페이지 반환
+        return "order/orderDetail2";
+    }
 
-  // orderNumber로 주문 상세 조회 (비회원, 회원 둘 다 가능)
-  @GetMapping("/orderDetailbyNum")
-  public String getOrderDetailByOrderNumber(@RequestParam String orderNumber, @RequestParam String phoneNumber, Model model){
-    log.info("주문번호: {}, 전화번호: {}", orderNumber, phoneNumber);
+    // orderNumber로 주문 상세 조회 (비회원, 회원 둘 다 가능)
+    @GetMapping("/orderDetailbyNum")
+    public String getOrderDetailByOrderNumber(@RequestParam String orderNumber, @RequestParam String phoneNumber, Model model) {
+        log.info("주문번호: {}, 전화번호: {}", orderNumber, phoneNumber);
 
-      // orderNumber + phone 조합
-      OrderDetailResponse orderDetail = orderService.getOrderDetailByOrderNumber(orderNumber, phoneNumber);
-      model.addAttribute("orderDetail", orderDetail);
-      log.info("주문번호로 조회완료");
-      return "order/orderDetailAllUser";
-  }
+        // orderNumber + phone 조합
+        OrderDetailResponse orderDetail = orderService.getOrderDetailByOrderNumber(orderNumber, phoneNumber);
+        model.addAttribute("orderDetail", orderDetail);
+        log.info("주문번호로 조회완료");
+        return "order/orderDetailAllUser";
+    }
 
 
     /**
@@ -284,6 +285,7 @@ public class OrderController {
         String referer = request.getHeader("Referer");
         return "redirect:" + (referer != null ? referer : "/admin/orders");
     }
+}
 
     /**
      * 배송시작 후 2일 후 자동으로 배송완료되도록 스케줄러 구현
