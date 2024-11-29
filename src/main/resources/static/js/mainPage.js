@@ -1,3 +1,4 @@
+// 구현중. 아직 사용하지 않은 js
 window.toggleCategory = function (element) {
     const categoryId = element.getAttribute('data-category-id');
 
