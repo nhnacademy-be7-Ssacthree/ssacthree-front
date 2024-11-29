@@ -6,7 +6,7 @@ public interface PointSaveRuleCustomerService {
 
     PointSaveRuleInfoResponse getPointSaveRuleByRuleName(String pointSaveRuleName);
 
-    ;
+    
 
     PointSaveRuleInfoResponse getBookPointSaveRule();
 }
