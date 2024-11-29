@@ -47,6 +47,7 @@
                             <th scope="col" class="fw-bold">상태</th>
                             <th scope="col" class="fw-bold">고객 성함</th>
                             <th scope="col" class="fw-bold">주문번호</th>
+                            <th scope="col" class="fw-bold">운송장번호</th>
                             <th scope="col" class="fw-bold">배송시작</th>
                             <th scope="col" class="fw-bold">배송완료</th>
                         </tr>
@@ -56,17 +57,25 @@
                             <td th:text="${order.orderId}"></td>
                             <td th:text="${#temporals.format(order.orderDate, 'yyyy-MM-dd')}"></td>
                             <td class="total-price" th:attr="data-total-price=${order.totalPrice ?: 0}"></td>
-                            <td th:text="${order.orderStatus}"></td>
+                            <td th:switch="${order.orderStatus}">
+                                <span th:case="'PENDING'">대기</span>
+                                <span th:case="'IN_SHOPPING'">배송중</span>
+                                <span th:case="'COMPLETED'">배송완료</span>
+                                <span th:case="*"></span>
+                            </td>
                             <td th:text="${order.customerName}"></td>
                             <td th:text="${order.orderNumber}"></td>
+                            <td th:text="${order.invoiceNumber}"></td>
                             <td>
-                                <form th:action="@{/admin/orders/{orderId}/delivery-start(orderId=${order.orderId})}" method="POST">
+                                <form th:action="@{/admin/orders/{orderId}/delivery-status(orderId=${order.orderId}, status='start')}" method="POST">
                                     <button class="btn btn-detail">배송 시작</button>
                                 </form>
                             </td>
                             <td>
                                 <!-- 배송중, 배솢완료를 파라미터로 받을지 고민, -->
-                                <a th:href="@{/admin/orders/{orderId}(orderId=${order.orderId})/delivery-complete}" class="btn btn-detail">배송완료</a>
+                                <form th:action="@{/admin/orders/{orderId}/delivery-status(orderId=${order.orderId}, status='complete')}" method="POST">
+                                    <button class="btn btn-detail">배송 완료</button>
+                                </form>
                             </td>
                         </tr>
                         </tbody>
