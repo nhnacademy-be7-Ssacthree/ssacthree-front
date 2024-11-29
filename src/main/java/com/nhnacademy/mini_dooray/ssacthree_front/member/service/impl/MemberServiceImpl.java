@@ -10,6 +10,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberRegisterReque
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberSleepToActiveRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.LoginFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.LogoutIllegalAccessException;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.MemberInfoUpdateFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.MemberNotFoundException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.MemberRegisterFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.SleepMemberLoginFailedException;
@@ -25,9 +26,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
 
+/**
+ * @author 김희망
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -37,7 +39,16 @@ public class MemberServiceImpl implements MemberService {
     private final MemberAdapter memberAdapter;
     private final CertNumberService certNumberService;
     private static final String SET_COOKIE = "Set-Cookie";
+    private static final String ACCESS_TOKEN = "access-token";
+    private static final String HEADER_BEARER = "Bearer ";
+    private static final String MEMBER_NOT_FOUND = "회원 정보를 불러올 수 없습니다.";
 
+    /**
+     * 회원가입 기능을 수행하는 메소드
+     *
+     * @param request 회원가입 DTO 전달
+     * @return : 응답 상태가 200번대 인 경우 MessageResponse 리턴, 아닐경우 Exception 발생
+     */
     @Override
     public MessageResponse memberRegister(MemberRegisterRequest request) {
 
@@ -55,6 +66,13 @@ public class MemberServiceImpl implements MemberService {
 
     }
 
+    /**
+     * 회원 로그인 기능을 수행하는 메소드
+     *
+     * @param requestBody         로그인 DTO 전달
+     * @param httpServletResponse ServletResponse를 받아서 쿠키 전달
+     * @return : 응답 상태가 200번대 인 경우 MessageResponse 리턴, 아닐경우 Exception 발생
+     */
     @Override
     public MessageResponse memberLogin(MemberLoginRequest requestBody,
         HttpServletResponse httpServletResponse) {
@@ -74,22 +92,34 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
+    /**
+     * 회원 로그아웃을 기능을 수행하는 메소드
+     *
+     * @param httpServletResponse ServletResponse를 전달하여 쿠키 제거
+     * @return : 응답 상태가 200번대 인 경우 MessageResponse 리턴, 아닐경우 Exception 발생
+     */
     @Override
     public MessageResponse memberLogout(HttpServletResponse httpServletResponse) {
-        ResponseEntity<MessageResponse> response = memberAdapter.memberLogout();
 
         try {
-
+            ResponseEntity<MessageResponse> response = memberAdapter.memberLogout();
             if (isHaveCookie(httpServletResponse, response)) {
                 return response.getBody();
             }
 
             throw new LogoutIllegalAccessException("잘못된 접근입니다.");
-        } catch (HttpClientErrorException | HttpServerErrorException e) {
+        } catch (FeignException e) {
             throw new LogoutIllegalAccessException("잘못된 접근입니다.");
         }
     }
 
+    /**
+     * Response에 쿠키가 들어오는지 확인하는 메소드
+     *
+     * @param httpServletResponse ServletResponse를 전달하여 FeignClient가 가져온 쿠키 생성
+     * @param response            FeignClient의 응답 결과
+     * @return : 응답 상태가 200번대 인 경우 MessageResponse 리턴, 아닐경우 Exception 발생
+     */
     private boolean isHaveCookie(HttpServletResponse httpServletResponse,
         ResponseEntity<MessageResponse> response) {
         if (response.getStatusCode().is2xxSuccessful()) {
@@ -102,84 +132,88 @@ public class MemberServiceImpl implements MemberService {
         return false;
     }
 
-
+    /**
+     * 회원 정보를 얻어오는 메소드
+     *
+     * @param request servletRequest를 전달받아 쿠키 추출에 이용
+     * @return : 응답 상태가 200번대 인 경우 MessageResponse 리턴, 아닐경우 Exception 발생
+     */
     @Override
     public MemberInfoResponse getMemberInfo(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         String accessToken = null;
         for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("access-token")) {
+            if (cookie.getName().equals(ACCESS_TOKEN)) {
                 accessToken = cookie.getValue();
                 break;
             }
         }
         try {
             ResponseEntity<MemberInfoResponse> response = memberAdapter.memberInfo(
-                "Bearer " + accessToken);
+                HEADER_BEARER + accessToken);
             if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             }
         } catch (FeignException e) {
-            throw new MemberNotFoundException("회원 정보를 불러올 수 없습니다.");
+            throw new MemberNotFoundException(MEMBER_NOT_FOUND);
         }
 
-        throw new RuntimeException("회원 정보를 불러올 수 없습니다.");
+        throw new MemberNotFoundException(MEMBER_NOT_FOUND);
     }
 
+    /**
+     * 회원 정보 수정 기능을 수행하는 메소드
+     *
+     * @param requestBody 회원정보 update DTO
+     * @param request     request로 쿠키 체크
+     * @return : 응답 상태가 200번대 인 경우 MessageResponse 리턴, 아닐경우 Exception 발생
+     */
     @Override
     public MessageResponse memberInfoUpdate(MemberInfoUpdateRequest requestBody,
         HttpServletRequest request) {
-
+        
         String accessToken = null;
         for (Cookie cookie : request.getCookies()) {
-            if (cookie.getName().equals("access-token")) {
+            if (cookie.getName().equals(ACCESS_TOKEN)) {
                 accessToken = cookie.getValue();
             }
         }
         try {
             ResponseEntity<MessageResponse> response = memberAdapter.memberInfoUpdate(
-                "Bearer " + accessToken, requestBody);
+                HEADER_BEARER + accessToken, requestBody);
             if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             }
         } catch (FeignException e) {
-            throw new RuntimeException("회원 수정이 불가합니다.");
+            throw new MemberInfoUpdateFailedException("회원 수정이 불가합니다.");
         }
 
-        throw new RuntimeException("회원 정보를 불러올 수 없습니다.");
+        throw new MemberNotFoundException(MEMBER_NOT_FOUND);
     }
 
-
+    /**
+     * 회원 탈퇴를 처리하는 메소드
+     *
+     * @param request  ServletRequest를 전달 받아 쿠키 체크
+     * @param response SerlvetResponse를 전달 받아 쿠키 제거
+     * @return : 응답 상태가 200번대 인 경우 MessageResponse 리턴, 아닐경우 Exception 발생
+     */
     @Override
     public MessageResponse memberWithdraw(HttpServletRequest request,
         HttpServletResponse response) {
 
         String accessToken = null;
         for (Cookie cookie : request.getCookies()) {
-            if (cookie.getName().equals("access-token")) {
+            if (cookie.getName().equals(ACCESS_TOKEN)) {
                 accessToken = cookie.getValue();
             }
         }
         try {
             ResponseEntity<MessageResponse> feignResponse = memberAdapter.memberDelete(
-                "Bearer " + accessToken);
+                HEADER_BEARER + accessToken);
             if (feignResponse.getStatusCode().is2xxSuccessful()) {
 
                 this.memberLogout(response);
-
-                // 쿠키 터뜨려서 로그아웃
-//                Cookie accessCookie = new Cookie("access-token", null);
-//                Cookie refreshCookie = new Cookie("refresh-token", null);
-//
-//                accessCookie.setPath("/");
-//                refreshCookie.setPath("/");
-//
-//                accessCookie.setMaxAge(0);
-//                refreshCookie.setMaxAge(0);
-//
-//                response.addCookie(accessCookie);
-//                response.addCookie(refreshCookie);
-//
                 return feignResponse.getBody();
             }
         } catch (FeignException e) {
@@ -188,6 +222,12 @@ public class MemberServiceImpl implements MemberService {
         throw new MemberNotFoundException("회원을 찾을 수 없습니다.");
     }
 
+    /**
+     * 휴면 회원인 멤버의 상태를 다시 Active로 변경하는 메소드
+     *
+     * @param memberSleepToActiveRequest 휴면 해제 DTO
+     * @return MessageResponse
+     */
     @Override
     public MessageResponse memberSleepToActive(
         MemberSleepToActiveRequest memberSleepToActiveRequest) {
@@ -195,7 +235,6 @@ public class MemberServiceImpl implements MemberService {
         String certNumber = certNumberService.getCertNumber(
             memberSleepToActiveRequest.getMemberLoginId());
 
-        // redis에 memberloginid의 certnumber가 없으면 잘못된 요청임을 보여줌.
         if (certNumber == null) {
             throw new SleepMemberReleaseFailedException("잘못된 요청입니다.");
 
