@@ -191,9 +191,11 @@
             </div>
 
             <!-- 썸네일 이미지 업로드 -->
+            <!-- Hidden Input for Thumbnail URL -->
+            <input type="hidden" id="bookThumbnailImageUrl" name="bookThumbnailImageUrl" th:value="${bookUpdateRequestMultipart.bookThumbnailImageUrl}" />
             <div class="mb-3">
               <label for="file" class="form-label">썸네일 이미지 업로드</label>
-              <input type="file" class="form-control"z
+              <input type="file" class="form-control"
                      th:field="*{bookThumbnailImageUrlMultipartFile}"
                      id="file" name="bookThumbnailImageUrlMultipartFile">
 
@@ -218,7 +220,7 @@
 
             <!-- 카테고리 선택 -->
             <div>
-              <input type="hidden" id="categories" name="categories" th:field="*{categoryIdList}" />
+              <input type="hidden" id="categories" name="categoryIdList" th:field="*{categoryIdList}"/>
               <div class="mb-3">
                 <div class="form-label-with-button">
                   <label for="categories" class="form-label">카테고리</label>
@@ -230,11 +232,11 @@
                     <option th:each="category : ${categories}" th:value="${category.categoryId}" th:text="${category.categoryName}"></option>
                   </select>
                 </div>
-                <div id="selected-categories-container" class="mt-2">
-                  <!-- 선택된 카테고리가 표시됩니다 -->
-                  <span th:each="category : ${existingCategories}" data-id="${category.categoryId}" class="tag-badge">
+                <div id="selected-categories-container">
+                  <span th:each="category : ${existingCategories}"
+                        th:attr="data-id=${category.categoryId}" class="tag-badge">
                     <span th:text="${category.categoryName}"></span>
-                    <button type="button" class="remove-tag-btn" data-id="${category.categoryId}">x</button>
+                    <button type="button" class="remove-tag-btn" th:attr="data-id=${category.categoryId}">x</button>
                   </span>
                 </div>
               </div>
@@ -245,7 +247,7 @@
 
             <!-- 태그 선택 -->
             <div>
-              <input type="hidden" id="tags" name="tags" th:field="*{tagIdList}" />
+              <input type="hidden" id="tags" name="tagIdList" th:field="*{tagIdList}" />
               <div class="mb-3">
                 <div class="form-label-with-button">
                   <label for="tags" class="form-label">태그</label>
@@ -257,12 +259,12 @@
                     <option th:each="tag : ${tags}" th:value="${tag.tagId}" th:text="${tag.tagName}"></option>
                   </select>
                 </div>
-                <div id="selected-tags-container" class="mt-2">
-                  <!-- 선택된 태그가 표시됩니다 -->
-                  <span th:each="tag : ${existingTags}" data-id="${tag.tagId}" class="tag-badge">
-                    <span th:text="${tag.tagName}"></span>
-                    <button type="button" class="remove-tag-btn" data-id="${tag.tagId}">x</button>
-                  </span>
+                <div id="selected-tags-container">
+                <span th:each="tag : ${existingTags}"
+                      th:attr="data-id=${tag.tagId}" class="tag-badge">
+                  <span th:text="${tag.tagName}"></span>
+                  <button type="button" class="remove-tag-btn" th:attr="data-id=${tag.tagId}">x</button>
+                </span>
                 </div>
               </div>
             </div>
@@ -286,7 +288,7 @@
 
             <!-- 작가 선택 -->
             <div>
-              <input type="hidden" id="authors" name="authors" th:field="*{authorIdList}" />
+              <input type="hidden" id="authors" name="authorIdList" th:field="*{authorIdList}" />
               <div class="mb-3">
                 <div class="form-label-with-button">
                   <label for="authors" class="form-label">작가</label>
@@ -298,11 +300,11 @@
                     <option th:each="author : ${authors}" th:value="${author.authorId}" th:text="${author.authorName}"></option>
                   </select>
                 </div>
-                <div id="selected-authors-container" class="mt-2">
-                  <!-- 선택된 작가가 표시됩니다 -->
-                  <span th:each="author : ${existingAuthors}" data-id="${author.authorId}" class="tag-badge">
+                <div id="selected-authors-container">
+                  <span th:each="author : ${existingAuthors}"
+                        th:attr="data-id=${author.authorId}" class="tag-badge">
                     <span th:text="${author.authorName}"></span>
-                  <button type="button" class="remove-tag-btn" data-id="${author.authorId}">x</button>
+                    <button type="button" class="remove-tag-btn" th:attr="data-id=${author.authorId}">x</button>
                   </span>
                 </div>
               </div>

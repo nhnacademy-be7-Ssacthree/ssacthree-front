@@ -7,6 +7,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryNameResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.service.CategoryAdminService;
 import jdk.jfr.Category;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +15,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class CategoryAdminServiceImpl implements CategoryAdminService {
 
     private final CategoryAdapter categoryAdapter;
-
-    public CategoryAdminServiceImpl(CategoryAdapter categoryAdapter) {
-        this.categoryAdapter = categoryAdapter;
-    }
 
     @Override
     public ResponseEntity<CategoryInfoResponse> createCategory(CategorySaveRequest request) {
