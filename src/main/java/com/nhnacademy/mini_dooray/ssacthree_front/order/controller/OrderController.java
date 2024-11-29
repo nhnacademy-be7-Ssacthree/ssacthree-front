@@ -220,4 +220,18 @@ public class OrderController {
 
 
     // TODO 5. 주문 상태 변경 -> 관리자
+    // TODO : 관리자가 주문내역 대기 -> 배송중으로 변경
+    // 이때 id는 orderId
+    @PostMapping("/admin/orders/{order-id}/delivery-start")
+    public String startDelivery(@PathVariable("order-id") String orderId) {
+        orderService.changeOrderStatue(orderId);
+        return "redirect:/admin/orders";
+    }
+
+    // TODO : 관리자가 주문내역 배송중 -> 배송완료로 변경
+    @PostMapping("/admin/orders/{order-id}/delivery-complete")
+    public String completeDelivery(@PathVariable("order-id") String orderId) {
+
+        return "redirect:/admin/orders";
+    }
 }
