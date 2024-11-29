@@ -36,4 +36,6 @@ public interface OrderService {
     OrderDetailResponse getOrderDetailByOrderNumber(String orderNumber, String phoneNumber);
 
     void changeOrderStatue(Long orderId,String status);
+
+    void cancelPayment(String orderId, String paymentKey);
 }

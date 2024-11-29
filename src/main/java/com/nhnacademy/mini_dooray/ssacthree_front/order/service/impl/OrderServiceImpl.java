@@ -173,6 +173,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public void cancelPayment(String orderId, String paymentKey) {
+        PaymentCancelRequest request = new PaymentCancelRequest(orderId, paymentKey);
+        orderAdapter.cancelPayment(request);
+    }
+
+    @Override
     public OrderDetailResponse getOrderDetailByOrderNumber(String orderNumber,String phoneNumber) {
         log.info("주문번호로 주문 상세 정보를 요청합니다.");
         ResponseEntity<OrderDetailResponse> orderAllAttrResponseEntity = orderAdapter.getOrderDetailByOrderNumber(orderNumber, phoneNumber);

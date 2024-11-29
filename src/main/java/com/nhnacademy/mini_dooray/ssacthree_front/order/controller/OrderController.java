@@ -285,11 +285,24 @@ public class OrderController {
         String referer = request.getHeader("Referer");
         return "redirect:" + (referer != null ? referer : "/admin/orders");
     }
-}
-
     /**
      * 배송시작 후 2일 후 자동으로 배송완료되도록 스케줄러 구현
      *
      */
+
+    // 결제 취소 - 주문 취소
+    @PostMapping("/payment/{order-id}/cancel")
+    public String cancelPayment(@PathVariable("order-id") String orderId,
+                                @RequestParam("paymentKey") String paymentKey,
+                                HttpServletRequest request) {
+        orderService.cancelPayment(orderId, paymentKey);
+        String referer = request.getHeader("Referer");
+        return "redirect:" + (referer != null ? referer : "/order/orderDetail2");
+    }
+
+
+
+}
+
 
 

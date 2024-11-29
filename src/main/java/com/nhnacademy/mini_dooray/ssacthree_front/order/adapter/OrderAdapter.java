@@ -57,4 +57,6 @@ public interface OrderAdapter {
     @PostMapping("/shop/admin/orders/change")
     ResponseEntity<MessageResponse> changeOrderStatus(@RequestBody ChangeOrderStatusRequest request);
 
+    @PostMapping("/shop/payment/cancel")
+    ResponseEntity<MessageResponse> cancelPayment(@RequestBody  PaymentCancelRequest request);
 }

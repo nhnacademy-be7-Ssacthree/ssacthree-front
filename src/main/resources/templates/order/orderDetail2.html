@@ -103,6 +103,11 @@
           <p><strong>결제 상태:</strong> <span th:text="${orderDetail.paymentStatus}"></span></p>
           <p><strong>결제 타입:</strong> <span th:text="${orderDetail.paymentTypeName}"></span></p>
         </div>
+        <div class="card-footer text-end">
+          <form th:action="@{/payment/{order-id}/cancel(paymentKey=${orderDetail.paymentKey}, order-id=${orderDetail.orderNumber})}" method="POST">
+            <button class="btn btn-detail">결제 취소</button>
+          </form>
+        </div>
       </div>
 
       <a href="/orders" class="btn btn-secondary mt-3">목록으로 돌아가기</a>
