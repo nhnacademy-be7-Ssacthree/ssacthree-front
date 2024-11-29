@@ -16,6 +16,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.dto.AuthorUpdat
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.service.AuthorService;
 import java.util.List;
 import java.util.Map;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +87,10 @@ class AuthorControllerTest {
             .andExpect(status().isOk())
             .andExpect(view().name("admin/author/authors"))
             .andExpect(model().attributeExists("baseUrl", "allParams", "extraParams", "authors"))
-            .andExpect(model().attribute("authors", mockPage))
+            .andExpect(model().attribute("authors", Matchers.hasProperty("content", Matchers.hasSize(1))))
+            .andExpect(model().attribute("authors", Matchers.hasProperty("content", Matchers.hasItem(
+                Matchers.hasProperty("authorName", Matchers.equalTo("Default Author"))
+            ))))
             .andExpect(model().attribute("baseUrl", "/admin/authors"));
 
         Mockito.verify(authorService, Mockito.times(1)).getAllAuthors(0, 10, new String[]{"authorName:asc"});
