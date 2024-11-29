@@ -2,6 +2,8 @@ package com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.controller;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.delivery_rule.dto.DeliveryRuleGetResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.delivery_rule.service.DeliveryRuleService;
+import com.nhnacademy.mini_dooray.ssacthree_front.admin.point_save_rule.dto.PointSaveRuleInfoResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.admin.point_save_rule.service.PointSaveRuleCustomerService;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookListResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.service.BookCommonService;
@@ -36,6 +38,7 @@ public class BookCustomerController {
     private final CategoryCommonService categoryCommonService;
     private final ReviewService reviewService;
     private final DeliveryRuleService deliveryRuleService;
+    private final PointSaveRuleCustomerService pointSaveRuleCustomerService;
 
     @GetMapping("/books")
     public String getBooksByFilters(
@@ -150,10 +153,10 @@ public class BookCustomerController {
 
     @GetMapping("/books/{book-id}")
     public String showBook(@PathVariable("book-id") Long bookId,
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size,
-        Model model,
-        HttpServletRequest request) {
+                           @RequestParam(defaultValue = "0") int page,
+                           @RequestParam(defaultValue = "10") int size,
+                           Model model,
+                           HttpServletRequest request) {
         String[] sort = {"reviewCreatedAt:desc"};
         model.addAttribute("book", bookCommonService.getBookById(bookId));
 
@@ -171,11 +174,14 @@ public class BookCustomerController {
             model.addAttribute("likeBooks", likeBooks);
         }
 
+
+        PointSaveRuleInfoResponse bookPointSaveRule = pointSaveRuleCustomerService.getBookPointSaveRule();
+        model.addAttribute("bookPointSaveRule", bookPointSaveRule);
+
         Page<BookReviewResponse> reviews = reviewService.getReviewsByBookId(page, size, sort, bookId);
         model.addAttribute("reviews", reviews.getContent());
         model.addAttribute("paging", reviews); // Page 객체를 템플릿에 전달
         model.addAttribute("baseUrl", "/books/" + bookId); // 기본 URL
-        model.addAttribute("categoryPaths", categoryPaths);
         model.addAttribute("categoryPaths", categoryPaths);
         return "bookDetails";
     }
