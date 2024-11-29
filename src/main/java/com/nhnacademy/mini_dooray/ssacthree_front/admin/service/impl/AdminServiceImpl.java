@@ -5,6 +5,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.admin.dto.AdminLoginRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.service.AdminService;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.util.CookieUtil;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.LoginFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.LogoutIllegalAccessException;
 import feign.FeignException;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,7 +22,7 @@ public class AdminServiceImpl implements AdminService {
 
     private final AdminAdapter adminAdapter;
     private static final String SET_COOKIE = "Set-Cookie";
-    
+
     @Override
     public MessageResponse login(HttpServletResponse httpServletResponse,
         AdminLoginRequest adminLoginRequest) {
@@ -32,9 +33,9 @@ public class AdminServiceImpl implements AdminService {
                 CookieUtil.addCookieFromFeignClient(httpServletResponse, response);
                 return response.getBody();
             }
-            throw new RuntimeException("어드민 로그인 불가능");
+            throw new LoginFailedException("어드민 로그인 불가능");
         } catch (FeignException e) {
-            throw new RuntimeException("어드민 로그인 불가능");
+            throw new LoginFailedException("어드민 로그인 불가능");
         }
     }
 

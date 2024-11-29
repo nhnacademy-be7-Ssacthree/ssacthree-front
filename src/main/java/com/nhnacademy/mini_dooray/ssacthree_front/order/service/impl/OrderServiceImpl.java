@@ -166,14 +166,29 @@ public class OrderServiceImpl implements OrderService {
 
     // 주문내역의 배송 상태를 변경합니다.
     @Override
-    public void changeOrderStatue(String orderId) {
+    public void changeOrderStatue(Long orderId, String status) {
         // 대기 -> 배송중, 이때 바꿔야하는 상태를 넣어줘서 작업할 수도 있을듯.
-        orderAdapter.changeOrderStatus(orderId);
+        ChangeOrderStatusRequest request = new ChangeOrderStatusRequest(orderId, status);
+        orderAdapter.changeOrderStatus(request);
+    }
+
+    @Override
+    public OrderDetailResponse getOrderDetailByOrderNumber(String orderNumber,String phoneNumber) {
+        log.info("주문번호로 주문 상세 정보를 요청합니다.");
+        ResponseEntity<OrderDetailResponse> orderAllAttrResponseEntity = orderAdapter.getOrderDetailByOrderNumber(orderNumber, phoneNumber);
+        if(orderAllAttrResponseEntity.getStatusCode().is2xxSuccessful()){
+            OrderDetailResponse orderAllAttrResponse = orderAllAttrResponseEntity.getBody();
+            log.info("주문 상세 정보를 받아옴");
+            return orderAllAttrResponse;
+        }
+
+        throw new FailedGetOrderDetail("조회 실패");
     }
 
 
     // 책 정보 만들기
     private BookOrderRequest buildBookOrderRequest(BookInfoResponse book, int quantity) {
+        // 포인트 가져오는거 생기면 그걸로 교체해서 가져오기, 아니면 책 자체에 포인트?
         int point = (int) (book.getRegularPrice() * 5 * 0.01);
         return new BookOrderRequest(
                 book.getBookId(),
