@@ -16,7 +16,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
 import java.util.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -69,7 +71,7 @@ class CartServiceTest {
 
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals("Book Title", result.get(0).getTitle());
+        assertEquals("Book Title", result.getFirst().getTitle());
     }
 
     @Test
@@ -321,5 +323,52 @@ class CartServiceTest {
         verify(cartAdapter, times(1)).saveCartInDBUseHeader(eq("Bearer mockAccessToken"), anyList());
         verify(redisTemplate.opsForValue(), times(1)).get(CART_ID);
     }
+
+    @Test
+    void testGetRandomBook_Success() {
+        Long bookId = 1L;
+        String accessToken = "dummy-access-token";
+        CartItem expectedCartItem = new CartItem(bookId, "Random Book", 1, 15000, "random_image_url");
+
+        // Mock: request에서 access-token 쿠키 반환
+        when(request.getCookies()).thenReturn(new Cookie[]{new Cookie("access-token", accessToken)});
+        // Mock: cartAdapter.getRandomBook 호출 성공
+        when(cartAdapter.getRandomBook(eq("Bearer " + accessToken), eq(bookId)))
+            .thenReturn(new ResponseEntity<>(expectedCartItem, HttpStatus.OK));
+
+        CartItem actualCartItem = cartService.getRandomBook(bookId, request);
+
+        assertNotNull(actualCartItem);
+        assertEquals(expectedCartItem.getId(), actualCartItem.getId());
+        assertEquals(expectedCartItem.getTitle(), actualCartItem.getTitle());
+        assertEquals(expectedCartItem.getQuantity(), actualCartItem.getQuantity());
+        assertEquals(expectedCartItem.getPrice(), actualCartItem.getPrice());
+        assertEquals(expectedCartItem.getBookThumbnailImageUrl(), actualCartItem.getBookThumbnailImageUrl());
+
+        verify(cartAdapter, times(1)).getRandomBook(eq("Bearer " + accessToken), eq(bookId));
+    }
+
+    @Test
+    void testGetRandomBook_Fail() {
+        // Given
+        Long bookId = 1L;
+        String accessToken = "dummy-access-token";
+
+        // Mock: request에서 access-token 쿠키 반환
+        when(request.getCookies()).thenReturn(new Cookie[]{new Cookie("access-token", accessToken)});
+        // Mock: cartAdapter.getRandomBook 호출 시 HttpClientErrorException 발생
+        when(cartAdapter.getRandomBook(eq("Bearer " + accessToken), eq(bookId)))
+            .thenThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST));
+
+        // When & Then
+        RuntimeException exception = assertThrows(RuntimeException.class, () ->
+            cartService.getRandomBook(bookId, request)
+        );
+        assertEquals("요청 오류", exception.getMessage());
+
+        // Verify
+        verify(cartAdapter, times(1)).getRandomBook(eq("Bearer " + accessToken), eq(bookId));
+    }
+
 
 }

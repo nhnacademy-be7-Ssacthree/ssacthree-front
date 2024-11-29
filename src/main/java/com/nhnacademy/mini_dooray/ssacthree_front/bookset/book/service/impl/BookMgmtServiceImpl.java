@@ -1,5 +1,6 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.service.impl;
 
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.dto.AuthorNameResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.adapter.BookMgmtAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.request.BookSaveRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.request.BookSaveRequestMultipart;
@@ -9,12 +10,10 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.Book
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookSearchResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.exception.BookFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.service.BookMgmtService;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryNameResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.dto.TagInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.image.adapter.ImageUploadAdapter;
-import io.micrometer.observation.annotation.Observed;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -70,11 +69,19 @@ public class BookMgmtServiceImpl implements BookMgmtService {
 
     @Override
     public MessageResponse updateBook(BookUpdateRequestMultipart bookUpdateRequestMultipart, MultipartFile bookThumbnailUrlMultipartFile){
-        String imageUrl = getImageUrl(bookThumbnailUrlMultipartFile);
+        String imageUrl;
+        if (bookThumbnailUrlMultipartFile == null || bookThumbnailUrlMultipartFile.isEmpty()) {
+            // 클라이언트에서 새 파일을 업로드하지 않은 경우
+            imageUrl = bookUpdateRequestMultipart.getBookThumbnailImageUrl();
+        } else {
+            // 클라이언트에서 새 파일을 업로드한 경우
+            imageUrl = getImageUrl(bookThumbnailUrlMultipartFile);
+        }
+
+        // 2. 변환된 BookUpdateRequest 확인
         BookUpdateRequest bookUpdateRequest = convertToBookUpdateRequest(bookUpdateRequestMultipart, imageUrl);
 
         ResponseEntity<MessageResponse> response = bookMgmtAdapter.updateBook(bookUpdateRequest);
-
 
         try{
             if(response.getStatusCode().is2xxSuccessful()){
@@ -115,12 +122,46 @@ public class BookMgmtServiceImpl implements BookMgmtService {
     }
 
     @Override
+    public BookUpdateRequestMultipart setBookUpdateRequestMultipart(BookInfoResponse bookInfoResponse){
+        BookUpdateRequestMultipart bookUpdateRequestMultipart = new BookUpdateRequestMultipart();
+        bookUpdateRequestMultipart.setBookId(bookInfoResponse.getBookId());
+        bookUpdateRequestMultipart.setBookName(bookInfoResponse.getBookName());
+        bookUpdateRequestMultipart.setBookIndex(bookInfoResponse.getBookIndex());
+        bookUpdateRequestMultipart.setBookInfo(bookInfoResponse.getBookInfo());
+        bookUpdateRequestMultipart.setBookIsbn(bookInfoResponse.getBookIsbn());
+        bookUpdateRequestMultipart.setPublicationDate(bookInfoResponse.getPublicationDate().toLocalDate());
+        bookUpdateRequestMultipart.setRegularPrice(bookInfoResponse.getRegularPrice());
+        bookUpdateRequestMultipart.setSalePrice(bookInfoResponse.getSalePrice());
+        bookUpdateRequestMultipart.setIsPacked(bookInfoResponse.isPacked());
+        bookUpdateRequestMultipart.setStock(bookInfoResponse.getStock());
+        bookUpdateRequestMultipart.setBookThumbnailImageUrl(bookInfoResponse.getBookThumbnailImageUrl());
+        bookUpdateRequestMultipart.setBookDiscount(bookInfoResponse.getBookDiscount());
+        bookUpdateRequestMultipart.setBookStatus(bookInfoResponse.getBookStatus());
+
+        bookUpdateRequestMultipart.setPublisherId(
+            bookInfoResponse.getPublisher() != null ? bookInfoResponse.getPublisher().getPublisherId() : null
+        );
+
+        bookUpdateRequestMultipart.setCategoryIdList(bookInfoResponse.getCategories().stream()
+            .map(CategoryNameResponse::getCategoryId)
+            .collect(Collectors.toList()));
+        bookUpdateRequestMultipart.setTagIdList(bookInfoResponse.getTags().stream()
+            .map(TagInfoResponse::getTagId)
+            .collect(Collectors.toList()));
+        bookUpdateRequestMultipart.setAuthorIdList(bookInfoResponse.getAuthors().stream()
+            .map(AuthorNameResponse::getAuthorId)
+            .collect(Collectors.toList()));
+
+        return bookUpdateRequestMultipart;
+    }
+
+    @Override
     public String getImageUrl(MultipartFile bookThumbnailUrl){
         return imageUploadAdapter.uploadImage(bookThumbnailUrl, IMAGE_PATH);
     }
 
 
-    private BookSaveRequest convertToBookSaveRequest(BookSaveRequestMultipart bookSaveRequestMultipart, String imageUrl) {
+    public BookSaveRequest convertToBookSaveRequest(BookSaveRequestMultipart bookSaveRequestMultipart, String imageUrl) {
         return new BookSaveRequest(
             bookSaveRequestMultipart.getBookId(),
             bookSaveRequestMultipart.getBookName(),
@@ -168,15 +209,5 @@ public class BookMgmtServiceImpl implements BookMgmtService {
         bookUpdateRequest.setAuthorIdList(bookUpdateRequestMultipart.getAuthorIdList());
 
         return bookUpdateRequest;
-    }
-
-    @Override
-    public List<Long> cleanList(List<Long> list){
-        if (list == null) {
-            return new ArrayList<>();
-        }
-        return list.stream()
-            .filter(Objects::nonNull)
-            .collect(Collectors.toList());
     }
 }

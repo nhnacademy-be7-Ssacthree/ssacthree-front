@@ -51,4 +51,11 @@ public interface OrderAdapter {
     // 주문내역의 배송 상태 변경
     @PostMapping("/shop/admin/orders/change")
     ResponseEntity<MessageResponse> changeOrderStatus(@RequestBody ChangeOrderStatusRequest request);
+
+    // 회원, 비회원이 접근 가능한 주문 상세 조회
+    @GetMapping("/shop/orderDetail/orderNumber")
+    ResponseEntity<OrderDetailResponse> getOrderDetailByOrderNumber(@RequestParam String orderNumber, @RequestParam String phoneNumber);
+
+    // 회원 주문 내역 - 상세 조회
+
 }

@@ -146,7 +146,7 @@
               action="/search/books" onsubmit="return validateSearchForm();">
           <!-- 검색 입력 필드 -->
           <input type="search" id="search-form" class="search-input form-control border-0"
-                 placeholder="Type and press enter" name="keyword"
+                 placeholder="검색어를 입력해주세요." name="keyword"
                  th:value="${keyword}" style="flex: 1; min-width: 0;" required/>
 
           <!-- 정렬값 전달 -->
@@ -312,14 +312,9 @@
               </li>
 
               <!-- 주문 번호 입력 및 주문 조회 -->
-<!--              <li>-->
-<!--                <form id="orderForm" method="get" class="d-flex">-->
-<!--                  <input type="number" id="orderId" class="form-control me-2"-->
-<!--                         placeholder="주문 번호 입력 (숫자만)"-->
-<!--                         min="1" step="1" required>-->
-<!--                  <button type="button" class="btn btn-primary" onclick="submitOrder()">주문 조회</button>-->
-<!--                </form>-->
-<!--              </li>-->
+              <li>
+                <button type="button" class="btn btn-primary btn-sm small-button" onclick="navigateToOrderForm()">주문 조회</button>
+              </li>
 
             </ul>
           </div>
@@ -327,17 +322,12 @@
       </div>
     </div>
 
-<!--    <script>-->
-<!--      function submitOrder() {-->
-<!--        const orderId = document.getElementById("orderId").value;-->
-<!--        if (orderId) {-->
-<!--          // 경로 변수로 이동-->
-<!--          window.location.href = `/orderDetail/${orderId}`;-->
-<!--        } else {-->
-<!--          alert("주문 번호를 입력하세요.");-->
-<!--        }-->
-<!--      }-->
-<!--    </script>-->
+    <script>
+      function navigateToOrderForm() {
+        window.location.href = "/input"; // 서버 경로로 이동
+      }
+    </script>
+
 
 
   </nav>

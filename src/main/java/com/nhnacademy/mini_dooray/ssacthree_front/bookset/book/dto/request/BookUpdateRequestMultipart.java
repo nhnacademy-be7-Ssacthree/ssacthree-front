@@ -1,6 +1,7 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.request;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
+
 @NoArgsConstructor
 public class BookUpdateRequestMultipart {
     private Long bookId;
@@ -34,11 +36,11 @@ public class BookUpdateRequestMultipart {
     private Long publisherId;
 
 
-    private List<Long> categoryIdList;
+    private List<Long> categoryIdList = new ArrayList<>();
 
-    private List<Long> authorIdList;
+    private List<Long> authorIdList = new ArrayList<>();
 
-    private List<Long> tagIdList;
+    private List<Long> tagIdList = new ArrayList<>();
 
     public boolean getIsPacked() {
         return isPacked;

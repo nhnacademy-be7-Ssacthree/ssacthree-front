@@ -172,6 +172,19 @@ public class OrderServiceImpl implements OrderService {
         orderAdapter.changeOrderStatus(request);
     }
 
+    @Override
+    public OrderDetailResponse getOrderDetailByOrderNumber(String orderNumber,String phoneNumber) {
+        log.info("주문번호로 주문 상세 정보를 요청합니다.");
+        ResponseEntity<OrderDetailResponse> orderAllAttrResponseEntity = orderAdapter.getOrderDetailByOrderNumber(orderNumber, phoneNumber);
+        if(orderAllAttrResponseEntity.getStatusCode().is2xxSuccessful()){
+            OrderDetailResponse orderAllAttrResponse = orderAllAttrResponseEntity.getBody();
+            log.info("주문 상세 정보를 받아옴");
+            return orderAllAttrResponse;
+        }
+
+        throw new FailedGetOrderDetail("조회 실패");
+    }
+
 
     // 책 정보 만들기
     private BookOrderRequest buildBookOrderRequest(BookInfoResponse book, int quantity) {

@@ -2,17 +2,13 @@ package com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.controller;
 
 
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.dto.AuthorGetResponse;
-import com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.dto.AuthorNameResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.service.AuthorService;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.request.BookSaveRequestMultipart;
-import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.request.BookUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.request.BookUpdateRequestMultipart;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookInfoResponse;
-import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookInfoResponseMultipart;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.exception.BookFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.service.BookMgmtService;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryInfoResponse;
-import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryNameResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.service.CategoryAdminService;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.publisher.dto.PublisherGetResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.publisher.service.PublisherMgmtService;
@@ -75,7 +71,7 @@ public class BookMgmtController {
     }
 
     @GetMapping("/create")
-    public String createBook(Model model){
+    public String createBookForm(Model model){
 
         // 작가 목록 가져오기
         List<AuthorGetResponse> authors = authorService.getAllAuthorList();
@@ -105,35 +101,7 @@ public class BookMgmtController {
         BookInfoResponse bookInfoResponse = bookMgmtService.getBookById(bookId);
 
         // BookSaveRequest 초기화
-        BookUpdateRequestMultipart bookUpdateRequestMultipart = new BookUpdateRequestMultipart();
-        bookUpdateRequestMultipart.setBookId(bookInfoResponse.getBookId());
-        bookUpdateRequestMultipart.setBookName(bookInfoResponse.getBookName());
-        bookUpdateRequestMultipart.setBookIndex(bookInfoResponse.getBookIndex());
-        bookUpdateRequestMultipart.setBookInfo(bookInfoResponse.getBookInfo());
-        bookUpdateRequestMultipart.setBookIsbn(bookInfoResponse.getBookIsbn());
-        bookUpdateRequestMultipart.setPublicationDate(bookInfoResponse.getPublicationDate().toLocalDate());
-        bookUpdateRequestMultipart.setRegularPrice(bookInfoResponse.getRegularPrice());
-        bookUpdateRequestMultipart.setSalePrice(bookInfoResponse.getSalePrice());
-        bookUpdateRequestMultipart.setIsPacked(bookInfoResponse.isPacked());
-        bookUpdateRequestMultipart.setStock(bookInfoResponse.getStock());
-        bookUpdateRequestMultipart.setBookThumbnailImageUrl(bookInfoResponse.getBookThumbnailImageUrl());
-        log.info("썸네일 이미지 url 확인용: {}" , bookInfoResponse.getBookThumbnailImageUrl());
-        bookUpdateRequestMultipart.setBookDiscount(bookInfoResponse.getBookDiscount());
-        bookUpdateRequestMultipart.setBookStatus(bookInfoResponse.getBookStatus());
-
-        bookUpdateRequestMultipart.setPublisherId(
-            bookInfoResponse.getPublisher() != null ? bookInfoResponse.getPublisher().getPublisherId() : null
-        );
-
-        bookUpdateRequestMultipart.setCategoryIdList(bookInfoResponse.getCategories().stream()
-            .map(CategoryNameResponse::getCategoryId)
-            .collect(Collectors.toList()));
-        bookUpdateRequestMultipart.setTagIdList(bookInfoResponse.getTags().stream()
-            .map(TagInfoResponse::getTagId)
-            .collect(Collectors.toList()));
-        bookUpdateRequestMultipart.setAuthorIdList(bookInfoResponse.getAuthors().stream()
-            .map(AuthorNameResponse::getAuthorId)
-            .collect(Collectors.toList()));
+        BookUpdateRequestMultipart bookUpdateRequestMultipart = bookMgmtService.setBookUpdateRequestMultipart(bookInfoResponse);
 
         model.addAttribute("bookInfoResponse", bookInfoResponse);
         model.addAttribute("bookUpdateRequestMultipart", bookUpdateRequestMultipart);
@@ -166,21 +134,7 @@ public class BookMgmtController {
             throw new BookFailedException(BOOK_UPDATE_ERROR_MESSAGE);
         }
 
-
-        bookUpdateRequestMultipart.setAuthorIdList(bookMgmtService.cleanList(bookUpdateRequestMultipart.getAuthorIdList()));
-        bookUpdateRequestMultipart.setCategoryIdList(bookMgmtService.cleanList(bookUpdateRequestMultipart.getCategoryIdList()));
-        bookUpdateRequestMultipart.setTagIdList(bookMgmtService.cleanList(bookUpdateRequestMultipart.getTagIdList()));
-
-        MultipartFile bookThumbnailUrlMultipartFile = bookUpdateRequestMultipart.getBookThumbnailImageUrlMultipartFile();
-
-        if (bookThumbnailUrlMultipartFile == null || bookThumbnailUrlMultipartFile.isEmpty()) {
-            // 기존 URL 유지
-            bookUpdateRequestMultipart.setBookThumbnailImageUrl(
-                bookMgmtService.getBookById(bookUpdateRequestMultipart.getBookId()).getBookThumbnailImageUrl()
-            );
-        }
-
-        bookMgmtService.updateBook(bookUpdateRequestMultipart, bookThumbnailUrlMultipartFile);
+        bookMgmtService.updateBook(bookUpdateRequestMultipart, bookUpdateRequestMultipart.getBookThumbnailImageUrlMultipartFile());
 
         return REDIRECT_ADDRESS;
     }
