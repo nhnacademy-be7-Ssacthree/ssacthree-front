@@ -10,17 +10,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/error")
 public class ErrorController {
 
+    private static final String EXCEPTION = "exception";
+
     @GetMapping("/unauthorized")
     public String handleUnauthorized(HttpServletRequest request, Model model) {
-        Exception exception = (Exception) request.getAttribute("exception");
-        model.addAttribute("exception", exception != null ? exception.getMessage() : "인증 실패");
+        Exception exception = (Exception) request.getAttribute(EXCEPTION);
+        model.addAttribute(EXCEPTION, exception != null ? exception.getMessage() : "인증 실패");
         return "error";
     }
 
     @GetMapping("/forbidden")
     public String handleForbidden(HttpServletRequest request, Model model) {
-        Exception exception = (Exception) request.getAttribute("exception");
-        model.addAttribute("exception", exception != null ? exception.getMessage() : "권한 없음");
+        Exception exception = (Exception) request.getAttribute(EXCEPTION);
+        model.addAttribute(EXCEPTION, exception != null ? exception.getMessage() : "권한 없음");
         return "error";
     }
 }
