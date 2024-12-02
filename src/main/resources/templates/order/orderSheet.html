@@ -141,7 +141,8 @@
                             <label for="buyer-phone" class="form-label">휴대폰번호</label>
                             <input type="tel" class="form-control" id="buyer-phone" name="buyerPhone"
                                    th:value="${isMember} ? ${memberInfo.customerPhoneNumber} : ''" required maxlength="13"
-                                   pattern="^01[016789]-\d{3,4}-\d{4}$" title="유효한 휴대폰 번호를 입력하세요. (예: 010-1234-5678)">
+                                   pattern="^01[016789]-\d{3,4}-\d{4}$" title="유효한 휴대폰 번호를 입력하세요. (예: 010-1234-5678)"
+                                    oninput="formatPhoneNumber(this)"> <!-- 전화번호 포맷 함수 추가하였습니다. -->
                         </div>
                     </section>
 
@@ -154,7 +155,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="recipient-phone" class="form-label">받는 사람 연락처</label>
-                            <input type="text" class="form-control" id="recipient-phone" name="recipientPhone" required>
+                            <input type="text" class="form-control" id="recipient-phone" name="recipientPhone" required
+                            oninput="formatPhoneNumber(this)">
                         </div>
                         <div class="mb-3" th:if="${isMember}">
                             <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addressModal">
@@ -308,6 +310,22 @@
     let bookLists = /*[[${bookLists}]]*/ [];
 </script>
 <script th:inline="javascript">
+    <!-- 전화번호 포맷 함수 -->
+    function formatPhoneNumber(phoneField) {
+        let input = phoneField.value.replace(/[^0-9]/g, ''); // 숫자만 남기기
+        let formatted = '';
+
+        if (input.length <= 3) {
+            formatted = input;
+        } else if (input.length <= 7) {
+            formatted = input.slice(0, 3) + '-' + input.slice(3);
+        } else {
+            formatted = input.slice(0, 3) + '-' + input.slice(3, 7) + '-' + input.slice(7, 11);
+        }
+
+        phoneField.value = formatted;
+    }
+
     function calculatePaymentPrice() {
         let paymentPrice = 0;
         let deliveryFee = 0;

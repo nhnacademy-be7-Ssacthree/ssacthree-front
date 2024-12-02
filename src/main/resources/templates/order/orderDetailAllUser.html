@@ -16,18 +16,23 @@
     <main class="col-lg-9">
       <h3 class="mb-4">주문 상세 조회</h3>
 
-      <!-- 주문 정보 -->
-      <div class="card mb-3">
-        <div class="card-header">
-          주문 정보
-        </div>
-        <div class="card-body">
-          <p><strong>주문 번호:</strong> <span th:text="${orderDetail.orderNumber}"></span></p>
-          <p><strong>주문 날짜:</strong> <span th:text="${orderDetail.orderedDate}"></span></p>
-          <p><strong>지정 배송일:</strong> <span th:text="${orderDetail.deliverySetDate}"></span></p>
-          <p><strong>총 주문 금액:</strong> <span th:text="${orderDetail.orderTotalPrice}"></span> 원</p>
-        </div>
+      <div th:if="${orderDetail == null}">
+        <p>주문 결과를 찾을 수 없습니다.</p>
       </div>
+
+      <div th:if="${orderDetail != null}">
+        <!-- 주문 정보 -->
+        <div class="card mb-3">
+          <div class="card-header">
+            주문 정보
+          </div>
+          <div class="card-body">
+            <p><strong>주문 번호:</strong> <span th:text="${orderDetail.orderNumber}"></span></p>
+            <p><strong>주문 날짜:</strong> <span th:text="${orderDetail.orderedDate}"></span></p>
+            <p><strong>지정 배송일:</strong> <span th:text="${orderDetail.deliverySetDate}"></span></p>
+            <p><strong>총 주문 금액:</strong> <span th:text="${orderDetail.orderTotalPrice}"></span> 원</p>
+          </div>
+        </div>
 
       <!-- 배송 정보 -->
       <div class="card mb-3">
@@ -100,7 +105,7 @@
           <p><strong>결제 ID:</strong> <span th:text="${orderDetail.paymentId}"></span></p>
           <p><strong>결제 완료일:</strong> <span th:text="${orderDetail.paymentCreatedAt}"></span></p>
           <p><strong>결제 금액:</strong> <span th:text="${orderDetail.paymentAmount}"></span> 원</p>
-          <p><strong>결제 승인 번호:</strong> <span th:text="${orderDetail.paymentKey}"></span></p>
+<!--          <p><strong>결제 승인 번호:</strong> <span th:text="${orderDetail.paymentKey}"></span></p>-->
           <p><strong>결제 상태:</strong> <span th:text="${orderDetail.paymentStatus}"></span></p>
           <p><strong>결제 타입:</strong> <span th:text="${orderDetail.paymentTypeName}"></span></p>
         </div>

@@ -201,11 +201,11 @@ public class OrderController {
         OrderDetailResponse orderDetail = orderService.getOrderDetail(orderId);
         model.addAttribute("orderDetail", orderDetail);
 
-        // order/customerOrderDetail;
+      // order/customerOrderDetail;
 
-        // 정상 처리 시 상세 페이지 반환
-        return "order/orderDetail2";
-    }
+      // 정상 처리 시 상세 페이지 반환
+      return "order/orderDetail";
+  }
 
     // orderNumber로 주문 상세 조회 (비회원, 회원 둘 다 가능)
     @GetMapping("/orderDetailbyNum")
