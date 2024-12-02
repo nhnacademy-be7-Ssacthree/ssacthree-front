@@ -137,10 +137,6 @@ public class BookCustomerController {
 
         Page<BookListResponse> awardBooks = bookCommonService.getBooksByAuthorId(page, size, sort, authorId); // 한강 작가
 
-        String[] categorySort = {"publicationDate:desc", "bookViewCount:desc"};
-        Page<BookListResponse> allRecentBooks = bookCommonService.getAllAvailableBooks(page, size, categorySort);
-        model.addAttribute("allRecentBooks", allRecentBooks);
-
 
         model.addAttribute("banner1", banner1);
         model.addAttribute("banner2", banner2);

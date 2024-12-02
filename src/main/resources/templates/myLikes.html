@@ -57,23 +57,13 @@
 
                         <!-- 리뷰 별점 -->
                         <div class="review-content d-flex mt-2">
-                            <div class="rating text-warning d-flex align-items-center">
-                                <svg class="star star-fill">
-                                    <use xlink:href="#star-fill"></use>
-                                </svg>
-                                <svg class="star star-fill">
-                                    <use xlink:href="#star-fill"></use>
-                                </svg>
-                                <svg class="star star-fill">
-                                    <use xlink:href="#star-fill"></use>
-                                </svg>
-                                <svg class="star star-fill">
-                                    <use xlink:href="#star-fill"></use>
-                                </svg>
-                                <svg class="star star-fill">
-                                    <use xlink:href="#star-fill"></use>
-                                </svg>
-                            </div>
+                            <!-- 별점 반복 렌더링 -->
+                            <svg th:each="i : ${#numbers.sequence(1, 5)}"
+                                 th:classappend="${i <= book.reviewRateAverage} ? 'text-warning' : 'text-muted'"
+                                 class="rating-star"
+                                 style="width:20px; height:20px">
+                                <use xlink:href="#star-fill"></use>
+                            </svg>
                         </div>
 
                         <!-- 가격 정보 -->
@@ -110,6 +100,13 @@
         </main>
     </div>
 </div>
+
+<svg style="display: none;">
+    <!-- 채워진 별 -->
+    <symbol id="star-fill" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M3.612 15.443C3.204 15.62 2.641 15.193 2.774 14.723L3.346 12.62 1.64 11.036C1.272 10.693 1.513 10.025 2.01 9.975L4.12 9.761 5.025 7.682C5.236 7.208 5.764 7.208 5.975 7.682L6.88 9.761 8.99 9.975C9.487 10.025 9.728 10.693 9.36 11.036L7.654 12.62 8.226 14.723C8.359 15.193 7.796 15.62 7.388 15.443L5.81 14.654 4.23 15.443H3.612Z" />
+    </symbol>
+</svg>
 
 <!-- JavaScript에 memberUrl 값 전달 -->
 <script th:inline="javascript">
