@@ -27,7 +27,7 @@ public class AuthorController {
     public String getAuthors(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
-        @RequestParam(defaultValue = "bookName:asc") String[] sort,
+        @RequestParam(defaultValue = "authorName:asc") String[] sort,
         Model model) {
         Map<String, Object> allParams = new HashMap<>();
         allParams.put("page", String.valueOf(page));

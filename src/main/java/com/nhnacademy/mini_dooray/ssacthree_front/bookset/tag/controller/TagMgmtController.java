@@ -20,8 +20,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TagMgmtController {
 
-    private static final String TAG_UPDATE_ERROR_MESSAGE = "태그 정보 수정 실패";
-
     private final TagMgmtService tagMgmtService;
 
     @GetMapping
