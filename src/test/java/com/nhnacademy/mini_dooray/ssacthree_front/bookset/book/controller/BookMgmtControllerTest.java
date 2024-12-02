@@ -65,7 +65,7 @@ class BookMgmtControllerTest {
     private PublisherMgmtService publisherMgmtService;
 
     @MockBean
-    private TagMgmtService tagMgmtService; // 추가
+    private TagMgmtService tagMgmtService;
 
     private static final String ON_SALE = "판매 중";
     private static final String DELETE_BOOK = "삭제 도서";
