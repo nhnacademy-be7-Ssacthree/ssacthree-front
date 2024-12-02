@@ -1,6 +1,7 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.order.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 public class BookOrderRequest {
     // 책 정보
     private Long bookId;

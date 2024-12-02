@@ -153,11 +153,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDetailResponse getOrderDetail(Long orderId) {
-        log.info("주문상세정보를요청합니다.");
+        log.info("주문 상세 정보를 요청합니다.");
         ResponseEntity<OrderDetailResponse> orderAllAttrResponseResponseEntity = orderAdapter.getOrderDetail(orderId);
         if(orderAllAttrResponseResponseEntity.getStatusCode().is2xxSuccessful()){
             OrderDetailResponse orderAllAttrResponse = orderAllAttrResponseResponseEntity.getBody();
-            log.info("주문상세정보를받아옴");
+            log.info("주문 상세 정보를 받음.");
             return orderAllAttrResponse;
         }
 
@@ -207,7 +207,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     // 비회원 - 고객 생성하기
-    private long resolveCustomerId(String memberId, OrderFormRequest orderFormRequest) {
+    public long resolveCustomerId(String memberId, OrderFormRequest orderFormRequest) {
         if (memberId.isEmpty()) {
             CustomerCreateRequest customerCreateRequest = new CustomerCreateRequest(
                     orderFormRequest.getBuyerName(),
