@@ -30,7 +30,6 @@ public class PaycoLoginController {
     @GetMapping("/payco/callback")
     public String paycoLoginCallback(@RequestParam(name = "code") String code,
         HttpServletResponse response) {
-        // TODO : access-token 발급 받는거 부터 해야뎀.. ㅠ
         String accessToken = paycoService.getAccessToken(code);
         String paycoIdNo = paycoService.getPaycoIdNo(accessToken);
         paycoService.paycoLogin(paycoIdNo, response);

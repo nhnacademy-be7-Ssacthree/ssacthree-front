@@ -23,6 +23,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TagMgmtServiceImpl implements TagMgmtService {
     private static final String TAG_NOT_FOUND_MESSAGE = "태그 아이디 조회에 실패했습니다.";
+    private static final String TAG_SEARCH_ERROR_MESSAGE = "태그 조회에 실패했습니다.";
+    private static final String TAG_CREATE_ERROR_MESSAGE = "태그 생성에 실패했습니다.";
     private static final String TAG_UPDATE_ERROR_MESSAGE = "태그 수정에 실패했습니다.";
     private static final String TAG_DELETE_ERROR_MESSAGE = "태그 삭제에 실패했습니다.";
 
@@ -36,13 +38,10 @@ public class TagMgmtServiceImpl implements TagMgmtService {
             if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             }
-        } catch (FeignException e) {
-            // todo: 이렇게 해도 될지 모르겠음. 차라리 예외 처리를 하는 것이..?
-            return (Page<TagInfoResponse>) Collections.EMPTY_LIST;
+            throw new TagFailedException(TAG_SEARCH_ERROR_MESSAGE);
+        } catch (HttpServerErrorException | HttpClientErrorException e) {
+            throw new TagFailedException(TAG_SEARCH_ERROR_MESSAGE);
         }
-
-        // todo: 이렇게 해도 될지 모르겠음. 차라리 예외 처리를 하는 것이..?
-        return (Page<TagInfoResponse>) Collections.EMPTY_LIST;
     }
 
     @Override
@@ -66,11 +65,10 @@ public class TagMgmtServiceImpl implements TagMgmtService {
             if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             }
-        } catch (FeignException e) {
-            // TODO : 적절한 예외 만들어야함.
-            throw new RuntimeException("태그 생성이 불가능합니다.");
+            throw new TagFailedException(TAG_CREATE_ERROR_MESSAGE);
+        } catch (HttpServerErrorException | HttpClientErrorException e) {
+            throw new TagFailedException(TAG_CREATE_ERROR_MESSAGE);
         }
-        throw new RuntimeException("태그 생성이 불가능합니다.");
     }
 
     @Override
