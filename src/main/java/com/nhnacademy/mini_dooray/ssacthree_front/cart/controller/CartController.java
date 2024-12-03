@@ -72,6 +72,6 @@ public class CartController {
         int intQuantity = Integer.parseInt(quantity);
         CartItem cartItem = cartService.getBook(longBookId);
         cartService.addNewBook(request,cartItem.getId(),cartItem.getTitle(),intQuantity,cartItem.getPrice(),cartItem.getBookThumbnailImageUrl());
-        return "redirect:/shop/carts";
+        return CART_REDIRECT;
     }
 }

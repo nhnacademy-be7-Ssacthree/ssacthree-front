@@ -27,6 +27,8 @@ public class SearchController {
 
   private final SearchService searchService;
   private final CategoryCommonService categoryCommonService;
+  private static final String SEARCH_BOOKS = "searchBooks";
+  private static final String BOOKS = "books";
 
   @GetMapping()
   public String searchPage(){
@@ -79,8 +81,8 @@ public class SearchController {
     // 키워드 유효성 검증
     if (keyword == null || keyword.trim().isEmpty()) {
       model.addAttribute("message", "검색어를 입력해 주세요.");
-      model.addAttribute("books", List.of()); // 빈 리스트 전달
-      return "searchBooks"; // 검색 페이지 유지
+      model.addAttribute(BOOKS, List.of()); // 빈 리스트 전달
+      return SEARCH_BOOKS; // 검색 페이지 유지
     }
 
     // 카테고리 정보를 조회
@@ -121,13 +123,13 @@ public class SearchController {
     // 검색 결과가 없는 경우 처리
     if (searchResponse.getBooks().isEmpty()) {
       model.addAttribute("message", "\"" + keyword + "\"에 대한 검색 결과가 없습니다.");
-      model.addAttribute("books", List.of());
-      return "searchBooks";
+      model.addAttribute(BOOKS, List.of());
+      return SEARCH_BOOKS;
     }
 
 
     // 검색 결과와 페이징 정보 구성
-    model.addAttribute("books", searchResponse.getBooks());
+    model.addAttribute(BOOKS, searchResponse.getBooks());
     // Paging 객체 생성
     Paging paging = new Paging(
         page, // Thymeleaf에서 0부터 시작하도록 조정
@@ -142,7 +144,7 @@ public class SearchController {
     model.addAttribute("baseUrl", "/search/books");
     model.addAttribute("extraParams", filters);
 
-    return "searchBooks"; // 검색 결과 페이지 반환
+    return SEARCH_BOOKS; // 검색 결과 페이지 반환
   }
 
   /**

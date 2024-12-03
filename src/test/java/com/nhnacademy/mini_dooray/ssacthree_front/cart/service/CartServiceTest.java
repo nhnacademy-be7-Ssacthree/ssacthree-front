@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpSession;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -364,7 +363,7 @@ class CartServiceTest {
         RuntimeException exception = assertThrows(RuntimeException.class, () ->
             cartService.getRandomBook(bookId, request)
         );
-        assertEquals("요청 오류", exception.getMessage());
+        assertEquals("책을 가져오는데 실패하였습니다.", exception.getMessage());
 
         // Verify
         verify(cartAdapter, times(1)).getRandomBook(eq("Bearer " + accessToken), eq(bookId));

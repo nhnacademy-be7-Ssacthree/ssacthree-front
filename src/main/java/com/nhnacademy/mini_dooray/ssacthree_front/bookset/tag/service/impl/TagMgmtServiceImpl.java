@@ -8,7 +8,6 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.dto.TagUpdateReque
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.exception.TagFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.service.TagMgmtService;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
-import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service

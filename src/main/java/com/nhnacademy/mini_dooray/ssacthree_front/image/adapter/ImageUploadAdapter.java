@@ -20,16 +20,19 @@ import java.nio.charset.StandardCharsets;
 @Component
 public class ImageUploadAdapter {
 
-    private final String API_URL = "https://api-image.nhncloudservice.com/image/v2.0/appkeys/rUN43QEwj1P6jThk/images";
-    private final String appKey = "rUN43QEwj1P6jThk";
-    private final String secretKey = "I1XLVufp";
-    private String IMAGE_PATH = "/ssacthree/packaging/"; // 업로드할 경로와 파일명 지정
+    private static final String API_URL = "https://api-image.nhncloudservice.com/image/v2.0/appkeys/rUN43QEwj1P6jThk/images";
+    private static final String SECRET_KEY = "I1XLVufp";
+    private static String imagePath = "/ssacthree/packaging/"; // 업로드할 경로와 파일명 지정
+
+    public static String updateImagePath(String imagePath, ByteArrayResource imageResource) {
+        return imagePath + imageResource.getFilename();
+    }
 
     public String uploadImage(MultipartFile imageFile) {
         try {
             // Prepare the HTTP request headers
             HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", secretKey);
+            headers.set("Authorization", SECRET_KEY);
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
 
             // 이미지 파일의 바이너리 데이터를 ByteArrayResource로 변환
@@ -41,8 +44,8 @@ public class ImageUploadAdapter {
             };
 
             // URL에 경로와 옵션을 추가
-            IMAGE_PATH = IMAGE_PATH + imageResource.getFilename();
-            String encodedPath = URLEncoder.encode(IMAGE_PATH, StandardCharsets.UTF_8.toString());
+            String newImagePath = updateImagePath(imagePath, imageResource);
+            String encodedPath = URLEncoder.encode(newImagePath, StandardCharsets.UTF_8);
             String uploadUrl = API_URL + "?path=" + encodedPath + "&overwrite=true";
 
             // HttpEntity 생성
@@ -72,7 +75,7 @@ public class ImageUploadAdapter {
         try {
             // Prepare the HTTP request headers
             HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", secretKey);
+            headers.set("Authorization", SECRET_KEY);
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
 
             // 이미지 파일의 바이너리 데이터를 ByteArrayResource로 변환
