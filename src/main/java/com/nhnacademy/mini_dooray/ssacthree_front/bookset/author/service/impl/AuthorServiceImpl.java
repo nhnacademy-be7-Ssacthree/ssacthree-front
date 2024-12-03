@@ -31,7 +31,7 @@ public class AuthorServiceImpl implements AuthorService {
     public AuthorUpdateRequest getAuthorById(Long authorId) {
         ResponseEntity<AuthorUpdateRequest> response = authorAdapter.getAuthorById(authorId);
 
-        if(response == null || !response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
+        if (response == null || !response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
             throw new AuthorFailedException(AUTHOR_SEARCH_ERROR);
         }
         return response.getBody();
@@ -41,7 +41,7 @@ public class AuthorServiceImpl implements AuthorService {
     public Page<AuthorGetResponse> getAllAuthors(int page, int size, String[] sort) {
         ResponseEntity<Page<AuthorGetResponse>> response = authorAdapter.getAllAuthors(page, size, sort);
 
-        if(response == null || !response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
+        if (response == null || !response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
             throw new AuthorFailedException(AUTHOR_SEARCH_ERROR);
         }
         return response.getBody();
@@ -51,7 +51,7 @@ public class AuthorServiceImpl implements AuthorService {
     public List<AuthorGetResponse> getAllAuthorList() {
         ResponseEntity<List<AuthorGetResponse>> response = authorAdapter.getAllAuthorList();
 
-        if(response == null || !response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
+        if (response == null || !response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
             throw new AuthorFailedException(AUTHOR_SEARCH_ERROR);
         }
         return response.getBody();

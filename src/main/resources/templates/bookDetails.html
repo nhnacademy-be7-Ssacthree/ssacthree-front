@@ -72,7 +72,7 @@
 
         <!-- 책 정보 -->
         <div class="col-md-8">
-            <h2 th:text="${book.bookName}"></h2>
+            <h3 th:text="${book.bookName}"></h3>
             <p class="text-muted">저자: <span th:each="item, iterStat : ${book.authors}"><span
                     th:text="${item.authorName}"></span><span th:if="${!iterStat.last}">, </span></span> |
                 출판사: <span th:text="${book.publisher.publisherName}"></span> | 발행일: <span
