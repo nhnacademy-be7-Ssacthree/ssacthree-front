@@ -80,11 +80,15 @@ public interface MemberAdapter {
         @RequestParam("sort") String sort,
         @RequestParam("direction") String direction);
 
-    @GetMapping("/shop/members/coupons")
-    ResponseEntity<Page<MemberCouponGetResponse>> getMemberCoupons(@RequestParam("page") int page,
-       @RequestParam("size") int size,
-       @RequestParam("sort") String sort,
-       @RequestParam("direction") String direction);
+    @GetMapping("/shop/members/coupons/not-used")
+    ResponseEntity<Page<MemberCouponGetResponse>> getNotUsedMemberCoupons(@RequestParam("page") int page,
+                                                                          @RequestParam("size") int size,
+                                                                          @RequestParam("memberCouponCreatedAt:asc") String[] sort);
+
+    @GetMapping("/shop/members/coupons/used")
+    ResponseEntity<Page<MemberCouponGetResponse>> getUsedMemberCoupons(@RequestParam("page") int page,
+                                                                       @RequestParam("size") int size,
+                                                                       @RequestParam("memberCouponCreatedAt:asc") String[] sort);
 
 
     @PutMapping("/shop/member-sleep")

@@ -33,16 +33,18 @@
           </tr>
           </thead>
           <tbody>
-          <tr th:each="memberCoupon : ${memberCoupons.content}"
-              th:if="${memberCoupon.memberCouponUsedAt} == null">
-            <td th:text="${memberCoupon.couponName}"></td>
-            <td th:text="${memberCoupon.couponDescription}"></td>
-            <td th:text="${#temporals.format(memberCoupon.memberCouponCreatedAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
-            <td th:text="${#temporals.format(memberCoupon.memberCouponExpiredAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+          <tr th:each="notUsedMemberCoupon : ${notUsedMemberCoupons.content}">
+            <td th:text="${notUsedMemberCoupons.couponName}"></td>
+            <td th:text="${notUsedMemberCoupons.couponDescription}"></td>
+            <td th:text="${#temporals.format(notUsedMemberCoupons.memberCouponCreatedAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td th:text="${#temporals.format(notUsedMemberCoupons.memberCouponExpiredAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
           </tr>
           </tbody>
         </table>
       </div>
+
+      <!-- 페이징 네비게이션 -->
+      <div th:replace="~{common/pagination :: pagination(${baseUrl}, ${notUsedMemberCoupons}, ${extraParams})}"></div>
 
       <!-- 사용 내역 -->
       <h4>사용 내역</h4>
@@ -58,21 +60,19 @@
           </tr>
           </thead>
           <tbody>
-          <tr th:each="memberCoupon : ${memberCoupons.content}"
-              th:if="${memberCoupon.memberCouponUsedAt} != null">
-            <td th:text="${memberCoupon.couponName}"></td>
-            <td th:text="${memberCoupon.couponDescription}"></td>
-            <td th:text="${#temporals.format(memberCoupon.memberCouponCreatedAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
-            <td th:text="${#temporals.format(memberCoupon.memberCouponExpiredAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
-            <td th:text="${#temporals.format(memberCoupon.memberCouponUsedAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+          <tr th:each="usedMemberCoupon : ${usedMemberCoupons.content}">
+            <td th:text="${usedMemberCoupon.couponName}"></td>
+            <td th:text="${usedMemberCoupon.couponDescription}"></td>
+            <td th:text="${#temporals.format(usedMemberCoupon.memberCouponCreatedAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td th:text="${#temporals.format(usedMemberCoupon.memberCouponExpiredAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td th:text="${#temporals.format(usedMemberCoupon.memberCouponUsedAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
           </tr>
           </tbody>
         </table>
       </div>
 
       <!-- 페이징 네비게이션 -->
-      <div
-          th:replace="~{common/pagination :: pagination(${baseUrl}, ${memberCoupons}, ${extraParams})}"></div>
+      <div th:replace="~{common/pagination :: pagination(${baseUrl}, ${usedMemberCoupon}, ${extraParams})}"></div>
     </main>
   </div>
 </div>

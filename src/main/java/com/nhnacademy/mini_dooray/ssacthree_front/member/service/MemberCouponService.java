@@ -4,5 +4,8 @@ import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberCouponGetResp
 import org.springframework.data.domain.Page;
 
 public interface MemberCouponService {
-    Page<MemberCouponGetResponse> getMemberCoupons(int page, int size, String sort, String direction);
+
+    Page<MemberCouponGetResponse> getNotUsedMemberCoupons(int page, int size, String[] sort);
+
+    Page<MemberCouponGetResponse> getUsedMemberCoupons(int page, int size, String[] sort);
 }

@@ -26,24 +26,26 @@ public class MemberCouponController {
     public String coupon(Model model, HttpServletRequest request,
                          @RequestParam(defaultValue = "0") int page,
                          @RequestParam(defaultValue = "5") int size,
-                         @RequestParam(defaultValue = "couponIssueDate") String sort,
-                         @RequestParam(defaultValue = "ASC") String direction) {
-
-        Page<MemberCouponGetResponse> memberCoupons = memberCouponService.getMemberCoupons(page,
-                size, sort, direction);
+                         @RequestParam(defaultValue = "memberCouponCreatedAt:asc") String[] sort) {
 
         Map<String, Object> allParams = new HashMap<>();
-        allParams.put("page", String.valueOf(page));
-        allParams.put("size", String.valueOf(size));
+        allParams.put("page", page);
+        allParams.put("size", size);
+        allParams.put("sort", sort);
+
+        Page<MemberCouponGetResponse> notUsedMemberCoupons = memberCouponService.getNotUsedMemberCoupons(page, size, sort);
+        Page<MemberCouponGetResponse> usedMemberCoupons = memberCouponService.getUsedMemberCoupons(page, size, sort);
 
         String extraParams = allParams.entrySet().stream()
-                .filter(entry -> !"page".equals(entry.getKey()) && !"size".equals(entry.getKey()))
+                .filter(entry -> !"page".equals(entry.getKey()) && !"size".equals(entry.getKey()) && !"sort".equals(entry.getKey()))
                 .map(entry -> entry.getKey() + "=" + entry.getValue())
                 .collect(Collectors.joining("&"));
-        model.addAttribute("memberCoupons", memberCoupons);
+
+        model.addAttribute("notUsedMemberCoupons", notUsedMemberCoupons);
+        model.addAttribute("usedMemberCoupons", usedMemberCoupons);
         model.addAttribute("baseUrl", "/coupons");
-        model.addAttribute("allParams", allParams);
-        model.addAttribute("extraParams", extraParams);
+        model.addAttribute("extraParams", extraParams.isEmpty() ? "" : "&" + extraParams);
+        model.addAttribute("sort", sort[0]);
 
         return "memberCoupon";
     }
