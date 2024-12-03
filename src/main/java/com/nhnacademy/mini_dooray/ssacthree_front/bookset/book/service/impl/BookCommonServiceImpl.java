@@ -3,6 +3,7 @@ package com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.service.impl;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.adapter.BookCustomerAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookListResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.exception.BookFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.service.BookCommonService;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.booklike.dto.request.BookLikeRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.booklike.dto.response.BookLikeResponse;
@@ -28,11 +29,11 @@ public class BookCommonServiceImpl implements BookCommonService {
                 return responseEntity.getBody();
             } else {
                 // 필요한 에러 처리 로직 추가
-                throw new RuntimeException("API 호출 실패: " + responseEntity.getStatusCode());
+                throw new BookFailedException("저자로 책들을 조회하는데 실패하였습니다.");
             }
         } catch (Exception e) {
             // 예외 로깅 및 처리
-            throw new RuntimeException("API 호출 중 예외 발생", e);
+            throw new BookFailedException("저자로 책들을 조회하는데 실패하였습니다.");
         }
     }
 
@@ -44,11 +45,11 @@ public class BookCommonServiceImpl implements BookCommonService {
                 return responseEntity.getBody();
             } else {
                 // 필요한 에러 처리 로직 추가
-                throw new RuntimeException("API 호출 실패: " + responseEntity.getStatusCode());
+                throw new BookFailedException("카테고리로 책들을 조회하는데 실패하였습니다.");
             }
         } catch (Exception e) {
             // 예외 로깅 및 처리
-            throw new RuntimeException("API 호출 중 예외 발생", e);
+            throw new BookFailedException("카테고리로 책들을 조회하는데 실패하였습니다.", e);
         }
     }
 
@@ -60,11 +61,11 @@ public class BookCommonServiceImpl implements BookCommonService {
                 return responseEntity.getBody();
             } else {
                 // 필요한 에러 처리 로직 추가
-                throw new RuntimeException("API 호출 실패: " + responseEntity.getStatusCode());
+                throw new BookFailedException("테그로 책들을 조회하는데 실패하였습니다.");
             }
         } catch (Exception e) {
             // 예외 로깅 및 처리
-            throw new RuntimeException("API 호출 중 예외 발생", e);
+            throw new BookFailedException("테그로 책들을 조회하는데 실패하였습니다.", e);
         }
     }
 
@@ -76,11 +77,11 @@ public class BookCommonServiceImpl implements BookCommonService {
                 return responseEntity.getBody();
             } else {
                 // 필요한 에러 처리 로직 추가
-                throw new RuntimeException("API 호출 실패: " + responseEntity.getStatusCode());
+                throw new BookFailedException("책 아이디로 책을 조회하는데 실패하였습니다.");
             }
         } catch (Exception e) {
             // 예외 로깅 및 처리
-            throw new RuntimeException("API 호출 중 예외 발생", e);
+            throw new BookFailedException("책 아이디로 책을 조회하는데 실패하였습니다.", e);
         }
     }
 
@@ -92,11 +93,11 @@ public class BookCommonServiceImpl implements BookCommonService {
                 return responseEntity.getBody();
             } else {
                 // 필요한 에러 처리 로직 추가
-                throw new RuntimeException("API 호출 실패: " + responseEntity.getStatusCode());
+                throw new BookFailedException("책 아이디로 카테고리들을 가져오는데 실패하였습니다.");
             }
         } catch (Exception e) {
             // 예외 로깅 및 처리
-            throw new RuntimeException("API 호출 중 예외 발생", e);
+            throw new BookFailedException("책 아이디로 카테고리들을 가져오는데 실패하였습니다.", e);
         }
     }
 
@@ -108,11 +109,11 @@ public class BookCommonServiceImpl implements BookCommonService {
                 return responseEntity.getBody();
             } else {
                 // 필요한 에러 처리 로직 추가
-                throw new RuntimeException("API 호출 실패: " + responseEntity.getStatusCode());
+                throw new BookFailedException("이용 가능한 책들을 가져오는데 실패하였습니다.");
             }
         } catch (Exception e) {
             // 예외 로깅 및 처리
-            throw new RuntimeException("API 호출 중 예외 발생", e);
+            throw new BookFailedException("이용 가능한 책들을 가져오는데 실패하였습니다.", e);
         }
     }
 
@@ -124,11 +125,11 @@ public class BookCommonServiceImpl implements BookCommonService {
                 return responseEntity.getBody();
             } else {
                 // 필요한 에러 처리 로직 추가
-                throw new RuntimeException("API 호출 실패: " + responseEntity.getStatusCode());
+                throw new BookFailedException("회원 아이디로 책들을 가져오는데 실패하였습니다.");
             }
         } catch (Exception e) {
             // 예외 로깅 및 처리
-            throw new RuntimeException("API 호출 중 예외 발생", e);
+            throw new BookFailedException("회원 아이디로 책들을 가져오는데 실패하였습니다.", e);
         }
     }
 
@@ -140,11 +141,11 @@ public class BookCommonServiceImpl implements BookCommonService {
                 return responseEntity.getBody();
             } else {
                 // 필요한 에러 처리 로직 추가
-                throw new RuntimeException("API 호출 실패: " + responseEntity.getStatusCode());
+                throw new BookFailedException("현재 유저가 좋아요를 누른 책의 정보를 가져오는데 실패하였습니다.");
             }
         } catch (Exception e) {
             // 예외 로깅 및 처리
-            throw new RuntimeException("API 호출 중 예외 발생", e);
+            throw new BookFailedException("현재 유저가 좋아요를 누른 책의 정보를 가져오는데 실패하였습니다.", e);
         }
     }
 
@@ -156,11 +157,11 @@ public class BookCommonServiceImpl implements BookCommonService {
                 return responseEntity.getBody();
             } else {
                 // 필요한 에러 처리 로직 추가
-                throw new RuntimeException("API 호출 실패: " + responseEntity.getStatusCode());
+                throw new BookFailedException("회원의 아이디로 좋아요를 누른 책을 만드는데 실패하였습니다.");
             }
         } catch (Exception e) {
             // 예외 로깅 및 처리
-            throw new RuntimeException("API 호출 중 예외 발생", e);
+            throw new BookFailedException("회원의 아이디로 좋아요를 누른 책을 만드는데 실패하였습니다.", e);
         }
     }
 
@@ -172,11 +173,11 @@ public class BookCommonServiceImpl implements BookCommonService {
                 return responseEntity.getBody();
             } else {
                 // 필요한 에러 처리 로직 추가
-                throw new RuntimeException("API 호출 실패: " + responseEntity.getStatusCode());
+                throw new BookFailedException("회원 아이디가 누른 좋아요를 삭제하는데 실패였습니다.");
             }
         } catch (Exception e) {
             // 예외 로깅 및 처리
-            throw new RuntimeException("API 호출 중 예외 발생", e);
+            throw new BookFailedException("회원 아이디가 누른 좋아요를 삭제하는데 실패였습니다.", e);
         }
     }
 }
