@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.image.adapter.ImageUploadAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.adapter.ReviewAdapter;
+import com.nhnacademy.mini_dooray.ssacthree_front.review.config.ReviewImagePathConfig;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.*;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.exception.PostReviewFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.service.impl.ReviewServiceImpl;
@@ -39,6 +40,9 @@ class ReviewServiceTest {
 
     @Mock
     private HttpServletRequest request;
+
+    @Mock
+    private ReviewImagePathConfig reviewImagePathConfig;
 
     @BeforeEach
     void setUp() {
@@ -95,16 +99,26 @@ class ReviewServiceTest {
         Long bookId = 1L;
         Long orderId = 101L;
         ReviewRequest reviewRequest = new ReviewRequest(5, "title", "Amazing book!", null);
-        when(request.getCookies()).thenReturn(
-            new Cookie[]{new Cookie("access-token", "mock-token")});
-        when(imageUploadAdapter.uploadImage(any(), eq("/ssacthree/review/"))).thenReturn(
-            "http://image.url");
+
+        // Mock HTTP Request Cookies
+        when(request.getCookies()).thenReturn(new Cookie[]{new Cookie("access-token", "mock-token")});
+
+        // Mock Image Upload Adapter
+        when(imageUploadAdapter.uploadImage(any(), eq("/mock/image/path"))).thenReturn("http://image.url");
+
+        // Mock ReviewImagePathConfig
+        when(reviewImagePathConfig.getImagePath()).thenReturn("/mock/image/path");
+
+        // Mock ReviewAdapter API Call
         when(reviewAdapter.postReviewBook(anyString(), eq(bookId), eq(orderId), any()))
             .thenReturn(new ResponseEntity<>(HttpStatus.CREATED));
 
         // When & Then
         assertDoesNotThrow(
-            () -> reviewService.postReviewBook(bookId, orderId, reviewRequest, request));
+            () -> reviewService.postReviewBook(bookId, orderId, reviewRequest, request)
+        );
+
+        // Verify that the adapter's method was called once
         verify(reviewAdapter, times(1)).postReviewBook(anyString(), eq(bookId), eq(orderId), any());
     }
 
@@ -197,10 +211,17 @@ class ReviewServiceTest {
         Long bookId = 1L;
         Long orderId = 123L;
         ReviewRequest reviewRequest = new ReviewRequest(5, "Great Book", "Loved it!", null);
-        when(request.getCookies()).thenReturn(
-            new Cookie[]{new Cookie("access-token", "dummy-token")});
-        when(imageUploadAdapter.uploadImage(any(), anyString())).thenReturn(
-            "http://example.com/image.jpg");
+
+        // Mock HTTP Request Cookies
+        when(request.getCookies()).thenReturn(new Cookie[]{new Cookie("access-token", "dummy-token")});
+
+        // Mock Image Upload Adapter
+        when(imageUploadAdapter.uploadImage(any(), anyString())).thenReturn("http://example.com/image.jpg");
+
+        // Mock ReviewImagePathConfig
+        when(reviewImagePathConfig.getImagePath()).thenReturn("/mock/image/path");
+
+        // Simulate API Call Failure
         doThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST))
             .when(reviewAdapter).postReviewBook(anyString(), eq(bookId), eq(orderId), any());
 
@@ -209,7 +230,6 @@ class ReviewServiceTest {
             reviewService.postReviewBook(bookId, orderId, reviewRequest, request)
         );
     }
-
     @Test
     void testAuthToWriteReview_Fail() {
         // Given
@@ -282,6 +302,7 @@ class ReviewServiceTest {
         ReviewRequest reviewRequest = new ReviewRequest(5, "Great Book", "Loved it!", null);
         when(request.getCookies()).thenReturn(new Cookie[]{new Cookie("access-token", "dummy-token")});
         when(imageUploadAdapter.uploadImage(any(), anyString())).thenReturn("http://example.com/image.jpg");
+        when(reviewImagePathConfig.getImagePath()).thenReturn("/mock/image/path");
 
         // Mock: API 호출 실패
         doThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST))
