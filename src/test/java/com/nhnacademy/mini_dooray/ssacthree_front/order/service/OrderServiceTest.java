@@ -121,19 +121,19 @@ class OrderServiceTest {
     orderService.prepareOrderCart(request, model);
 
     // Assert
-    verify(mockSession).setAttribute(eq("bookLists"), argThat(argument -> {
+    verify(mockSession).setAttribute("bookLists", argThat(argument -> {
       List<BookOrderRequest> actualList = (List<BookOrderRequest>) argument;
       return actualList.equals(expectedBookOrderRequests);
     }));
-    verify(mockSession).setAttribute(eq("deliveryRuleId"), eq(1L));
-    verify(model).addAttribute(eq("isMember"), eq(true));
-    verify(model).addAttribute(eq("memberInfo"), eq(mockMemberInfo));
-    verify(model).addAttribute(eq("bookLists"), argThat(argument -> {
+    verify(mockSession).setAttribute("deliveryRuleId", 1L);
+    verify(model).addAttribute("isMember", true);
+    verify(model).addAttribute("memberInfo", mockMemberInfo);
+    verify(model).addAttribute("bookLists", argThat(argument -> {
       List<BookOrderRequest> actualList = (List<BookOrderRequest>) argument;
       return actualList.equals(expectedBookOrderRequests);
     }));
-    verify(model).addAttribute(eq("packagingList"), eq(mockPackagingList));
-    verify(model).addAttribute(eq("deliveryRule"), eq(mockDeliveryRule));
+    verify(model).addAttribute("packagingList", mockPackagingList);
+    verify(model).addAttribute("deliveryRule", mockDeliveryRule);
   }
 
 
@@ -179,16 +179,16 @@ class OrderServiceTest {
     orderService.prepareOrderNow(request, 1L, 2, model);
 
     // Assert
-    verify(model).addAttribute(eq("isMember"), eq(true));
-    verify(model).addAttribute(eq("memberInfo"), eq(mockMemberInfo));
-    verify(model).addAttribute(eq("bookLists"), argThat(argument -> {
+    verify(model).addAttribute("isMember", true);
+    verify(model).addAttribute("memberInfo", mockMemberInfo);
+    verify(model).addAttribute("bookLists", argThat(argument -> {
       List<BookOrderRequest> actualList = (List<BookOrderRequest>) argument;
-      return actualList.size() == 1 && actualList.get(0).getBookId().equals(1L);
+      return actualList.size() == 1 && actualList.getFirst().getBookId().equals(1L);
     }));
-    verify(model).addAttribute(eq("packagingList"), eq(mockPackagingList));
-    verify(model).addAttribute(eq("deliveryRule"), eq(mockDeliveryRule));
-    verify(mockSession).setAttribute(eq("bookLists"), anyList());
-    verify(mockSession).setAttribute(eq("deliveryRuleId"), eq(1L));
+    verify(model).addAttribute("packagingList", mockPackagingList);
+    verify(model).addAttribute("deliveryRule", mockDeliveryRule);
+    verify(mockSession).setAttribute("bookLists", anyList());
+    verify(mockSession).setAttribute("deliveryRuleId", 1L);
   }
 
 
@@ -198,7 +198,7 @@ class OrderServiceTest {
     String orderNumber = "ORD12345";
     String phoneNumber = "01012345678";
     OrderDetailResponse mockResponse = new OrderDetailResponse();
-    when(orderAdapter.getOrderDetailByOrderNumber(eq(orderNumber), eq(phoneNumber)))
+    when(orderAdapter.getOrderDetailByOrderNumber(orderNumber, phoneNumber))
         .thenReturn(ResponseEntity.ok(mockResponse));
 
     // Act
@@ -207,7 +207,7 @@ class OrderServiceTest {
     // Assert
     assertNotNull(response);
     assertEquals(mockResponse, response);
-    verify(orderAdapter).getOrderDetailByOrderNumber(eq(orderNumber), eq(phoneNumber));
+    verify(orderAdapter).getOrderDetailByOrderNumber(orderNumber, phoneNumber);
   }
 
   @Test
@@ -215,7 +215,7 @@ class OrderServiceTest {
     // Arrange
     OrderSaveRequest mockRequest = new OrderSaveRequest();
     OrderResponse mockResponse = new OrderResponse();
-    when(orderAdapter.createOrder(eq(mockRequest))).thenReturn(ResponseEntity.ok(mockResponse));
+    when(orderAdapter.createOrder(mockRequest)).thenReturn(ResponseEntity.ok(mockResponse));
 
     // Act
     OrderResponse response = orderService.createOrder(mockRequest);
@@ -223,7 +223,7 @@ class OrderServiceTest {
     // Assert
     assertNotNull(response);
     assertEquals(mockResponse, response);
-    verify(orderAdapter).createOrder(eq(mockRequest));
+    verify(orderAdapter).createOrder(mockRequest);
   }
 
   @Test
@@ -235,7 +235,7 @@ class OrderServiceTest {
     LocalDateTime endDate = LocalDateTime.now();
     AdminOrderResponseWithCount mockResponse = new AdminOrderResponseWithCount(List.of(), 5);
 
-    when(orderAdapter.adminGetAllOrders(eq(page), eq(size), eq(startDate.toLocalDate()), eq(endDate.toLocalDate())))
+    when(orderAdapter.adminGetAllOrders(page, size, startDate.toLocalDate(), endDate.toLocalDate()))
         .thenReturn(mockResponse);
 
     // Act
@@ -244,7 +244,7 @@ class OrderServiceTest {
     // Assert
     assertNotNull(response);
     assertEquals(5, response.getTotalOrders());
-    verify(orderAdapter).adminGetAllOrders(eq(page), eq(size), eq(startDate.toLocalDate()), eq(endDate.toLocalDate()));
+    verify(orderAdapter).adminGetAllOrders(page, size, startDate.toLocalDate(), endDate.toLocalDate());
   }
 
 
@@ -357,9 +357,9 @@ class OrderServiceTest {
       // Assert
       assertEquals(1L, mockOrderFormRequest.getCustomerId()); // 고객 ID가 설정되었는지 확인
       assertEquals(mockOrderNumber, mockOrderFormRequest.getOrderNumber()); // 주문 번호가 설정되었는지 확인
-      verify(mockSession).setAttribute(eq("orderFormRequest"), eq(mockOrderFormRequest)); // 세션에 저장된 데이터 검증
-      verify(model).addAttribute(eq("orderId"), eq(mockOrderNumber)); // 모델에 추가된 주문 번호 검증
-      verify(model).addAttribute(eq("paymentPrice"), eq(paymentPrice)); // 모델에 추가된 결제 금액 검증
+      verify(mockSession).setAttribute("orderFormRequest", mockOrderFormRequest); // 세션에 저장된 데이터 검증
+      verify(model).addAttribute("orderId", mockOrderNumber); // 모델에 추가된 주문 번호 검증
+      verify(model).addAttribute("paymentPrice", paymentPrice); // 모델에 추가된 결제 금액 검증
     }
   }
 

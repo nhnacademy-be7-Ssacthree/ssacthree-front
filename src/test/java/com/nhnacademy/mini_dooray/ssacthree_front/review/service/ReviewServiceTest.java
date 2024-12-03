@@ -72,7 +72,7 @@ class ReviewServiceTest {
         Page<BookReviewResponse> mockPage = new org.springframework.data.domain.PageImpl<>(
             mockContent);
 
-        when(reviewAdapter.getReviewsByBookId(eq(page), eq(size), eq(sort), eq(bookId)))
+        when(reviewAdapter.getReviewsByBookId(page, size, sort, bookId))
             .thenReturn(new ResponseEntity<>(mockPage, HttpStatus.OK));
 
         // When
@@ -82,14 +82,14 @@ class ReviewServiceTest {
         // Then
         assertNotNull(reviewsPage);
         assertEquals(1, reviewsPage.getTotalElements());
-        BookReviewResponse firstReview = reviewsPage.getContent().get(0);
+        BookReviewResponse firstReview = reviewsPage.getContent().getFirst();
         assertEquals("User123", firstReview.getMemberId());
         assertEquals(5, firstReview.getReviewRate());
         assertEquals("Excellent Book", firstReview.getReviewTitle());
         assertEquals("This is a fantastic read!", firstReview.getReviewContent());
         assertNotNull(firstReview.getReviewCreatedAt());
-        verify(reviewAdapter, times(1)).getReviewsByBookId(eq(page), eq(size), eq(sort),
-            eq(bookId));
+        verify(reviewAdapter, times(1)).getReviewsByBookId(page, size, sort,
+            bookId);
     }
 
     @Test
@@ -300,12 +300,18 @@ class ReviewServiceTest {
         Long bookId = 1L;
         Long orderId = 123L;
         ReviewRequest reviewRequest = new ReviewRequest(5, "Great Book", "Loved it!", null);
+
+        // Mock HTTP Request Cookies
         when(request.getCookies()).thenReturn(new Cookie[]{new Cookie("access-token", "dummy-token")});
+
+        // Mock Image Upload Adapter
         when(imageUploadAdapter.uploadImage(any(), anyString())).thenReturn("http://example.com/image.jpg");
+
+        // Mock ReviewImagePathConfig
         when(reviewImagePathConfig.getImagePath()).thenReturn("/mock/image/path");
 
-        // Mock: API 호출 실패
-        doThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST))
+        // Mock: 서버 오류 시뮬레이션 (500 Internal Server Error)
+        doThrow(new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR))
             .when(reviewAdapter).postReviewBook(anyString(), eq(bookId), eq(orderId), any());
 
         // When & Then: PostReviewFailedException 발생 확인
