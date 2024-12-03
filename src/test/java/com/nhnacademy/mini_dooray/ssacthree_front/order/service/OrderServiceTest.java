@@ -96,11 +96,11 @@ class OrderServiceTest {
         .bookViewCount(0)
         .bookDiscount(10)
         .build();
-    BookOrderRequest expectedBookOrderRequest = new BookOrderRequest(
-        1L, "Book1", 10000, 9000, 10, true, 10, "url", 2, null, 500, null
+    List<BookOrderRequest> expectedBookOrderRequests = List.of(
+        new BookOrderRequest(
+            1L, "Book1", 10000, 9000, 10, true, 10, "url", 2, null, 500, null
+        )
     );
-    List<BookOrderRequest> expectedBookOrderRequests = List.of(expectedBookOrderRequest);
-
     List<PackagingGetResponse> mockPackagingList = List.of();
     DeliveryRuleGetResponse mockDeliveryRule = new DeliveryRuleGetResponse(
         1L, "Standard", 3000, 0, true, LocalDateTime.now()
@@ -108,6 +108,7 @@ class OrderServiceTest {
 
     HttpSession mockSession = mock(HttpSession.class);
 
+    // 원시 값을 직접 사용
     when(request.getSession(false)).thenReturn(mockSession);
     when(cartService.getAccessToken(request)).thenReturn(mockAccessToken);
     when(memberService.getMemberInfo(request)).thenReturn(mockMemberInfo);
@@ -121,17 +122,11 @@ class OrderServiceTest {
     orderService.prepareOrderCart(request, model);
 
     // Assert
-    verify(mockSession).setAttribute("bookLists", argThat(argument -> {
-      List<BookOrderRequest> actualList = (List<BookOrderRequest>) argument;
-      return actualList.equals(expectedBookOrderRequests);
-    }));
+    verify(mockSession).setAttribute("bookLists", expectedBookOrderRequests);
     verify(mockSession).setAttribute("deliveryRuleId", 1L);
     verify(model).addAttribute("isMember", true);
     verify(model).addAttribute("memberInfo", mockMemberInfo);
-    verify(model).addAttribute("bookLists", argThat(argument -> {
-      List<BookOrderRequest> actualList = (List<BookOrderRequest>) argument;
-      return actualList.equals(expectedBookOrderRequests);
-    }));
+    verify(model).addAttribute("bookLists", expectedBookOrderRequests);
     verify(model).addAttribute("packagingList", mockPackagingList);
     verify(model).addAttribute("deliveryRule", mockDeliveryRule);
   }
@@ -167,7 +162,7 @@ class OrderServiceTest {
 
     HttpSession mockSession = mock(HttpSession.class);
 
-    // Mock 설정
+    // Mock 설정: 원시 값 사용
     when(cartService.getAccessToken(request)).thenReturn(mockAccessToken); // AccessToken 반환
     when(memberService.getMemberInfo(request)).thenReturn(mockMemberInfo);
     when(bookCommonService.getBookById(1L)).thenReturn(mockBookInfo);
@@ -181,16 +176,13 @@ class OrderServiceTest {
     // Assert
     verify(model).addAttribute("isMember", true);
     verify(model).addAttribute("memberInfo", mockMemberInfo);
-    verify(model).addAttribute("bookLists", argThat(argument -> {
-      List<BookOrderRequest> actualList = (List<BookOrderRequest>) argument;
-      return actualList.size() == 1 && actualList.getFirst().getBookId().equals(1L);
-    }));
+    verify(mockSession).setAttribute("bookLists", List.of(new BookOrderRequest(
+        1L, "Book1", 10000, 9000, 10, true, 10, "url", 2, null, 500, null
+    )));
+    verify(mockSession).setAttribute("deliveryRuleId", 1L);
     verify(model).addAttribute("packagingList", mockPackagingList);
     verify(model).addAttribute("deliveryRule", mockDeliveryRule);
-    verify(mockSession).setAttribute("bookLists", anyList());
-    verify(mockSession).setAttribute("deliveryRuleId", 1L);
   }
-
 
   @Test
   void testGetOrderDetailByOrderNumber() {
