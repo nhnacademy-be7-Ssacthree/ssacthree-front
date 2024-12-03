@@ -300,9 +300,9 @@ class CartServiceTest {
     void testSaveCartInDBUseRequest_Success() {
         // Mock 데이터 설정
         CartItem mockCartItem = new CartItem(1L, "Test Book", 2, 10000, "image_url");
-        List<CartItem> cartItems = Collections.singletonList(mockCartItem);
+        List<CartItem> cartItems1 = Collections.singletonList(mockCartItem);
         Map<String, Object> mockCartData = new HashMap<>();
-        mockCartData.put("cartItems", cartItems);
+        mockCartData.put("cartItems", cartItems1);
 
         ResponseEntity<Void> mockResponse = ResponseEntity.ok().build();
 
@@ -332,7 +332,7 @@ class CartServiceTest {
         // Mock: request에서 access-token 쿠키 반환
         when(request.getCookies()).thenReturn(new Cookie[]{new Cookie("access-token", accessToken)});
         // Mock: cartAdapter.getRandomBook 호출 성공
-        when(cartAdapter.getRandomBook(eq("Bearer " + accessToken), eq(bookId)))
+        when(cartAdapter.getRandomBook("Bearer " + accessToken, bookId))
             .thenReturn(new ResponseEntity<>(expectedCartItem, HttpStatus.OK));
 
         CartItem actualCartItem = cartService.getRandomBook(bookId, request);
@@ -344,7 +344,7 @@ class CartServiceTest {
         assertEquals(expectedCartItem.getPrice(), actualCartItem.getPrice());
         assertEquals(expectedCartItem.getBookThumbnailImageUrl(), actualCartItem.getBookThumbnailImageUrl());
 
-        verify(cartAdapter, times(1)).getRandomBook(eq("Bearer " + accessToken), eq(bookId));
+        verify(cartAdapter, times(1)).getRandomBook("Bearer " + accessToken, bookId);
     }
 
     @Test
@@ -356,7 +356,7 @@ class CartServiceTest {
         // Mock: request에서 access-token 쿠키 반환
         when(request.getCookies()).thenReturn(new Cookie[]{new Cookie("access-token", accessToken)});
         // Mock: cartAdapter.getRandomBook 호출 시 HttpClientErrorException 발생
-        when(cartAdapter.getRandomBook(eq("Bearer " + accessToken), eq(bookId)))
+        when(cartAdapter.getRandomBook("Bearer " + accessToken, bookId))
             .thenThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST));
 
         // When & Then
@@ -366,7 +366,7 @@ class CartServiceTest {
         assertEquals("책을 가져오는데 실패하였습니다.", exception.getMessage());
 
         // Verify
-        verify(cartAdapter, times(1)).getRandomBook(eq("Bearer " + accessToken), eq(bookId));
+        verify(cartAdapter, times(1)).getRandomBook("Bearer " + accessToken, bookId);
     }
 
 

@@ -5,7 +5,7 @@ import lombok.Getter;
 public class SleepMemberLoginFailedException extends RuntimeException {
 
     @Getter
-    private String memberLoginId;
+    private final String memberLoginId;
 
     public SleepMemberLoginFailedException(String message, String memberLoginId) {
         super(message);

@@ -12,7 +12,7 @@ public interface SearchAdapter {
   SearchResponse searchBooks(@RequestParam String keyword,
                                  @RequestParam int page,
                                  @RequestParam(required = false) String sort,
-                                 @RequestParam(required = false) int pageSize,
+                                 @RequestParam(required = false) Integer pageSize,
                                  @RequestParam(required = false) String category,
                                  @RequestParam(required = false) String tag);
 

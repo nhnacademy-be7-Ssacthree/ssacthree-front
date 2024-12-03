@@ -1,6 +1,7 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.review.service.impl;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.image.adapter.ImageUploadAdapter;
+import com.nhnacademy.mini_dooray.ssacthree_front.review.config.ReviewImagePathConfig;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.adapter.ReviewAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.MemberReviewResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.ReviewRequest;
@@ -27,10 +28,10 @@ import org.springframework.web.client.HttpServerErrorException;
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewAdapter adapter;
-    private static final String IMAGE_PATH = "/ssacthree/review/";
     private final ImageUploadAdapter imageUploadAdapter;
 
     private static final String BEARER = "Bearer ";
+    private final ReviewImagePathConfig reviewImagePathConfig;
 
     @Override
     public Page<BookReviewResponse> getReviewsByBookId(int page, int size, String[] sort, Long bookId) {
@@ -50,7 +51,7 @@ public class ReviewServiceImpl implements ReviewService {
     public void postReviewBook(Long bookId,Long orderId,ReviewRequest reviewRequest, HttpServletRequest request) {
         String accessToken = getAccessToken(request);
 
-        String imageurl = imageUploadAdapter.uploadImage(reviewRequest.getReviewImage(),IMAGE_PATH);
+        String imageurl = imageUploadAdapter.uploadImage(reviewRequest.getReviewImage(),reviewImagePathConfig.getImagePath());
 
         ReviewRequestWithUrl requestWithUrl = new ReviewRequestWithUrl(reviewRequest.getReviewRate(),reviewRequest.getReviewTitle(),reviewRequest.getReviewContent(),imageurl);
 

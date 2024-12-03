@@ -140,7 +140,7 @@ class CartControllerTest {
         String quantity = "2";
         CartItem cartItem = new CartItem(1L, "Book Title", 2, 20000, "image_url");
 
-        when(cartService.getBook(eq(Long.parseLong(bookId)))).thenReturn(cartItem);
+        when(cartService.getBook(Long.parseLong(bookId))).thenReturn(cartItem);
 
         // When & Then
         mockMvc.perform(get("/shop/carts/add")
@@ -149,7 +149,7 @@ class CartControllerTest {
             .andExpect(status().is3xxRedirection()) // Redirect 상태 확인
             .andExpect(redirectedUrl("/shop/carts")); // Redirect URL 확인
 
-        verify(cartService, times(1)).getBook(eq(Long.parseLong(bookId)));
+        verify(cartService, times(1)).getBook(Long.parseLong(bookId));
         verify(cartService, times(1)).addNewBook(any(HttpServletRequest.class), eq(cartItem.getId()), eq(cartItem.getTitle()),
             eq(Integer.parseInt(quantity)), eq(cartItem.getPrice()), eq(cartItem.getBookThumbnailImageUrl()));
     }
