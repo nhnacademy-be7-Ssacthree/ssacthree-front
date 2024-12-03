@@ -29,44 +29,32 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public AuthorUpdateRequest getAuthorById(Long authorId) {
-        ResponseEntity<AuthorUpdateRequest> request = authorAdapter.getAuthorById(authorId);
+        ResponseEntity<AuthorUpdateRequest> response = authorAdapter.getAuthorById(authorId);
 
-        try {
-            if (request.getStatusCode().is2xxSuccessful()) {
-                return request.getBody();
-            }
-            throw new AuthorFailedException(AUTHOR_SEARCH_ERROR);
-        } catch (HttpClientErrorException | HttpServerErrorException e) {
+        if (response == null || !response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
             throw new AuthorFailedException(AUTHOR_SEARCH_ERROR);
         }
+        return response.getBody();
     }
 
     @Override
     public Page<AuthorGetResponse> getAllAuthors(int page, int size, String[] sort) {
         ResponseEntity<Page<AuthorGetResponse>> response = authorAdapter.getAllAuthors(page, size, sort);
 
-        try {
-            if (response.getStatusCode().is2xxSuccessful()) {
-                return response.getBody();
-            }
-            throw new AuthorFailedException(AUTHOR_SEARCH_ERROR);
-        } catch (HttpClientErrorException | HttpServerErrorException e) {
+        if (response == null || !response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
             throw new AuthorFailedException(AUTHOR_SEARCH_ERROR);
         }
+        return response.getBody();
     }
 
     @Override
     public List<AuthorGetResponse> getAllAuthorList() {
         ResponseEntity<List<AuthorGetResponse>> response = authorAdapter.getAllAuthorList();
 
-        try{
-            if(response.getStatusCode().is2xxSuccessful()){
-                return response.getBody();
-            }
-            throw new AuthorFailedException(AUTHOR_SEARCH_ERROR);
-        }catch(HttpClientErrorException | HttpServerErrorException e){
+        if (response == null || !response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
             throw new AuthorFailedException(AUTHOR_SEARCH_ERROR);
         }
+        return response.getBody();
     }
 
     @Override

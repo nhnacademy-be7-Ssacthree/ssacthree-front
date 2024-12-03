@@ -42,7 +42,7 @@ public class MemberPointHistoryController {
             .map(entry -> entry.getKey() + "=" + entry.getValue())
             .collect(Collectors.joining("&"));
         model.addAttribute("pointHistories", pointHistories);
-        model.addAttribute("baseUrl", "/point-histories");
+        model.addAttribute("baseUrl", "/members/point-histories");
         model.addAttribute("allParams", allParams);
         model.addAttribute("extraParams", extraParams);
         return "memberPointHistory";

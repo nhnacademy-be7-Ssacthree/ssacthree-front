@@ -35,5 +35,5 @@ public interface OrderService {
     OrderDetailResponse getOrderDetail(Long orderId);
     OrderDetailResponse getOrderDetailByOrderNumber(String orderNumber, String phoneNumber);
 
-    void changeOrderStatue(String orderId);
+    void changeOrderStatue(Long orderId,String status);
 }
