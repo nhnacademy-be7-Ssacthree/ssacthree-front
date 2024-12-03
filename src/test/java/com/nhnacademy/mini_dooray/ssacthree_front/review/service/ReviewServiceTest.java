@@ -307,7 +307,7 @@ class ReviewServiceTest {
         RuntimeException exception = assertThrows(RuntimeException.class, () ->
             reviewService.authToWriteReview(bookId, request)
         );
-        assertEquals("이 오류는 뭐지", exception.getMessage());
+        assertEquals("리뷰 권한이 없습니다.", exception.getMessage());
     }
 
     @Test
@@ -325,7 +325,7 @@ class ReviewServiceTest {
         RuntimeException exception = assertThrows(RuntimeException.class, () ->
             reviewService.getReview(request, orderId, bookId)
         );
-        assertEquals("예상치 못한 상태 코드: 404 NOT_FOUND", exception.getMessage());
+        assertEquals("리뷰를 가져오는데 실패하였습니다.", exception.getMessage());
     }
 }
 

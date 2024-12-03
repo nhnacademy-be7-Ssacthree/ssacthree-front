@@ -2,6 +2,7 @@ package com.nhnacademy.mini_dooray.ssacthree_front.member.service.impl;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.member.adapter.MemberAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberCouponGetResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.CouponFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.MemberCouponService;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +25,9 @@ public class MemberCouponServiceImpl implements MemberCouponService {
             if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             }
-            throw new RuntimeException("API 호출 실패: " + response.getStatusCode());
+            throw new CouponFailedException("쿠폰을 가져오는데 실패하였습니다.");
         } catch (FeignException e) {
-            throw new RuntimeException("API 호출 중 예외 발생", e);
+            throw new CouponFailedException("API 호출 중 예외 발생");
         }
     }
 }

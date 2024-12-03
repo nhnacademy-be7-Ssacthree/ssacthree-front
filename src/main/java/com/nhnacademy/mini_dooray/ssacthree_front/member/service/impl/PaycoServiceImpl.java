@@ -8,11 +8,14 @@ import com.nhnacademy.mini_dooray.ssacthree_front.member.adapter.PaycoTokenAdapt
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.PaycoGetTokenResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.PaycoLoginRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.PaycoMemberResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.PaycoMemberResponse.Data;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.PaycoMemberResponse.Member;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.LoginFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.PaycoConnectionFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.PaycoService;
 import feign.FeignException;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -90,7 +93,9 @@ public class PaycoServiceImpl implements PaycoService {
                 code,
                 clientSecret);
             if (response.getStatusCode().is2xxSuccessful()) {
-                return response.getBody().getAccessToken();
+                return Optional.ofNullable(response.getBody())
+                    .map(body -> body.getAccessToken())
+                    .orElseThrow(() -> new IllegalStateException("응답 본문이 null입니다."));
             }
             return null;
         } catch (FeignException e) {
@@ -105,7 +110,11 @@ public class PaycoServiceImpl implements PaycoService {
             ResponseEntity<PaycoMemberResponse> response = paycoIdAdapter.getIdNo(clientId,
                 accessToken);
             if (response.getStatusCode().is2xxSuccessful()) {
-                return response.getBody().getData().getMember().getIdNo();
+                return Optional.ofNullable(response.getBody())
+                    .map(PaycoMemberResponse::getData)
+                    .map(Data::getMember)
+                    .map(Member::getIdNo)
+                    .orElseThrow(() -> new IllegalStateException("응답 본문 또는 데이터가 null입니다."));
             }
             return null;
         } catch (FeignException e) {
