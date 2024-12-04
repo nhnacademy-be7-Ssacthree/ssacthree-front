@@ -64,7 +64,7 @@ class MemberRegisterControllerTest {
 
 
     @Test
-    void testMemberRegisterValidationFailed() throws Exception {
+    void testMemberRegisterValidationFailed() {
         MemberRegisterRequest request = new MemberRegisterRequest(); // 유효하지 않은 데이터 포함
         BindingResult bindingResult = mock(BindingResult.class);
         RedirectAttributes redirectAttributes = mock(RedirectAttributes.class);
