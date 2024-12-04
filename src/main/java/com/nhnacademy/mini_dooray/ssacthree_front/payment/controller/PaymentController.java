@@ -191,8 +191,9 @@ public class PaymentController {
     public String cancelPayment(@PathVariable(name = "order-id") Long orderId,
                                 @ModelAttribute PaymentCancelRequest paymentCancelRequest,
                                 HttpServletRequest request) {
-        paymentService.cancelPayment(paymentCancelRequest.getPaymentKey(), paymentCancelRequest.getCancelReason());
+        paymentService.cancelPayment(orderId, paymentCancelRequest);
 
+        // 결제 취소 alert 띄우기
         String referer = request.getHeader("Referer");
         return "redirect:" + (referer != null ? referer : "/admin/orders");
     }
