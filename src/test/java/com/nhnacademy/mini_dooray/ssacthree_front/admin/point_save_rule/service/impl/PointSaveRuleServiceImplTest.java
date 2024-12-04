@@ -1,14 +1,18 @@
-package com.nhnacademy.mini_dooray.ssacthree_front.member.service;
+package com.nhnacademy.mini_dooray.ssacthree_front.admin.point_save_rule.service.impl;
+
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.point_save_rule.adapter.PointSaveRuleAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.point_save_rule.dto.PointSaveRuleCreateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.point_save_rule.dto.PointSaveRuleGetResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.point_save_rule.dto.PointSaveRuleUpdateRequest;
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.point_save_rule.exception.PointSaveRuleCreateFailedException;
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.point_save_rule.exception.PointSaveRuleGetFailedException;
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.point_save_rule.exception.PointSaveRuleUpdateFailedException;
-import com.nhnacademy.mini_dooray.ssacthree_front.admin.point_save_rule.service.impl.PointSaveRuleServiceImpl;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
+import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -16,14 +20,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpServerErrorException;
-
-import java.util.Collections;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 class PointSaveRuleServiceTest {
 
@@ -49,9 +45,6 @@ class PointSaveRuleServiceTest {
         assertEquals(1, result.size());
     }
 
-    @Test
-    void testGetAllPointSaveRules_Failure() {
-    }
 
     @Test
     void testCreatePointSaveRule_Success() {
@@ -66,9 +59,6 @@ class PointSaveRuleServiceTest {
         assertEquals("Created successfully", response.getMessage());
     }
 
-    @Test
-    void testCreatePointSaveRule_Failure() {
-    }
 
     @Test
     void testUpdatePointSaveRule_Success() {
@@ -83,7 +73,5 @@ class PointSaveRuleServiceTest {
         assertEquals("Updated successfully", response.getMessage());
     }
 
-    @Test
-    void testUpdatePointSaveRule_Failure() {
-    }
+
 }
