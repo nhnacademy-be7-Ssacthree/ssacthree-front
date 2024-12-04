@@ -39,9 +39,7 @@ public class BookCustomerController {
     private final DeliveryRuleService deliveryRuleService;
     private final PointSaveRuleCustomerService pointSaveRuleCustomerService;
     private static final String LIKE_BOOKS = "likeBooks";
-
-
-    private static final String LIKE_BOOKS = "likeBooks";
+    
 
     @GetMapping("/books")
     public String getBooksByFilters(

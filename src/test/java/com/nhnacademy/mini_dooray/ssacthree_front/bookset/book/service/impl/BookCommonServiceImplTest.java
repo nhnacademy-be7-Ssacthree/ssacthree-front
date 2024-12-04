@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.adapter.BookCustomerAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.dto.response.BookListResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.exception.BookFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.booklike.dto.request.BookLikeRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.booklike.dto.response.BookLikeResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryNameResponse;
@@ -132,13 +133,13 @@ class BookCommonServiceImplTest {
             Long authorId = 1L;
 
             when(adapter.getBooksByAuthorId(page, size, sort, authorId))
-                .thenThrow(new RuntimeException("Adapter error"));
+                .thenThrow(new BookFailedException("Adapter error"));
 
             // Act & Assert
             RuntimeException exception = assertThrows(RuntimeException.class, () ->
                 service.getBooksByAuthorId(page, size, sort, authorId));
 
-            assertTrue(exception.getMessage().contains("API 호출 중 예외 발생"));
+            assertTrue(exception.getMessage().contains("저자로 책들을 조회하는데 실패하였습니다."));
             verify(adapter, times(1)).getBooksByAuthorId(page, size, sort, authorId);
         }
     }
@@ -190,7 +191,7 @@ class BookCommonServiceImplTest {
             RuntimeException exception = assertThrows(RuntimeException.class, () ->
                 service.getBooksByCategoryId(page, size, sort, categoryId));
 
-            assertTrue(exception.getMessage().contains("API 호출 중 예외 발생"));
+            assertTrue(exception.getMessage().contains("카테고리로 책들을 조회하는데 실패하였습니다."));
             verify(adapter, times(1)).getBooksByCategoryId(page, size, sort, categoryId);
         }
     }
@@ -241,7 +242,7 @@ class BookCommonServiceImplTest {
             RuntimeException exception = assertThrows(RuntimeException.class, () ->
                 service.getBooksByTagId(page, size, sort, tagId));
 
-            assertTrue(exception.getMessage().contains("API 호출 중 예외 발생"));
+            assertTrue(exception.getMessage().contains("태그로 책들을 조회하는데 실패하였습니다."));
             verify(adapter, times(1)).getBooksByTagId(page, size, sort, tagId);
         }
     }
@@ -283,7 +284,7 @@ class BookCommonServiceImplTest {
             RuntimeException exception = assertThrows(RuntimeException.class, () ->
                 service.getBookById(bookId));
 
-            assertTrue(exception.getMessage().contains("API 호출 중 예외 발생"));
+            assertTrue(exception.getMessage().contains("책 아이디로 책을 조회하는데 실패하였습니다."));
             verify(adapter, times(1)).getBookById(bookId);
         }
     }
@@ -328,7 +329,7 @@ class BookCommonServiceImplTest {
             RuntimeException exception = assertThrows(RuntimeException.class, () ->
                 service.getCategoriesByBookId(bookId));
 
-            assertTrue(exception.getMessage().contains("API 호출 중 예외 발생"));
+            assertTrue(exception.getMessage().contains("책 아이디로 카테고리들을 가져오는데 실패하였습니다."));
             verify(adapter, times(1)).getCategoriesByBookId(bookId);
         }
     }
@@ -377,7 +378,7 @@ class BookCommonServiceImplTest {
             RuntimeException exception = assertThrows(RuntimeException.class, () ->
                 service.getAllAvailableBooks(page, size, sort));
 
-            assertTrue(exception.getMessage().contains("API 호출 중 예외 발생"));
+            assertTrue(exception.getMessage().contains("이용 가능한 책들을 가져오는데 실패하였습니다."));
             verify(adapter, times(1)).getAllAvailableBooks(page, size, sort);
         }
     }
@@ -426,7 +427,7 @@ class BookCommonServiceImplTest {
             RuntimeException exception = assertThrows(RuntimeException.class, () ->
                 service.getBooksByMemberId(page, size, sort));
 
-            assertTrue(exception.getMessage().contains("API 호출 중 예외 발생"));
+            assertTrue(exception.getMessage().contains("회원 아이디로 책들을 가져오는데 실패하였습니다."));
             verify(adapter, times(1)).getBooksByMemberId(page, size, sort);
         }
     }
@@ -465,7 +466,7 @@ class BookCommonServiceImplTest {
             RuntimeException exception = assertThrows(RuntimeException.class, () ->
                 service.getLikedBooksIdForCurrentUser());
 
-            assertTrue(exception.getMessage().contains("API 호출 중 예외 발생"));
+            assertTrue(exception.getMessage().contains("현재 유저가 좋아요를 누른 책의 정보를 가져오는데 실패하였습니다."));
             verify(adapter, times(1)).getLikedBooksIdForCurrentUser();
         }
     }
@@ -510,7 +511,7 @@ class BookCommonServiceImplTest {
             RuntimeException exception = assertThrows(RuntimeException.class, () ->
                 service.createBookLikeByMemberId(request));
 
-            assertTrue(exception.getMessage().contains("API 호출 중 예외 발생"));
+            assertTrue(exception.getMessage().contains("회원의 아이디로 좋아요를 누른 책을 만드는데 실패하였습니다."));
             verify(adapter, times(1)).createBookLikeByMemberId(request);
         }
     }
@@ -551,7 +552,7 @@ class BookCommonServiceImplTest {
             RuntimeException exception = assertThrows(RuntimeException.class, () ->
                 service.deleteBookLikeByMemberId(bookId));
 
-            assertTrue(exception.getMessage().contains("API 호출 중 예외 발생"));
+            assertTrue(exception.getMessage().contains("회원 아이디가 누른 좋아요를 삭제하는데 실패였습니다."));
             verify(adapter, times(1)).deleteBookLikeByMemberId(bookId);
         }
     }
