@@ -41,7 +41,6 @@ public class BookCustomerController {
     private static final String LIKE_BOOKS = "likeBooks";
 
 
-    private static final String LIKE_BOOKS = "likeBooks";
 
     @GetMapping("/books")
     public String getBooksByFilters(
