@@ -37,12 +37,12 @@ public class MemberRegisterRequest {
 
     @NotBlank(message = "공백일 수 없습니다.")
     @Size(max = 50)
-    @Pattern(regexp = "^[A-Za-z0-9_]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$", message = "올바른 이메일 주소를 입력하세요.")
+    @Pattern(regexp = "^\\w+@[\\w.-]+\\.[A-Za-z]{2,6}$", message = "올바른 이메일 주소를 입력하세요.")
     private String customerEmail;
 
     @NotBlank(message = "공백일 수 없습니다.")
     @Size(min = 8, max = 8, message = "생년월일은 숫자 8자리여야 합니다.")
-    @Pattern(regexp = "^[0-9]{8}$", message = "8자리 숫자로만 입력 가능합니다.")
+    @Pattern(regexp = "^\\d{8}$", message = "8자리 숫자로만 입력 가능합니다.")
     private String birth;
 
     public void setBirth(String birth) {

@@ -2,7 +2,6 @@ package com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.controller;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.dto.TagCreateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.dto.TagUpdateRequest;
-import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.exception.TagFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.service.TagMgmtService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +20,7 @@ import java.util.stream.Collectors;
 public class TagMgmtController {
 
     private final TagMgmtService tagMgmtService;
+    private static final String REDIRECT_TAG = "redirect:/admin/tags";
 
     @GetMapping
     public String tagView(
@@ -49,7 +49,7 @@ public class TagMgmtController {
     @PostMapping
     public String tagCreate(@ModelAttribute TagCreateRequest tagCreateRequest) {
         tagMgmtService.createTag(tagCreateRequest);
-        return "redirect:/admin/tags";
+        return REDIRECT_TAG;
     }
 
     @PostMapping("/update")
@@ -63,13 +63,13 @@ public class TagMgmtController {
             return "admin/tag/Tag";
         }
         tagMgmtService.updateTag(tagUpdateRequest);
-        return "redirect:/admin/tags";
+        return REDIRECT_TAG;
     }
 
     @PostMapping("/delete/{tag-id}")
     public String tagDelete(@PathVariable(name = "tag-id") Long tagId) {
         tagMgmtService.deleteTag(tagId);
-        return "redirect:/admin/tags";
+        return REDIRECT_TAG;
     }
 
 }

@@ -12,7 +12,6 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerAdapter customerAdapter;
 
     public Long createCustomer(CustomerCreateRequest request) {
-        Long customerId = customerAdapter.createCustomer(request).getBody();
-        return customerId;
+        return customerAdapter.createCustomer(request).getBody();
     }
 }

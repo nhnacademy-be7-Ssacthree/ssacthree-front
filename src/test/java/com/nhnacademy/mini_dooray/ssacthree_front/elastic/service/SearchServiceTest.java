@@ -43,7 +43,7 @@ class SearchServiceTest {
     ));
 
     // SearchAdapter의 동작 모의
-    when(searchAdapter.searchBooks(eq(keyword), eq(page), eq(sort), eq(pageSize), eq("fiction"), eq("bestseller")))
+    when(searchAdapter.searchBooks(keyword, page, sort, pageSize, "fiction", "bestseller"))
         .thenReturn(mockResponse);
 
     // 서비스 호출
@@ -53,10 +53,10 @@ class SearchServiceTest {
     assertThat(result).isNotNull();
     assertThat(result.getTotalHits()).isEqualTo(10);
     assertThat(result.getBooks()).hasSize(2);
-    assertThat(result.getBooks().get(0).getBookName()).isEqualTo("Test Book 1");
+    assertThat(result.getBooks().getFirst().getBookName()).isEqualTo("Test Book 1");
 
     // SearchAdapter가 올바르게 호출되었는지 확인
-    verify(searchAdapter, times(1)).searchBooks(eq(keyword), eq(page), eq(sort), eq(pageSize), eq("fiction"), eq("bestseller"));
+    verify(searchAdapter, times(1)).searchBooks(keyword, page, sort, pageSize, "fiction", "bestseller");
   }
 
   @Test

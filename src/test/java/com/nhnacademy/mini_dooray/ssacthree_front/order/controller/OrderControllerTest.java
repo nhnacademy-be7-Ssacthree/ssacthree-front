@@ -28,15 +28,12 @@ import static org.mockito.Mockito.doNothing;
 
 import java.time.LocalDate;
 import java.util.List;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
-import org.springframework.web.context.WebApplicationContext;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -83,7 +80,7 @@ class OrderControllerTest {
 
   @Test
   @WithMockUser(username = "testUser", roles = {"USER"})
-  public void testGetOrderDetailByOrderNumber_NotFound() throws Exception {
+  void testGetOrderDetailByOrderNumber_NotFound() throws Exception {
     mockMvc.perform(get("/orderDetailbyNum")
             .param("orderNumber", "invalid-order-number")
             .param("phoneNumber", "000-0000-0000"))
@@ -198,7 +195,7 @@ class OrderControllerTest {
     when(cartService.getAccessToken(any(HttpServletRequest.class))).thenReturn("mockAccessToken");
     when(memberService.getMemberInfo(any(HttpServletRequest.class))).thenReturn(mockMemberInfo);
     when(orderService.getOrdersByMemberAndDate(
-        eq(mockMemberInfo.getCustomerId()), eq(page), eq(size), eq(startDate), eq(endDate)
+        mockMemberInfo.getCustomerId(), page, size, startDate, endDate
     )).thenReturn(mockResponse);
 
     // Act & Assert
@@ -219,7 +216,7 @@ class OrderControllerTest {
     verify(cartService).getAccessToken(any(HttpServletRequest.class));
     verify(memberService).getMemberInfo(any(HttpServletRequest.class));
     verify(orderService).getOrdersByMemberAndDate(
-        eq(mockMemberInfo.getCustomerId()), eq(page), eq(size), eq(startDate), eq(endDate)
+        mockMemberInfo.getCustomerId(), page, size, startDate, endDate
     );
   }
 
@@ -262,7 +259,7 @@ class OrderControllerTest {
         .build();
 
     // Service 계층에서 반환할 Mock 설정
-    when(orderService.getOrderDetailByOrderNumber(eq(orderNumber), eq(phoneNumber)))
+    when(orderService.getOrderDetailByOrderNumber(orderNumber, phoneNumber))
         .thenReturn(mockOrderDetail);
 
     // Act & Assert
@@ -275,7 +272,7 @@ class OrderControllerTest {
         .andExpect(model().attribute("orderDetail", mockOrderDetail)); // 모델의 "orderDetail" 값 확인
 
     // Verify interaction
-    verify(orderService).getOrderDetailByOrderNumber(eq(orderNumber), eq(phoneNumber));
+    verify(orderService).getOrderDetailByOrderNumber(orderNumber, phoneNumber);
   }
 
 

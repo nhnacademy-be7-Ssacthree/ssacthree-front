@@ -40,6 +40,8 @@ public class BookCustomerController {
     private final DeliveryRuleService deliveryRuleService;
     private final PointSaveRuleCustomerService pointSaveRuleCustomerService;
 
+    private static final String LIKE_BOOKS = "likeBooks";
+
     @GetMapping("/books")
     public String getBooksByFilters(
             @RequestParam(defaultValue = "0") int page,
@@ -74,7 +76,7 @@ public class BookCustomerController {
 
         if (CookieUtil.checkAccessTokenCookie(request)) {
             List<Long> likeBooks = bookCommonService.getLikedBooksIdForCurrentUser();
-            model.addAttribute("likeBooks", likeBooks);
+            model.addAttribute(LIKE_BOOKS, likeBooks);
         }
 
         // 데이터 가져오기
@@ -121,7 +123,7 @@ public class BookCustomerController {
 
         if (CookieUtil.checkAccessTokenCookie(request)) {
             List<Long> likeBooks = bookCommonService.getLikedBooksIdForCurrentUser();
-            model.addAttribute("likeBooks", likeBooks);
+            model.addAttribute(LIKE_BOOKS, likeBooks);
         }
 
         // 카테고리 정보 가져오기
@@ -167,7 +169,7 @@ public class BookCustomerController {
 
         if (CookieUtil.checkAccessTokenCookie(request)) {
             List<Long> likeBooks = bookCommonService.getLikedBooksIdForCurrentUser();
-            model.addAttribute("likeBooks", likeBooks);
+            model.addAttribute(LIKE_BOOKS, likeBooks);
         }
 
 

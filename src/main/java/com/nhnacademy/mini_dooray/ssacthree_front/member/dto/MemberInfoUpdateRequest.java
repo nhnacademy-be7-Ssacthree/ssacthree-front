@@ -26,7 +26,7 @@ public class MemberInfoUpdateRequest {
 
     @NotBlank(message = "공백일 수 없습니다.")
     @Size(max = 50)
-    @Pattern(regexp = "^[A-Za-z0-9_]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$", message = "올바른 이메일 주소를 입력하세요.")
+    @Pattern(regexp = "^\\w+@[\\w.-]+\\.[A-Za-z]{2,6}$", message = "올바른 이메일 주소를 입력하세요.")
     private String customerEmail;
 
 

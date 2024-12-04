@@ -2,6 +2,7 @@ package com.nhnacademy.mini_dooray.ssacthree_front.member.service.impl;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.member.adapter.MemberAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.PointHistoryGetResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.GetPointHistoryFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.PointHistoryService;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -26,10 +27,10 @@ public class PointHistoryServiceImpl implements PointHistoryService {
             if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             }
-            throw new RuntimeException("API 호출 실패: " + response.getStatusCode());
+            throw new GetPointHistoryFailedException("포인트 목록을 조회하는데 실패하였습니다." + response.getStatusCode());
 
         } catch (FeignException e) {
-            throw new RuntimeException("API 호출 중 예회 발생", e);
+            throw new GetPointHistoryFailedException("포인트 목록을 조회하는데 실패하였습니다.");
         }
     }
 }

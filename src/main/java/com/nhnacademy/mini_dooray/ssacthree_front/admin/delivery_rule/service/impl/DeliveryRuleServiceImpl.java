@@ -25,6 +25,8 @@ public class DeliveryRuleServiceImpl implements DeliveryRuleService {
     private final DeliveryRuleAdapter deliveryRuleAdapter;
     private final DeliveryRuleCustomerAdapter deliveryRuleCustomerAdapter;
 
+    private static final String FAILED_TO_DELIVERY = "배송정책 생성에 실패하였습니다.";
+
     @Override
     public MessageResponse createDeliveryRule(DeliveryRuleCreateRequest deliveryRuleCreateRequest) {
         ResponseEntity<MessageResponse> response = deliveryRuleAdapter.createDeliveryRule(deliveryRuleCreateRequest);
@@ -33,10 +35,10 @@ public class DeliveryRuleServiceImpl implements DeliveryRuleService {
             if(response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             }
-            throw new DeliveryRuleCreateFailedException("배송정책 생성에 실패하였습니다.");
+            throw new DeliveryRuleCreateFailedException(FAILED_TO_DELIVERY);
         }
         catch (HttpClientErrorException | HttpServerErrorException e ) {
-            throw new DeliveryRuleCreateFailedException("배송정책 생성에 실패하였습니다.");
+            throw new DeliveryRuleCreateFailedException(FAILED_TO_DELIVERY);
         }
     }
 
@@ -48,9 +50,9 @@ public class DeliveryRuleServiceImpl implements DeliveryRuleService {
             if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             }
-            throw new DeliveryRuleGetFailedException("배송정책 조회에 실패하였습니다.");
+            throw new DeliveryRuleGetFailedException(FAILED_TO_DELIVERY);
         } catch (HttpClientErrorException | HttpServerErrorException e ) {
-            throw new DeliveryRuleGetFailedException("배송정책 조회에 실패하였습니다.");
+            throw new DeliveryRuleGetFailedException(FAILED_TO_DELIVERY);
         }
     }
 

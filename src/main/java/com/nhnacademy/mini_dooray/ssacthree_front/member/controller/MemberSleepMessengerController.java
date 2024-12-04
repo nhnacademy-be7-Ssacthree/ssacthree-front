@@ -4,6 +4,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.member.adapter.DoorayAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.Dooray;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.CertNumberService;
 import java.util.Map;
+import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,10 +17,11 @@ public class MemberSleepMessengerController {
 
     private final DoorayAdapter doorayAdapter;
     private final CertNumberService certNumberService;
+    Random random = new Random();
 
 
     @PostMapping("/send-cert-number")
-    public ResponseEntity<?> sendCertNumber(@RequestBody Map<String, String> payload) {
+    public ResponseEntity<Void> sendCertNumber(@RequestBody Map<String, String> payload) {
 
         String memberLoginId = payload.get("memberLoginId");
         String certNumber = generateCertNumber();
@@ -30,7 +32,8 @@ public class MemberSleepMessengerController {
     }
 
     private String generateCertNumber() {
-        return String.valueOf((int) (Math.random() * 9000) + 1000); // 4자리 랜덤 숫자
+        int certNumber = random.nextInt(9000) + 1000; // 1000부터 9999까지의 랜덤 숫자 생성
+        return String.valueOf((certNumber * 9000) + 1000); // 4자리 랜덤 숫자
     }
 
     private void sendCertNumberToUser(String certNumber) {

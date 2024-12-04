@@ -16,6 +16,8 @@ public class PackagingController {
 
     private final PackagingService packagingService;
 
+    private static final String REDIRECT_TO_PACKAGING = "redirect:/admin/packaging";
+
     @GetMapping
     public String packagingView(Model model) {
         model.addAttribute("packagingList", packagingService.getAllPackaging());
@@ -32,7 +34,7 @@ public class PackagingController {
         PackagingCreateRequest packagingCreateRequest = new PackagingCreateRequest(name, price, imageUrl);
 
         packagingService.createPackaging(packagingCreateRequest);
-        return "redirect:/admin/packaging";
+        return REDIRECT_TO_PACKAGING;
     }
 
     @PostMapping("/update/{packaging-id}")
@@ -47,12 +49,12 @@ public class PackagingController {
         // 서비스 호출하여 업데이트 처리
         packagingService.updatePackaging(packagingId, packagingUpdateRequest);
 
-        return "redirect:/admin/packaging";
+        return REDIRECT_TO_PACKAGING;
     }
 
     @PostMapping("/delete/{packaging-id}")
     public String deletePackaging(@PathVariable("packaging-id") Long id) {
         packagingService.deletePackaging(id);
-        return "redirect:/admin/packaging";
+        return REDIRECT_TO_PACKAGING;
     }
 }

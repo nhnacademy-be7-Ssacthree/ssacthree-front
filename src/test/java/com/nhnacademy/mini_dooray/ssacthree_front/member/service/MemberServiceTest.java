@@ -180,7 +180,7 @@ class MemberServiceTest {
         ResponseEntity<MemberInfoResponse> responseEntity = new ResponseEntity<>(expectedResponse,
             HttpStatus.OK);
 
-        when(memberAdapter.memberInfo(eq(HEADER_BEARER + "testAccessToken"))).thenReturn(
+        when(memberAdapter.memberInfo(HEADER_BEARER + "testAccessToken")).thenReturn(
             responseEntity);
 
         // Act
@@ -198,7 +198,7 @@ class MemberServiceTest {
         when(request.getCookies()).thenReturn(cookies);
 
         FeignException feignException = mock(FeignException.class);
-        when(memberAdapter.memberInfo(eq(HEADER_BEARER + "testAccessToken"))).thenThrow(
+        when(memberAdapter.memberInfo(HEADER_BEARER + "testAccessToken")).thenThrow(
             feignException);
 
         // Act & Assert

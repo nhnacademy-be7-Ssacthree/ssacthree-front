@@ -29,16 +29,14 @@ public class CookieUtil {
             }
         }
 
-        if (accessToken == null) {
-            return false;
-        }
-        return true;
+        return accessToken != null;
     }
 
     public static void addCookieFromFeignClient(HttpServletResponse httpServletResponse,
         ResponseEntity<?> response) {
         List<String> cookies = response.getHeaders().get(SET_COOKIE);
-        httpServletResponse.addHeader(SET_COOKIE, cookies.get(0));
+        assert cookies != null;
+        httpServletResponse.addHeader(SET_COOKIE, cookies.getFirst());
         httpServletResponse.addHeader(SET_COOKIE, cookies.get(1));
     }
 
