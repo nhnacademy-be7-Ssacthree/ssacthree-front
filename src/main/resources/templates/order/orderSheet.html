@@ -444,7 +444,8 @@
             { className: "book-total-price", isPercentage: false }, // 총합 금액
             { className: "sale-price", isPercentage: false }, // 판매 가격
             { className: "regular-price", isPercentage: false }, // 정가
-            { className: "book-discount", isPercentage: true } // 할인율
+            { className: "book-discount", isPercentage: true }, // 할인율
+            { className: "user-points", isPercentage: false }, // 할인율
         ];
 
         // 각 클래스에 대해 포맷팅 함수 실행
@@ -452,18 +453,6 @@
             formatNumber(className, isPercentage)
         );
 
-        // 포맷팅할 항목들 (ID 기반)
-        const idsToFormat = [
-            "book-price",           // 도서 금액
-            "delivery-price",       // 배송비
-            "packaging-price",      // 포장 가격
-            "discount-amount",      // 할인 금액
-            "PaymentPrice",         // 총 결제 금액
-            "user-points"           // 보유 포인트
-        ];
-
-        // 각 ID에 대해 포맷팅 함수 실행
-        idsToFormat.forEach(id => formatNumberById(id));
     });
 
 
