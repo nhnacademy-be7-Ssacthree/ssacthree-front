@@ -44,6 +44,8 @@ public class CartService {
     private static final String BEARER = "Bearer ";
     private static final String CART_ITEM = "cartItems";
 
+    private static final String NOT_SESSION = "세션이 없습니다.";
+
     /**
      *
      * @param cartId 카트 번호
@@ -118,7 +120,10 @@ public class CartService {
 
 
     public void updateItemQuantity(HttpServletRequest request, Long itemId, int quantityChange) {
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            throw new SessionNotFoundException(NOT_SESSION); // 명확한 예외 던짐
+        }
         String cartId = session.getId();
         List<CartItem> cartItems = getCartItemsByCartId(cartId);
 
@@ -142,7 +147,10 @@ public class CartService {
 
 
     public void deleteItem(HttpServletRequest request, Long itemId) {
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            throw new SessionNotFoundException(NOT_SESSION); // 명확한 예외 던짐
+        }
         String cartId = session.getId();
         List<CartItem> cartItems = getCartItemsByCartId(cartId);
         Iterator<CartItem> iterator = cartItems.iterator();
@@ -160,7 +168,10 @@ public class CartService {
 
 
     public void addNewBook(HttpServletRequest request, Long itemId, String title, int quantity, int price, String image) {
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            throw new SessionNotFoundException(NOT_SESSION); // 명확한 예외 던짐
+        }
         String cartId = session.getId();
         List<CartItem> cartItems = getCartItemsByCartId(cartId);
 
@@ -238,7 +249,7 @@ public class CartService {
         }
     }
 
-    private Long getLoginCustomerId(HttpServletRequest request) {
+    public Long getLoginCustomerId(HttpServletRequest request) {
         String accessToken = getAccessToken(request);
         try {
             ResponseEntity<Long> response = cartAdapter.getCustomerId(BEARER + accessToken);
@@ -293,7 +304,7 @@ public class CartService {
 
         HttpSession session = request.getSession(false);
         if (session == null) {
-            throw new SessionNotFoundException("세션이 없습니다.");
+            throw new SessionNotFoundException(NOT_SESSION);
         }
 
         // 세션 ID 가져오기

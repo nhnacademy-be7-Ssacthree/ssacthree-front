@@ -40,6 +40,7 @@ public class BookCustomerController {
     private final PointSaveRuleCustomerService pointSaveRuleCustomerService;
     private static final String LIKE_BOOKS = "likeBooks";
 
+
     @GetMapping("/books")
     public String getBooksByFilters(
         @RequestParam(defaultValue = "0") int page,
