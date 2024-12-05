@@ -34,7 +34,7 @@ public class BookCommonServiceImpl implements BookCommonService {
             }
         } catch (Exception e) {
             // 예외 로깅 및 처리
-            throw new BookFailedException("저자로 책들을 조회하는데 실패하였습니다.");
+            throw new BookFailedException("저자로 책들을 조회하는데 실패하였습니다.", e);
         }
     }
 
