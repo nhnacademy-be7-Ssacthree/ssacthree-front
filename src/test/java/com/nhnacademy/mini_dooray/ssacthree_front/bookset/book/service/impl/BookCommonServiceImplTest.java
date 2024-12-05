@@ -124,7 +124,7 @@ class BookCommonServiceImplTest {
 
 
         @Test
-        @DisplayName("Adapter가 예외를 던지면 BookFailedException을 던져야 한다")
+        @DisplayName("Adapter가 예외를 던지면 RuntimeException을 던져야 한다")
         void testGetBooksByAuthorIdAdapterException() {
             // Arrange
             int page = 0;
@@ -132,23 +132,14 @@ class BookCommonServiceImplTest {
             String[] sort = {"name,asc"};
             Long authorId = 1L;
 
-            // Adapter에서 RuntimeException을 던지도록 설정
             when(adapter.getBooksByAuthorId(page, size, sort, authorId))
-                .thenThrow(new RuntimeException("Adapter error"));
+                .thenThrow(new BookFailedException("Adapter error"));
 
             // Act & Assert
-            BookFailedException exception = assertThrows(BookFailedException.class, () ->
-                service.getBooksByAuthorId(page, size, sort, authorId)
-            );
+            RuntimeException exception = assertThrows(RuntimeException.class, () ->
+                service.getBooksByAuthorId(page, size, sort, authorId));
 
-            // 예외 메시지가 올바른지 확인
-            assertTrue(exception.getMessage().contains("저자로 책들을 조회하는데 실패"));
-            assertTrue(exception.getCause() instanceof RuntimeException,
-                "Expected cause to be an instance of RuntimeException");
-            assertEquals("Adapter error", exception.getCause().getMessage(),
-                "Expected cause message to match 'Adapter error'");
-
-            // Adapter 호출 검증
+            assertTrue(exception.getMessage().contains("저자로 책들을 조회하는데 실패하였습니다."));
             verify(adapter, times(1)).getBooksByAuthorId(page, size, sort, authorId);
         }
     }
@@ -185,7 +176,7 @@ class BookCommonServiceImplTest {
 
 
         @Test
-        @DisplayName("Adapter가 예외를 던지면 BookFailedException을 던져야 한다")
+        @DisplayName("Adapter가 예외를 던지면 RuntimeException을 던져야 한다")
         void testGetBooksByCategoryIdAdapterException() {
             // Arrange
             int page = 0;
@@ -193,20 +184,14 @@ class BookCommonServiceImplTest {
             String[] sort = {"name,asc"};
             Long categoryId = 1L;
 
-            // Adapter에서 RuntimeException을 던지도록 설정
             when(adapter.getBooksByCategoryId(page, size, sort, categoryId))
                 .thenThrow(new RuntimeException("Adapter error"));
 
             // Act & Assert
-            BookFailedException exception = assertThrows(BookFailedException.class, () ->
-                service.getBooksByCategoryId(page, size, sort, categoryId)
-            );
+            RuntimeException exception = assertThrows(RuntimeException.class, () ->
+                service.getBooksByCategoryId(page, size, sort, categoryId));
 
-            // 예외 메시지가 올바른지 확인
-            assertTrue(exception.getMessage().contains("카테고리로 책들을 조회하는데 실패"));
-            assertTrue(exception.getCause() instanceof RuntimeException);
-
-            // Adapter가 정확히 호출되었는지 확인
+            assertTrue(exception.getMessage().contains("카테고리로 책들을 조회하는데 실패하였습니다."));
             verify(adapter, times(1)).getBooksByCategoryId(page, size, sort, categoryId);
         }
     }
@@ -242,7 +227,7 @@ class BookCommonServiceImplTest {
 
 
         @Test
-        @DisplayName("Adapter가 예외를 던지면 BookFailedException을 던져야 한다")
+        @DisplayName("Adapter가 예외를 던지면 RuntimeException을 던져야 한다")
         void testGetBooksByTagIdAdapterException() {
             // Arrange
             int page = 0;
@@ -250,20 +235,14 @@ class BookCommonServiceImplTest {
             String[] sort = {"name,asc"};
             Long tagId = 1L;
 
-            // Adapter에서 RuntimeException을 던지도록 설정
             when(adapter.getBooksByTagId(page, size, sort, tagId))
                 .thenThrow(new RuntimeException("Adapter error"));
 
             // Act & Assert
-            BookFailedException exception = assertThrows(BookFailedException.class, () ->
-                service.getBooksByTagId(page, size, sort, tagId)
-            );
+            RuntimeException exception = assertThrows(RuntimeException.class, () ->
+                service.getBooksByTagId(page, size, sort, tagId));
 
-            // 예외 메시지가 올바른지 확인
-            assertTrue(exception.getMessage().contains("테그로 책들을 조회하는데 실패"));
-            assertTrue(exception.getCause() instanceof RuntimeException);
-
-            // Adapter가 정확히 호출되었는지 확인
+            assertTrue(exception.getMessage().contains("태그로 책들을 조회하는데 실패하였습니다."));
             verify(adapter, times(1)).getBooksByTagId(page, size, sort, tagId);
         }
     }
@@ -293,25 +272,19 @@ class BookCommonServiceImplTest {
 
 
         @Test
-        @DisplayName("Adapter가 예외를 던지면 BookFailedException을 던져야 한다")
+        @DisplayName("Adapter가 예외를 던지면 RuntimeException을 던져야 한다")
         void testGetBookByIdAdapterException() {
             // Arrange
             Long bookId = 1L;
 
-            // Adapter에서 RuntimeException을 던지도록 설정
             when(adapter.getBookById(bookId))
                 .thenThrow(new RuntimeException("Adapter error"));
 
             // Act & Assert
-            BookFailedException exception = assertThrows(BookFailedException.class, () ->
-                service.getBookById(bookId)
-            );
+            RuntimeException exception = assertThrows(RuntimeException.class, () ->
+                service.getBookById(bookId));
 
-            // 예외 메시지가 올바른지 확인
-            assertTrue(exception.getMessage().contains("책 아이디로 책을 조회하는데 실패"));
-            assertTrue(exception.getCause() instanceof RuntimeException);
-
-            // Adapter가 정확히 호출되었는지 확인
+            assertTrue(exception.getMessage().contains("책 아이디로 책을 조회하는데 실패하였습니다."));
             verify(adapter, times(1)).getBookById(bookId);
         }
     }
@@ -344,25 +317,19 @@ class BookCommonServiceImplTest {
 
 
         @Test
-        @DisplayName("Adapter가 예외를 던지면 BookFailedException을 던져야 한다")
+        @DisplayName("Adapter가 예외를 던지면 RuntimeException을 던져야 한다")
         void testGetCategoriesByBookIdAdapterException() {
             // Arrange
             Long bookId = 1L;
 
-            // Adapter에서 RuntimeException을 던지도록 설정
             when(adapter.getCategoriesByBookId(bookId))
                 .thenThrow(new RuntimeException("Adapter error"));
 
             // Act & Assert
-            BookFailedException exception = assertThrows(BookFailedException.class, () ->
-                service.getCategoriesByBookId(bookId)
-            );
+            RuntimeException exception = assertThrows(RuntimeException.class, () ->
+                service.getCategoriesByBookId(bookId));
 
-            // 예외 메시지가 올바른지 확인
-            assertTrue(exception.getMessage().contains("책 아이디로 카테고리들을 가져오는데 실패"));
-            assertTrue(exception.getCause() instanceof RuntimeException);
-
-            // Adapter가 정확히 호출되었는지 확인
+            assertTrue(exception.getMessage().contains("책 아이디로 카테고리들을 가져오는데 실패하였습니다."));
             verify(adapter, times(1)).getCategoriesByBookId(bookId);
         }
     }
@@ -397,27 +364,21 @@ class BookCommonServiceImplTest {
 
 
         @Test
-        @DisplayName("Adapter가 예외를 던지면 BookFailedException을 던져야 한다")
+        @DisplayName("Adapter가 예외를 던지면 RuntimeException을 던져야 한다")
         void testGetAllAvailableBooksAdapterException() {
             // Arrange
             int page = 0;
             int size = 10;
             String[] sort = {"name,asc"};
 
-            // Adapter에서 RuntimeException을 던지도록 설정
             when(adapter.getAllAvailableBooks(page, size, sort))
                 .thenThrow(new RuntimeException("Adapter error"));
 
             // Act & Assert
-            BookFailedException exception = assertThrows(BookFailedException.class, () ->
-                service.getAllAvailableBooks(page, size, sort)
-            );
+            RuntimeException exception = assertThrows(RuntimeException.class, () ->
+                service.getAllAvailableBooks(page, size, sort));
 
-            // 예외 메시지가 올바른지 확인
-            assertTrue(exception.getMessage().contains("이용 가능한 책들을 가져오는데 실패"));
-            assertTrue(exception.getCause() instanceof RuntimeException);
-
-            // Adapter가 정확히 호출되었는지 확인
+            assertTrue(exception.getMessage().contains("이용 가능한 책들을 가져오는데 실패하였습니다."));
             verify(adapter, times(1)).getAllAvailableBooks(page, size, sort);
         }
     }
@@ -452,27 +413,21 @@ class BookCommonServiceImplTest {
 
 
         @Test
-        @DisplayName("Adapter가 예외를 던지면 BookFailedException을 던져야 한다")
+        @DisplayName("Adapter가 예외를 던지면 RuntimeException을 던져야 한다")
         void testGetBooksByMemberIdAdapterException() {
             // Arrange
             int page = 0;
             int size = 10;
             String[] sort = {"name,asc"};
 
-            // Adapter에서 RuntimeException을 던지도록 설정
             when(adapter.getBooksByMemberId(page, size, sort))
                 .thenThrow(new RuntimeException("Adapter error"));
 
             // Act & Assert
-            BookFailedException exception = assertThrows(BookFailedException.class, () ->
-                service.getBooksByMemberId(page, size, sort)
-            );
+            RuntimeException exception = assertThrows(RuntimeException.class, () ->
+                service.getBooksByMemberId(page, size, sort));
 
-            // 예외 메시지가 올바른지 확인
-            assertTrue(exception.getMessage().contains("회원 아이디로 책들을 가져오는데 실패"));
-            assertTrue(exception.getCause() instanceof RuntimeException);
-
-            // Adapter가 정확히 호출되었는지 확인
+            assertTrue(exception.getMessage().contains("회원 아이디로 책들을 가져오는데 실패하였습니다."));
             verify(adapter, times(1)).getBooksByMemberId(page, size, sort);
         }
     }
@@ -501,22 +456,17 @@ class BookCommonServiceImplTest {
 
 
         @Test
-        @DisplayName("Adapter가 예외를 던지면 BookFailedException을 던져야 한다")
+        @DisplayName("Adapter가 예외를 던지면 RuntimeException을 던져야 한다")
         void testGetLikedBooksIdForCurrentUserAdapterException() {
             // Arrange
             when(adapter.getLikedBooksIdForCurrentUser())
                 .thenThrow(new RuntimeException("Adapter error"));
 
             // Act & Assert
-            BookFailedException exception = assertThrows(BookFailedException.class, () ->
-                service.getLikedBooksIdForCurrentUser()
-            );
+            RuntimeException exception = assertThrows(RuntimeException.class, () ->
+                service.getLikedBooksIdForCurrentUser());
 
-            // 예외 메시지가 올바른지 확인
-            assertTrue(exception.getMessage().contains("좋아요를 누른 책의 정보를 가져오는데 실패"));
-            assertTrue(exception.getCause() instanceof RuntimeException);
-
-            // Adapter가 정확히 호출되었는지 확인
+            assertTrue(exception.getMessage().contains("현재 유저가 좋아요를 누른 책의 정보를 가져오는데 실패하였습니다."));
             verify(adapter, times(1)).getLikedBooksIdForCurrentUser();
         }
     }
@@ -549,25 +499,19 @@ class BookCommonServiceImplTest {
 
 
         @Test
-        @DisplayName("Adapter가 예외를 던지면 BookFailedException을 던져야 한다")
+        @DisplayName("Adapter가 예외를 던지면 RuntimeException을 던져야 한다")
         void testCreateBookLikeByMemberIdAdapterException() {
             // Arrange
-            BookLikeRequest request = new BookLikeRequest(); // 필요한 필드 초기화
+            BookLikeRequest request = new BookLikeRequest(); // 적절한 필드 설정 필요
 
-            // Adapter에서 RuntimeException을 던지도록 설정
             when(adapter.createBookLikeByMemberId(request))
                 .thenThrow(new RuntimeException("Adapter error"));
 
             // Act & Assert
-            BookFailedException exception = assertThrows(BookFailedException.class, () ->
-                service.createBookLikeByMemberId(request)
-            );
+            RuntimeException exception = assertThrows(RuntimeException.class, () ->
+                service.createBookLikeByMemberId(request));
 
-            // 예외 메시지가 올바른지 확인
-            assertTrue(exception.getMessage().contains("좋아요를 누른 책을 만드는데 실패"));
-            assertTrue(exception.getCause() instanceof RuntimeException);
-
-            // Adapter가 정확히 호출되었는지 확인
+            assertTrue(exception.getMessage().contains("회원의 아이디로 좋아요를 누른 책을 만드는데 실패하였습니다."));
             verify(adapter, times(1)).createBookLikeByMemberId(request);
         }
     }
@@ -596,25 +540,19 @@ class BookCommonServiceImplTest {
 
 
         @Test
-        @DisplayName("Adapter가 예외를 던지면 BookFailedException을 던져야 한다")
+        @DisplayName("Adapter가 예외를 던지면 RuntimeException을 던져야 한다")
         void testDeleteBookLikeByMemberIdAdapterException() {
             // Arrange
             Long bookId = 1L;
 
-            // Adapter에서 RuntimeException을 던지도록 설정
             when(adapter.deleteBookLikeByMemberId(bookId))
                 .thenThrow(new RuntimeException("Adapter error"));
 
             // Act & Assert
-            BookFailedException exception = assertThrows(BookFailedException.class, () ->
-                service.deleteBookLikeByMemberId(bookId)
-            );
+            RuntimeException exception = assertThrows(RuntimeException.class, () ->
+                service.deleteBookLikeByMemberId(bookId));
 
-            // 예외 메시지가 올바른지 확인
-            assertTrue(exception.getMessage().contains("좋아요를 삭제하는데 실패"));
-            assertTrue(exception.getCause() instanceof RuntimeException);
-
-            // Adapter가 정확히 호출되었는지 확인
+            assertTrue(exception.getMessage().contains("회원 아이디가 누른 좋아요를 삭제하는데 실패였습니다."));
             verify(adapter, times(1)).deleteBookLikeByMemberId(bookId);
         }
     }
