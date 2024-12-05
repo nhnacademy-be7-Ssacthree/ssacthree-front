@@ -21,7 +21,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-class PointSaveRuleServiceTest {
+class PointSaveRuleServiceImplTest {
 
     @Mock
     private PointSaveRuleAdapter pointSaveRuleAdapter;
