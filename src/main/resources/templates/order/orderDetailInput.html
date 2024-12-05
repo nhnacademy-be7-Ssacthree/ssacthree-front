@@ -23,6 +23,12 @@
         <div class="card-header">
           주문 정보 입력
         </div>
+
+        <!-- 에러 메시지 표시 -->
+        <div class="alert alert-danger mt-3" th:if="${errorMessage}">
+          <span th:text="${errorMessage}"></span>
+        </div>
+
         <div class="card-body">
           <form id="orderDetailForm" method="get" action="/orderDetailbyNum">
             <!-- 주문 번호 입력 -->

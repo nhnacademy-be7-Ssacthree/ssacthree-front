@@ -227,6 +227,6 @@ public class OrderServiceImpl implements OrderService {
         if (response.getStatusCode().is2xxSuccessful()) {
             return response.getBody();
         }
-        throw new RuntimeException("주문 생성 에러");
+        throw new FailedGetOrderDetail("주문 생성 에러");
     }
 }

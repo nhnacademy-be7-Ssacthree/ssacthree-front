@@ -48,7 +48,7 @@ class BookRestControllerTest {
         Mockito.when(bookCommonService.getBooksByCategoryId(anyInt(), anyInt(), any(), anyLong()))
             .thenReturn(mockBookPage);
 
-        mockMvc.perform(get("/api/shop/books/categories/1")
+        mockMvc.perform(get("/shop/books/categories/1")
                 .param("page", "0")
                 .param("size", "10")
                 .param("sort", "bookName:asc")
@@ -61,7 +61,7 @@ class BookRestControllerTest {
         Mockito.when(bookCommonService.getAllAvailableBooks(anyInt(), anyInt(), any()))
             .thenReturn(mockBookPage);
 
-        mockMvc.perform(get("/api/shop/books")
+        mockMvc.perform(get("/shop/books")
                 .param("page", "0")
                 .param("size", "10")
                 .param("sort", "bookName:asc")

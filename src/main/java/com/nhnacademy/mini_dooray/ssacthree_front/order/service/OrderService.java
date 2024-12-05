@@ -1,7 +1,6 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.order.service;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderDetailResponse;
-import com.nhnacademy.mini_dooray.ssacthree_front.cart.domain.CartItem;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.*;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderResponseWithCount;
@@ -10,10 +9,6 @@ import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderSaveRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
-import java.util.List;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 public interface OrderService {
