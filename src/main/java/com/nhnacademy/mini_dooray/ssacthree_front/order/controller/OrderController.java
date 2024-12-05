@@ -292,14 +292,13 @@ public class OrderController {
         return "redirect:" + (referer != null ? referer : "/admin/orders");
     }
 
-
-
-
-}
-
     /**
      * 배송시작 후 2일 후 자동으로 배송완료되도록 스케줄러 구현
      *
      */
+
+}
+
+
 
 

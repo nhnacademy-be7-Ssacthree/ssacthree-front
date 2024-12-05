@@ -49,6 +49,7 @@
                             <th scope="col" class="fw-bold">주문번호</th>
                             <th scope="col" class="fw-bold">운송장번호</th>
                             <th scope="col" class="fw-bold">배송관리</th>
+                            <th scope="col" class="fw-bold">배송날짜</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -71,10 +72,13 @@
                                 <form th:if="${order.orderStatus} == 'PENDING'" th:action="@{/admin/orders/{orderId}/delivery-status(orderId=${order.orderId}, status='start')}" method="POST">
                                     <button class="btn btn-detail">배송시작</button>
                                 </form>
-                                <!-- 배송중, 배솢완료를 파라미터로 받을지 고민, -->
                                 <form th:if="${order.orderStatus} == 'IN_SHOPPING'" th:action="@{/admin/orders/{orderId}/delivery-status(orderId=${order.orderId}, status='complete')}" method="POST">
                                     <button class="btn btn-detail">배송완료</button>
                                 </form>
+                            </td>
+                            <td>
+                                <span th:if="${order.orderStatus} == 'IN_SHOPPING'" th:text="${order.orderStatusCreatedAt} + '  배송시작'"></span>
+                                <span th:if="${order.orderStatus} == 'COMPLETED'" th:text="${order.orderStatusCreatedAt} + '  배송완료'"></span>
                             </td>
                         </tr>
                         </tbody>

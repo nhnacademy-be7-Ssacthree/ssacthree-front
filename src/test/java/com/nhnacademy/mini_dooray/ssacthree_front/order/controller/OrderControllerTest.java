@@ -286,7 +286,7 @@ class OrderControllerTest {
     LocalDate endDate = LocalDate.now();
 
     AdminOrderResponseWithCount mockResponse = new AdminOrderResponseWithCount(
-        List.of(new AdminOrderListResponse(1L, LocalDate.now(), 10000, "배송중", "홍길동", "12345", "67890")),
+        List.of(new AdminOrderListResponse(1L, LocalDate.now(), 10000, "배송중", LocalDate.now(), "홍길동", "12345", "67890")),
         1
     );
 
