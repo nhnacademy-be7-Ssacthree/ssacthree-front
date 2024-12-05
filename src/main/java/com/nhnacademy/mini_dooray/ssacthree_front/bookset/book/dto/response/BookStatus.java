@@ -22,7 +22,7 @@ public enum BookStatus {
             .filter(bookStatus -> bookStatus.getStatus().equals(status))
             .findFirst()
             //TODO 에러 페이지로 에러 처리 해줘야함.
-            .orElseThrow(IllegalArgumentException::new);
+            .orElseThrow(() -> new IllegalArgumentException("잘못된 bookStatus, BookStatus Enum 에러: " + status));
     }
 
     public String getStatusName() {
