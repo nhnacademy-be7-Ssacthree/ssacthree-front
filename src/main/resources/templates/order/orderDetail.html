@@ -103,7 +103,7 @@
           <p><strong>결제 상태:</strong> <span th:text="${orderDetail.paymentStatus}"></span></p>
           <p><strong>결제 타입:</strong> <span th:text="${orderDetail.paymentTypeName}"></span></p>
         </div>
-        <div class="card-footer text-end">
+        <div class="card-footer text-end" th:if="${orderDetail.paymentStatus} == '결제 완료'">
           <!-- 페이먼트키만 있으면 취소 가능 -->
           <form th:action="@{/payment/{order-id}/cancel(order-id=${orderDetail.orderId})}" method="POST" class="d-flex justify-content-end align-items-center gap-2">
             <input type="hidden" name="PaymentKey" th:value="${orderDetail.paymentKey}">
