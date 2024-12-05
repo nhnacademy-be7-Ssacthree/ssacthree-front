@@ -47,7 +47,6 @@ public class ValidationTokenFilter extends OncePerRequestFilter {
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 filterChain.doFilter(httpServletRequest, httpSevletResponse);
-                return;
             }
         } catch (FeignException e) {
             httpSevletResponse.addCookie(CookieUtil.cookieDestroyer("access-token"));

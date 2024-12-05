@@ -23,6 +23,7 @@ import java.util.List;
 public class PublisherMgmtServiceImpl implements PublisherMgmtService {
 
     private final PublisherMgmtAdapter publisherMgmtAdapter;
+    private static final String FAILED_GET_PUBLISHER = "출판사 조회에 실패하였습니다.";
 
     @Override
     public Page<PublisherGetResponse> getAllPublishers(int page, int size, String[] sort) {
@@ -32,9 +33,9 @@ public class PublisherMgmtServiceImpl implements PublisherMgmtService {
             if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             }
-            throw new PublisherGetFailedException("출판사 조회에 실패하였습니다.");
+            throw new PublisherGetFailedException(FAILED_GET_PUBLISHER);
         } catch (HttpClientErrorException | HttpServerErrorException e) {
-            throw new PublisherGetFailedException("출판사 조회에 실패하였습니다.");
+            throw new PublisherGetFailedException(FAILED_GET_PUBLISHER);
         }
     }
 
@@ -46,9 +47,9 @@ public class PublisherMgmtServiceImpl implements PublisherMgmtService {
             if (response.getStatusCode().is2xxSuccessful()) {
                 return response.getBody();
             }
-            throw new PublisherGetFailedException("출판사 조회에 실패하였습니다.");
+            throw new PublisherGetFailedException(FAILED_GET_PUBLISHER);
         } catch (HttpClientErrorException | HttpServerErrorException e) {
-            throw new PublisherGetFailedException("출판사 조회에 실패하였습니다.");
+            throw new PublisherGetFailedException(FAILED_GET_PUBLISHER);
         }
     }
 

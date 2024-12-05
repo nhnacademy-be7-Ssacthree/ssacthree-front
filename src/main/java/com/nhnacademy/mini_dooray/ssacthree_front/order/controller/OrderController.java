@@ -6,6 +6,8 @@ import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.MemberService;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.*;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.service.OrderService;
+import com.nhnacademy.mini_dooray.ssacthree_front.order.utils.OrderUtil;
+import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
@@ -122,8 +124,6 @@ public class OrderController {
         return ResponseEntity.ok("포장지 id가 매핑되었습니다.");
     }
 
-    // TODO 4. 비회원 주문 내역 페이지 구현
-
 
     /**
      * 회원 주문 내역 페이지 구현
@@ -201,8 +201,6 @@ public class OrderController {
         OrderDetailResponse orderDetail = orderService.getOrderDetail(orderId);
         model.addAttribute("orderDetail", orderDetail);
 
-      // order/customerOrderDetail;
-
       // 정상 처리 시 상세 페이지 반환
       return "order/orderDetail";
   }
@@ -212,11 +210,19 @@ public class OrderController {
     public String getOrderDetailByOrderNumber(@RequestParam String orderNumber, @RequestParam String phoneNumber, Model model) {
         log.info("주문번호: {}, 전화번호: {}", orderNumber, phoneNumber);
 
-        // orderNumber + phone 조합
-        OrderDetailResponse orderDetail = orderService.getOrderDetailByOrderNumber(orderNumber, phoneNumber);
-        model.addAttribute("orderDetail", orderDetail);
-        log.info("주문번호로 조회완료");
-        return "order/orderDetailAllUser";
+        try{
+            // orderNumber + phone 조합
+            OrderDetailResponse orderDetail = orderService.getOrderDetailByOrderNumber(orderNumber, phoneNumber);
+            model.addAttribute("orderDetail", orderDetail);
+            log.info("주문 번호로 조회 완료");
+            return "order/orderDetailAllUser";
+        } catch (FeignException ex){
+            String errorMessage = OrderUtil.extractErrorMessage(ex);
+            model.addAttribute("errorMessage", errorMessage);
+            log.info("주문 조회 실패");
+            return "order/orderDetailInput"; // 에러 발생 시 원래 페이지로 복귀
+        }
+
     }
 
 
@@ -285,6 +291,10 @@ public class OrderController {
         String referer = request.getHeader("Referer");
         return "redirect:" + (referer != null ? referer : "/admin/orders");
     }
+
+
+
+
 }
 
     /**

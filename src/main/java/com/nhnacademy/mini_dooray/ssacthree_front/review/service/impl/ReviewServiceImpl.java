@@ -1,12 +1,15 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.review.service.impl;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.image.adapter.ImageUploadAdapter;
+import com.nhnacademy.mini_dooray.ssacthree_front.review.config.ReviewImagePathConfig;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.adapter.ReviewAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.MemberReviewResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.ReviewRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.ReviewRequestWithUrl;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.BookReviewResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.dto.ReviewResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.review.exception.AuthToWriteFailedException;
+import com.nhnacademy.mini_dooray.ssacthree_front.review.exception.GetReviewFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.exception.PostReviewFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.review.service.ReviewService;
 import jakarta.servlet.http.Cookie;
@@ -25,10 +28,10 @@ import org.springframework.web.client.HttpServerErrorException;
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewAdapter adapter;
-    private static final String IMAGE_PATH = "/ssacthree/review/";
     private final ImageUploadAdapter imageUploadAdapter;
 
     private static final String BEARER = "Bearer ";
+    private final ReviewImagePathConfig reviewImagePathConfig;
 
     @Override
     public Page<BookReviewResponse> getReviewsByBookId(int page, int size, String[] sort, Long bookId) {
@@ -37,10 +40,10 @@ public class ReviewServiceImpl implements ReviewService {
             if (responseEntity.getStatusCode().is2xxSuccessful()) {
                 return responseEntity.getBody();
             } else {
-                throw new RuntimeException("API 호출 실패: " + responseEntity.getStatusCode());
+                throw new GetReviewFailedException("책에 있는 리뷰를 달성하는데 실패하였습니다.");
             }
         } catch (Exception e) {
-            throw new RuntimeException("API 호출 중 예외 발생", e);
+            throw new GetReviewFailedException("API 호출 중 예외 발생");
         }
     }
 
@@ -48,12 +51,12 @@ public class ReviewServiceImpl implements ReviewService {
     public void postReviewBook(Long bookId,Long orderId,ReviewRequest reviewRequest, HttpServletRequest request) {
         String accessToken = getAccessToken(request);
 
-        String imageurl = imageUploadAdapter.uploadImage(reviewRequest.getReviewImage(),IMAGE_PATH);
+        String imageurl = imageUploadAdapter.uploadImage(reviewRequest.getReviewImage(),reviewImagePathConfig.getImagePath());
 
         ReviewRequestWithUrl requestWithUrl = new ReviewRequestWithUrl(reviewRequest.getReviewRate(),reviewRequest.getReviewTitle(),reviewRequest.getReviewContent(),imageurl);
 
         try {
-            ResponseEntity<Void> response = adapter.postReviewBook(
+            adapter.postReviewBook(
                 BEARER + accessToken,bookId,orderId,requestWithUrl);
 
         } catch (HttpClientErrorException | HttpServerErrorException e) {
@@ -75,7 +78,7 @@ public class ReviewServiceImpl implements ReviewService {
                 response.getBody();
                 return response.getBody();
             } else {
-                throw new RuntimeException("이 오류는 뭐지");
+                throw new AuthToWriteFailedException("리뷰 권한이 없습니다.");
             }
 
         } catch (HttpClientErrorException | HttpServerErrorException e) {
@@ -96,7 +99,7 @@ public class ReviewServiceImpl implements ReviewService {
                 return response.getBody();
             } else {
                 // 예상하지 못한 응답 처리
-                throw new RuntimeException("예상치 못한 상태 코드: " + response.getStatusCode());
+                throw new GetReviewFailedException("리뷰를 가져오는데 실패하였습니다.");
             }
 
         } catch (HttpClientErrorException | HttpServerErrorException e) {
@@ -117,7 +120,7 @@ public class ReviewServiceImpl implements ReviewService {
                 return response.getBody();
             } else {
                 // 예상하지 못한 응답 처리
-                throw new RuntimeException("예상치 못한 상태 코드: " + response.getStatusCode());
+                throw new GetReviewFailedException("리뷰를 가져오는데 실패하였습니다.");
             }
 
         } catch (HttpClientErrorException | HttpServerErrorException e) {

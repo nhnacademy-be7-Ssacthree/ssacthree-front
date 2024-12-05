@@ -79,7 +79,7 @@ class PointHistoryServiceImplTest {
         // When & Then
         assertThatThrownBy(() -> pointHistoryService.getPointHistory(page, size, sort, direction))
             .isInstanceOf(RuntimeException.class)
-            .hasMessageContaining("API 호출 실패");
+            .hasMessageContaining("포인트 목록을 조회하는데 실패하였습니다.500 INTERNAL_SERVER_ERROR");
         verify(memberAdapter).getPointHistories(page, size, sort, direction);
     }
 
@@ -100,7 +100,7 @@ class PointHistoryServiceImplTest {
         // When & Then
         assertThatThrownBy(() -> pointHistoryService.getPointHistory(page, size, sort, direction))
             .isInstanceOf(RuntimeException.class)
-            .hasMessageContaining("API 호출 중 예회 발생");
+            .hasMessageContaining("포인트 목록을 조회하는데 실패하였습니다.");
 
         verify(memberAdapter).getPointHistories(page, size, sort, direction);
     }

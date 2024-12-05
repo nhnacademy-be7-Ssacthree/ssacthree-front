@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // 특정 카테고리의 책 데이터를 가져오는 함수
 function loadBooksByCategory(categoryId) {
     // 카테고리 ID에 따른 URL 생성
-    let url = categoryId ? `/api/shop/books/categories/${categoryId}` : `/api/shop/books`;
+    let url = categoryId ? `/shop/books/categories/${categoryId}` : `/shop/books`;
 
     fetch(url, {
         method: "GET",

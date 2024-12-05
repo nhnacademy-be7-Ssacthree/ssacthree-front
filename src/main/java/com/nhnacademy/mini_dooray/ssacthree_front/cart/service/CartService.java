@@ -1,9 +1,13 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.cart.service;
 
+import com.nhnacademy.mini_dooray.ssacthree_front.bookset.book.exception.BookFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.adapter.CartAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.domain.CartItem;
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.dto.CartRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.cart.exception.CartFailedException;
+import com.nhnacademy.mini_dooray.ssacthree_front.cart.exception.SessionNotFoundException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.AddressFailedException;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.MemberNotFoundException;
 import feign.FeignException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,9 +26,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
  * 장바구니에 필요한 service
@@ -41,6 +42,9 @@ public class CartService {
 
     static final long CART_EXPIRATION_MINUTES = 30;
     private static final String BEARER = "Bearer ";
+    private static final String CART_ITEM = "cartItems";
+
+    private static final String NOT_SESSION = "세션이 없습니다.";
 
     /**
      *
@@ -53,7 +57,7 @@ public class CartService {
 
         if (cartData instanceof Map) {
             Map<String, Object> cartDataMap = (Map<String, Object>) cartData;
-            Object cartItems = cartDataMap.get("cartItems");
+            Object cartItems = cartDataMap.get(CART_ITEM);
 
             if (cartItems instanceof List) {
                 return (List<CartItem>) cartItems;
@@ -71,8 +75,8 @@ public class CartService {
             Map<String, Object> cartDataMap = (Map<String, Object>) cartData;
             Object customerId = cartDataMap.get("customerId");
 
-            if (customerId instanceof Long) {
-                return (Long) customerId;
+            if (customerId instanceof Long longCustomerId) {
+                return longCustomerId;
             }
         }
 
@@ -101,7 +105,7 @@ public class CartService {
 
         // 여러 데이터를 저장할 수 있도록 Map 생성
         Map<String, Object> cartData = new HashMap<>();
-        cartData.put("cartItems", cartItems);
+        cartData.put(CART_ITEM, cartItems);
         cartData.put("customerId", customerId);
 
         // `cartId` 키로 1시간 동안 Redis에 `cartData` 저장
@@ -116,7 +120,10 @@ public class CartService {
 
 
     public void updateItemQuantity(HttpServletRequest request, Long itemId, int quantityChange) {
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            throw new SessionNotFoundException(NOT_SESSION); // 명확한 예외 던짐
+        }
         String cartId = session.getId();
         List<CartItem> cartItems = getCartItemsByCartId(cartId);
 
@@ -140,7 +147,10 @@ public class CartService {
 
 
     public void deleteItem(HttpServletRequest request, Long itemId) {
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            throw new SessionNotFoundException(NOT_SESSION); // 명확한 예외 던짐
+        }
         String cartId = session.getId();
         List<CartItem> cartItems = getCartItemsByCartId(cartId);
         Iterator<CartItem> iterator = cartItems.iterator();
@@ -158,7 +168,10 @@ public class CartService {
 
 
     public void addNewBook(HttpServletRequest request, Long itemId, String title, int quantity, int price, String image) {
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            throw new SessionNotFoundException(NOT_SESSION); // 명확한 예외 던짐
+        }
         String cartId = session.getId();
         List<CartItem> cartItems = getCartItemsByCartId(cartId);
 
@@ -198,7 +211,7 @@ public class CartService {
             }
             return response;
         }catch (FeignException e) {
-            throw new RuntimeException("요청 오류: " + e.getMessage(), e);
+            throw new AddressFailedException("요청 오류: " + e.getMessage());
         }
     }
 
@@ -213,7 +226,7 @@ public class CartService {
             }
 
         }catch (HttpClientErrorException | HttpServerErrorException e){
-            throw new RuntimeException("요청 오류");
+            throw new BookFailedException("책을 가져오는데 실패하였습니다.");
         }
         return null;
     }
@@ -232,11 +245,11 @@ public class CartService {
             }
 
         } catch (HttpClientErrorException | HttpServerErrorException e) {
-            throw new RuntimeException("요청 오류");
+            throw new CartFailedException("회원 카트를 가져오는데 실패하였습니다.");
         }
     }
 
-    private Long getLoginCustomerId(HttpServletRequest request) {
+    public Long getLoginCustomerId(HttpServletRequest request) {
         String accessToken = getAccessToken(request);
         try {
             ResponseEntity<Long> response = cartAdapter.getCustomerId(BEARER + accessToken);
@@ -245,9 +258,9 @@ public class CartService {
                 return response.getBody();
             }
 
-            throw new RuntimeException("아이디를 가져올 수 없습니다.");
+            throw new MemberNotFoundException("아이디를 가져올 수 없습니다.");
         } catch (HttpClientErrorException | HttpServerErrorException e) {
-            throw new RuntimeException("요청 오류");
+            throw new MemberNotFoundException("아이디를 가져올 수 없습니다.");
         }
     }
 
@@ -278,11 +291,11 @@ public class CartService {
                 return responseEntity.getBody();
             } else {
                 // 필요한 에러 처리 로직 추가
-                throw new RuntimeException("API 호출 실패: " + responseEntity.getStatusCode());
+                throw new BookFailedException("책을 가져오는데 실패하였습니다.");
             }
         } catch (Exception e) {
             // 예외 로깅 및 처리
-            throw new RuntimeException("API 호출 중 예외 발생", e);
+            throw new BookFailedException("API 호출 중 예외 발생");
         }
     }
 
@@ -291,7 +304,7 @@ public class CartService {
 
         HttpSession session = request.getSession(false);
         if (session == null) {
-            throw new RuntimeException("세션이 없습니다.");
+            throw new SessionNotFoundException(NOT_SESSION);
         }
 
         // 세션 ID 가져오기
@@ -301,7 +314,7 @@ public class CartService {
         Map<String, Object> cartData = (Map<String, Object>) redisTemplate.opsForValue().get(sessionId);
 
         if(cartData != null) {
-            Object cartItemsObj = Optional.ofNullable(cartData.get("cartItems")).orElse(null);
+            Object cartItemsObj = Optional.ofNullable(cartData.get(CART_ITEM)).orElse(null);
             List<CartItem> cartItems = (List<CartItem>) cartItemsObj;
 
             // cartRequests 생성
@@ -320,7 +333,7 @@ public class CartService {
                     throw new AddressFailedException("장바구니 저장에 실패하였습니다.");
                 }
             } catch (FeignException e) {
-                throw new RuntimeException("요청 오류: " + e.getMessage(), e);
+                throw new AddressFailedException("장바구니 저장에 실패하였습니다.");
             }
         }
 

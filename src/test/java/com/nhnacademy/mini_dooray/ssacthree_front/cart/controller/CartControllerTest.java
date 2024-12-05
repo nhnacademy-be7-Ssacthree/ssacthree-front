@@ -3,15 +3,19 @@ package com.nhnacademy.mini_dooray.ssacthree_front.cart.controller;
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.domain.CartItem;
 import com.nhnacademy.mini_dooray.ssacthree_front.cart.service.CartService;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.ui.Model;
 
@@ -140,7 +144,7 @@ class CartControllerTest {
         String quantity = "2";
         CartItem cartItem = new CartItem(1L, "Book Title", 2, 20000, "image_url");
 
-        when(cartService.getBook(eq(Long.parseLong(bookId)))).thenReturn(cartItem);
+        when(cartService.getBook(Long.parseLong(bookId))).thenReturn(cartItem);
 
         // When & Then
         mockMvc.perform(get("/shop/carts/add")
@@ -149,7 +153,7 @@ class CartControllerTest {
             .andExpect(status().is3xxRedirection()) // Redirect 상태 확인
             .andExpect(redirectedUrl("/shop/carts")); // Redirect URL 확인
 
-        verify(cartService, times(1)).getBook(eq(Long.parseLong(bookId)));
+        verify(cartService, times(1)).getBook(Long.parseLong(bookId));
         verify(cartService, times(1)).addNewBook(any(HttpServletRequest.class), eq(cartItem.getId()), eq(cartItem.getTitle()),
             eq(Integer.parseInt(quantity)), eq(cartItem.getPrice()), eq(cartItem.getBookThumbnailImageUrl()));
     }

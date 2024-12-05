@@ -6,7 +6,9 @@ import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.dto.PackagingC
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.dto.PackagingGetResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.dto.PackagingUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.exception.PackagingCreateFailedException;
+import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.exception.PackagingDeleteFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.exception.PackagingGetFailedException;
+import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.exception.PackagingUpdateFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.packaging.service.PackagingService;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.image.adapter.ImageUploadAdapter;
@@ -63,7 +65,7 @@ public class PackagingServiceImpl implements PackagingService {
             return response.getBody();
         }
 
-        throw new RuntimeException("포장지 수정에 실패했습니다.");
+        throw new PackagingUpdateFailedException("포장지 수정에 실패했습니다.");
     }
 
     @Override
@@ -80,6 +82,6 @@ public class PackagingServiceImpl implements PackagingService {
             return response.getBody();
         }
 
-        throw new RuntimeException("포장지 삭제에 실패했습니다.");
+        throw new PackagingDeleteFailedException("포장지 삭제에 실패했습니다.");
     }
 }

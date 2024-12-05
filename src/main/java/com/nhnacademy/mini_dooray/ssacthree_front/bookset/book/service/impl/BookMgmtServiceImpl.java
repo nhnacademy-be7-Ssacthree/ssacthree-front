@@ -14,7 +14,6 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.tag.dto.TagInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.image.adapter.ImageUploadAdapter;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -144,13 +143,13 @@ public class BookMgmtServiceImpl implements BookMgmtService {
 
         bookUpdateRequestMultipart.setCategoryIdList(bookInfoResponse.getCategories().stream()
             .map(CategoryNameResponse::getCategoryId)
-            .collect(Collectors.toList()));
+            .toList());
         bookUpdateRequestMultipart.setTagIdList(bookInfoResponse.getTags().stream()
             .map(TagInfoResponse::getTagId)
-            .collect(Collectors.toList()));
+            .toList());
         bookUpdateRequestMultipart.setAuthorIdList(bookInfoResponse.getAuthors().stream()
             .map(AuthorNameResponse::getAuthorId)
-            .collect(Collectors.toList()));
+            .toList());
 
         return bookUpdateRequestMultipart;
     }

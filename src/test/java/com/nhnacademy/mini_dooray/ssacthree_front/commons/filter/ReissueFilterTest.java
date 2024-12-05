@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
-public class ReissueFilterTest {
+class ReissueFilterTest {
 
     private AuthAdapter adapter;
     private ReissueFilter filter;
@@ -42,7 +42,7 @@ public class ReissueFilterTest {
     }
 
     @Test
-    public void testAccessTokenNull_RefreshTokenNotNull() throws IOException, ServletException {
+    void testAccessTokenNull_RefreshTokenNotNull() throws IOException, ServletException {
         // Arrange
         Cookie refreshTokenCookie = new Cookie("refresh-token", "some-refresh-token");
         when(request.getCookies()).thenReturn(new Cookie[]{refreshTokenCookie});
@@ -67,7 +67,7 @@ public class ReissueFilterTest {
     }
 
     @Test
-    public void testExceptionOccurs_RedirectsToRoot() throws IOException, ServletException {
+    void testExceptionOccurs_RedirectsToRoot() throws IOException, ServletException {
         // Arrange
         Cookie refreshTokenCookie = new Cookie("refresh-token", "some-refresh-token");
         when(request.getCookies()).thenReturn(new Cookie[]{refreshTokenCookie});
@@ -85,7 +85,7 @@ public class ReissueFilterTest {
     }
 
     @Test
-    public void testNoTokensPresent() throws IOException, ServletException {
+    void testNoTokensPresent() throws IOException, ServletException {
         // Arrange
         when(request.getCookies()).thenReturn(null);
         when(request.getRequestURI()).thenReturn("/someUri");
@@ -99,7 +99,7 @@ public class ReissueFilterTest {
     }
 
     @Test
-    public void testStaticResourcesAreExcluded() throws IOException, ServletException {
+    void testStaticResourcesAreExcluded() throws IOException, ServletException {
         // Arrange
         when(request.getRequestURI()).thenReturn("/images/logo.png");
 
@@ -112,7 +112,7 @@ public class ReissueFilterTest {
     }
 
     @Test
-    public void testAccessTokenPresent() throws IOException, ServletException {
+    void testAccessTokenPresent() throws IOException, ServletException {
         // Arrange
         Cookie accessTokenCookie = new Cookie("access-token", "some-access-token");
         when(request.getCookies()).thenReturn(new Cookie[]{accessTokenCookie});
