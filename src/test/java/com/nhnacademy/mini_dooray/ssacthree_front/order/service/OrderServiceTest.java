@@ -18,6 +18,8 @@ import com.nhnacademy.mini_dooray.ssacthree_front.member.service.AddressService;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.MemberService;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.adapter.OrderAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.*;
+import com.nhnacademy.mini_dooray.ssacthree_front.order.exception.FailedCreateOrder;
+import com.nhnacademy.mini_dooray.ssacthree_front.order.exception.FailedGetOrderDetail;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.service.impl.OrderServiceImpl;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.utils.OrderUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,6 +29,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 
@@ -218,6 +221,26 @@ class OrderServiceTest {
     verify(orderAdapter).createOrder(mockRequest);
   }
 
+
+  @Test
+  void testCreateOrderFailure() {
+    // Arrange
+    OrderSaveRequest orderSaveRequest = new OrderSaveRequest(); // 필요한 필드 설정
+    when(orderAdapter.createOrder(orderSaveRequest))
+        .thenReturn(ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
+
+    // Act & Assert
+    FailedCreateOrder exception = assertThrows(
+        FailedCreateOrder.class,
+        () -> orderService.createOrder(orderSaveRequest)
+    );
+
+    assertEquals("주문 생성 에러", exception.getMessage());
+    verify(orderAdapter, times(1)).createOrder(orderSaveRequest);
+  }
+
+
+
   @Test
   void testAdminGetAllOrders() {
     // Arrange
@@ -307,6 +330,42 @@ class OrderServiceTest {
     assertEquals("ORD12345", result.getOrderNumber());
     verify(orderAdapter, times(1)).getOrderDetail(orderId);
   }
+
+
+  @Test
+  void testGetOrderDetailFailure() {
+    // Arrange
+    Long orderId = 1L;
+    when(orderAdapter.getOrderDetail(orderId))
+        .thenReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+
+    FailedGetOrderDetail exception = assertThrows(
+          FailedGetOrderDetail.class,
+        () -> orderService.getOrderDetail(orderId)
+    );
+
+    assertEquals("조회 실패", exception.getMessage());
+    verify(orderAdapter, times(1)).getOrderDetail(orderId);
+  }
+
+  @Test
+  void testGetOrderDetailByOrderNumberFailure() {
+    // Arrange
+    String orderNumber = "testOrderNumber1";
+    String phoneNumber = "010-1234-1100";
+    when(orderAdapter.getOrderDetailByOrderNumber(orderNumber, phoneNumber))
+        .thenReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+
+    FailedGetOrderDetail exception = assertThrows(
+        FailedGetOrderDetail.class,
+        () -> orderService.getOrderDetailByOrderNumber(orderNumber, phoneNumber)
+    );
+
+    assertEquals("조회 실패", exception.getMessage());
+    verify(orderAdapter, times(1)).getOrderDetailByOrderNumber(orderNumber, phoneNumber);
+  }
+
+
 
 
   @Test
