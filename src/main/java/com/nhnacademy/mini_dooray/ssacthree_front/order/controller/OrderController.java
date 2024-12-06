@@ -298,6 +298,22 @@ public class OrderController {
      *
      */
 
+
+    @PostMapping("/orders/{order-id}/return")
+    public String returnOrder(HttpServletRequest request) {
+
+        // 출고일(배송 시작) 기준 10일 이내 미사용시 택배비 차감 후 반품 가능 (5000원)
+
+        // 파손, 파본에 의한 반품은 출고일 기준 30일까지 가능
+
+        // 반품시 결제금액은 포인트로 적립(최종금액만)
+
+        // 주문상태 -> 반품으로 변경
+
+        //반품 완료 alert 띄우기
+        String referer = request.getHeader("Referer");
+        return "redirect:" + (referer != null ? referer : "/admin/orders");
+    }
 }
 
 
