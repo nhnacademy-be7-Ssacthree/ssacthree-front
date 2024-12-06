@@ -56,7 +56,7 @@
 
                                     </div>
                                 </td>
-                                <td th:if="${isMember}" th:text="${book.pointToSave} + 'P'"></td>
+                                <td th:if="${isMember}" th:text="${book.pointToSave} + 'P'" class="point-to-save"></td>
                                 <td th:text="${book.quantity}"></td>
                                 <td th:text="'회원쿠폰 가져오기'"></td>
                                 <td>
@@ -233,7 +233,7 @@
                     <!-- 4. 포인트 사용 -->
                     <section id="point-use" class="mb-4" th:if="${isMember}">
                         <h4 class="text-dark">포인트 사용</h4>
-                        <p>보유 포인트: <span class="user-points" th:text="${memberInfo.memberPoint}" th:value="${memberInfo.memberPoint}"></span></p>
+                        <p>보유 포인트: <span id="user-points" class="user-points" th:text="${memberInfo.memberPoint}" th:value="${memberInfo.memberPoint}"></span></p>
                         <!-- 가진 포인트보다 많으면 안됨. -->
                         <div class="mb-3">
                             <label for="points-to-use" class="form-label">사용할 포인트</label>
@@ -355,10 +355,8 @@
 
         // 총 결제 금액을 계산하여 표시 (포맷팅 추가)
         paymentPrice = bookPrice + deliveryFee;
+        document.getElementById("payment-price").value = paymentPrice;         // 결제 가격을 hidden input에 설정
         document.getElementById("PaymentPrice").innerText = '총 결제 금액: ' + paymentPrice.toLocaleString("en-US") + '원';
-
-        // 결제 가격을 hidden input에 설정
-        document.getElementById("payment-price").value = paymentPrice;
 
         // 적립 포인트를 화면에 표시
         document.getElementById("user-points-save").innerText = pointSave.toLocaleString("en-US") + "P";
@@ -440,16 +438,17 @@
 
         // 포맷팅할 항목들 (클래스 기반)
         const classesToFormat = [
-            { className: "packaging-price", isPercentage: false }, // 포장 가격
-            { className: "book-total-price", isPercentage: false }, // 총합 금액
-            { className: "sale-price", isPercentage: false }, // 판매 가격
-            { className: "regular-price", isPercentage: false }, // 정가
-            { className: "book-discount", isPercentage: true }, // 할인율
-            { className: "user-points", isPercentage: false }, // 할인율
+            {className: "packaging-price", isPercentage: false}, // 포장 가격
+            {className: "book-total-price", isPercentage: false}, // 총합 금액
+            {className: "sale-price", isPercentage: false}, // 판매 가격
+            {className: "regular-price", isPercentage: false}, // 정가
+            {className: "book-discount", isPercentage: true}, // 할인율
+            {className: "user-points", isPercentage: false}, // 할인율
+            {className: "point-to-save", isPercentage: false}
         ];
 
         // 각 클래스에 대해 포맷팅 함수 실행
-        classesToFormat.forEach(({ className, isPercentage }) =>
+        classesToFormat.forEach(({className, isPercentage}) =>
             formatNumber(className, isPercentage)
         );
 
