@@ -20,7 +20,6 @@ public class AdminController {
     @GetMapping("/admin")
     public String admin() {
 
-        //구현 고민 중 ㅠ
         return "admin/admin";
     }
 
