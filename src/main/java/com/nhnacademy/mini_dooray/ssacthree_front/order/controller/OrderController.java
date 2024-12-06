@@ -194,14 +194,15 @@ public class OrderController {
      * @return
      */
     @GetMapping("/orderDetailbyId/{orderId}")
-    public String getOrderDetail(@PathVariable("orderId") Long orderId, Model model) {
+    public String getOrderDetail(@PathVariable("orderId") Long orderId, @RequestParam String status, Model model) {
         // 입력받은 주문번호를 orderId로 변환하여 service 요청
         // 1. 조회 시에 order 내역의 customerId 가 멤버인지 확인하고 customerView 또는 memberView 로 나눠서 return 되게(응답 dto 내용은 같음) <- service에서 플래그
         // 2. orderNumber, 이메일가 order 안의 내용과 동일 할 때 조회가 가능하게
         OrderDetailResponse orderDetail = orderService.getOrderDetail(orderId);
         model.addAttribute("orderDetail", orderDetail);
+        model.addAttribute("orderStatus", status);
 
-      // 정상 처리 시 상세 페이지 반환
+        // 정상 처리 시 상세 페이지 반환
       return "order/orderDetail";
   }
 
@@ -292,14 +293,29 @@ public class OrderController {
         return "redirect:" + (referer != null ? referer : "/admin/orders");
     }
 
-
-
-
-}
-
     /**
      * 배송시작 후 2일 후 자동으로 배송완료되도록 스케줄러 구현
      *
      */
+
+
+    @PostMapping("/orders/{order-id}/return")
+    public String returnOrder(HttpServletRequest request) {
+
+        // 출고일(배송 시작) 기준 10일 이내 미사용시 택배비 차감 후 반품 가능 (5000원)
+
+        // 파손, 파본에 의한 반품은 출고일 기준 30일까지 가능
+
+        // 반품시 결제금액은 포인트로 적립(최종금액만)
+
+        // 주문상태 -> 반품으로 변경
+
+        //반품 완료 alert 띄우기
+        String referer = request.getHeader("Referer");
+        return "redirect:" + (referer != null ? referer : "/admin/orders");
+    }
+}
+
+
 
 
