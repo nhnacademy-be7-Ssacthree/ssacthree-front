@@ -28,7 +28,7 @@
           <p><strong>주문 번호:</strong> <span th:text="${orderDetail.orderNumber}"></span></p>
           <p><strong>주문 날짜:</strong> <span th:text="${orderDetail.orderedDate}"></span></p>
           <p><strong>지정 배송일:</strong> <span th:text="${orderDetail.deliverySetDate}"></span></p>
-          <p><strong>총 주문 금액:</strong> <span th:text="${orderDetail.orderTotalPrice}"></span> 원</p>
+          <p><strong>총 주문 금액:</strong> <span class="order-total-price" th:text="${orderDetail.orderTotalPrice}"></span> 원</p>
         </div>
       </div>
 
@@ -45,7 +45,7 @@
           <p><strong>주소:</strong> <span th:text="${orderDetail.deliveryAddressRoadname}"></span>
             <span th:text="${orderDetail.deliveryAddressDetail}"></span></p>
           <p><strong>우편번호:</strong> <span th:text="${orderDetail.deliveryPostalNumber}"></span></p>
-          <p><strong>배송비:</strong> <span th:text="${orderDetail.deliveryFee}"></span> 원</p>
+          <p><strong>배송비:</strong> <span class="delivery-fee" th:text="${orderDetail.deliveryFee}"></span> 원</p>
         </div>
       </div>
 
@@ -82,8 +82,8 @@
                 </a>
               </td>
               <td th:text="${detail.quantity}"></td>
-              <td th:text="${detail.bookPriceAtOrder}"></td>
-              <td th:text="${detail.quantity * detail.bookPriceAtOrder}"></td>
+              <td class="book-price" th:text="${detail.bookPriceAtOrder}"></td>
+              <td class="total-price" th:text="${detail.quantity * detail.bookPriceAtOrder}"></td>
             </tr>
             </tbody>
           </table>
@@ -98,10 +98,24 @@
         <div class="card-body">
           <p><strong>결제 ID:</strong> <span th:text="${orderDetail.paymentId}"></span></p>
           <p><strong>결제 완료일:</strong> <span th:text="${orderDetail.paymentCreatedAt}"></span></p>
-          <p><strong>결제 금액:</strong> <span th:text="${orderDetail.paymentAmount}"></span> 원</p>
+          <p><strong>결제 금액:</strong> <span class="payment-amount" th:text="${orderDetail.paymentAmount}"></span> 원</p>
           <p><strong>결제 승인 번호:</strong> <span th:text="${orderDetail.paymentKey}"></span></p>
           <p><strong>결제 상태:</strong> <span th:text="${orderDetail.paymentStatus}"></span></p>
           <p><strong>결제 타입:</strong> <span th:text="${orderDetail.paymentTypeName}"></span></p>
+        </div>
+        <div class="card-footer text-end">
+          <!-- 페이먼트키만 있으면 취소 가능 -->
+          <form th:action="@{/payment/{order-id}/cancel(order-id=${orderDetail.orderId})}" method="POST" class="d-flex justify-content-end align-items-center gap-2">
+            <input type="hidden" name="PaymentKey" th:value="${orderDetail.paymentKey}">
+            <label for="cancelReason" class="form-label mb-0">결제 취소 이유:</label>
+            <select id="cancelReason" name="cancelReason" class="form-select" style="width: 150px;">
+              <option value="change_of_mind">단순 변심</option>
+              <option value="order_mistake">잘못된 주문</option>
+              <option value="delayed_delivery">배송 지연</option>
+              <option value="other">기타</option>
+            </select>
+            <button class="btn btn-detail">결제 취소</button>
+          </form>
         </div>
       </div>
 
@@ -122,6 +136,34 @@
 <!--    </aside>-->
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // 숫자를 천 단위로 포맷팅하는 함수
+    function formatNumber(elementsClass) {
+      const elements = document.querySelectorAll(`.${elementsClass}`);
+      elements.forEach((element) => {
+        const originalValue = parseInt(element.textContent, 10);
+        if (!isNaN(originalValue)) {
+          element.textContent = originalValue.toLocaleString("en-US");
+        }
+      });
+    }
+
+    // 포맷팅 대상 클래스 목록
+    const classesToFormat = [
+      "book-price",       // 책 가격
+      "total-price",      // 수량 * 가격
+      "delivery-fee",     // 배송비
+      "order-total-price", // 총 주문 금액
+      "payment-amount"    // 결제 금액
+    ];
+
+    // 각 클래스에 대해 포맷팅 함수 실행
+    classesToFormat.forEach(formatNumber);
+  });
+</script>
+
 
 <footer th:replace="~{common/footer :: footer}"></footer>
 

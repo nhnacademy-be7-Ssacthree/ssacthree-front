@@ -21,6 +21,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.*;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderResponseWithCount;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.OrderSaveRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.order.exception.FailedCreateOrder;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.exception.FailedGetOrderDetail;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.service.OrderService;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.utils.OrderUtil;
@@ -227,6 +228,6 @@ public class OrderServiceImpl implements OrderService {
         if (response.getStatusCode().is2xxSuccessful()) {
             return response.getBody();
         }
-        throw new FailedGetOrderDetail("주문 생성 에러");
+        throw new FailedCreateOrder("주문 생성 에러");
     }
 }

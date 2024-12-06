@@ -3,6 +3,7 @@ package com.nhnacademy.mini_dooray.ssacthree_front.payment.controller;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.service.PointHistoryService;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.*;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.service.OrderService;
+import com.nhnacademy.mini_dooray.ssacthree_front.payment.dto.PaymentCancelRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.payment.dto.PaymentRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.payment.service.PaymentService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,10 +14,9 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -87,8 +87,6 @@ public class PaymentController {
         Reader reader = new InputStreamReader(responseStream, StandardCharsets.UTF_8);
         JSONObject jsonObject = (JSONObject) parser.parse(reader);
 
-
-
         // TODO : 결제 성공 ! 주문 저장하기. - 재고차감 등등... shop의 orderService에서 모든 로직 처리하기.
         HttpSession session = request.getSession(false);
         OrderFormRequest orderFormRequest = (OrderFormRequest) session.getAttribute("orderFormRequest");
@@ -150,10 +148,6 @@ public class PaymentController {
                 approvedAt);
 
         paymentService.savePayment(paymentRequest);
-
-        //TODO 여기에 주문완료하고서 보여줄 정보 주기.
-
-
         responseStream.close();
 
         return ResponseEntity.status(code).body(jsonObject);
@@ -193,4 +187,14 @@ public class PaymentController {
     }
 
     // TODO : 결제 취소
+    @PostMapping("/payment/{order-id}/cancel")
+    public String cancelPayment(@PathVariable(name = "order-id") Long orderId,
+                                @ModelAttribute PaymentCancelRequest paymentCancelRequest,
+                                HttpServletRequest request) {
+        paymentService.cancelPayment(orderId, paymentCancelRequest);
+
+        // 결제 취소 alert 띄우기
+        String referer = request.getHeader("Referer");
+        return "redirect:" + (referer != null ? referer : "/admin/orders");
+    }
 }
