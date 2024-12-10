@@ -1,6 +1,5 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.payment.controller;
 
-import com.nhnacademy.mini_dooray.ssacthree_front.member.service.PointHistoryService;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.dto.*;
 import com.nhnacademy.mini_dooray.ssacthree_front.order.service.OrderService;
 import com.nhnacademy.mini_dooray.ssacthree_front.payment.dto.PaymentCancelRequest;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
-
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -31,7 +29,7 @@ public class PaymentController {
 
     private final OrderService orderService;
     private final PaymentService paymentService;
-    private final PointHistoryService pointHistoryService;
+
     @RequestMapping(value = "/confirm")
     public ResponseEntity<JSONObject> confirmPayment(HttpServletRequest request, @RequestBody String jsonBody) throws Exception {
 
@@ -40,7 +38,6 @@ public class PaymentController {
         String amount;
         String paymentKey;
         try {
-            // 클라이언트에서 받은 JSON 요청 바디입니다.
             JSONObject requestData = (JSONObject) parser.parse(jsonBody);
             paymentKey = (String) requestData.get("paymentKey");
             orderId = (String) requestData.get("orderId");
@@ -53,27 +50,19 @@ public class PaymentController {
         obj.put("amount", amount);
         obj.put("paymentKey", paymentKey);
 
-        // TODO: 개발자센터에 로그인해서 내 결제위젯 연동 키 > 시크릿 키를 입력하세요. 시크릿 키는 외부에 공개되면 안돼요.
-        // @docs https://docs.tosspayments.com/reference/using-api/api-keys
         String widgetSecretKey = "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6";
 
-        // 토스페이먼츠 API는 시크릿 키를 사용자 ID로 사용하고, 비밀번호는 사용하지 않습니다.
-        // 비밀번호가 없다는 것을 알리기 위해 시크릿 키 뒤에 콜론을 추가합니다.
-        // @docs https://docs.tosspayments.com/reference/using-api/authorization#%EC%9D%B8%EC%A6%9D
         Base64.Encoder encoder = Base64.getEncoder();
         byte[] encodedBytes = encoder.encode((widgetSecretKey + ":").getBytes(StandardCharsets.UTF_8));
         String authorizations = "Basic " + new String(encodedBytes);
 
-        // 결제 승인 API를 호출하세요.
-        // 결제를 승인하면 결제수단에서 금액이 차감돼요.
-        // @docs https://docs.tosspayments.com/guides/v2/payment-widget/integration#3-결제-승인하기
+        // 결제 승인 API
         URL url = new URL("https://api.tosspayments.com/v1/payments/confirm");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestProperty("Authorization", authorizations);
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setRequestMethod("POST");
         connection.setDoOutput(true);
-
 
         OutputStream outputStream = connection.getOutputStream();
         outputStream.write(obj.toString().getBytes("UTF-8"));
@@ -83,11 +72,10 @@ public class PaymentController {
 
         InputStream responseStream = isSuccess ? connection.getInputStream() : connection.getErrorStream();
 
-        // TODO: 결제 성공 및 실패 비즈니스 로직을 구현하세요.
         Reader reader = new InputStreamReader(responseStream, StandardCharsets.UTF_8);
         JSONObject jsonObject = (JSONObject) parser.parse(reader);
 
-        // TODO : 결제 성공 ! 주문 저장하기. - 재고차감 등등... shop의 orderService에서 모든 로직 처리하기.
+        // 결제 성공
         HttpSession session = request.getSession(false);
         OrderFormRequest orderFormRequest = (OrderFormRequest) session.getAttribute("orderFormRequest");
         List<BookOrderRequest> bookLists = (List<BookOrderRequest>) session.getAttribute("bookLists");
@@ -127,16 +115,11 @@ public class PaymentController {
                 orderFormRequest.getOrderNumber()
                 );
 
-        // TODO 1. 주문서에서 결제하기 누르면 주문 정보 저장.(+ 결제 대기로) -> 결제 선택창으로 넘어감.
-        // TODO : 주문 정보 저장하기 - 주문시 저장되어야하는 모든 정보들(상품 리스트, 포인트, 쿠폰, 정책 등등)
         // 모든 정보 전달 - 주문상세+포장정보, 포인트 기록 정보, 결제 정보
         OrderResponse order = orderService.createOrder(orderSaveRequest);
         Long dbOrderId = order.getOrderId();
 
-        // TODO 2. 결제승인 이후, 성공 메세지 뜨기 전에 결제 정보 저장해주기.
-        //String type = (String) jsonObject.get("type"); // 일반결제 등등
         String approvedAt = (String) jsonObject.get("approvedAt");
-        // TODO : 타입에 일단 임시로 아무 숫자 넣음, 제대로 변경 필요
         String method = (String) jsonObject.get("method");
         String status = (String) jsonObject.get("status"); // 결제 처리 상태
         PaymentRequest paymentRequest = new PaymentRequest(
@@ -155,6 +138,7 @@ public class PaymentController {
 
     /**
      * 인증성공처리
+     *
      * @param request
      * @param model
      * @return
@@ -162,14 +146,12 @@ public class PaymentController {
      */
     @RequestMapping(value = "/success", method = RequestMethod.GET)
     public String paymentRequest(HttpServletRequest request, Model model) throws Exception {
-        // 결제 성공 -> 결제 정보 저장하기.
-        // TODO : 여기에 결제 저장?
-
         return "payment/success";
     }
 
     /**
      * 인증실패처리
+     *
      * @param request
      * @param model
      * @return
@@ -186,14 +168,20 @@ public class PaymentController {
         return "payment/fail";
     }
 
-    // TODO : 결제 취소
+    /**
+     * 결제 취소
+     *
+     * @param orderId
+     * @param paymentCancelRequest
+     * @param request
+     * @return
+     */
     @PostMapping("/payment/{order-id}/cancel")
     public String cancelPayment(@PathVariable(name = "order-id") Long orderId,
                                 @ModelAttribute PaymentCancelRequest paymentCancelRequest,
                                 HttpServletRequest request) {
         paymentService.cancelPayment(orderId, paymentCancelRequest);
 
-        // 결제 취소 alert 띄우기
         String referer = request.getHeader("Referer");
         return "redirect:" + (referer != null ? referer : "/admin/orders");
     }
