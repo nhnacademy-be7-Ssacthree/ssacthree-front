@@ -5,6 +5,8 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.request.C
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryInfoResponse;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
 public interface CategoryAdminService {
 
     ResponseEntity<CategoryInfoResponse> createCategory(CategorySaveRequest request);
@@ -12,5 +14,7 @@ public interface CategoryAdminService {
     ResponseEntity<CategoryInfoResponse> updateCategory(Long categoryId, CategoryUpdateRequest request);
 
     ResponseEntity<Boolean> deleteCategory(Long categoryId);
+
+    ResponseEntity<List<CategoryInfoResponse>> getAllCategoriesForAdmin();
 
 }

@@ -1,0 +1,51 @@
+<aside class="col-lg-3 mb-4">
+    <div class="sticky-top" style="top: 80px;">
+        <h5 class="mb-3">
+            <a href="/members/my-page" class="text-decoration-none text-dark">마이페이지</a>
+        </h5>
+        <ul class="list-group">
+            <li class="list-group-item" onclick="location.href='/orders';"><a href="/orders">최근 주문 내역</a></li>
+            <li class="list-group-item" onclick="location.href='/members/my-page/likes';"><a
+                    href="/members/my-page/likes">찜 목록</a></li>
+            <li class="list-group-item" onclick="location.href='/members/my-page/point-histories';"><a
+                    href="/members/my-page/point-histories">포인트 내역</a></li>
+            <li class="list-group-item" onclick="location.href='/members/my-page/coupons';"><a
+                href="/members/my-page/coupons">쿠폰 목록</a></li>
+            <li class="list-group-item" onclick="location.href='/members/my-page/address-page';"><a
+                    href="/members/my-page/address-page">주소록</a></li>
+            <li class="list-group-item" onclick="location.href='/members/my-page/reviews';"><a
+                    href="/members/my-page/reviews">리뷰 목록</a></li>
+            <li class="list-group-item"
+                onclick="if(confirm('정말로 회원 탈퇴를 하시겠습니까?')) { document.getElementById('withdrawForm').submit(); } else { event.preventDefault(); }">
+                <a href="#">회원 탈퇴</a>
+            </li>
+                <li class="list-group-item">
+        <a href="#" id="paycoConnect" style="color: #FF2233">PAYCO 연동</a>
+      </li>
+        </ul>
+
+
+        <form id="withdrawForm" th:action="@{/members/withdraw}" method="post"
+              style="display: none;"></form>
+    </div>
+</aside>
+
+<script>
+  document.querySelector('form[action="/members/withdraw"]').addEventListener('submit',
+      function (event) {
+        const confirmWithdraw = confirm("정말로 회원 탈퇴를 하시겠습니까?");
+        if (!confirmWithdraw) {
+          event.preventDefault(); // 사용자가 취소를 누르면 form 제출을 막음
+        }
+      });
+
+  document.getElementById('paycoConnect').addEventListener('click', function (event) {
+    const confirmPayco = confirm("PAYCO 로그인 연동을 수행하시겠습니까?");
+    if (confirmPayco) {
+      // 이동 경로를 지정
+      window.location.href = "/members/payco-connection";
+    } else {
+      event.preventDefault(); // 사용자가 취소를 누르면 이동을 막음
+    }
+  });
+</script>

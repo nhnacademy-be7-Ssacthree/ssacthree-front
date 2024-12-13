@@ -1,182 +1,460 @@
 <!DOCTYPE html>
-<html lang="ko">
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{common/config :: config}">
     <meta charset="UTF-8">
     <title>주문서 작성</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
 </head>
 <body onload="calculatePaymentPrice()">
-<header th:replace="~{common/header :: header}" />
+<header th:replace="~{common/header :: header}"></header>
 
 <div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-10">
+    <div class="row justify-content-between">
+        <!-- 왼쪽 : 다른 내용 -->
+        <div class="col-md-8">
             <div class="card shadow-lg border-0 rounded-3">
                 <div class="card-header bg-primary text-white text-center">
                     <h3>주문서 작성</h3>
                 </div>
-                <form method="post" action="/payment" class="container mb-4">
-                    <div class="card-body">
-                        <!-- 1. 주문 상품 정보 -->
-                        <section id="order-items" class="mb-4">
-                            <h4 class="text-primary">주문 상품 정보</h4>
-                            <table class="table table-bordered mt-3">
-                                <thead class="table-light">
-                                <tr>
-                                    <th>도서명</th>
-                                    <th>가격</th>
-                                    <th>수량</th>
-                                    <th>쿠폰 적용</th>
-                                    <th>포장지 선택</th>
-                                    <th>책별 총 금액</th>
-                                </tr>
-                                </thead>
-                                <tbody id="items-table-body">
-                                <!-- 상품 행이 JavaScript로 추가됩니다 -->
-                                <!-- 여기서,  ${cartInfo.getBookInfos()} 이런식으로 해서, book정보 받아올 수 있게 구현 -->
-                                <tr th:each="item : ${guestCartInfo}">
-                                    <td th:text="${item.title}"></td>
-                                    <!-- 가격은 정가? 판매가?-->
-                                    <td th:text="${item.price}"></td>
-                                    <td th:text="${item.quantity}"></td>
-                                    <td th:text="'쿠폰 적용하려면? 회원이 가진 쿠폰 중, 도서에 쓸 수 있는? 주문?'"></td>
-                                    <td th:text="'도서별 포장 가능 여부에 따라, 없->미지원 도서, 있->포장지 선택으로 바꾸기'"></td>
-                                    <td th:text="'총금액은 어디서 처리해서 주는거지 여기서 js써서 total해주나?'"></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </section>
-
-                        <!-- 2. 구매자 정보 입력 -->
-                        <!-- 비회원인 경우, 모든 칸이 비어있고, 회원인 경우 구매자 정보 입력칸을 해당 회원의 정보로 채워야함.-->
-                        <section id="buyer-info" class="mb-4">
-                            <h4 class="text-primary">구매자 정보 입력</h4>
-                            <div class="mb-3">
-                                <label for="buyer-name" class="form-label">이름</label>
-                                <input type="text" class="form-control" id="buyer-name" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="buyer-email" class="form-label">이메일</label>
-                                <input type="email" class="form-control" id="buyer-email" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="buyer-phone" class="form-label">휴대폰번호</label>
-                                <input type="tel" class="form-control" id="buyer-phone" required>
-                            </div>
-                        </section>
-
-                        <!-- 3. 배송지 입력 -->
-                        <section id="delivery-info" class="mb-4">
-                            <h4 class="text-primary">배송지 입력</h4>
-                            <div class="mb-3">
-                                <label for="address-list" class="form-label">주소 선택</label>
-                                <select class="form-select" id="address-list" onchange="setSelectedAddress()">
-                                    <option>주소 선택</option>
-                                    <!-- 회원 주소 리스트 추가 -->
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="recipient-name" class="form-label">받는 사람 이름</label>
-                                <input type="text" class="form-control" id="recipient-name" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="recipient-name" class="form-label">받는 사람 연락처</label>
-                                <input type="text" class="form-control" id="recipient-phone" required>
-                            </div>
-                            <div class="mb-3">
-                                <button type="button" class="btn btn-outline-secondary" onclick="openPostcodeSearch()">주소 조회</button>
-                            </div>
-                            <div class="mb-3">
-                                <label for="postal-code" class="form-label">우편 주소</label>
-                                <input type="text" class="form-control" id="postal-code" readonly onclick="openPostcodeSearch()">
-                            </div>
-                            <div class="mb-3">
-                                <label for="road-address" class="form-label">도로명 주소</label>
-                                <input type="text" class="form-control" id="road-address" readonly onclick="openPostcodeSearch()">
-                            </div>
-                            <div class="mb-3">
-                                <label for="detail-address" class="form-label">상세 주소</label>
-                                <input type="text" class="form-control" id="detail-address" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="delivery-date" class="form-label">배송 날짜 지정</label>
-                                <input type="date" class="form-control" id="delivery-date">
-                                <!-- 5일 이후까지만 선택 가능 -->
-                                <script>
-                                    const deliveryDateInput = document.getElementById("delivery-date");
-                                    const today = new Date();
-
-                                    // 오늘로부터 5일 이후 날짜 설정
-                                    const maxDate = new Date(today);
-                                    maxDate.setDate(today.getDate() + 5);
-
-                                    // YYYY-MM-DD 형식으로 min과 max 속성 설정
-                                    deliveryDateInput.max = maxDate.toISOString().split("T")[0];
-                                </script>
-                            </div>
-                        </section>
-
-                        <!-- 4. 포인트 사용 -->
-                        <section id="point-use" class="mb-4">
-                            <h4 class="text-primary">포인트 사용</h4>
-                            <p>보유 포인트: <span id="user-points">2000 포인트</span></p>
-                            <!-- 가진 포인트보다 많으면 안됨. -->
-                            <div class="mb-3">
-                                <label for="points-to-use" class="form-label">사용할 포인트</label>
-                                <input type="number" class="form-control" id="points-to-use" max="2000" onchange="applyPoints()">
-                            </div>
-                        </section>
-
-                        <!-- 5. 전체 주문에 대한 포인트 적립(등급 정책 적용), 계산 필요 -->
-                        <section id="point-save" class="mb-4">
-                            <h4 class="text-primary">포인트 적립</h4>
-                            <p>적립 포인트: <span id="user-points-save">100 포인트</span></p>
-                        </section>
-
-                        <!-- 6. 결제 버튼, 총 결제 금액 계산 필요 js -->
-                        <div class="text-center">
-                            <h4>총 결제 금액: <span id="PaymentPrice">0원</span></h4>
-                            <button type="button" class="btn btn-primary" onclick="processOrder()">결제하기</button>
+                <form id="order-form" method="post" action="/payment" class="container mb-4">
+                    <!-- 1. 주문 상품 정보 -->
+                    <section id="order-items" class="mb-4">
+                        <div>
+                            <h5 th:if="${isMember}" class="member-order-title">회원 주문</h5>
                         </div>
+                        <div>
+                            <h5 th:if="${not isMember}" class="non-member-order-title">비회원 주문</h5>
+                        </div>
+                        <h4 class="text-dark">주문 상품 정보</h4>
+                        <table class="table table-bordered mt-3">
+                            <thead class="table-light">
+                            <tr>
+                                <th style="width: 130px;">도서 이미지</th>
+                                <th>도서명</th>
+                                <th>도서 가격</th>
+                                <th th:if="${isMember}">적립 포인트</th>
+                                <th>수량</th>
+                                <th>쿠폰 적용</th>
+                                <th>포장지 선택</th>
+                                <th>합계</th>
+                            </tr>
+                            </thead>
+                            <tbody id="items-table-body">
+                            <tr th:each="book : ${bookLists}" th:data-book-id="${book.bookId}">
+                                <td>
+                                    <img th:src="${book.bookThumbnailImageUrl}" class="img-fluid" style="width: 200px; height: auto;" alt="Book Image">
+                                </td>
+                                <td th:text="${book.bookName}"></td>
+                                <td>
+                                    <!-- 가격 텍스트를 포함한 div 요소로 감싸기 -->
+                                    <div class="price-wrapper">
+                                        <span class="fs-4 text-danger fw-bold sale-price" th:text="${book.salePrice}"></span>
+                                        <br><del class="fs-6 text-danger">
+                                        <span class="fs-6 text-danger regular-price" th:text="${book.regularPrice}"></span></del>
+                                        <span class="fs-6 text-danger book-discount" th:text="${book.bookDiscount}"></span>
+
+                                    </div>
+                                </td>
+                                <td th:if="${isMember}" th:text="${book.pointToSave} + 'P'" class="point-to-save"></td>
+                                <td th:text="${book.quantity}"></td>
+                                <td th:text="'회원쿠폰 가져오기'"></td>
+                                <td>
+                                    <!-- book.isPacked가 true일 때만 포장지 선택 버튼 표시 -->
+                                    <!-- 여기까지는 ok -->
+                                    <div th:if="${book.isPacked}">
+                                        <button type="button" class="btn btn-outline-primary"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#packagingModal"
+                                                th:data-book-id="${book.bookId}"
+                                                th:data-packaging-id="${book.packagingId}"
+                                                onclick="setCurrentRow(this)">
+                                            포장지 선택
+                                        </button>
+                                        <br>
+                                        <span class="selected-packaging" th:text="'(선택된 포장지 없음)'"></span>
+                                        <span class="selected-packaging-cost" th:text="''"></span>
+                                    </div>
+
+                                    <!-- book.isPacked가 false일 때는 포장지를 지원하지 않는 도서 메시지 표시 -->
+                                    <div th:if="${not book.isPacked}">
+                                        포장지를 지원하지 않는 도서입니다
+                                    </div>
+                                </td>
+                                <td class="book-total-price" th:text="${book.salePrice * book.quantity}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <!-- 포장지 선택 모달 -->
+                    <div class="modal fade" id="packagingModal" tabindex="-1" aria-labelledby="packagingModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="packagingModalLabel">포장지 선택</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="list-group">
+                                        <div th:each="packaging : ${packagingList}" class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-center">
+                                                <img th:src="${packaging.packagingImageUrl}" alt="포장지 이미지" class="img-thumbnail me-3" style="width: 80px; height: 80px;">
+                                                <div>
+                                                    <h6 th:text="${packaging.packagingName}"></h6>
+                                                    <p class="mb-0 text-muted packaging-price" th:text="'가격: ' + ${packaging.packagingPrice} + '원'"></p>
+                                                </div>
+                                            </div>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-primary"
+                                                    th:attr="onclick=|selectPackaging('${packaging.id}', '${packaging.packagingName}', '${packaging.packagingPrice}') |">
+                                                포장지 선택
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. 구매자 정보 입력 -->
+                    <!-- 비회원인 경우, 모든 칸이 비어있고, 회원인 경우 구매자 정보 입력칸을 해당 회원의 정보로 채워야함.-->
+                    <section id="buyer-info" class="mb-4">
+                        <h4 class="text-dark">구매자 정보 입력</h4>
+                        <div class="mb-3">
+                            <label for="buyer-name" class="form-label">이름</label>
+                            <input type="text" class="form-control" id="buyer-name" name="buyerName"
+                                   th:value="${isMember} ? ${memberInfo.customerName} : ''"
+                                   required maxlength="50" minlength="2"
+                                   pattern="^[가-힣a-zA-Z\s]+$" title="이름은 한글 또는 영어로 입력해야 합니다.">
+                        </div>
+                        <div class="mb-3">
+                            <label for="buyer-email" class="form-label">이메일</label>
+                            <input type="email" class="form-control" id="buyer-email" name="buyerEmail"
+                                   th:value="${isMember} ? ${memberInfo.customerEmail} : ''" required maxlength="100"
+                                   title="유효한 이메일 주소를 입력하세요.">
+                        </div>
+                        <div class="mb-3">
+                            <label for="buyer-phone" class="form-label">휴대폰번호</label>
+                            <input type="tel" class="form-control" id="buyer-phone" name="buyerPhone"
+                                   th:value="${isMember} ? ${memberInfo.customerPhoneNumber} : ''" required maxlength="13"
+                                   pattern="^01[016789]-\d{3,4}-\d{4}$" title="유효한 휴대폰 번호를 입력하세요. (예: 010-1234-5678)"
+                                    oninput="formatPhoneNumber(this)"> <!-- 전화번호 포맷 함수 추가하였습니다. -->
+                        </div>
+                    </section>
+
+                    <!-- 배송지 입력 -->
+                    <section id="delivery-info" class="mb-4">
+                        <h4 class="text-dark">배송지 입력</h4>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="form-label">받는 사람 이름</label>
+                            <input type="text" class="form-control" id="recipient-name" name="recipientName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipient-phone" class="form-label">받는 사람 연락처</label>
+                            <input type="text" class="form-control" id="recipient-phone" name="recipientPhone" required
+                            oninput="formatPhoneNumber(this)">
+                        </div>
+                        <div class="mb-3" th:if="${isMember}">
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addressModal">
+                                배송지주소록 선택
+                            </button>
+                        </div>
+                        <div class="mb-3">
+                            <label for="postal-code" class="form-label">우편 번호</label>
+                            <input type="text" class="form-control" id="postal-code" name="postalCode" readonly="readonly">
+                        </div>
+                        <div class="mb-3">
+                            <label for="road-address" class="form-label">도로명 주소</label>
+                            <input type="text" class="form-control" id="road-address" name="roadAddress" readonly="readonly">
+                        </div>
+                        <div class="mb-3">
+                            <label for="detail-address" class="form-label">상세 주소</label>
+                            <input type="text" class="form-control" id="detail-address" name="detailAddress" required maxlength="100"
+                                   title="상세 주소를 입력하세요.">
+                        </div>
+                        <div class="mb-3">
+                            <button type="button" class="btn btn-outline-secondary" onclick="openPostcodeSearch()">주소 조회</button>
+                        </div>
+                        <div class="mb-3">
+                            <label for="order-request" class="form-label">배송 요청 사항</label>
+                            <input type="text" class="form-control" id="order-request" name="orderRequest">
+                        </div>
+                        <div class="mb-3">
+                            <label for="delivery-date" class="form-label">배송 날짜 지정</label>
+                            <input type="date" class="form-control" id="delivery-date" name="deliveryDate">
+                            <small id="date-message" class="form-text text-muted">
+                                오늘부터 5일 후까지 선택 가능합니다.
+                            </small>
+                        </div>
+                    </section>
+
+                    <!-- 배송지 주소록 선택 모달 -->
+                    <div class="modal fade" id="addressModal" th:if="${isMember}" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="addressModalLabel">배송지 선택</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="list-group">
+                                        <!-- 회원 주소 목록을 반복해서 출력 -->
+                                        <div th:each="address : ${memberAddressList}" class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-center">
+                                                <div>
+                                                    <p>별칭 : <span th:text="${address.addressAlias}"></span></p>
+                                                    <p>우편 번호 : <span th:text="${address.addressPostalNumber}"></span></p>
+                                                    <p>도로명 주소 : <span th:text="${address.addressRoadname}"></span></p>
+                                                    <p>상세 주소 : <span th:text="${address.addressDetail}"></span></p>
+                                                </div>
+                                            </div>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-primary"
+                                                    th:attr="onclick=|selectAddress('${address.addressPostalNumber}','${address.addressRoadname}','${address.addressDetail}') |">
+                                                배송지 선택
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                                    <button type="button" class="btn btn-primary">확인</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- 4. 포인트 사용 -->
+                    <section id="point-use" class="mb-4" th:if="${isMember}">
+                        <h4 class="text-dark">포인트 사용</h4>
+                        <p>보유 포인트: <span id="user-points" class="user-points" th:text="${memberInfo.memberPoint}" th:value="${memberInfo.memberPoint}"></span></p>
+                        <!-- 가진 포인트보다 많으면 안됨. -->
+                        <div class="mb-3">
+                            <label for="points-to-use" class="form-label">사용할 포인트</label>
+                            <input type="number" id="points-to-use" name="pointToUse" value="0" min="0">
+                            <button class="btn btn-primary" type="button" onclick="applyPoints()">적용</button>
+                        </div>
+                    </section>
+
+                    <!-- 5. 전체 주문에 대한 포인트 적립(등급 정책 적용), 계산 필요 -->
+                    <section id="point-save" class="mb-4" th:if="${isMember}">
+                        <h4 class="text-dark">포인트 적립</h4>
+                        <p>적립 포인트: <span id="user-points-save"></span></p>
+                        <input type="hidden" id="points-input" name="pointToSave" />
+                    </section>
+
+                    <!-- 결제 정보 넘기기 -->
+                    <div class="text-center">
+                        <input type="hidden" name="memberId" th:value="${memberInfo.customerId}" th:if="${isMember}">
+                        <input type="hidden" id="payment-price" name="paymentPrice">
                     </div>
                 </form>
             </div>
         </div>
+
+
+        <!-- 오른쪽: 결제 내역 -->
+        <div class="col-md-4">
+            <section id="payment-summary" class="mb-4" style="position: sticky; top: 20px;">
+                <div class="card border-gray">
+                    <div class="card-header bg-light">
+                        <h5 class="text-center">결제 금액</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>도서 금액</span>
+                                <strong id="book-price"></strong> <!-- 예시 값 -->
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>배송비</span>
+                                <strong id="delivery-price">+0원</strong>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>포장 가격</span>
+                                <strong id="packaging-price">+0원</strong>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between" th:if="${isMember}">
+                                <span>할인</span>
+                                <strong id="discount-amount">-0원</strong>
+                            </li>
+                        </ul>
+                        <div class="mt-3 text-center">
+                            <h4 class="text-dark"><span id="PaymentPrice"></span></h4>
+                        </div>
+                    </div>
+                    <div class="card-footer text-center">
+                        <button type="button" class="btn btn-dark w-100" onclick="submitOrderForm()">결제하기</button>
+                    </div>
+                </div>
+            </section>
+        </div>
     </div>
 </div>
 
-<footer th:replace="~{common/footer :: footer}"/>
+<footer th:replace="~{common/footer :: footer}"></footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<!-- modal 이용시... footer에 이미 js있어서 중복 문제.. 지우기 -->
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>-->
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script>
-    // 주문서 스크립트 로직
-    function openPostcodeSearch() {
-        new daum.Postcode({
-            oncomplete: function(data) {
-                document.getElementById('postal-code').value = data.zonecode;
-                document.getElementById('road-address').value = data.roadAddress;
-                document.getElementById('detail-address').focus();
-            }
-        }).open();
-    }
-</script>
+<script src="js/order.js"></script>
+
 <script th:inline="javascript">
     /* Thymeleaf를 통해 서버의 데이터를 JSON 형태로 자바스크립트에 전달 */
-    let guestCartInfo = /*[[${guestCartInfo}]]*/ [];
+    let bookLists = /*[[${bookLists}]]*/ [];
 </script>
+<script th:inline="javascript">
+    <!-- 전화번호 포맷 함수 -->
+    function formatPhoneNumber(phoneField) {
+        let input = phoneField.value.replace(/[^0-9]/g, ''); // 숫자만 남기기
+        let formatted = '';
 
-<script>
+        if (input.length <= 3) {
+            formatted = input;
+        } else if (input.length <= 7) {
+            formatted = input.slice(0, 3) + '-' + input.slice(3);
+        } else {
+            formatted = input.slice(0, 3) + '-' + input.slice(3, 7) + '-' + input.slice(7, 11);
+        }
+
+        phoneField.value = formatted;
+    }
+
     function calculatePaymentPrice() {
         let paymentPrice = 0;
+        let deliveryFee = 0;
+        let pointSave = 0;
+        let bookPrice = 0;
 
-        guestCartInfo.forEach(item => {
-            paymentPrice += item.price * item.quantity;
+        // 상품 가격 계산, 적립 포인트 계산
+        bookLists.forEach(book => {
+            bookPrice += book.salePrice * book.quantity;
+            pointSave += book.pointToSave * book.quantity;
         });
 
-        document.getElementById("PaymentPrice").innerText = paymentPrice + "원";
+        // 도서 금액을 화면에 표시 (포맷팅 추가)
+        const bookPriceElement = document.getElementById("book-price");
+        bookPriceElement.innerText = '+' + bookPrice.toLocaleString("en-US") + '원';
+
+        // 배송비 계산 (상품 가격이 무료 배송 기준을 초과하는지 확인)
+        const deliveryDiscountCost = /*[[${deliveryRule.deliveryDiscountCost}]]*/ 0;
+        const deliveryFeeValue = /*[[${deliveryRule.deliveryFee}]]*/ 0;
+
+        if (bookPrice < deliveryDiscountCost) {
+            deliveryFee = deliveryFeeValue;  // 무료 배송 기준 미만이면 배송비 추가
+        }
+
+        // 배송비를 화면에 표시 (포맷팅 추가)
+        document.getElementById("delivery-price").innerText = '+' + deliveryFee.toLocaleString("en-US") + '원';
+
+        // 총 결제 금액을 계산하여 표시 (포맷팅 추가)
+        paymentPrice = bookPrice + deliveryFee;
+        document.getElementById("payment-price").value = paymentPrice;         // 결제 가격을 hidden input에 설정
+        document.getElementById("PaymentPrice").innerText = '총 결제 금액: ' + paymentPrice.toLocaleString("en-US") + '원';
+
+        // 적립 포인트를 화면에 표시
+        document.getElementById("user-points-save").innerText = pointSave.toLocaleString("en-US") + "P";
+
+        // 세이브되는 포인트 넘기기
+        document.getElementById("points-input").value = pointSave;
+        console.log("적립" + pointSave);
     }
+
+
+
+    // 포인트 사용
+    function applyPoints() {
+        const pointsToUse = parseInt(document.getElementById("points-to-use").value) || 0;
+        let paymentPrice = parseInt(document.getElementById("payment-price").value);
+        const points = parseInt(document.getElementById("user-points").value);
+
+        // 포인트는 100원 단위로만 사용할 수 있다고 가정 (옵션)
+        if (pointsToUse < 0 || pointsToUse % 100 !== 0) {
+            alert("포인트는 100원 단위로만 사용할 수 있습니다.");
+            return;
+        }
+
+        if (pointsToUse > points) {
+            alert("사용할 포인트가 보유한 포인트보다 클 수 없습니다.");
+            return;
+        }
+
+        if (paymentPrice - pointsToUse<= 0) {
+            alert("총 결제 금액은 0원보다 커야합니다.");
+            return;
+        }
+
+        // 총 할인 금액 업데이트
+        discount = pointsToUse;
+
+        // 총 결제 금액 계산
+        paymentPrice -= discount;
+
+        // 업데이트 UI
+        document.getElementById("PaymentPrice").value = paymentPrice;
+
+        document.getElementById("PaymentPrice").innerText = `총 결제 금액: ${paymentPrice.toLocaleString()}원`;
+        document.querySelector("#discount-amount").innerText = `-${discount.toLocaleString()}원`;
+    }
+
+    // 가격 포맷팅 함수
+    document.addEventListener("DOMContentLoaded", function () {
+        // 숫자를 천 단위로 포맷팅하는 함수
+        function formatNumber(elementsClass, isPercentage = false) {
+            const elements = document.querySelectorAll(`.${elementsClass}`);
+            elements.forEach((element) => {
+                const text = element.textContent;
+                // 숫자 추출
+                const match = text.match(/-?\d+/);
+                if (match) {
+                    const originalValue = parseInt(match[0], 10);
+                    if (!isNaN(originalValue)) {
+                        const formattedValue = isPercentage
+                            ? `${originalValue}% 할인` // 퍼센트 포맷
+                            : `${originalValue.toLocaleString("en-US")}원`; // 금액 포맷
+                        element.textContent = text.replace(match[0], formattedValue);
+                    }
+                }
+            });
+        }
+
+        // 숫자 포맷팅을 위한 ID별 포맷팅 함수
+        function formatNumberById(elementId, isPercentage = false) {
+            const element = document.getElementById(elementId);
+            if (element && !isNaN(parseInt(element.textContent, 10))) {
+                const originalValue = parseInt(element.textContent, 10);
+                const formattedValue = isPercentage
+                    ? `${originalValue}% 할인` // 퍼센트 포맷
+                    : `${originalValue.toLocaleString("en-US")}원`; // 금액 포맷
+                element.textContent = formattedValue;
+            }
+        }
+
+        // 포맷팅할 항목들 (클래스 기반)
+        const classesToFormat = [
+            {className: "packaging-price", isPercentage: false}, // 포장 가격
+            {className: "book-total-price", isPercentage: false}, // 총합 금액
+            {className: "sale-price", isPercentage: false}, // 판매 가격
+            {className: "regular-price", isPercentage: false}, // 정가
+            {className: "book-discount", isPercentage: true}, // 할인율
+            {className: "user-points", isPercentage: false}, // 할인율
+            {className: "point-to-save", isPercentage: false}
+        ];
+
+        // 각 클래스에 대해 포맷팅 함수 실행
+        classesToFormat.forEach(({className, isPercentage}) =>
+            formatNumber(className, isPercentage)
+        );
+
+    });
+
+
 </script>
 </body>
 </html>

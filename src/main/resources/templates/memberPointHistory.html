@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="~{common/config :: config}">
+  <meta charset="UTF-8">
+  <title>Point History</title>
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+</head>
+<body>
+
+<header th:replace="~{common/header}"></header>
+
+<div class="container my-3">
+  <div class="row">
+    <!-- 사이드바 -->
+    <div th:replace="~{common/sidebar}"></div>
+
+    <!-- 메인 콘텐츠 -->
+    <main class="col-lg-9">
+      <h3 class="mb-4">포인트 적립 내역</h3>
+      <p th:utext="'잔여 포인트 : <b>' + ${member.memberPoint} + '</b>'"></p>
+      <hr>
+      <!-- 포인트 내역 섹션 -->
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th scope="col" class="fw-bold">날짜</th>
+            <th scope="col" class="fw-bold">적립/차감 이유</th>
+            <th scope="col" class="fw-bold">포인트</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="pointHistory : ${pointHistories.content}">
+            <td th:text="${#temporals.format(pointHistory.pointChangeDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td th:text="${pointHistory.pointChangeReason}"></td>
+            <td th:text="${pointHistory.pointAmount} + ' P'"></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 페이징 네비게이션 -->
+      <div
+          th:replace="~{common/pagination :: pagination(${baseUrl}, ${pointHistories}, ${extraParams})}"></div>
+    </main>
+  </div>
+</div>
+
+<footer th:replace="~{common/footer :: footer}"></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -5,17 +5,17 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.request.C
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.request.CategoryUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.service.CategoryAdminService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
+@RequiredArgsConstructor
 public class CategoryAdminServiceImpl implements CategoryAdminService {
 
     private final CategoryAdapter categoryAdapter;
-
-    public CategoryAdminServiceImpl(CategoryAdapter categoryAdapter) {
-        this.categoryAdapter = categoryAdapter;
-    }
 
     @Override
     public ResponseEntity<CategoryInfoResponse> createCategory(CategorySaveRequest request) {
@@ -30,6 +30,11 @@ public class CategoryAdminServiceImpl implements CategoryAdminService {
     @Override
     public ResponseEntity<Boolean> deleteCategory(Long categoryId) {
         return categoryAdapter.deleteCategory(categoryId);
+    }
+
+    @Override
+    public ResponseEntity<List<CategoryInfoResponse>> getAllCategoriesForAdmin() {
+        return categoryAdapter.getAllCategoriesForAdmin();
     }
 
 }

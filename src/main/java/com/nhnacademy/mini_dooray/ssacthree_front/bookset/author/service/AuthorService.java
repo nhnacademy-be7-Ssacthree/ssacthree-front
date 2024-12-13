@@ -4,14 +4,20 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.dto.AuthorCreat
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.dto.AuthorGetResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.dto.AuthorUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
-import org.apache.logging.log4j.message.Message;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 public interface AuthorService {
-    AuthorUpdateRequest getAuthorById(long authorId);
-    List<AuthorGetResponse> getAllAuthors();
+    AuthorUpdateRequest getAuthorById(Long authorId);
+
+    Page<AuthorGetResponse> getAllAuthors(int page, int size, String[] sort);
+
+    List<AuthorGetResponse> getAllAuthorList();
+
     MessageResponse createAuthor(AuthorCreateRequest authorCreateRequest);
+
     MessageResponse updateAuthor(AuthorUpdateRequest authorUpdateRequest);
-    MessageResponse deleteAuthor(long authorId);
+
+    MessageResponse deleteAuthor(Long authorId);
 }

@@ -5,6 +5,7 @@ import feign.RequestTemplate;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Objects;
+import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -17,6 +18,15 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 public class FeignCookieInterceptor implements RequestInterceptor {
     @Override
     public void apply(RequestTemplate requestTemplate) {
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+
+        // RequestAttributes가 없는 경우 처리
+        if (requestAttributes == null) {
+            // Redis 리스너나 비동기 환경에서는 HTTP 컨텍스트가 없을 수 있습니다.
+            return;
+        }
+
+
         HttpServletRequest httpServletRequest = ((ServletRequestAttributes) Objects.requireNonNull(
             RequestContextHolder.getRequestAttributes())).getRequest();
 

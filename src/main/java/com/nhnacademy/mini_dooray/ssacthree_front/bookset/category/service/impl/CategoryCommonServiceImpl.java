@@ -3,6 +3,7 @@ package com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.service.impl
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.adapter.CategoryAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.dto.response.CategoryInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.category.service.CategoryCommonService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -10,13 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CategoryCommonServiceImpl implements CategoryCommonService {
 
     private final CategoryAdapter categoryAdapter;
-
-    public CategoryCommonServiceImpl(CategoryAdapter categoryAdapter) {
-        this.categoryAdapter = categoryAdapter;
-    }
 
     @Override
     public ResponseEntity<List<CategoryInfoResponse>> getAllCategories() {
@@ -34,8 +32,8 @@ public class CategoryCommonServiceImpl implements CategoryCommonService {
     }
 
     @Override
-    public ResponseEntity<List<CategoryInfoResponse>> getRootCategories() {
-        return categoryAdapter.getRootCategories();
+    public List<CategoryInfoResponse> getRootCategories() {
+        return categoryAdapter.getRootCategories().getBody();
     }
 
     @Override
@@ -44,8 +42,8 @@ public class CategoryCommonServiceImpl implements CategoryCommonService {
     }
 
     @Override
-    public ResponseEntity<List<CategoryInfoResponse>> getCategoryPath(Long categoryId) {
-        return categoryAdapter.getCategoryPath(categoryId);
+    public List<CategoryInfoResponse> getCategoryPath(Long categoryId) {
+        return categoryAdapter.getCategoryPath(categoryId).getBody();
     }
 
     @Override

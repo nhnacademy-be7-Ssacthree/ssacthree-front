@@ -10,11 +10,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MemberInfoResponse {
 
+    private Long customerId;
     private String memberLoginId;
     private String customerName;
     private String customerPhoneNumber;
     private String customerEmail;
     private String memberBirthdate;
     private long memberPoint;
+    private String memberGradeName;
+    private float memberGradePointSave;
 
 }

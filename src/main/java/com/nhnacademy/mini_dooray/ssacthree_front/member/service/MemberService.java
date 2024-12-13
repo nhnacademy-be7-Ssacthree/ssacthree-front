@@ -5,6 +5,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoUpdateRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberLoginRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberRegisterRequest;
+import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberSleepToActiveRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -22,5 +23,7 @@ public interface MemberService {
     MessageResponse memberInfoUpdate(MemberInfoUpdateRequest requestDto,
         HttpServletRequest request);
 
-    MessageResponse memberWithdraw(HttpServletRequest request);
+    MessageResponse memberWithdraw(HttpServletRequest request, HttpServletResponse response);
+
+    MessageResponse memberSleepToActive(MemberSleepToActiveRequest memberSleepToActiveRequest);
 }

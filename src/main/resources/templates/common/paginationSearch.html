@@ -1,0 +1,37 @@
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="pagination(baseUrl, paging, extraParams)">
+    <!-- 페이지네이션: paging이 null이 아닐 때만 렌더링 -->
+    <div th:if="${paging != null}">
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                <!-- 이전 페이지 -->
+                <li th:classappend="${paging.number - 1 == 0} ? 'disabled' : ''" class="page-item">
+                    <a class="page-link"
+                       th:href="@{|${baseUrl}?keyword=${keyword}&page=${paging.number - 1}&sort=${paging.sort}&pageSize=${paging.size ?: 20}${extraParams['category'] != null ? '&category=' + extraParams['category'] : ''}|}"
+                       aria-label="Previous">
+                        &laquo;
+                    </a>
+                </li>
+
+                <!-- 페이지 번호 -->
+                <li th:each="i : ${#numbers.sequence(
+                        (paging.number > 2 ? paging.number - 2 : 1),
+                        (paging.number + 2 < paging.totalPages ? paging.number + 2 : paging.totalPages - 1)
+                    )}"
+                    th:classappend="${i == paging.number} ? 'active' : ''" class="page-item">
+                    <a class="page-link"
+                       th:href="@{|${baseUrl}?keyword=${keyword}&page=${i}&sort=${paging.sort}&pageSize=${paging.size ?: 20}${extraParams['category'] != null ? '&category=' + extraParams['category'] : ''}${extraParams['tag'] != null ? '&tag=' + extraParams['tag'] : ''}|}"
+                       th:text="${i}"></a>
+                </li>
+
+                <!-- 다음 페이지 -->
+                <li th:classappend="${paging.number == paging.totalPages - 1} ? 'disabled' : ''" class="page-item">
+                    <a class="page-link"
+                       th:href="@{|${baseUrl}?keyword=${keyword}&page=${paging.number + 1}&sort=${paging.sort}&pageSize=${paging.size ?: 20}${extraParams['category'] != null ? '&category=' + extraParams['category'] : ''}|}"
+                       aria-label="Next">
+                        &raquo;
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

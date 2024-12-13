@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/config :: config}">
+    <title>포장지 관리</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <style>
+        .gift-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .gift-name {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .gift-price {
+            margin-top: 5px;
+            color: #FF5733;
+        }
+        .gift-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%; /* 카드 높이를 100%로 맞춤 */
+            min-height: 250px; /* 최소 높이 설정 */
+        }
+    </style>
+</head>
+<body>
+<header th:replace="~{common/adminHeader :: header}" />
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3>포장지 관리</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div th:each="packaging : ${packagingList}" class="col-md-4 mb-4">
+                            <div class="gift-card border p-3 rounded text-center">
+                                <img th:src="${packaging.getPackagingImageUrl()}" alt="Gift Image" class="gift-image, img-fluid" />
+
+                                <div class="gift-name mt-3">
+                                    <strong>포장지 이름:</strong> <span th:text="${packaging.getPackagingName()}">Gift Name</span>
+                                </div>
+
+                                <div class="gift-price mt-2">
+                                    <strong>포장지 가격:</strong> <span th:text="${packaging.getPackagingPrice()}">₩0</span>
+                                </div>
+                                <!-- 수정 및 삭제 버튼 -->
+                                <div class="mt-3 d-flex justify-content-between">
+
+                                    <button class="btn btn-warning btn-sm w-auto" data-bs-toggle="modal" data-bs-target="#updatePackagingModal"
+                                            th:attr="data-id=${packaging.id}, data-name=${packaging.getPackagingName()}, data-price=${packaging.getPackagingPrice()}, data-imageurl=${packaging.getPackagingImageUrl()}">
+                                        수정
+                                    </button>
+
+                                    <form th:action="@{/admin/packaging/delete/{id}(id=${packaging.id})}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+                                        <button type="submit" class="btn btn-danger btn-sm w-auto">삭제</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#packagingModal">새 포장지 추가
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 포장지 수정 모달 -->
+<div class="modal fade" id="updatePackagingModal" tabindex="-1" aria-labelledby="updatePackagingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- action을 동적으로 설정 -->
+            <form id="updatePackagingForm" method="post" th:action="@{/admin/packaging/update/{id}(id=${id})}">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updatePackagingModalLabel">포장지 수정</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="updateName" class="form-label">포장지 이름</label>
+                        <input type="text" class="form-control" id="updateName" name="packagingName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="updatePrice" class="form-label">포장지 가격</label>
+                        <input type="number" class="form-control" id="updatePrice" name="packagingPrice" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="updateImageUrl" class="form-label">이미지 URL</label>
+                        <input type="file" class="form-control" id="updateImageUrl" name="packagingImageUrl" accept="image/*" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <button type="submit" class="btn btn-primary">확인</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- 포장지 추가 모달 -->
+<div class="modal fade" id="packagingModal" tabindex="-1" aria-labelledby="packagingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form th:action="@{/admin/packaging}" method="post" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="packagingModalLabel">새 포장지 추가</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">포장지 이름</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="price" class="form-label">포장지 가격</label>
+                        <input type="number" class="form-control" id="price" name="price" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="imageUrl" class="form-label">이미지 URL</label>
+                        <input type="file" class="form-control" id="imageUrl" name="imageUrl" accept="image/*" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <button type="submit" class="btn btn-primary">확인</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{common/footer :: footer}"/>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // 수정 모달에 기존 데이터 채우기
+    var updateModal = document.getElementById('updatePackagingModal');
+    updateModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget; // 수정 버튼
+        var id = button.getAttribute('data-id');
+        var name = button.getAttribute('data-name');
+        var price = button.getAttribute('data-price');
+        var imageUrl = button.getAttribute('data-imageurl');
+
+        // 폼의 input 필드에 값 설정
+        var nameInput = updateModal.querySelector('#updateName');
+        var priceInput = updateModal.querySelector('#updatePrice');
+        var imageUrlInput = updateModal.querySelector('#updateImageUrl');
+        var form = updateModal.querySelector('form'); // 수정 폼
+
+        nameInput.value = name;
+        priceInput.value = price;
+        imageUrlInput.value = imageUrl;
+
+        // form action URL에 id 값 반영
+        form.action = "/admin/packaging/update/" + id;  // 동적으로 URL 설정
+    });
+
+
+</script>
+
+</body>
+</html>
