@@ -99,13 +99,16 @@ function updateBookList(books) {
                             onclick="addToCart(${book.bookId})">
                         <svg class="cart"><use xlink:href="#cart"></use></svg>
                     </button>
-                    <button type="button" class="btn btn-dark wishlist-button"
-                            data-book-id="${book.bookId}"
-                            onclick="toggleLike(this)">
-                        <svg class="wishlist">
-                            <use xlink:href="#heart"></use>
-                        </svg>
-                    </button>
+                    <div class="btn btn-dark wishlist-button">
+                        <span>
+                            <svg class="wishlist"
+                                style="width: 25px; height: 25px; cursor: pointer;"
+                                data-book-id="${book.bookId}"
+                                onclick="toggleLike(this)">
+                                <use xlink:href="#${likeBooks && likeBooks.includes(book.bookId) ? 'heart-filled' : 'heart'}"></use>
+                            </svg>
+                        </span>
+                    </div>
                 </div>
             </div>
         `;
