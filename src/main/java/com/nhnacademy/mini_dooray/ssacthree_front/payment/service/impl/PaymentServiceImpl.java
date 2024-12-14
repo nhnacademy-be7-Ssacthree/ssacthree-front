@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 public class PaymentServiceImpl implements PaymentService {
     private final PaymentAdapter paymentAdapter;
 
-    // TODO : 결제 정보 저장하기, api요청
     public MessageResponse savePayment(PaymentRequest paymentRequest) {
         ResponseEntity<MessageResponse> response = paymentAdapter.savePayment(paymentRequest);
         return response.getBody();
