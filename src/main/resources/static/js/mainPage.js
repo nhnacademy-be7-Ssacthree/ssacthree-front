@@ -100,7 +100,8 @@ function updateBookList(books) {
                         <svg class="cart"><use xlink:href="#cart"></use></svg>
                     </button>
                     <button type="button" class="btn btn-dark wishlist-button"
-                            onclick="toggleLike(this, ${book.bookId})">
+                            data-book-id="${book.bookId}"
+                            onclick="toggleLike(this)">
                         <svg class="wishlist">
                             <use xlink:href="#heart"></use>
                         </svg>
