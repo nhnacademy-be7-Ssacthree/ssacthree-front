@@ -5,6 +5,7 @@ import com.nhnacademy.mini_dooray.ssacthree_front.admin.dto.AdminLoginRequest;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.service.AdminService;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.util.CookieUtil;
+import com.nhnacademy.mini_dooray.ssacthree_front.commons.util.ResponseEntityHandler;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.LoginFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.exception.LogoutIllegalAccessException;
 import feign.FeignException;
@@ -13,8 +14,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
 
 @Service
 @RequiredArgsConstructor
@@ -43,16 +42,14 @@ public class AdminServiceImpl implements AdminService {
     public MessageResponse logout(HttpServletResponse httpServletResponse) {
         ResponseEntity<MessageResponse> response = adminAdapter.logout();
 
-        try {
-
-            if (isHaveCookie(httpServletResponse, response)) {
-                return response.getBody();
-            }
-
-            throw new LogoutIllegalAccessException("잘못된 접근입니다.");
-        } catch (HttpClientErrorException | HttpServerErrorException e) {
-            throw new LogoutIllegalAccessException("잘못된 접근입니다.");
+        if (isHaveCookie(httpServletResponse, response)) {
+            return ResponseEntityHandler.getResponseBody(
+                response,
+                () -> new LogoutIllegalAccessException("잘못된 접근입니다.")
+            );
         }
+
+        throw new LogoutIllegalAccessException("잘못된 접근입니다.");
     }
 
     private boolean isHaveCookie(HttpServletResponse httpServletResponse,

@@ -10,12 +10,9 @@ import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
-
 import java.util.List;
+import com.nhnacademy.mini_dooray.ssacthree_front.commons.util.ResponseEntityHandler;
 
 @Service
 @RequiredArgsConstructor

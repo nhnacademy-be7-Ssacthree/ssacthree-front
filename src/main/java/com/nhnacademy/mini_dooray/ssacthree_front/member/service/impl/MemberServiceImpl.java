@@ -2,6 +2,7 @@ package com.nhnacademy.mini_dooray.ssacthree_front.member.service.impl;
 
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.util.ExceptionParser;
+import com.nhnacademy.mini_dooray.ssacthree_front.commons.util.ResponseEntityHandler;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.adapter.MemberAdapter;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoResponse;
 import com.nhnacademy.mini_dooray.ssacthree_front.member.dto.MemberInfoUpdateRequest;
@@ -51,19 +52,16 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public MessageResponse memberRegister(MemberRegisterRequest request) {
-
         try {
-            ResponseEntity<MessageResponse> response = memberAdapter.memberRegister(request);
-            if (response.getStatusCode().is2xxSuccessful()) {
-                return response.getBody();
-            }
-            throw new MemberRegisterFailedException("회원가입에 실패하였습니다.");
+            return ResponseEntityHandler.getResponseBody(
+                memberAdapter.memberRegister(request),
+                () -> new MemberRegisterFailedException("회원가입에 실패하였습니다.")
+            );
         } catch (FeignException e) {
             throw new MemberRegisterFailedException(
                 // e.contentUTF8 --> response body
                 ExceptionParser.getErrorMessageFromFeignException(e.contentUTF8()));
         }
-
     }
 
     /**
@@ -149,16 +147,13 @@ public class MemberServiceImpl implements MemberService {
             }
         }
         try {
-            ResponseEntity<MemberInfoResponse> response = memberAdapter.memberInfo(
-                HEADER_BEARER + accessToken);
-            if (response.getStatusCode().is2xxSuccessful()) {
-                return response.getBody();
-            }
+            return ResponseEntityHandler.getResponseBody(
+                memberAdapter.memberInfo(HEADER_BEARER + accessToken),
+                () -> new MemberNotFoundException(MEMBER_NOT_FOUND)
+            );
         } catch (FeignException e) {
             throw new MemberNotFoundException(MEMBER_NOT_FOUND);
         }
-
-        throw new MemberNotFoundException(MEMBER_NOT_FOUND);
     }
 
     /**
@@ -179,16 +174,13 @@ public class MemberServiceImpl implements MemberService {
             }
         }
         try {
-            ResponseEntity<MessageResponse> response = memberAdapter.memberInfoUpdate(
-                HEADER_BEARER + accessToken, requestBody);
-            if (response.getStatusCode().is2xxSuccessful()) {
-                return response.getBody();
-            }
+            return ResponseEntityHandler.getResponseBody(
+                memberAdapter.memberInfoUpdate(HEADER_BEARER + accessToken, requestBody),
+                () -> new MemberInfoUpdateFailedException("회원 수정이 불가합니다.")
+            );
         } catch (FeignException e) {
             throw new MemberInfoUpdateFailedException("회원 수정이 불가합니다.");
         }
-
-        throw new MemberNotFoundException(MEMBER_NOT_FOUND);
     }
 
     /**
@@ -209,17 +201,15 @@ public class MemberServiceImpl implements MemberService {
             }
         }
         try {
-            ResponseEntity<MessageResponse> feignResponse = memberAdapter.memberDelete(
-                HEADER_BEARER + accessToken);
-            if (feignResponse.getStatusCode().is2xxSuccessful()) {
-
-                this.memberLogout(response);
-                return feignResponse.getBody();
-            }
+            MessageResponse result = ResponseEntityHandler.getResponseBody(
+                memberAdapter.memberDelete(HEADER_BEARER + accessToken),
+                () -> new MemberNotFoundException("회원을 찾을 수 없습니다.")
+            );
+            this.memberLogout(response);
+            return result;
         } catch (FeignException e) {
             throw new MemberNotFoundException("회원을 찾을 수 없습니다.");
         }
-        throw new MemberNotFoundException("회원을 찾을 수 없습니다.");
     }
 
     /**
@@ -245,12 +235,10 @@ public class MemberServiceImpl implements MemberService {
             throw new SleepMemberReleaseFailedException("인증번호가 다릅니다.");
         }
         try {
-            ResponseEntity<MessageResponse> response = memberAdapter.memberActive(
-                memberSleepToActiveRequest.getMemberLoginId());
-            if (response.getStatusCode().is2xxSuccessful()) {
-                return response.getBody();
-            }
-            throw new SleepMemberReleaseFailedException("휴면 해제를 실패하였습니다.");
+            return ResponseEntityHandler.getResponseBody(
+                memberAdapter.memberActive(memberSleepToActiveRequest.getMemberLoginId()),
+                () -> new SleepMemberReleaseFailedException("휴면 해제를 실패하였습니다.")
+            );
         } catch (FeignException e) {
             throw new SleepMemberReleaseFailedException("휴면 해제를 실패하였습니다.");
         } finally {
