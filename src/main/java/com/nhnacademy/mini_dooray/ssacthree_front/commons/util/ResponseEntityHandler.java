@@ -1,5 +1,6 @@
 package com.nhnacademy.mini_dooray.ssacthree_front.commons.util;
 
+import feign.FeignException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
@@ -32,7 +33,7 @@ public class ResponseEntityHandler {
                 return response.getBody();
             }
             throw exceptionSupplier.get();
-        } catch (HttpClientErrorException | HttpServerErrorException e) {
+        } catch (HttpClientErrorException | HttpServerErrorException | FeignException e) {
             throw exceptionSupplier.get();
         }
     }
