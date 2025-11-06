@@ -10,11 +10,9 @@ import com.nhnacademy.mini_dooray.ssacthree_front.admin.delivery_rule.exception.
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.delivery_rule.exception.DeliveryRuleUpdateFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.admin.delivery_rule.service.DeliveryRuleService;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.commons.util.ResponseEntityHandler;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.List;
 
@@ -29,59 +27,33 @@ public class DeliveryRuleServiceImpl implements DeliveryRuleService {
 
     @Override
     public MessageResponse createDeliveryRule(DeliveryRuleCreateRequest deliveryRuleCreateRequest) {
-        ResponseEntity<MessageResponse> response = deliveryRuleAdapter.createDeliveryRule(deliveryRuleCreateRequest);
-
-        try {
-            if(response.getStatusCode().is2xxSuccessful()) {
-                return response.getBody();
-            }
-            throw new DeliveryRuleCreateFailedException(FAILED_TO_DELIVERY);
-        }
-        catch (HttpClientErrorException | HttpServerErrorException e ) {
-            throw new DeliveryRuleCreateFailedException(FAILED_TO_DELIVERY);
-        }
+        return ResponseEntityHandler.getResponseBody(
+            deliveryRuleAdapter.createDeliveryRule(deliveryRuleCreateRequest),
+            () -> new DeliveryRuleCreateFailedException(FAILED_TO_DELIVERY)
+        );
     }
 
     @Override
     public List<DeliveryRuleGetResponse> getAllDeliveryRules() {
-        ResponseEntity<List<DeliveryRuleGetResponse>> response = deliveryRuleAdapter.getAllDeliveryRules();
-
-        try {
-            if (response.getStatusCode().is2xxSuccessful()) {
-                return response.getBody();
-            }
-            throw new DeliveryRuleGetFailedException(FAILED_TO_DELIVERY);
-        } catch (HttpClientErrorException | HttpServerErrorException e ) {
-            throw new DeliveryRuleGetFailedException(FAILED_TO_DELIVERY);
-        }
+        return ResponseEntityHandler.getResponseBody(
+            deliveryRuleAdapter.getAllDeliveryRules(),
+            () -> new DeliveryRuleGetFailedException(FAILED_TO_DELIVERY)
+        );
     }
 
     @Override
     public MessageResponse updateDeliveryRule(DeliveryRuleUpdateRequest deliveryRuleUpdateRequest) {
-        ResponseEntity<MessageResponse> response = deliveryRuleAdapter.updateDeliveryRule(deliveryRuleUpdateRequest);
-
-        try {
-            if(response.getStatusCode().is2xxSuccessful()) {
-                return response.getBody();
-            }
-            throw new DeliveryRuleUpdateFailedException("배송정책 수정에 실패하였습니다.");
-        }
-        catch (HttpClientErrorException | HttpServerErrorException e ) {
-            throw new DeliveryRuleUpdateFailedException("배송정책 수정에 실패하였습니다.");
-        }
+        return ResponseEntityHandler.getResponseBody(
+            deliveryRuleAdapter.updateDeliveryRule(deliveryRuleUpdateRequest),
+            () -> new DeliveryRuleUpdateFailedException("배송정책 수정에 실패하였습니다.")
+        );
     }
 
     @Override
     public DeliveryRuleGetResponse getCurrentDeliveryRule() {
-        ResponseEntity<DeliveryRuleGetResponse> response = deliveryRuleCustomerAdapter.getCurrentDeliveryRule();
-
-        try {
-            if (response.getStatusCode().is2xxSuccessful()) {
-                return response.getBody();
-            }
-            throw new DeliveryRuleGetFailedException("배송정책 조회에 실패하였습니다.");
-        } catch (HttpClientErrorException | HttpServerErrorException e ) {
-            throw new DeliveryRuleGetFailedException("배송정책 조회에 실패하였습니다.");
-        }
+        return ResponseEntityHandler.getResponseBody(
+            deliveryRuleCustomerAdapter.getCurrentDeliveryRule(),
+            () -> new DeliveryRuleGetFailedException("배송정책 조회에 실패하였습니다.")
+        );
     }
 }
