@@ -7,12 +7,13 @@ import com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.dto.AuthorUpdat
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.exception.AuthorFailedException;
 import com.nhnacademy.mini_dooray.ssacthree_front.bookset.author.service.AuthorService;
 import com.nhnacademy.mini_dooray.ssacthree_front.commons.dto.MessageResponse;
+import com.nhnacademy.mini_dooray.ssacthree_front.commons.util.ResponseEntityHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import com.nhnacademy.mini_dooray.ssacthree_front.commons.util.ResponseEntityHandler;
 
 @Service
 @RequiredArgsConstructor
@@ -56,43 +57,25 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public MessageResponse createAuthor(AuthorCreateRequest authorCreateRequest) {
-        ResponseEntity<MessageResponse> response = authorAdapter.createAuthor(authorCreateRequest);
-
-        try {
-            if (response.getStatusCode().is2xxSuccessful()) {
-                return response.getBody();
-            }
-            throw new AuthorFailedException(AUTHOR_CREATE_ERROR);
-        } catch (HttpClientErrorException | HttpServerErrorException e) {
-            throw new AuthorFailedException(AUTHOR_CREATE_ERROR);
-        }
+        return ResponseEntityHandler.getResponseBody(
+            authorAdapter.createAuthor(authorCreateRequest),
+            () -> new AuthorFailedException(AUTHOR_CREATE_ERROR)
+        );
     }
 
     @Override
     public MessageResponse updateAuthor(AuthorUpdateRequest authorUpdateRequest) {
-        ResponseEntity<MessageResponse> response = authorAdapter.updateAuthor(authorUpdateRequest);
-
-        try {
-            if (response.getStatusCode().is2xxSuccessful()) {
-                return response.getBody();
-            }
-            throw new AuthorFailedException(AUTHOR_UPDATE_ERROR);
-        } catch (HttpClientErrorException | HttpServerErrorException e) {
-            throw new AuthorFailedException(AUTHOR_UPDATE_ERROR);
-        }
+        return ResponseEntityHandler.getResponseBody(
+            authorAdapter.updateAuthor(authorUpdateRequest),
+            () -> new AuthorFailedException(AUTHOR_UPDATE_ERROR)
+        );
     }
 
     @Override
     public MessageResponse deleteAuthor(Long authorId) {
-        ResponseEntity<MessageResponse> response = authorAdapter.deleteAuthor(authorId);
-
-        try {
-            if (response.getStatusCode().is2xxSuccessful()) {
-                return response.getBody();
-            }
-            throw new AuthorFailedException(AUTHOR_DELETE_ERROR);
-        } catch (HttpClientErrorException | HttpServerErrorException e) {
-            throw new AuthorFailedException(AUTHOR_DELETE_ERROR);
-        }
+        return ResponseEntityHandler.getResponseBody(
+            authorAdapter.deleteAuthor(authorId),
+            () -> new AuthorFailedException(AUTHOR_DELETE_ERROR)
+        );
     }
 }
