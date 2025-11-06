@@ -43,10 +43,7 @@ public class AdminServiceImpl implements AdminService {
         ResponseEntity<MessageResponse> response = adminAdapter.logout();
 
         if (isHaveCookie(httpServletResponse, response)) {
-            return ResponseEntityHandler.getResponseBody(
-                response,
-                () -> new LogoutIllegalAccessException("잘못된 접근입니다.")
-            );
+            return response.getBody();
         }
 
         throw new LogoutIllegalAccessException("잘못된 접근입니다.");
